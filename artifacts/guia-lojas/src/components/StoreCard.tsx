@@ -1,74 +1,71 @@
 import { motion } from "framer-motion";
-import { Heart, MapPin } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Link } from "wouter";
 import { Store } from "@/data/mock";
 import { StarRating } from "./StarRating";
-import { Badge } from "@/components/ui/badge";
 
 interface StoreCardProps {
   store: Store;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
   index?: number;
+  size?: "sm" | "md" | "lg";
 }
 
-export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0 }: StoreCardProps) {
+export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size = "md" }: StoreCardProps) {
+  const imgHeight = size === "lg" ? "h-72" : size === "sm" ? "h-44" : "h-56";
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.06, ease: "easeOut" }}
-      whileHover={{ y: -4, boxShadow: "0 12px 32px -8px rgba(0,0,0,0.12)" }}
-      className="bg-card border border-card-border rounded-xl overflow-hidden cursor-pointer group"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, delay: index * 0.05 }}
+      className="group cursor-pointer"
       data-testid={`card-store-${store.id}`}
     >
       <Link href={`/loja/${store.id}`} className="block">
-        <div
-          className="h-40 w-full relative"
-          style={{ backgroundColor: store.coverColor }}
-        >
-          <div className="absolute inset-0 flex items-end p-3">
-            <Badge
-              className={`text-xs font-medium ${
-                store.isOpen
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                  : "bg-gray-100 text-gray-500 border-gray-200"
-              }`}
-              variant="outline"
-            >
-              {store.isOpen ? "Aberto agora" : "Fechado"}
-            </Badge>
+        {/* Image area */}
+        <div className={`${imgHeight} w-full relative overflow-hidden bg-muted`}
+          style={{ backgroundColor: store.coverColor }}>
+          {/* Status pill */}
+          <div className="absolute top-3 left-3">
+            <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
+              store.isOpen
+                ? "bg-white/90 text-emerald-700"
+                : "bg-white/80 text-muted-foreground"
+            }`}>
+              {store.isOpen ? "Aberto" : "Fechado"}
+            </span>
           </div>
+          {/* Favorite */}
+          <button
+            data-testid={`button-favorite-${store.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleFavorite(store.id);
+            }}
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+          >
+            <Heart
+              size={14}
+              className={isFavorite ? "fill-rose-500 text-rose-500" : "text-foreground"}
+            />
+          </button>
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
         </div>
-        <div className="p-4">
+
+        {/* Info */}
+        <div className="pt-3 pb-1">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-foreground text-sm leading-tight truncate group-hover:text-primary transition-colors">
-                {store.name}
-              </h3>
+            <div>
+              <p className="text-sm font-medium text-foreground leading-tight">{store.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">{store.category}</p>
             </div>
-            <button
-              data-testid={`button-favorite-${store.id}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleFavorite(store.id);
-              }}
-              className="flex-shrink-0 p-1.5 rounded-lg hover:bg-muted transition-colors"
-            >
-              <Heart
-                size={16}
-                className={isFavorite ? "fill-rose-500 text-rose-500" : "text-muted-foreground"}
-              />
-            </button>
           </div>
-          <div className="mt-2.5">
+          <div className="mt-1.5">
             <StarRating rating={store.rating} reviewCount={store.reviewCount} />
-          </div>
-          <div className="flex items-center gap-1 mt-2">
-            <MapPin size={11} className="text-muted-foreground flex-shrink-0" />
-            <p className="text-xs text-muted-foreground truncate">{store.address}</p>
           </div>
         </div>
       </Link>

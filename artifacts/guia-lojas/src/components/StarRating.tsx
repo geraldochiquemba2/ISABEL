@@ -7,7 +7,7 @@ interface StarRatingProps {
 }
 
 export function StarRating({ rating, reviewCount, size = "sm" }: StarRatingProps) {
-  const iconSize = size === "sm" ? 12 : 16;
+  const iconSize = size === "sm" ? 11 : 14;
   return (
     <div className="flex items-center gap-1">
       <div className="flex items-center gap-0.5">
@@ -23,7 +23,7 @@ export function StarRating({ rating, reviewCount, size = "sm" }: StarRatingProps
           />
         ))}
       </div>
-      <span className={`font-semibold text-foreground ${size === "sm" ? "text-xs" : "text-sm"}`}>
+      <span className={`font-medium text-foreground ${size === "sm" ? "text-xs" : "text-sm"}`}>
         {rating.toFixed(1)}
       </span>
       {reviewCount !== undefined && (

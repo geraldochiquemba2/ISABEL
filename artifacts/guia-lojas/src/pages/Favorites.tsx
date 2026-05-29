@@ -5,7 +5,6 @@ import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { PageTransition } from "@/components/PageTransition";
-import { Button } from "@/components/ui/button";
 
 export default function Favorites() {
   const { favorites, isFavorite, toggleFavorite } = useFavorites();
@@ -15,38 +14,36 @@ export default function Favorites() {
     <PageTransition>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Heart size={22} className="text-rose-500 fill-rose-500" />
-            Meus Favoritos
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <h1 className="text-2xl font-semibold text-foreground tracking-tight">Favoritos</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {favoriteStores.length === 0
-              ? "Você ainda não favoritou nenhuma loja."
+              ? "Nenhuma loja salva ainda."
               : `${favoriteStores.length} ${favoriteStores.length === 1 ? "loja salva" : "lojas salvas"}`}
           </p>
         </div>
 
         {favoriteStores.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-20 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <div className="w-20 h-20 rounded-full bg-rose-50 flex items-center justify-center mb-5">
-              <Heart size={36} className="text-rose-300" />
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-5">
+              <Heart size={28} className="text-muted-foreground opacity-40" />
             </div>
-            <h2 className="text-lg font-semibold text-foreground mb-2">Nada por aqui ainda</h2>
-            <p className="text-muted-foreground text-sm max-w-xs mb-6">
-              Explore lojas e serviços e clique no icone de coração para salvar seus favoritos.
-            </p>
+            <p className="text-muted-foreground text-sm mb-1">Explore lojas e salve suas favoritas</p>
+            <p className="text-muted-foreground text-xs mb-7">Clique no coração de qualquer loja para salvar</p>
             <Link href="/busca">
-              <Button data-testid="button-explore" className="flex items-center gap-2">
-                Explorar lojas <ArrowRight size={16} />
-              </Button>
+              <span
+                data-testid="button-explore"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground border border-foreground rounded-full px-5 py-2 hover:bg-foreground hover:text-background transition-colors"
+              >
+                Explorar lojas <ArrowRight size={14} />
+              </span>
             </Link>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {favoriteStores.map((store, i) => (
               <StoreCard
                 key={store.id}

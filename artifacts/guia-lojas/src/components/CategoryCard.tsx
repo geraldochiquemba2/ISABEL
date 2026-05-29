@@ -20,29 +20,33 @@ interface CategoryCardProps {
   category: Category;
   index?: number;
   onClick?: () => void;
+  active?: boolean;
 }
 
-export function CategoryCard({ category, index = 0, onClick }: CategoryCardProps) {
+export function CategoryCard({ category, index = 0, onClick, active }: CategoryCardProps) {
   const Icon = ICON_MAP[category.icon] || Home;
 
   return (
     <motion.button
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.25, delay: index * 0.04, ease: "easeOut" }}
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.97 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, delay: index * 0.03 }}
       onClick={onClick}
       data-testid={`button-category-${category.id}`}
-      className="flex flex-col items-center gap-3 p-5 bg-card border border-card-border rounded-2xl hover:border-primary/40 hover:bg-accent/30 transition-all text-center w-full group"
+      className={`flex flex-col items-center gap-2.5 px-4 py-4 transition-all text-center flex-shrink-0 ${
+        active ? "opacity-100" : "opacity-80 hover:opacity-100"
+      }`}
     >
-      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-        <Icon size={22} className="text-primary" />
+      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${
+        active ? "bg-foreground" : "bg-muted hover:bg-foreground/8"
+      }`}>
+        <Icon size={22} className={active ? "text-background" : "text-foreground"} />
       </div>
-      <div>
-        <p className="text-sm font-semibold text-foreground leading-tight">{category.name}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">{category.count} lugares</p>
-      </div>
+      <p className={`text-xs font-medium leading-tight whitespace-nowrap ${
+        active ? "text-foreground" : "text-muted-foreground"
+      }`}>
+        {category.name}
+      </p>
     </motion.button>
   );
 }

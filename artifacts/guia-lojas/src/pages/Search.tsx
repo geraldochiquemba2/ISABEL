@@ -6,13 +6,8 @@ import { STORES, CATEGORIES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { PageTransition } from "@/components/PageTransition";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 function useSearchParams() {
-  const [location] = useLocation();
   const params = new URLSearchParams(
     typeof window !== "undefined" ? window.location.search : ""
   );
@@ -49,7 +44,6 @@ export default function SearchPage() {
         typeFilter === "all" ||
         (typeFilter === "servico" && isService) ||
         (typeFilter === "loja" && !isService);
-
       return matchQuery && matchCategory && matchRating && matchOpen && matchType;
     });
   }, [query, selectedCategory, minRating, typeFilter, openOnly]);
@@ -62,6 +56,13 @@ export default function SearchPage() {
     setLocation(`/busca?${url.toString()}`);
   }
 
+  const activeFilters = [
+    selectedCategory && { key: "categoria", label: CATEGORIES.find((c) => c.id === selectedCategory)?.name || selectedCategory },
+    minRating > 0 && { key: "rating", label: `${minRating}+ estrelas` },
+    typeFilter !== "all" && { key: "type", label: typeFilter === "loja" ? "Lojas" : "Serviços" },
+    openOnly && { key: "open", label: "Aberto agora" },
+  ].filter(Boolean) as { key: string; label: string }[];
+
   function clearFilter(key: string) {
     if (key === "categoria") setSelectedCategory("");
     if (key === "rating") setMinRating(0);
@@ -69,196 +70,167 @@ export default function SearchPage() {
     if (key === "open") setOpenOnly(false);
   }
 
-  const activeFilters = [
-    selectedCategory && { key: "categoria", label: CATEGORIES.find((c) => c.id === selectedCategory)?.name || selectedCategory },
-    minRating > 0 && { key: "rating", label: `Acima de ${minRating} estrelas` },
-    typeFilter !== "all" && { key: "type", label: typeFilter === "loja" ? "Lojas" : "Serviços" },
-    openOnly && { key: "open", label: "Aberto agora" },
-  ].filter(Boolean) as { key: string; label: string }[];
-
   return (
     <PageTransition>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Search bar */}
-        <form onSubmit={handleSearch} className="flex gap-2 mb-6">
-          <div className="flex-1 relative">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
+      {/* Top search bar */}
+      <div className="sticky top-14 z-30 bg-white border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+          <form onSubmit={handleSearch} className="flex-1 flex items-center gap-2 border border-border rounded-full px-4 py-2 focus-within:border-foreground/40 transition-colors">
+            <Search size={15} className="text-muted-foreground flex-shrink-0" />
+            <input
               data-testid="input-search"
               placeholder="Buscar lojas e serviços..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-10 h-11 bg-background"
+              className="flex-1 text-sm outline-none bg-transparent text-foreground placeholder:text-muted-foreground"
             />
-          </div>
-          <Button type="submit" data-testid="button-search-submit" className="h-11 px-5">
-            Buscar
-          </Button>
-          <Button
+            {query && (
+              <button type="button" onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+                <X size={14} />
+              </button>
+            )}
+          </form>
+          <button
             type="button"
-            variant="outline"
-            size="icon"
             data-testid="button-toggle-filters"
-            className="h-11 w-11"
             onClick={() => setFilterOpen(!filterOpen)}
+            className={`flex items-center gap-1.5 text-sm px-4 py-2 border rounded-full transition-colors ${
+              filterOpen || activeFilters.length > 0
+                ? "bg-foreground text-background border-foreground"
+                : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+            }`}
           >
-            <SlidersHorizontal size={16} />
-          </Button>
-        </form>
-
-        <div className="flex gap-6">
-          {/* Sidebar filters — desktop */}
-          <aside className="hidden lg:block w-56 flex-shrink-0 space-y-6">
-            <FilterPanel
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              minRating={minRating}
-              setMinRating={setMinRating}
-              typeFilter={typeFilter}
-              setTypeFilter={setTypeFilter}
-              openOnly={openOnly}
-              setOpenOnly={setOpenOnly}
-            />
-          </aside>
-
-          <main className="flex-1 min-w-0">
-            {/* Mobile filter drawer */}
-            <AnimatePresence>
-              {filterOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="lg:hidden bg-card border border-card-border rounded-xl p-5 mb-5 overflow-hidden"
-                >
-                  <FilterPanel
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    minRating={minRating}
-                    setMinRating={setMinRating}
-                    typeFilter={typeFilter}
-                    setTypeFilter={setTypeFilter}
-                    openOnly={openOnly}
-                    setOpenOnly={setOpenOnly}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Active filter chips */}
+            <SlidersHorizontal size={14} />
+            <span className="hidden sm:inline">Filtros</span>
             {activeFilters.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {activeFilters.map((f) => (
-                  <Badge
-                    key={f.key}
-                    variant="secondary"
-                    className="flex items-center gap-1 cursor-pointer pr-1.5"
-                    onClick={() => clearFilter(f.key)}
-                    data-testid={`badge-filter-${f.key}`}
-                  >
-                    {f.label}
-                    <X size={12} />
-                  </Badge>
-                ))}
-              </div>
+              <span className="w-4 h-4 rounded-full bg-white text-foreground text-[10px] font-bold flex items-center justify-center">
+                {activeFilters.length}
+              </span>
             )}
-
-            {/* Result count */}
-            <p className="text-sm text-muted-foreground mb-4">
-              <span className="font-semibold text-foreground">{filtered.length}</span>{" "}
-              {filtered.length === 1 ? "resultado encontrado" : "resultados encontrados"}
-            </p>
-
-            {filtered.length === 0 ? (
-              <div className="text-center py-16">
-                <Search size={40} className="text-muted mx-auto mb-4" />
-                <p className="text-muted-foreground">Nenhuma loja encontrada com esses filtros.</p>
-                <Button
-                  variant="outline"
-                  className="mt-4"
-                  onClick={() => {
-                    setQuery("");
-                    setSelectedCategory("");
-                    setMinRating(0);
-                    setTypeFilter("all");
-                    setOpenOnly(false);
-                  }}
-                >
-                  Limpar filtros
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filtered.map((store, i) => (
-                  <StoreCard
-                    key={store.id}
-                    store={store}
-                    isFavorite={isFavorite(store.id)}
-                    onToggleFavorite={toggleFavorite}
-                    index={i}
-                  />
-                ))}
-              </div>
-            )}
-          </main>
+          </button>
         </div>
+
+        {/* Active filters row */}
+        {activeFilters.length > 0 && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-3 flex flex-wrap gap-2">
+            {activeFilters.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => clearFilter(f.key)}
+                data-testid={`badge-filter-${f.key}`}
+                className="flex items-center gap-1.5 text-xs px-3 py-1 bg-foreground text-background rounded-full hover:opacity-70 transition-opacity"
+              >
+                {f.label} <X size={11} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex gap-6">
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:block w-52 flex-shrink-0">
+          <FilterPanel
+            selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
+            minRating={minRating} setMinRating={setMinRating}
+            typeFilter={typeFilter} setTypeFilter={setTypeFilter}
+            openOnly={openOnly} setOpenOnly={setOpenOnly}
+          />
+        </aside>
+
+        <main className="flex-1 min-w-0">
+          {/* Mobile filter drawer */}
+          <AnimatePresence>
+            {filterOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="lg:hidden border border-border rounded-2xl p-5 mb-5 overflow-hidden"
+              >
+                <FilterPanel
+                  selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
+                  minRating={minRating} setMinRating={setMinRating}
+                  typeFilter={typeFilter} setTypeFilter={setTypeFilter}
+                  openOnly={openOnly} setOpenOnly={setOpenOnly}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <p className="text-sm text-muted-foreground mb-5">
+            <span className="font-semibold text-foreground">{filtered.length}</span>{" "}
+            {filtered.length === 1 ? "resultado" : "resultados"}
+          </p>
+
+          {filtered.length === 0 ? (
+            <div className="text-center py-20">
+              <Search size={36} className="text-muted mx-auto mb-4 opacity-40" />
+              <p className="text-muted-foreground text-sm">Nenhuma loja encontrada.</p>
+              <button
+                className="mt-4 text-sm font-medium text-foreground underline"
+                onClick={() => {
+                  setQuery(""); setSelectedCategory("");
+                  setMinRating(0); setTypeFilter("all"); setOpenOnly(false);
+                }}
+              >
+                Limpar filtros
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filtered.map((store, i) => (
+                <StoreCard
+                  key={store.id}
+                  store={store}
+                  isFavorite={isFavorite(store.id)}
+                  onToggleFavorite={toggleFavorite}
+                  index={i}
+                />
+              ))}
+            </div>
+          )}
+        </main>
       </div>
     </PageTransition>
   );
 }
 
 interface FilterPanelProps {
-  selectedCategory: string;
-  setSelectedCategory: (v: string) => void;
-  minRating: number;
-  setMinRating: (v: number) => void;
-  typeFilter: "all" | "loja" | "servico";
-  setTypeFilter: (v: "all" | "loja" | "servico") => void;
-  openOnly: boolean;
-  setOpenOnly: (v: boolean) => void;
+  selectedCategory: string; setSelectedCategory: (v: string) => void;
+  minRating: number; setMinRating: (v: number) => void;
+  typeFilter: "all" | "loja" | "servico"; setTypeFilter: (v: "all" | "loja" | "servico") => void;
+  openOnly: boolean; setOpenOnly: (v: boolean) => void;
 }
 
-function FilterPanel({
-  selectedCategory, setSelectedCategory,
-  minRating, setMinRating,
-  typeFilter, setTypeFilter,
-  openOnly, setOpenOnly,
-}: FilterPanelProps) {
+function FilterPanel({ selectedCategory, setSelectedCategory, minRating, setMinRating, typeFilter, setTypeFilter, openOnly, setOpenOnly }: FilterPanelProps) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 text-sm">
       <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Categoria</p>
-        <div className="space-y-1">
-          <button
-            onClick={() => setSelectedCategory("")}
-            className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${!selectedCategory ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
-          >
-            Todas
-          </button>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Categoria</p>
+        <div className="space-y-0.5">
+          <FilterBtn active={!selectedCategory} onClick={() => setSelectedCategory("")}>Todas</FilterBtn>
           {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              data-testid={`filter-category-${cat.id}`}
-              onClick={() => setSelectedCategory(cat.id === selectedCategory ? "" : cat.id)}
-              className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${selectedCategory === cat.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
-            >
+            <FilterBtn key={cat.id} active={selectedCategory === cat.id} onClick={() => setSelectedCategory(cat.id === selectedCategory ? "" : cat.id)} testId={`filter-category-${cat.id}`}>
               {cat.name}
-            </button>
+            </FilterBtn>
           ))}
         </div>
       </div>
 
-      <Separator />
-
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Avaliação mínima</p>
-        <div className="flex flex-wrap gap-1.5">
+      <div className="border-t border-border pt-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Avaliação mínima</p>
+        <div className="flex flex-wrap gap-2">
           {[0, 3, 4, 4.5].map((r) => (
             <button
               key={r}
               data-testid={`filter-rating-${r}`}
               onClick={() => setMinRating(r === minRating ? 0 : r)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${minRating === r && r > 0 ? "bg-primary text-primary-foreground" : "border border-border text-muted-foreground hover:border-primary/50"}`}
+              className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                minRating === r && r > 0
+                  ? "bg-foreground text-background border-foreground"
+                  : "border-border text-muted-foreground hover:border-foreground"
+              }`}
             >
               {r === 0 ? "Qualquer" : `${r}+`}
             </button>
@@ -266,42 +238,49 @@ function FilterPanel({
         </div>
       </div>
 
-      <Separator />
-
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Tipo</p>
-        <div className="space-y-1">
+      <div className="border-t border-border pt-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Tipo</p>
+        <div className="space-y-0.5">
           {[
             { value: "all" as const, label: "Todos" },
             { value: "loja" as const, label: "Lojas" },
             { value: "servico" as const, label: "Serviços" },
           ].map((opt) => (
-            <button
-              key={opt.value}
-              data-testid={`filter-type-${opt.value}`}
-              onClick={() => setTypeFilter(opt.value)}
-              className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${typeFilter === opt.value ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
-            >
+            <FilterBtn key={opt.value} active={typeFilter === opt.value} onClick={() => setTypeFilter(opt.value)} testId={`filter-type-${opt.value}`}>
               {opt.label}
-            </button>
+            </FilterBtn>
           ))}
         </div>
       </div>
 
-      <Separator />
-
-      <div>
+      <div className="border-t border-border pt-5">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             data-testid="filter-open-now"
             type="checkbox"
             checked={openOnly}
             onChange={(e) => setOpenOnly(e.target.checked)}
-            className="accent-primary"
+            className="accent-foreground"
           />
           <span className="text-sm text-foreground">Aberto agora</span>
         </label>
       </div>
     </div>
+  );
+}
+
+function FilterBtn({ active, onClick, children, testId }: {
+  active: boolean; onClick: () => void; children: React.ReactNode; testId?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      data-testid={testId}
+      className={`w-full text-left px-2 py-1.5 rounded-lg text-sm transition-colors ${
+        active ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
