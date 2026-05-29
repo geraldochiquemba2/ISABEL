@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Guia de Lojas e Serviços"
+version = "1.0.0"
+id = "artifacts/guia-lojas"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21039
+
+[services.development]
+run = "pnpm --filter @workspace/guia-lojas run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/guia-lojas", "run", "build" ]
+publicDir = "artifacts/guia-lojas/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21039"
+BASE_PATH = "/"
