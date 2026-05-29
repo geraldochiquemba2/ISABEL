@@ -123,8 +123,57 @@ function CleanField({ label, defaultValue, testId, as: As = "input" }: {
   );
 }
 
+const TIME_OPTIONS = Array.from({ length: 32 }, (_, i) => {
+  const h = Math.floor(i / 2) + 6;
+  const m = i % 2 === 0 ? "00" : "30";
+  return `${String(h).padStart(2, "0")}:${m}`;
+});
+
+interface DaySchedule {
+  label: string;
+  closed: boolean;
+  open: string;
+  close: string;
+}
+
+const DEFAULT_SCHEDULE: DaySchedule[] = [
+  { label: "Segunda a Sexta", closed: false, open: "08:00", close: "18:00" },
+  { label: "Sábado",          closed: false, open: "09:00", close: "14:00" },
+  { label: "Domingo",         closed: true,  open: "08:00", close: "18:00" },
+];
+
+function TimeSelect({
+  value, onChange, disabled, testId,
+}: { value: string; onChange: (v: string) => void; disabled?: boolean; testId?: string }) {
+  return (
+    <div className="relative">
+      <select
+        data-testid={testId}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        className="w-full appearance-none border border-border rounded-xl px-3 py-2 text-xs text-foreground bg-white outline-none focus:border-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed pr-7 cursor-pointer"
+      >
+        {TIME_OPTIONS.map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+      <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+        <ChevronRight size={12} className="rotate-90" />
+      </span>
+    </div>
+  );
+}
+
 function LojaSection() {
   const [saved, setSaved] = useState(false);
+  const [schedule, setSchedule] = useState<DaySchedule[]>(DEFAULT_SCHEDULE);
+
+  function updateDay(i: number, patch: Partial<DaySchedule>) {
+    setSchedule((prev) => prev.map((d, idx) => (idx === i ? { ...d, ...patch } : d)));
+    setSaved(false);
+  }
+
   return (
     <div className="space-y-6 max-w-md">
       <h1 className="text-xl font-semibold text-foreground tracking-tight">Minha Loja</h1>
@@ -132,23 +181,70 @@ function LojaSection() {
       <CleanField label="Descrição" defaultValue={myStore.description} testId="input-store-description" as="textarea" />
       <CleanField label="Telefone" defaultValue={myStore.phone} testId="input-store-phone" />
       <CleanField label="Endereço" defaultValue={myStore.address} testId="input-store-address" />
+
       <div>
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-3">Horários</label>
-        <div className="grid grid-cols-3 gap-3">
-          {[{ day: "Seg-Sex", time: "08:00 - 18:00" }, { day: "Sábado", time: "09:00 - 14:00" }, { day: "Domingo", time: "Fechado" }].map((h) => (
-            <div key={h.day}>
-              <p className="text-xs text-muted-foreground mb-1">{h.day}</p>
-              <input data-testid={`input-hours-${h.day}`} defaultValue={h.time}
-                className="w-full border-b border-border bg-transparent py-1.5 text-xs text-foreground outline-none focus:border-foreground transition-colors" />
+        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-4">
+          Horários de funcionamento
+        </label>
+        <div className="space-y-3">
+          {schedule.map((day, i) => (
+            <div key={day.label} className="border border-border rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-medium text-foreground">{day.label}</p>
+                {/* Fechado toggle */}
+                <button
+                  type="button"
+                  data-testid={`toggle-closed-${i}`}
+                  onClick={() => updateDay(i, { closed: !day.closed })}
+                  className={`relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 cursor-pointer focus:outline-none ${
+                    day.closed ? "bg-foreground" : "bg-border"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${
+                      day.closed ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {day.closed ? (
+                <p className="text-xs text-muted-foreground bg-muted rounded-xl px-3 py-2 text-center">
+                  Fechado
+                </p>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-wide">Abertura</p>
+                    <TimeSelect
+                      testId={`select-open-${i}`}
+                      value={day.open}
+                      onChange={(v) => updateDay(i, { open: v })}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-wide">Fechamento</p>
+                    <TimeSelect
+                      testId={`select-close-${i}`}
+                      value={day.close}
+                      onChange={(v) => updateDay(i, { close: v })}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
+
       {saved ? (
         <p className="text-sm text-emerald-600 font-medium">Salvo com sucesso.</p>
       ) : (
-        <button data-testid="button-save-store" onClick={() => setSaved(true)}
-          className="bg-foreground text-background text-sm font-medium px-6 py-2.5 rounded-full hover:opacity-80 transition-opacity">
+        <button
+          data-testid="button-save-store"
+          onClick={() => setSaved(true)}
+          className="bg-foreground text-background text-sm font-medium px-6 py-2.5 rounded-full hover:opacity-80 transition-opacity"
+        >
           Salvar alterações
         </button>
       )}
