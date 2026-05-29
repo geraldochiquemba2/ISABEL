@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useParams, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -77,13 +77,45 @@ export default function StoreProfile() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Meta bar */}
-        <div className="py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between border-b border-border">
-          <p className="text-sm text-muted-foreground max-w-md">{store.description}</p>
-          <div className="flex-shrink-0">
-            <a href={`https://wa.me/${store.whatsapp}`} target="_blank" rel="noopener noreferrer" data-testid="button-whatsapp">
+        <div className="py-5 border-b border-border space-y-4">
+          <p className="text-sm text-muted-foreground max-w-2xl">{store.description}</p>
+
+          {/* Address */}
+          <div className="flex items-start gap-2">
+            <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-foreground">{store.address}</p>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`https://wa.me/${store.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="button-whatsapp"
+            >
               <button className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">
-                <SiWhatsapp size={16} />
-                Fale no WhatsApp
+                <SiWhatsapp size={15} />
+                WhatsApp
+              </button>
+            </a>
+
+            <a href={`tel:${store.phone.replace(/\D/g, "")}`} data-testid="button-call">
+              <button className="flex items-center gap-2 border border-border text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                <Phone size={14} />
+                Ligar
+              </button>
+            </a>
+
+            <a
+              href={`https://wa.me/${store.whatsapp}?text=Olá, vim pelo GuiaLocal e gostaria de mais informações.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="button-message"
+            >
+              <button className="flex items-center gap-2 border border-border text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                <MessageSquare size={14} />
+                Mensagem
               </button>
             </a>
           </div>
