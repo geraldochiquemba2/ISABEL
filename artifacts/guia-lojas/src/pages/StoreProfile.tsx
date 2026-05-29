@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Clock, Heart, ArrowLeft } from "lucide-react";
@@ -12,6 +13,7 @@ export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
   const store = STORES.find((s) => s.id === id);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const [coverError, setCoverError] = useState(false);
 
   if (!store) {
     return (
@@ -35,43 +37,58 @@ export default function StoreProfile() {
   return (
     <PageTransition>
       {/* Cover */}
-      <div className="relative h-64 sm:h-80 w-full" style={{ backgroundColor: store.coverColor }}>
-        <div className="absolute top-4 left-4 flex items-center gap-2">
-          <Link href="/busca">
-            <button data-testid="button-back" className="w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors">
-              <ArrowLeft size={16} className="text-foreground" />
-            </button>
-          </Link>
-        </div>
+      <div className="relative h-72 sm:h-96 w-full overflow-hidden bg-muted">
+        {!coverError ? (
+          <img
+            src={store.coverImage}
+            alt={store.name}
+            className="w-full h-full object-cover"
+            onError={() => setCoverError(true)}
+          />
+        ) : (
+          <div className="w-full h-full" style={{ backgroundColor: store.coverColor }} />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+
+        <button
+          data-testid="button-back"
+          onClick={() => window.history.back()}
+          className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors backdrop-blur-sm"
+        >
+          <ArrowLeft size={16} className="text-foreground" />
+        </button>
+
         <button
           data-testid="button-favorite-profile"
           onClick={() => toggleFavorite(store.id)}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors backdrop-blur-sm"
         >
           <Heart size={16} className={isFavorite(store.id) ? "fill-rose-500 text-rose-500" : "text-foreground"} />
         </button>
 
-        <div className="absolute bottom-4 left-4">
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+        {/* Title overlay on cover */}
+        <div className="absolute bottom-5 left-5 right-5">
+          <span className={`inline-block text-xs font-medium px-2.5 py-0.5 rounded-full mb-2 ${
             store.isOpen ? "bg-white/90 text-emerald-700" : "bg-white/80 text-muted-foreground"
           }`}>
             {store.isOpen ? "Aberto agora" : "Fechado"}
           </span>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight drop-shadow-sm">{store.name}</h1>
+          <p className="text-white/80 text-sm mt-0.5">{store.category}</p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="py-6 flex flex-col sm:flex-row sm:items-start gap-4 sm:justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1.5">{store.category}</p>
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">{store.name}</h1>
-            <div className="mt-2"><StarRating rating={store.rating} reviewCount={store.reviewCount} size="md" /></div>
-            <p className="text-sm text-muted-foreground mt-3 max-w-md leading-relaxed">{store.description}</p>
+        {/* Meta bar */}
+        <div className="py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between border-b border-border">
+          <div className="flex items-center gap-4 flex-wrap">
+            <StarRating rating={store.rating} reviewCount={store.reviewCount} size="md" />
+            <span className="text-xs text-muted-foreground hidden sm:block">|</span>
+            <p className="text-sm text-muted-foreground max-w-md">{store.description}</p>
           </div>
           <div className="flex-shrink-0">
             <a href={`https://wa.me/${store.whatsapp}`} target="_blank" rel="noopener noreferrer" data-testid="button-whatsapp">
-              <button className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors">
+              <button className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">
                 <SiWhatsapp size={16} />
                 Fale no WhatsApp
               </button>
@@ -79,11 +96,9 @@ export default function StoreProfile() {
           </div>
         </div>
 
-        <div className="border-t border-border" />
-
         {/* Tabs */}
-        <Tabs defaultValue="produtos" className="py-6 pb-12">
-          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-6 border-b border-border w-full justify-start rounded-none h-auto">
+        <Tabs defaultValue="produtos" className="py-6 pb-14">
+          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-border w-full justify-start rounded-none h-auto">
             {[
               { value: "produtos", label: "Produtos / Serviços" },
               { value: "info", label: "Informações" },
@@ -103,32 +118,15 @@ export default function StoreProfile() {
           <TabsContent value="produtos">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {store.products.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.04 }}
-                  className="group cursor-pointer"
-                  data-testid={`card-product-${product.id}`}
-                >
-                  <div className="h-36 rounded-xl w-full mb-3" style={{ backgroundColor: product.imageColor }} />
-                  <p className="text-sm font-medium text-foreground leading-tight">{product.name}</p>
-                  {product.price > 0 ? (
-                    <p className="text-sm text-foreground font-semibold mt-0.5">
-                      R$ {product.price.toFixed(2).replace(".", ",")}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-emerald-600 font-medium mt-0.5">Gratuito</p>
-                  )}
-                </motion.div>
+                <ProductCard key={product.id} product={product} index={i} />
               ))}
             </div>
           </TabsContent>
 
           <TabsContent value="info">
-            <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+            <div className="grid sm:grid-cols-2 gap-6 max-w-2xl">
               <div className="space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Contato</p>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Contato</p>
                 <div className="flex items-start gap-3">
                   <MapPin size={15} className="text-muted-foreground mt-0.5 flex-shrink-0" />
                   <p className="text-sm text-foreground">{store.address}</p>
@@ -140,8 +138,8 @@ export default function StoreProfile() {
               </div>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-1.5">
-                  <Clock size={13} /> Horários
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-1.5">
+                  <Clock size={11} /> Horários
                 </p>
                 <div className="space-y-2">
                   {hours.map((h) => (
@@ -153,9 +151,9 @@ export default function StoreProfile() {
                 </div>
               </div>
 
-              <div className="sm:col-span-2 bg-muted rounded-2xl h-40 flex items-center justify-center">
+              <div className="sm:col-span-2 bg-muted rounded-2xl h-44 flex items-center justify-center">
                 <div className="text-center">
-                  <MapPin size={24} className="text-muted-foreground mx-auto mb-2 opacity-40" />
+                  <MapPin size={22} className="text-muted-foreground mx-auto mb-2 opacity-30" />
                   <p className="text-xs text-muted-foreground">Mapa indisponível no modo demonstração</p>
                 </div>
               </div>
@@ -166,14 +164,14 @@ export default function StoreProfile() {
             {reviews.length === 0 ? (
               <p className="text-sm text-muted-foreground py-10 text-center">Nenhuma avaliação ainda.</p>
             ) : (
-              <div className="space-y-4 max-w-2xl">
+              <div className="space-y-0 max-w-2xl divide-y divide-border">
                 {reviews.map((review, i) => (
                   <motion.div
                     key={review.id}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="py-4 border-b border-border last:border-0"
+                    className="py-5"
                     data-testid={`card-review-${review.id}`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -192,5 +190,39 @@ export default function StoreProfile() {
         </Tabs>
       </div>
     </PageTransition>
+  );
+}
+
+function ProductCard({ product, index }: { product: { id: string; name: string; price: number; imageColor: string; imageUrl?: string }; index: number }) {
+  const [imgError, setImgError] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.04 }}
+      className="group cursor-pointer"
+      data-testid={`card-product-${product.id}`}
+    >
+      <div className="relative overflow-hidden rounded-xl h-40 mb-3 bg-muted">
+        {product.imageUrl && !imgError ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="w-full h-full" style={{ backgroundColor: product.imageColor }} />
+        )}
+      </div>
+      <p className="text-sm font-medium text-foreground leading-tight">{product.name}</p>
+      {product.price > 0 ? (
+        <p className="text-sm font-semibold text-foreground mt-0.5">
+          R$ {product.price.toFixed(2).replace(".", ",")}
+        </p>
+      ) : (
+        <p className="text-xs text-emerald-600 font-medium mt-0.5">Gratuito</p>
+      )}
+    </motion.div>
   );
 }
