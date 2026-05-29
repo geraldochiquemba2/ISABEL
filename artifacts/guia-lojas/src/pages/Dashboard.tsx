@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Store, Package, Star,
   Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus,
+  ChevronDown, ChevronRight, Tag,
 } from "lucide-react";
-import { STORES, REVIEWS } from "@/data/mock";
+import { STORES, REVIEWS, Product } from "@/data/mock";
+import { PRODUCT_CATEGORIES } from "@/data/productCategories";
 import { StarRating } from "@/components/StarRating";
 import { PageTransition } from "@/components/PageTransition";
 
@@ -176,64 +178,272 @@ function LojaSection() {
 }
 
 function ProdutosSection() {
-  const [products, setProducts] = useState(myStore.products);
+  const [products, setProducts] = useState<Product[]>(myStore.products);
   const [adding, setAdding] = useState(false);
+
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState("");
+  const [newCategoryId, setNewCategoryId] = useState("");
+  const [newSubcategoryId, setNewSubcategoryId] = useState("");
+
+  const selectedCategory = PRODUCT_CATEGORIES.find((c) => c.id === newCategoryId);
+
+  function resetForm() {
+    setNewName("");
+    setNewPrice("");
+    setNewCategoryId("");
+    setNewSubcategoryId("");
+    setAdding(false);
+  }
 
   function addProduct() {
     if (!newName.trim()) return;
-    setProducts((prev) => [...prev, { id: `p-${Date.now()}`, name: newName, price: parseFloat(newPrice) || 0, imageColor: "#f0f0f0" }]);
-    setNewName(""); setNewPrice(""); setAdding(false);
+    const cat = PRODUCT_CATEGORIES.find((c) => c.id === newCategoryId);
+    const sub = cat?.subcategories.find((s) => s.id === newSubcategoryId);
+    setProducts((prev) => [
+      ...prev,
+      {
+        id: `p-${Date.now()}`,
+        name: newName,
+        price: parseFloat(newPrice) || 0,
+        imageColor: "#f0f0f0",
+        category: cat?.name,
+        subcategory: sub?.name,
+      },
+    ]);
+    resetForm();
   }
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-foreground tracking-tight">Produtos</h1>
-        <button data-testid="button-add-product" onClick={() => setAdding(true)}
-          className="flex items-center gap-1.5 text-sm font-medium text-foreground border border-foreground rounded-full px-4 py-1.5 hover:bg-foreground hover:text-background transition-colors">
-          <Plus size={13} /> Adicionar
-        </button>
+        <div>
+          <h1 className="text-xl font-semibold text-foreground tracking-tight">Produtos</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">{products.length} itens cadastrados</p>
+        </div>
+        {!adding && (
+          <button
+            data-testid="button-add-product"
+            onClick={() => setAdding(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-foreground border border-foreground rounded-full px-4 py-1.5 hover:bg-foreground hover:text-background transition-colors"
+          >
+            <Plus size={13} /> Adicionar
+          </button>
+        )}
       </div>
 
-      {adding && (
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
-          className="border border-border rounded-2xl p-5 space-y-4">
-          <p className="text-sm font-medium text-foreground">Novo produto</p>
-          <div className="flex gap-3">
-            <input data-testid="input-new-product-name" placeholder="Nome" value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="flex-1 border-b border-border bg-transparent py-2 text-sm outline-none focus:border-foreground text-foreground placeholder:text-muted-foreground" />
-            <input data-testid="input-new-product-price" placeholder="R$" value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)} type="number"
-              className="w-24 border-b border-border bg-transparent py-2 text-sm outline-none focus:border-foreground text-foreground placeholder:text-muted-foreground" />
-          </div>
-          <div className="flex gap-3">
-            <button data-testid="button-confirm-add" onClick={addProduct}
-              className="text-sm font-medium text-background bg-foreground px-4 py-1.5 rounded-full hover:opacity-80 transition-opacity">Confirmar</button>
-            <button onClick={() => setAdding(false)} className="text-sm text-muted-foreground hover:text-foreground">Cancelar</button>
-          </div>
-        </motion.div>
-      )}
+      {/* Add Product Form */}
+      <AnimatePresence>
+        {adding && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="border border-border rounded-2xl p-6 space-y-5 bg-muted/30"
+          >
+            <p className="text-sm font-semibold text-foreground">Novo produto / serviço</p>
 
+            {/* Name + Price */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2">
+                <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">
+                  Nome
+                </label>
+                <input
+                  data-testid="input-new-product-name"
+                  placeholder="Ex: Vestido Floral"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="w-full border-b border-border bg-transparent py-2 text-sm outline-none focus:border-foreground text-foreground placeholder:text-muted-foreground"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">
+                  Preço (R$)
+                </label>
+                <input
+                  data-testid="input-new-product-price"
+                  placeholder="0,00"
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  className="w-full border-b border-border bg-transparent py-2 text-sm outline-none focus:border-foreground text-foreground placeholder:text-muted-foreground"
+                />
+              </div>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-2">
+                Categoria
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {PRODUCT_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    data-testid={`button-cat-${cat.id}`}
+                    type="button"
+                    onClick={() => {
+                      setNewCategoryId(cat.id === newCategoryId ? "" : cat.id);
+                      setNewSubcategoryId("");
+                    }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                      newCategoryId === cat.id
+                        ? "bg-foreground text-background border-foreground"
+                        : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Subcategory — appears after category is selected */}
+            <AnimatePresence>
+              {selectedCategory && (
+                <motion.div
+                  key={selectedCategory.id}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-1">
+                    <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-2 flex items-center gap-1.5">
+                      <ChevronRight size={11} />
+                      Subcategoria em <span className="text-foreground">{selectedCategory.name}</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCategory.subcategories.map((sub) => (
+                        <button
+                          key={sub.id}
+                          data-testid={`button-subcat-${sub.id}`}
+                          type="button"
+                          onClick={() => setNewSubcategoryId(sub.id === newSubcategoryId ? "" : sub.id)}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                            newSubcategoryId === sub.id
+                              ? "bg-foreground text-background border-foreground"
+                              : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Summary preview */}
+            {(newCategoryId || newSubcategoryId) && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-2 bg-muted px-3 py-2 rounded-xl"
+              >
+                <Tag size={13} className="text-muted-foreground flex-shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                  Classificado como:{" "}
+                  <span className="font-semibold text-foreground">
+                    {selectedCategory?.name}
+                    {newSubcategoryId && ` › ${selectedCategory?.subcategories.find((s) => s.id === newSubcategoryId)?.name}`}
+                  </span>
+                </p>
+              </motion.div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center gap-3 pt-1">
+              <button
+                data-testid="button-confirm-add"
+                onClick={addProduct}
+                disabled={!newName.trim()}
+                className="text-sm font-medium text-background bg-foreground px-5 py-2 rounded-full hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Adicionar produto
+              </button>
+              <button
+                onClick={resetForm}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Product list */}
       <div className="divide-y divide-border">
         {products.map((p) => (
-          <div key={p.id} className="flex items-center gap-4 py-3.5">
-            <div className="w-10 h-10 rounded-xl flex-shrink-0" style={{ backgroundColor: p.imageColor }} />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground">{p.name}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {p.price > 0 ? `R$ ${p.price.toFixed(2).replace(".", ",")}` : "Gratuito"}
-              </p>
-            </div>
-            <div className="flex items-center gap-1">
-              <button data-testid={`button-edit-product-${p.id}`} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"><Edit2 size={13} /></button>
-              <button data-testid={`button-delete-product-${p.id}`} onClick={() => setProducts((prev) => prev.filter((x) => x.id !== p.id))}
-                className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={13} /></button>
-            </div>
-          </div>
+          <ProductRow key={p.id} product={p} onDelete={(id) => setProducts((prev) => prev.filter((x) => x.id !== id))} />
         ))}
+        {products.length === 0 && (
+          <p className="text-sm text-muted-foreground py-8 text-center">Nenhum produto cadastrado.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProductRow({ product, onDelete }: { product: Product; onDelete: (id: string) => void }) {
+  const [editing, setEditing] = useState(false);
+
+  return (
+    <div className="flex items-center gap-4 py-3.5" data-testid={`row-product-${product.id}`}>
+      {product.imageUrl ? (
+        <img src={product.imageUrl} alt={product.name}
+          className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+      ) : (
+        <div className="w-10 h-10 rounded-xl flex-shrink-0" style={{ backgroundColor: product.imageColor }} />
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-foreground">{product.name}</p>
+        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+          <p className="text-xs text-muted-foreground">
+            {product.price > 0 ? `R$ ${product.price.toFixed(2).replace(".", ",")}` : "Gratuito"}
+          </p>
+          {/* Category + subcategory badges */}
+          {product.category && (
+            <>
+              <span className="text-muted-foreground text-xs">·</span>
+              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
+                <Tag size={9} />
+                {product.category}
+              </span>
+            </>
+          )}
+          {product.subcategory && (
+            <>
+              <ChevronRight size={10} className="text-muted-foreground" />
+              <span className="inline-flex items-center text-[11px] px-2 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
+                {product.subcategory}
+              </span>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        <button
+          data-testid={`button-edit-product-${product.id}`}
+          onClick={() => setEditing(!editing)}
+          className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Edit2 size={13} />
+        </button>
+        <button
+          data-testid={`button-delete-product-${product.id}`}
+          onClick={() => onDelete(product.id)}
+          className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+        >
+          <Trash2 size={13} />
+        </button>
       </div>
     </div>
   );

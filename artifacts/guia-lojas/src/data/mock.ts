@@ -4,6 +4,8 @@ export interface Product {
   price: number;
   imageColor: string;
   imageUrl?: string;
+  category?: string;
+  subcategory?: string;
 }
 
 export interface Store {
