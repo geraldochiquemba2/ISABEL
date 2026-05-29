@@ -20,7 +20,6 @@ export default function SearchPage() {
 
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("categoria") || "");
-  const [minRating, setMinRating] = useState(0);
   const [typeFilter, setTypeFilter] = useState<"all" | "loja" | "servico">("all");
   const [openOnly, setOpenOnly] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -37,16 +36,15 @@ export default function SearchPage() {
       const matchCategory =
         !selectedCategory ||
         store.category.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").includes(selectedCategory.replace(/[^a-z0-9-]/g, ""));
-      const matchRating = store.rating >= minRating;
       const matchOpen = !openOnly || store.isOpen;
       const isService = ["Serviços Residenciais", "Automotivo", "Saúde & Beleza", "Educação"].includes(store.category);
       const matchType =
         typeFilter === "all" ||
         (typeFilter === "servico" && isService) ||
         (typeFilter === "loja" && !isService);
-      return matchQuery && matchCategory && matchRating && matchOpen && matchType;
+      return matchQuery && matchCategory && matchOpen && matchType;
     });
-  }, [query, selectedCategory, minRating, typeFilter, openOnly]);
+  }, [query, selectedCategory, typeFilter, openOnly]);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -58,14 +56,12 @@ export default function SearchPage() {
 
   const activeFilters = [
     selectedCategory && { key: "categoria", label: CATEGORIES.find((c) => c.id === selectedCategory)?.name || selectedCategory },
-    minRating > 0 && { key: "rating", label: `${minRating}+ estrelas` },
     typeFilter !== "all" && { key: "type", label: typeFilter === "loja" ? "Lojas" : "Serviços" },
     openOnly && { key: "open", label: "Aberto agora" },
   ].filter(Boolean) as { key: string; label: string }[];
 
   function clearFilter(key: string) {
     if (key === "categoria") setSelectedCategory("");
-    if (key === "rating") setMinRating(0);
     if (key === "type") setTypeFilter("all");
     if (key === "open") setOpenOnly(false);
   }
@@ -132,7 +128,6 @@ export default function SearchPage() {
         <aside className="hidden lg:block w-52 flex-shrink-0">
           <FilterPanel
             selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
-            minRating={minRating} setMinRating={setMinRating}
             typeFilter={typeFilter} setTypeFilter={setTypeFilter}
             openOnly={openOnly} setOpenOnly={setOpenOnly}
           />
@@ -150,7 +145,6 @@ export default function SearchPage() {
               >
                 <FilterPanel
                   selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
-                  minRating={minRating} setMinRating={setMinRating}
                   typeFilter={typeFilter} setTypeFilter={setTypeFilter}
                   openOnly={openOnly} setOpenOnly={setOpenOnly}
                 />
@@ -171,7 +165,7 @@ export default function SearchPage() {
                 className="mt-4 text-sm font-medium text-foreground underline"
                 onClick={() => {
                   setQuery(""); setSelectedCategory("");
-                  setMinRating(0); setTypeFilter("all"); setOpenOnly(false);
+                  setTypeFilter("all"); setOpenOnly(false);
                 }}
               >
                 Limpar filtros
@@ -198,12 +192,11 @@ export default function SearchPage() {
 
 interface FilterPanelProps {
   selectedCategory: string; setSelectedCategory: (v: string) => void;
-  minRating: number; setMinRating: (v: number) => void;
   typeFilter: "all" | "loja" | "servico"; setTypeFilter: (v: "all" | "loja" | "servico") => void;
   openOnly: boolean; setOpenOnly: (v: boolean) => void;
 }
 
-function FilterPanel({ selectedCategory, setSelectedCategory, minRating, setMinRating, typeFilter, setTypeFilter, openOnly, setOpenOnly }: FilterPanelProps) {
+function FilterPanel({ selectedCategory, setSelectedCategory, typeFilter, setTypeFilter, openOnly, setOpenOnly }: FilterPanelProps) {
   return (
     <div className="space-y-6 text-sm">
       <div>
@@ -214,26 +207,6 @@ function FilterPanel({ selectedCategory, setSelectedCategory, minRating, setMinR
             <FilterBtn key={cat.id} active={selectedCategory === cat.id} onClick={() => setSelectedCategory(cat.id === selectedCategory ? "" : cat.id)} testId={`filter-category-${cat.id}`}>
               {cat.name}
             </FilterBtn>
-          ))}
-        </div>
-      </div>
-
-      <div className="border-t border-border pt-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Avaliação mínima</p>
-        <div className="flex flex-wrap gap-2">
-          {[0, 3, 4, 4.5].map((r) => (
-            <button
-              key={r}
-              data-testid={`filter-rating-${r}`}
-              onClick={() => setMinRating(r === minRating ? 0 : r)}
-              className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                minRating === r && r > 0
-                  ? "bg-foreground text-background border-foreground"
-                  : "border-border text-muted-foreground hover:border-foreground"
-              }`}
-            >
-              {r === 0 ? "Qualquer" : `${r}+`}
-            </button>
           ))}
         </div>
       </div>

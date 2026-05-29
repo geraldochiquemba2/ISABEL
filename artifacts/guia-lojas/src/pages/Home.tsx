@@ -190,7 +190,7 @@ export default function Home() {
 
         {/* Recent */}
         <section className="py-12">
-          <SectionHeader title="Avaliados recentemente" href="/busca" />
+          <SectionHeader title="Adicionados recentemente" href="/busca" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
             {recent.map((store, i) => (
               <StoreCard

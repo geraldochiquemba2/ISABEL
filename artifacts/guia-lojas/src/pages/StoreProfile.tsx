@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "wouter";
-import { motion } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
-import { STORES, REVIEWS } from "@/data/mock";
+import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
-import { StarRating } from "@/components/StarRating";
 import { PageTransition } from "@/components/PageTransition";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -25,8 +24,6 @@ export default function StoreProfile() {
       </div>
     );
   }
-
-  const reviews = REVIEWS.filter((r) => r.storeId === store.id);
 
   const hours = [
     { day: "Segunda — Sexta", time: "08:00 – 18:00" },
@@ -81,11 +78,7 @@ export default function StoreProfile() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Meta bar */}
         <div className="py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between border-b border-border">
-          <div className="flex items-center gap-4 flex-wrap">
-            <StarRating rating={store.rating} reviewCount={store.reviewCount} size="md" />
-            <span className="text-xs text-muted-foreground hidden sm:block">|</span>
-            <p className="text-sm text-muted-foreground max-w-md">{store.description}</p>
-          </div>
+          <p className="text-sm text-muted-foreground max-w-md">{store.description}</p>
           <div className="flex-shrink-0">
             <a href={`https://wa.me/${store.whatsapp}`} target="_blank" rel="noopener noreferrer" data-testid="button-whatsapp">
               <button className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">
@@ -102,7 +95,6 @@ export default function StoreProfile() {
             {[
               { value: "produtos", label: "Produtos / Serviços" },
               { value: "info", label: "Informações" },
-              { value: "avaliacoes", label: `Avaliações (${reviews.length})` },
             ].map((tab) => (
               <TabsTrigger
                 key={tab.value}
@@ -116,11 +108,7 @@ export default function StoreProfile() {
           </TabsList>
 
           <TabsContent value="produtos">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {store.products.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} />
-              ))}
-            </div>
+            <ProductsTab products={store.products} />
           </TabsContent>
 
           <TabsContent value="info">
@@ -159,41 +147,129 @@ export default function StoreProfile() {
               </div>
             </div>
           </TabsContent>
-
-          <TabsContent value="avaliacoes">
-            {reviews.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-10 text-center">Nenhuma avaliação ainda.</p>
-            ) : (
-              <div className="space-y-0 max-w-2xl divide-y divide-border">
-                {reviews.map((review, i) => (
-                  <motion.div
-                    key={review.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="py-5"
-                    data-testid={`card-review-${review.id}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{review.author}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{review.date}</p>
-                      </div>
-                      <StarRating rating={review.rating} />
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-2.5 leading-relaxed">{review.text}</p>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
         </Tabs>
       </div>
     </PageTransition>
   );
 }
 
-function ProductCard({ product, index }: { product: { id: string; name: string; price: number; imageColor: string; imageUrl?: string }; index: number }) {
+function ProductsTab({ products }: { products: { id: string; name: string; price: number; imageColor: string; imageUrl?: string; category?: string; subcategory?: string }[] }) {
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
+
+  const categories = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    products.forEach((p) => {
+      if (p.category) {
+        if (!map.has(p.category)) map.set(p.category, new Set());
+        if (p.subcategory) map.get(p.category)!.add(p.subcategory);
+      }
+    });
+    return map;
+  }, [products]);
+
+  const subcategories = activeCategory ? Array.from(categories.get(activeCategory) || []) : [];
+
+  const filtered = useMemo(() => {
+    return products.filter((p) => {
+      if (activeCategory && p.category !== activeCategory) return false;
+      if (activeSubcategory && p.subcategory !== activeSubcategory) return false;
+      return true;
+    });
+  }, [products, activeCategory, activeSubcategory]);
+
+  const hasCategoryData = categories.size > 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Category filter bar */}
+      {hasCategoryData && (
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                !activeCategory
+                  ? "bg-foreground text-background border-foreground"
+                  : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+              }`}
+            >
+              Todos
+            </button>
+            {Array.from(categories.keys()).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  if (activeCategory === cat) {
+                    setActiveCategory(null);
+                    setActiveSubcategory(null);
+                  } else {
+                    setActiveCategory(cat);
+                    setActiveSubcategory(null);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                  activeCategory === cat
+                    ? "bg-foreground text-background border-foreground"
+                    : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <Tag size={10} />
+                  {cat}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Subcategory row */}
+          <AnimatePresence>
+            {activeCategory && subcategories.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.18 }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-wrap gap-2 pl-1">
+                  <span className="flex items-center text-xs text-muted-foreground gap-1 mr-1">
+                    <ChevronRight size={11} /> em {activeCategory}:
+                  </span>
+                  {subcategories.map((sub) => (
+                    <button
+                      key={sub}
+                      onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                        activeSubcategory === sub
+                          ? "bg-foreground text-background border-foreground"
+                          : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {sub}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* Product grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {filtered.map((product, i) => (
+          <ProductCard key={product.id} product={product} index={i} />
+        ))}
+        {filtered.length === 0 && (
+          <p className="col-span-full text-sm text-muted-foreground py-8 text-center">Nenhum item nesta categoria.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product, index }: { product: { id: string; name: string; price: number; imageColor: string; imageUrl?: string; category?: string; subcategory?: string }; index: number }) {
   const [imgError, setImgError] = useState(false);
   return (
     <motion.div
@@ -222,6 +298,22 @@ function ProductCard({ product, index }: { product: { id: string; name: string; 
         </p>
       ) : (
         <p className="text-xs text-emerald-600 font-medium mt-0.5">Gratuito</p>
+      )}
+      {/* Category + subcategory badges */}
+      {(product.category || product.subcategory) && (
+        <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+          {product.category && (
+            <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
+              <Tag size={8} />
+              {product.category}
+            </span>
+          )}
+          {product.subcategory && (
+            <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
+              {product.subcategory}
+            </span>
+          )}
+        </div>
       )}
     </motion.div>
   );

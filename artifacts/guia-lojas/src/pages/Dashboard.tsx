@@ -1,25 +1,22 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, Store, Package, Star,
+  LayoutDashboard, Store, Package,
   Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus,
-  ChevronDown, ChevronRight, Tag,
+  ChevronRight, Tag,
 } from "lucide-react";
-import { STORES, REVIEWS, Product } from "@/data/mock";
+import { STORES, Product } from "@/data/mock";
 import { PRODUCT_CATEGORIES } from "@/data/productCategories";
-import { StarRating } from "@/components/StarRating";
 import { PageTransition } from "@/components/PageTransition";
 
 const myStore = STORES[0];
-const myReviews = REVIEWS.filter((r) => r.storeId === myStore.id);
 
-type Section = "overview" | "loja" | "produtos" | "avaliacoes";
+type Section = "overview" | "loja" | "produtos";
 
 const navItems: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
   { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
   { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
-  { id: "avaliacoes", label: "Avaliações", icon: <Star size={15} /> },
 ];
 
 export default function Dashboard() {
@@ -75,7 +72,6 @@ export default function Dashboard() {
             {section === "overview" && <OverviewSection />}
             {section === "loja" && <LojaSection />}
             {section === "produtos" && <ProdutosSection />}
-            {section === "avaliacoes" && <AvaliacoesSection reviews={myReviews} />}
           </motion.div>
         </main>
       </div>
@@ -104,24 +100,7 @@ function OverviewSection() {
         <Stat icon={<Eye size={14} />} label="Visualizações" value="1.240" sub="este mês" />
         <Stat icon={<MessageCircle size={14} />} label="Contatos WhatsApp" value="87" sub="este mês" />
         <Stat icon={<Package size={14} />} label="Produtos" value={myStore.products.length} />
-        <Stat icon={<TrendingUp size={14} />} label="Avaliação" value={myStore.rating.toFixed(1)} sub={`${myStore.reviewCount} avaliações`} />
-      </div>
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Avaliações recentes</p>
-        <div className="space-y-3">
-          {REVIEWS.slice(0, 3).map((r) => (
-            <div key={r.id} className="flex items-start gap-3 py-3 border-b border-border last:border-0">
-              <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center flex-shrink-0 text-xs font-semibold text-foreground">
-                {r.author.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2"><span className="text-sm font-medium text-foreground">{r.author}</span><StarRating rating={r.rating} /></div>
-                <p className="text-xs text-muted-foreground mt-0.5 truncate">{r.text}</p>
-              </div>
-              <span className="text-xs text-muted-foreground flex-shrink-0">{r.date}</span>
-            </div>
-          ))}
-        </div>
+        <Stat icon={<TrendingUp size={14} />} label="Cliques no WhatsApp" value="312" sub="este mês" />
       </div>
     </div>
   );
@@ -449,33 +428,3 @@ function ProductRow({ product, onDelete }: { product: Product; onDelete: (id: st
   );
 }
 
-function AvaliacoesSection({ reviews }: { reviews: typeof REVIEWS }) {
-  return (
-    <div className="space-y-5 max-w-2xl">
-      <h1 className="text-xl font-semibold text-foreground tracking-tight">Avaliações</h1>
-      {reviews.length === 0 ? (
-        <p className="text-sm text-muted-foreground py-10">Nenhuma avaliação ainda.</p>
-      ) : (
-        <div className="divide-y divide-border">
-          {reviews.map((review) => (
-            <div key={review.id} data-testid={`card-dashboard-review-${review.id}`} className="py-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-foreground flex-shrink-0">
-                    {review.author.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{review.author}</p>
-                    <p className="text-xs text-muted-foreground">{review.date}</p>
-                  </div>
-                </div>
-                <StarRating rating={review.rating} />
-              </div>
-              <p className="text-sm text-muted-foreground mt-3 ml-11 leading-relaxed">{review.text}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { Link } from "wouter";
 import { Store } from "@/data/mock";
-import { StarRating } from "./StarRating";
 
 interface StoreCardProps {
   store: Store;
@@ -74,9 +73,6 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
         <div className="pt-3">
           <p className="text-sm font-medium text-foreground leading-tight">{store.name}</p>
           <p className="text-xs text-muted-foreground mt-0.5">{store.category}</p>
-          <div className="mt-1.5">
-            <StarRating rating={store.rating} reviewCount={store.reviewCount} />
-          </div>
         </div>
       </Link>
     </motion.div>
