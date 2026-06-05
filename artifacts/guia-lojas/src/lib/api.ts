@@ -50,14 +50,35 @@ export async function fetchStores(filters?: {
 
   const res = await fetch(`/api/stores?${params.toString()}`);
   if (!res.ok) throw new Error("Erro ao buscar lojas");
-  return res.json();
+  const stores: Store[] = await res.json();
+  return stores.map(applyDynamicOpenStatus);
 }
 
 // GET /api/stores/:id — Detalhes de uma loja
 export async function fetchStoreById(id: string): Promise<Store> {
   const res = await fetch(`/api/stores/${id}`);
   if (!res.ok) throw new Error("Erro ao buscar loja");
-  return res.json();
+  const store: Store = await res.json();
+  return applyDynamicOpenStatus(store);
+}
+
+// Calcula dinamicamente se a loja está aberta baseada no horário padrão e fuso de Angola
+function applyDynamicOpenStatus(store: Store): Store {
+  if (store.isOpen === false) return store; // Respeita fecho forçado pelo dono
+
+  const agora = new Date();
+  const angolaTime = new Date(agora.toLocaleString("en-US", { timeZone: "Africa/Luanda" }));
+  const diaSemana = angolaTime.getDay(); // 0 = Domingo
+  const horaAtual = angolaTime.getHours() * 100 + angolaTime.getMinutes();
+
+  let isOpen = false;
+  if (diaSemana >= 1 && diaSemana <= 5) {
+    isOpen = horaAtual >= 800 && horaAtual < 1800;
+  } else if (diaSemana === 6) {
+    isOpen = horaAtual >= 900 && horaAtual < 1400;
+  }
+
+  return { ...store, isOpen };
 }
 
 // POST /api/stores — Criar ou atualizar uma loja
