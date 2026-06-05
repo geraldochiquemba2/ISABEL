@@ -27,11 +27,34 @@ const HERO_IMAGES = [
   },
 ];
 
+import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+
+async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
+  const res = await fetch("/api/stats");
+  if (!res.ok) throw new Error("Erro ao buscar stats");
+  return res.json();
+}
+
 export default function Home() {
   const [query, setQuery] = useState("");
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [activeHero, setActiveHero] = useState(0);
+
+  const { data: stores = [], isLoading } = useQuery({
+    queryKey: ["stores"],
+    queryFn: () => fetchStores(),
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["stats"],
+    queryFn: fetchStats,
+    staleTime: 60_000,
+  });
+
+  const totalStores = stats?.totalStores ?? stores.length;
+  const totalCategories = stats?.totalCategories ?? 8;
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -42,16 +65,16 @@ export default function Home() {
     }
   }
 
-  const featured = STORES.slice(0, 4);
-  const trending = STORES.slice(4, 8);
-  const recent = STORES.slice(8, 12);
+  const featured = stores.slice(0, 4);
+  const trending = stores.slice(4, 8);
+  const recent = stores.slice(8, 12);
 
   return (
     <PageTransition>
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-0 min-h-[520px] items-center">
+          <div className="grid grid-cols-[1.2fr_1fr] lg:grid-cols-2 gap-0 min-h-[380px] lg:min-h-[520px] items-center relative">
 
             {/* Left — text + search */}
             <div className="py-14 lg:py-20 pr-0 lg:pr-12 relative z-10">
@@ -65,11 +88,11 @@ export default function Home() {
                   Lojas e serviços perto de você
                 </div>
 
-                <h1 className="text-5xl sm:text-6xl font-light text-foreground leading-[1.1] tracking-tight mb-2">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] tracking-tight mb-1 sm:mb-2">
                   Descubra o
                 </h1>
-                <h1 className="text-5xl sm:text-6xl font-semibold text-foreground leading-[1.1] tracking-tight mb-8">
-                  melhor do<br />seu bairro
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-foreground leading-[1.1] tracking-tight mb-6 sm:mb-8">
+                  melhor da<br />sua zona
                 </h1>
 
                 <form
@@ -110,7 +133,7 @@ export default function Home() {
             </div>
 
             {/* Right — image collage */}
-            <div className="hidden lg:flex items-center justify-center relative h-[520px]">
+            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[520px] mt-0">
               {HERO_IMAGES.map((img, i) => (
                 <motion.div
                   key={i}
@@ -142,17 +165,16 @@ export default function Home() {
                 </motion.div>
               ))}
 
-              {/* Floating stat bubbles */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.4 }}
-                className="absolute bottom-16 left-4 z-40 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3"
+                className="absolute bottom-4 lg:bottom-16 left-0 lg:left-4 z-40 bg-white rounded-xl lg:rounded-2xl shadow-lg px-2 lg:px-4 py-2 lg:py-3 flex items-center gap-2 lg:gap-3 scale-75 lg:scale-100 origin-bottom-left"
               >
-                <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-bold">+</div>
+                <div className="w-6 h-6 lg:w-9 lg:h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-[10px] lg:text-xs font-bold">+</div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">1.100 negócios</p>
-                  <p className="text-xs text-muted-foreground">cadastrados</p>
+                  <p className="text-xs lg:text-sm font-semibold text-foreground">{totalStores.toLocaleString("pt-AO")} negócios</p>
+                  <p className="text-[10px] lg:text-xs text-muted-foreground">cadastrados</p>
                 </div>
               </motion.div>
 
@@ -160,22 +182,13 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.75, duration: 0.4 }}
-                className="absolute top-12 right-2 z-40 bg-white rounded-2xl shadow-lg px-4 py-3"
+                className="absolute top-4 lg:top-12 right-0 lg:right-2 z-40 bg-white rounded-xl lg:rounded-2xl shadow-lg px-2 lg:px-4 py-2 lg:py-3 scale-75 lg:scale-100 origin-top-right"
               >
-                <p className="text-sm font-semibold text-foreground">8 categorias</p>
-                <p className="text-xs text-muted-foreground">para explorar</p>
+                <p className="text-xs lg:text-sm font-semibold text-foreground">{totalCategories} categorias</p>
+                <p className="text-[10px] lg:text-xs text-muted-foreground">para explorar</p>
               </motion.div>
             </div>
           </div>
-        </div>
-
-        {/* Mobile hero — background tint */}
-        <div className="lg:hidden absolute inset-0 -z-10 opacity-5">
-          <img
-            src={HERO_IMAGES[0].src}
-            alt=""
-            className="w-full h-full object-cover"
-          />
         </div>
       </section>
 
@@ -184,14 +197,17 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">Categorias</p>
           <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
-            {CATEGORIES.map((cat, i) => (
-              <CategoryCard
-                key={cat.id}
-                category={cat}
-                index={i}
-                onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
-              />
-            ))}
+            {CATEGORIES.map((cat, i) => {
+              const count = stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length;
+              return (
+                <CategoryCard
+                  key={cat.id}
+                  category={{ ...cat, count }}
+                  index={i}
+                  onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -262,7 +278,7 @@ export default function Home() {
                 <p className="text-white/60 text-xs font-medium uppercase tracking-widest">Comunidade</p>
                 <div>
                   <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">
-                    +1.100 negócios<br />cadastrados
+                    +{totalStores.toLocaleString("pt-AO")} negócios<br />cadastrados
                   </h3>
                   <Link href="/busca">
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white hover:opacity-70 transition-opacity">

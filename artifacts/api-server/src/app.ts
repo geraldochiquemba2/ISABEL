@@ -29,6 +29,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Return JSON for malformed JSON body errors (avoid HTML error pages)
+// so the frontend can parse the error and show a useful message.
+app.use((err: any, req: any, res: any, next: any) => {
+  if (err && err instanceof SyntaxError && 'body' in err) {
+    return res.status(400).json({ error: 'Invalid JSON body' });
+  }
+  return next(err);
+});
+
 app.use("/api", router);
 
 export default app;

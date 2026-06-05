@@ -6,7 +6,6 @@ import { Navbar } from "@/components/Navbar";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
-import Favorites from "@/pages/Favorites";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/not-found";
@@ -21,7 +20,6 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/busca" component={SearchPage} />
         <Route path="/loja/:id" component={StoreProfile} />
-        <Route path="/favoritos" component={Favorites} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/login" component={Login} />
         <Route component={NotFound} />

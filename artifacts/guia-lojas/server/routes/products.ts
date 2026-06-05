@@ -1,0 +1,84 @@
+import { Router } from "express";
+import { pool } from "../db";
+
+export const productsRouter = Router();
+
+// GET /api/products?store_id=xxx — listar produtos de uma loja
+productsRouter.get("/", async (req, res) => {
+  try {
+    const { store_id } = req.query;
+    let query = "SELECT * FROM products";
+    const params: unknown[] = [];
+    if (store_id) {
+      params.push(store_id);
+      query += " WHERE store_id=$1";
+    }
+    query += " ORDER BY created_at DESC";
+    const result = await pool.query(query, params);
+    res.json(result.rows.map((p) => ({
+      id: p.id,
+      storeId: p.store_id,
+      name: p.name,
+      price: parseFloat(p.price),
+      currency: p.currency,
+      imageUrl: p.image_url,
+      imageColor: p.image_color,
+      imageUrls: p.image_urls || [],
+      category: p.category,
+      subcategory: p.subcategory,
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar produtos" });
+  }
+});
+
+// POST /api/products — criar produto
+productsRouter.post("/", async (req, res) => {
+  try {
+    const { id, storeId, name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory } = req.body;
+    const result = await pool.query(
+      `INSERT INTO products (id, store_id, name, price, currency, image_url, image_urls, image_color, category, subcategory)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+      [id, storeId, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null]
+    );
+    const p = result.rows[0];
+    res.json({
+      id: p.id, storeId: p.store_id, name: p.name,
+      price: parseFloat(p.price), currency: p.currency, imageUrl: p.image_url, imageUrls: p.image_urls || [],
+      imageColor: p.image_color, category: p.category, subcategory: p.subcategory,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao criar produto" });
+  }
+});
+
+// PUT /api/products/:id — atualizar produto
+productsRouter.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory } = req.body;
+    await pool.query(
+      `UPDATE products SET name=$2, price=$3, currency=$4, image_url=$5, image_urls=$6, image_color=$7, category=$8, subcategory=$9
+       WHERE id=$1`,
+      [id, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao atualizar produto" });
+  }
+});
+
+// DELETE /api/products/:id — eliminar produto
+productsRouter.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("DELETE FROM products WHERE id=$1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao eliminar produto" });
+  }
+});

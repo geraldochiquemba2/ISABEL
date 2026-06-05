@@ -29,7 +29,7 @@ export function CategoryCard({ category, index = 0, onClick, active }: CategoryC
       transition={{ duration: 0.25, delay: index * 0.04 }}
       onClick={onClick}
       data-testid={`button-category-${category.id}`}
-      className="flex-shrink-0 group relative overflow-hidden rounded-2xl w-28 h-28 cursor-pointer focus:outline-none"
+      className="flex-shrink-0 group relative overflow-hidden rounded-2xl w-28 h-28 cursor-pointer focus:outline-none border border-black"
     >
       {/* Background image */}
       {imageUrl && (

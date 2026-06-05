@@ -1,0 +1,32 @@
+services:
+  # 1. API Server (Backend)
+  - type: web
+    name: isabel-loja-api
+    env: node
+    rootDir: artifacts/guia-lojas
+    buildCommand: pnpm install
+    startCommand: pnpm exec tsx server/index.ts
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false # Configura o teu URL de base de dados no painel do Render
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: RENDER_EXTERNAL_URL
+        sync: false # O Render preenche isto automaticamente. O nosso script usa para o self-ping.
+
+  # 2. Frontend (Static Site)
+  - type: web # Ou static, dependendo de como preferes, mas web permite rotas SPA facilmente se necessário. Static é mais rápido se o Render suportar nativamente (como Static Site).
+    name: isabel-loja-frontend
+    env: static
+    rootDir: artifacts/guia-lojas
+    buildCommand: pnpm install && pnpm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: VITE_API_URL
+        value: https://isabel-loja-api.onrender.com # Ajustar se necessário após o deploy da API
