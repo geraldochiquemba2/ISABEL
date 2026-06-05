@@ -216,7 +216,7 @@ export default function Dashboard() {
             </p>
             <div className="flex flex-col gap-2">
               <a
-                href={`https://wa.me/244999999999?text=${encodeURIComponent("Olá, meu pedido de loja no GuiaLocal foi recusado e gostaria de reavaliar.")}`}
+                href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá, meu pedido de loja no GuiaLocal foi recusado e gostaria de reavaliar.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border border-black/10 shadow-sm"
@@ -268,7 +268,7 @@ export default function Dashboard() {
             </p>
             <div className="flex flex-col gap-2">
               <a
-                href={`https://wa.me/244999999999?text=${encodeURIComponent("Olá, a minha conta no GuiaLocal foi suspensa e gostaria de esclarecimentos.")}`}
+                href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá, a minha conta no GuiaLocal foi suspensa e gostaria de esclarecimentos.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border border-black/10 shadow-sm"
