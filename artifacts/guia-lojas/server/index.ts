@@ -99,7 +99,8 @@ async function start() {
   app.use(express.static(distPath));
 
   // Qualquer outra rota que não seja /api/... vai para o index.html (SPA)
-  app.get("*", (req, res) => {
+  // No Express 5, o wildcard '*' não é suportado da mesma forma, usamos Regex
+  app.get(/.*/, (req, res) => {
     if (!req.path.startsWith("/api/")) {
       res.sendFile(path.resolve(distPath, "index.html"));
     } else {
