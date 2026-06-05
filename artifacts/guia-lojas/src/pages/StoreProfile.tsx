@@ -275,6 +275,13 @@ export default function StoreProfile() {
   );
 }
 
+// ─── Formatar preço com separador de milhares por espaço ───────────────────
+function formatPrice(price: number): string {
+  const [int, dec] = price.toFixed(2).split(".");
+  const formatted = int.replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+  return `${formatted},${dec}`;
+}
+
 function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeName: string; storeWhatsapp: string }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
@@ -530,14 +537,14 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
             <div className="text-center text-white mt-5 px-4 max-w-md flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
               <h2 className="text-base font-semibold tracking-tight">{filtered[lightboxIndex].name}</h2>
               <p className="text-sm font-semibold text-emerald-400 mt-1">
-                {filtered[lightboxIndex].price > 0 ? `${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${filtered[lightboxIndex].price.toFixed(2).replace(".", ",")}` : "Gratuito"}
+                {filtered[lightboxIndex].price > 0 ? `${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Gratuito"}
               </p>
               
               <a
                 href={`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(
                   `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
                   `Produto: ${filtered[lightboxIndex].name}\n` +
-                  `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${filtered[lightboxIndex].price.toFixed(2).replace(".", ",")}`
+                  `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -560,7 +567,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
   const whatsappMessage = encodeURIComponent(
     `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
     `Produto: ${product.name}\n` +
-    `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${product.price.toFixed(2).replace(".", ",")}`
+    `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(product.price)}`
   );
 
   const whatsappUrl = `https://wa.me/${storeWhatsapp}?text=${whatsappMessage}`;
@@ -595,7 +602,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
         <div>
           {product.price > 0 ? (
             <p className="text-sm font-semibold text-foreground">
-              {product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} {product.price.toFixed(2).replace(".", ",")}
+              {product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} {formatPrice(product.price)}
             </p>
           ) : (
             <p className="text-xs text-emerald-600 font-medium">Gratuito</p>
