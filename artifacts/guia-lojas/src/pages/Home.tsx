@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowRight, MapPin } from "lucide-react";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -9,22 +9,13 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { PageTransition } from "@/components/PageTransition";
 import { Link } from "wouter";
 
-const HERO_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=700&fit=crop&auto=format&q=85",
-    label: "Moda",
-    rotate: "rotate-2",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=700&fit=crop&auto=format&q=85",
-    label: "Restaurantes",
-    rotate: "-rotate-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=700&fit=crop&auto=format&q=85",
-    label: "Beleza",
-    rotate: "rotate-1",
-  },
+const FALLBACK_HERO = [
+  { src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=700&fit=crop&auto=format&q=85", label: "Moda" },
+  { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=700&fit=crop&auto=format&q=85", label: "Restaurantes" },
+  { src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=700&fit=crop&auto=format&q=85", label: "Beleza" },
+  { src: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=700&fit=crop&auto=format&q=85", label: "Eletrônicos" },
+  { src: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=700&fit=crop&auto=format&q=85", label: "Automotivo" },
+  { src: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=700&fit=crop&auto=format&q=85", label: "Educação" },
 ];
 
 import { useQuery } from "@tanstack/react-query";
@@ -41,17 +32,8 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  // Auto-shuffle hero cards
-  const [order, setOrder] = useState([0, 1, 2]);
-  useEffect(() => {
-    const t = setInterval(() => {
-      setOrder((prev) => {
-        const [first, ...rest] = prev;
-        return [...rest, first];
-      });
-    }, 2800);
-    return () => clearInterval(t);
-  }, []);
+  // Hero cards cycling through all categories
+  const [frontIdx, setFrontIdx] = useState(2);
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores"],
@@ -71,6 +53,35 @@ export default function Home() {
 
   const totalStores = stats?.totalStores ?? stores.length;
   const totalCategories = stats?.totalCategories ?? apiCategories.length;
+
+  // Build hero items from all API categories (with fallback)
+  const heroItems: { src: string; label: string }[] = apiCategories.length >= 2
+    ? apiCategories
+        .filter((cat: any) => cat.cover_image || cat.coverImage)
+        .map((cat: any) => ({ src: cat.cover_image || cat.coverImage, label: cat.name }))
+    : FALLBACK_HERO;
+  const heroN = heroItems.length || 1;
+
+  // Auto-cycle through all heroItems
+  useEffect(() => {
+    if (heroN < 2) return;
+    const t = setInterval(() => {
+      setFrontIdx((prev) => (prev + 1) % heroN);
+    }, 2800);
+    return () => clearInterval(t);
+  }, [heroN]);
+
+  // Derive the 3 visible slots: back, mid, front
+  const POSITIONS = [
+    { x: "8%",  y: "10%", rotate: -6, scale: 0.82, zIndex: 10 },
+    { x: "22%", y: "4%",  rotate:  3, scale: 0.90, zIndex: 20 },
+    { x: "14%", y: "0%",  rotate: -1, scale: 1.00, zIndex: 30 },
+  ];
+  const visibleSlots = [
+    { catIdx: (frontIdx - 2 + heroN) % heroN, rank: 0 },
+    { catIdx: (frontIdx - 1 + heroN) % heroN, rank: 1 },
+    { catIdx: frontIdx,                        rank: 2 },
+  ];
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -154,34 +165,25 @@ export default function Home() {
 
             {/* Right — image collage */}
             <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[520px] mt-0">
-              {HERO_IMAGES.map((img, i) => {
-                const rank = order.indexOf(i); // 0=back, 1=mid, 2=front
-                const positions = [
-                  { x: "8%",  y: "10%", rotate: -6,  scale: 0.82, zIndex: 10 },
-                  { x: "22%", y: "4%",  rotate:  3,  scale: 0.90, zIndex: 20 },
-                  { x: "14%", y: "0%",  rotate: -1,  scale: 1.00, zIndex: 30 },
-                ];
-                const pos = positions[rank];
+              <AnimatePresence>
+              {visibleSlots.map(({ catIdx, rank }) => {
+                const img = heroItems[catIdx];
+                const pos = POSITIONS[rank];
                 return (
                   <motion.div
-                    key={i}
-                    initial={false}
+                    key={catIdx}
+                    initial={{ opacity: 0, scale: 0.85 }}
                     animate={{
+                      opacity: 1,
                       left: pos.x,
                       top: pos.y,
                       rotate: pos.rotate,
                       scale: pos.scale,
                       zIndex: pos.zIndex,
                     }}
-                    transition={{
-                      duration: 0.7,
-                      ease: [0.4, 0, 0.2, 1],
-                    }}
-                    onClick={() => setOrder((prev) => {
-                      // bring clicked card to front
-                      const without = prev.filter((x) => x !== i);
-                      return [...without, i];
-                    })}
+                    exit={{ opacity: 0, scale: 0.75 }}
+                    transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                    onClick={() => setFrontIdx(catIdx)}
                     className="absolute cursor-pointer shadow-xl"
                     style={{ width: "52%" }}
                   >
@@ -198,6 +200,7 @@ export default function Home() {
                   </motion.div>
                 );
               })}
+              </AnimatePresence>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
