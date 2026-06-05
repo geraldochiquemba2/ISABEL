@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Search, ArrowRight, MapPin } from "lucide-react";
@@ -40,7 +40,18 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [activeHero, setActiveHero] = useState(0);
+
+  // Auto-shuffle hero cards
+  const [order, setOrder] = useState([0, 1, 2]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setOrder((prev) => {
+        const [first, ...rest] = prev;
+        return [...rest, first];
+      });
+    }, 2800);
+    return () => clearInterval(t);
+  }, []);
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores"],
@@ -143,36 +154,50 @@ export default function Home() {
 
             {/* Right — image collage */}
             <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[520px] mt-0">
-              {HERO_IMAGES.map((img, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.12 }}
-                  onClick={() => setActiveHero(i)}
-                  className={`absolute cursor-pointer transition-all duration-300 ${img.rotate} ${
-                    activeHero === i
-                      ? "z-30 scale-105 shadow-2xl"
-                      : "z-10 hover:z-20 hover:scale-[1.02] shadow-lg"
-                  }`}
-                  style={{
-                    left: `${10 + i * 22}%`,
-                    top: `${6 + (i % 2) * 8}%`,
-                    width: "52%",
-                  }}
-                >
-                  <div className="relative overflow-hidden rounded-2xl aspect-[3/4]">
-                    <img
-                      src={img.src}
-                      alt={img.label}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                      <span className="text-white text-xs font-semibold">{img.label}</span>
+              {HERO_IMAGES.map((img, i) => {
+                const rank = order.indexOf(i); // 0=back, 1=mid, 2=front
+                const positions = [
+                  { x: "8%",  y: "10%", rotate: -6,  scale: 0.82, zIndex: 10 },
+                  { x: "22%", y: "4%",  rotate:  3,  scale: 0.90, zIndex: 20 },
+                  { x: "14%", y: "0%",  rotate: -1,  scale: 1.00, zIndex: 30 },
+                ];
+                const pos = positions[rank];
+                return (
+                  <motion.div
+                    key={i}
+                    initial={false}
+                    animate={{
+                      left: pos.x,
+                      top: pos.y,
+                      rotate: pos.rotate,
+                      scale: pos.scale,
+                      zIndex: pos.zIndex,
+                    }}
+                    transition={{
+                      duration: 0.7,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                    onClick={() => setOrder((prev) => {
+                      // bring clicked card to front
+                      const without = prev.filter((x) => x !== i);
+                      return [...without, i];
+                    })}
+                    className="absolute cursor-pointer shadow-xl"
+                    style={{ width: "52%" }}
+                  >
+                    <div className="relative overflow-hidden rounded-2xl aspect-[3/4]">
+                      <img
+                        src={img.src}
+                        alt={img.label}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                        <span className="text-white text-xs font-semibold">{img.label}</span>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
