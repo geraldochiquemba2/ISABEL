@@ -33,6 +33,8 @@ export interface Category {
   name: string;
   icon: string;
   count: number;
+  coverImage?: string;
+  cover_image?: string;
 }
 
 export const CATEGORIES: Category[] = [

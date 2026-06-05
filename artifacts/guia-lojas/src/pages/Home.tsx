@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Search, ArrowRight, MapPin } from "lucide-react";
-import { CATEGORIES, STORES } from "@/data/mock";
+import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { CategoryCard } from "@/components/CategoryCard";
@@ -28,7 +28,7 @@ const HERO_IMAGES = [
 ];
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchStores } from "@/lib/api";
+import { fetchStores, getCategories } from "@/lib/api";
 
 async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
   const res = await fetch("/api/stats");
@@ -47,6 +47,11 @@ export default function Home() {
     queryFn: () => fetchStores(),
   });
 
+  const { data: apiCategories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
+  });
+
   const { data: stats } = useQuery({
     queryKey: ["stats"],
     queryFn: fetchStats,
@@ -54,7 +59,7 @@ export default function Home() {
   });
 
   const totalStores = stats?.totalStores ?? stores.length;
-  const totalCategories = stats?.totalCategories ?? 8;
+  const totalCategories = stats?.totalCategories ?? apiCategories.length;
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -201,7 +206,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">Categorias</p>
           <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
-            {CATEGORIES.map((cat, i) => {
+            {apiCategories.map((cat: any, i: number) => {
               const count = stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length;
               return (
                 <CategoryCard

@@ -20,7 +20,7 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category, index = 0, onClick, active }: CategoryCardProps) {
-  const imageUrl = CATEGORY_IMAGES[category.id];
+  const imageUrl = category.cover_image || category.coverImage || CATEGORY_IMAGES[category.id] || CATEGORY_IMAGES[category.name.toLowerCase().replace(/\s+/g, '-')];
 
   return (
     <motion.button

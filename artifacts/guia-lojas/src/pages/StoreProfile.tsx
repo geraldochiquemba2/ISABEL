@@ -462,7 +462,17 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.2 }}
-                className="w-full h-full flex flex-col items-center justify-center p-2"
+                className="w-full h-full flex flex-col items-center justify-center p-2 touch-pan-y"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, { offset }) => {
+                  if (offset.x < -50) {
+                    handleNext();
+                  } else if (offset.x > 50) {
+                    handlePrev();
+                  }
+                }}
               >
                 {(() => {
                   const p = filtered[lightboxIndex];
@@ -525,10 +535,9 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
               
               <a
                 href={`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(
-                  `Olá! Gostaria de pedir o seguinte produto de vossa loja *${storeName}*:\n\n` +
-                  `*Produto:* ${filtered[lightboxIndex].name}\n` +
-                  `*Preço:* ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${filtered[lightboxIndex].price.toFixed(2).replace(".", ",")}\n` +
-                  (filtered[lightboxIndex].imageUrls?.length ? `*Imagem:* ${filtered[lightboxIndex].imageUrls[0]}` : (filtered[lightboxIndex].imageUrl ? `*Imagem:* ${filtered[lightboxIndex].imageUrl}` : ""))
+                  `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
+                  `Produto: ${filtered[lightboxIndex].name}\n` +
+                  `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${filtered[lightboxIndex].price.toFixed(2).replace(".", ",")}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -549,10 +558,9 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
   const [imgError, setImgError] = useState(false);
 
   const whatsappMessage = encodeURIComponent(
-    `Olá! Gostaria de pedir o seguinte produto de vossa loja *${storeName}*:\n\n` +
-    `*Produto:* ${product.name}\n` +
-    `*Preço:* ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${product.price.toFixed(2).replace(".", ",")}\n` +
-    (product.imageUrl ? `*Imagem:* ${product.imageUrl}` : "")
+    `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
+    `Produto: ${product.name}\n` +
+    `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${product.price.toFixed(2).replace(".", ",")}`
   );
 
   const whatsappUrl = `https://wa.me/${storeWhatsapp}?text=${whatsappMessage}`;
