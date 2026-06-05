@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, cancelApplication } from "@/lib/api";
+import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, cancelApplication, changePassword } from "@/lib/api";
 import { AdminPanel } from "@/components/AdminPanel";
-import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera } from "lucide-react";
+import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera, KeyRound, EyeOff } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -33,6 +33,33 @@ export default function Dashboard() {
   const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
+
+  // Forced password change modal
+  const [showChangePwd, setShowChangePwd] = useState(!!localUser?.mustChangePassword);
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [pwdError, setPwdError] = useState("");
+  const [pwdLoading, setPwdLoading] = useState(false);
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+
+  async function handleForceChangePwd() {
+    setPwdError("");
+    if (newPwd.length < 6) { setPwdError("A senha deve ter pelo menos 6 caracteres."); return; }
+    if (newPwd !== confirmPwd) { setPwdError("As senhas não coincidem."); return; }
+    if (newPwd === "123456789") { setPwdError("Escolha uma senha diferente da padrão."); return; }
+    setPwdLoading(true);
+    try {
+      await changePassword(localUser.id, newPwd);
+      const updatedUser = { ...localUser, mustChangePassword: false };
+      localStorage.setItem("guialocal_user", JSON.stringify(updatedUser));
+      setShowChangePwd(false);
+    } catch (e: any) {
+      setPwdError(e.message || "Erro ao alterar a senha.");
+    } finally {
+      setPwdLoading(false);
+    }
+  }
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -278,6 +305,69 @@ export default function Dashboard() {
 
   return (
     <PageTransition>
+      {/* ── Modal Obrigatório: Alterar Senha Padrão ── */}
+      {showChangePwd && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl border border-black shadow-2xl p-7 w-full max-w-sm space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-500">
+                <KeyRound size={18} />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-foreground">Defina uma nova senha</h2>
+                <p className="text-xs text-muted-foreground">A sua senha foi redefinida pelo administrador. Por segurança, escolha uma nova senha para continuar.</p>
+              </div>
+            </div>
+
+            {pwdError && (
+              <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 text-xs font-medium">{pwdError}</div>
+            )}
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Nova Senha</label>
+                <div className="relative">
+                  <input
+                    type={showNewPwd ? "text" : "password"}
+                    placeholder="Mínimo 6 caracteres"
+                    value={newPwd}
+                    onChange={(e) => setNewPwd(e.target.value)}
+                    className="w-full border-b border-border bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors pr-8"
+                  />
+                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-0 top-2.5 text-muted-foreground">
+                    {showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Confirmar Nova Senha</label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPwd ? "text" : "password"}
+                    placeholder="Repita a nova senha"
+                    value={confirmPwd}
+                    onChange={(e) => setConfirmPwd(e.target.value)}
+                    className="w-full border-b border-border bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors pr-8"
+                  />
+                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-0 top-2.5 text-muted-foreground">
+                    {showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleForceChangePwd}
+              disabled={pwdLoading || !newPwd || !confirmPwd}
+              className="w-full bg-foreground text-background py-3 text-sm font-semibold rounded-full hover:opacity-80 transition-opacity disabled:opacity-40 border border-black flex items-center justify-center gap-2"
+            >
+              <KeyRound size={14} />
+              {pwdLoading ? "A guardar..." : "Definir Nova Senha"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
         {/* Sticky top bar com botão Salvar quando em "Minha Loja" */}
         {section === "loja" && (

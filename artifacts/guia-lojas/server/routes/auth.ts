@@ -108,11 +108,27 @@ authRouter.post("/login", async (req, res) => {
         address: user.address,
         status: user.status,
         statusReason: user.status_reason,
+        mustChangePassword: user.password === "123456789",
       }
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erro ao fazer login." });
+  }
+});
+
+// PUT /api/auth/change-password — Alterar palavra-passe
+authRouter.put("/change-password", async (req, res) => {
+  try {
+    const { userId, newPassword } = req.body;
+    if (!userId || !newPassword || newPassword.length < 6) {
+      return res.status(400).json({ error: "Dados inválidos. A senha deve ter pelo menos 6 caracteres." });
+    }
+    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [userId, newPassword]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao alterar a senha." });
   }
 });
 

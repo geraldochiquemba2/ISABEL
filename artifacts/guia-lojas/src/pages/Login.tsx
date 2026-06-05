@@ -209,6 +209,17 @@ export default function Login() {
                 >
                   Entrar
                 </button>
+
+                <div className="text-center pt-2">
+                  <a
+                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe no GuiaLocal.")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+                  >
+                    Esqueci a minha palavra-passe
+                  </a>
+                </div>
               </form>
             ) : (
               /* ── REGISTER FORM ── */

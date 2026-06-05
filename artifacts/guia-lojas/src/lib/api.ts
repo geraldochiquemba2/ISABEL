@@ -239,4 +239,19 @@ export async function uploadImage(imageBase64: string, filename: string): Promis
   if (!res.ok) throw new Error(json.error || "Erro no upload da imagem");
   return json;
 }
+// PUT /api/admin/users/:id/reset-password — Admin redefine senha para padrão
+export async function resetUserPassword(id: string): Promise<void> {
+  const res = await fetch(`/api/admin/users/${id}/reset-password`, { method: "PUT" });
+  if (!res.ok) throw new Error("Erro ao redefinir senha");
+}
 
+// PUT /api/auth/change-password — Utilizador altera a própria senha
+export async function changePassword(userId: string, newPassword: string): Promise<void> {
+  const res = await fetch("/api/auth/change-password", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, newPassword }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao alterar a senha");
+}

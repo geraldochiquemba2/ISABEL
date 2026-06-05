@@ -108,4 +108,18 @@ adminRouter.delete("/users/:id/cancel", async (req, res) => {
     res.status(500).json({ error: "Erro ao cancelar solicitação" });
   }
 });
+// PUT /api/admin/users/:id/reset-password — Redefinir senha para o padrão
+adminRouter.put("/users/:id/reset-password", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query(
+      "UPDATE users SET password = '123456789' WHERE id = $1",
+      [id]
+    );
+    res.json({ success: true, message: "Senha redefinida para 123456789" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao redefinir senha" });
+  }
+});
 

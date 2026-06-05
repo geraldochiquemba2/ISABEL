@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import {
   Check, X, ShieldAlert, Ban, Info, Phone, Search,
-  Star, TrendingUp, Tag, Plus, Trash2, Image, RefreshCw
+  Star, TrendingUp, Tag, Plus, Trash2, Image, RefreshCw, KeyRound
 } from "lucide-react";
 import {
-  fetchAdminUsers, approveLojista, rejectLojista, suspendLojista, reactivateLojista,
+  fetchAdminUsers, approveLojista, rejectLojista, suspendLojista, reactivateLojista, resetUserPassword,
 } from "@/lib/api";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -78,6 +78,7 @@ function ContasSection() {
   const [rejectReason, setRejectReason] = useState("");
   const [suspendId, setSuspendId] = useState<string | null>(null);
   const [suspendReason, setSuspendReason] = useState("");
+  const [resetId, setResetId] = useState<string | null>(null);
 
   useEffect(() => { loadUsers(); }, []);
 
@@ -108,6 +109,14 @@ function ContasSection() {
   async function handleReactivate(id: string) {
     try { await reactivateLojista(id); loadUsers(); }
     catch { alert("Erro ao reativar conta."); }
+  }
+
+  async function handleResetPassword(id: string) {
+    try {
+      await resetUserPassword(id);
+      setResetId(null);
+      alert("Senha redefinida com sucesso! O lojista deverá usar a senha 123456789 para entrar.");
+    } catch { alert("Erro ao redefinir senha."); }
   }
 
   const filtered = users
@@ -201,6 +210,13 @@ function ContasSection() {
               {(user.status === "RECUSADO" || user.status === "SUSPENSO") && (
                 <button onClick={() => handleReactivate(user.id)} className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors"><Check size={12} />Reativar</button>
               )}
+              <button
+                onClick={() => setResetId(user.id)}
+                className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors"
+                title="Redefinir senha para 123456789"
+              >
+                <KeyRound size={12} />Reset Senha
+              </button>
             </div>
           </div>
         ))}
@@ -232,6 +248,20 @@ function ContasSection() {
             <div className="flex justify-end gap-2 text-xs">
               <button onClick={() => { setSuspendId(null); setSuspendReason(""); }} className="px-4 py-2 border border-black rounded-full hover:bg-muted transition-colors">Cancelar</button>
               <button onClick={handleSuspendSubmit} disabled={!suspendReason.trim()} className="px-4 py-2 bg-amber-500 text-white rounded-full hover:bg-amber-600 transition-colors disabled:opacity-50">Confirmar Suspensão</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reset Password Confirm Modal */}
+      {resetId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl border border-black shadow-xl p-6 w-full max-w-sm space-y-4">
+            <h3 className="text-sm font-semibold flex items-center gap-1.5"><KeyRound size={16} className="text-blue-500" />Redefinir Senha</h3>
+            <p className="text-xs text-muted-foreground">A senha deste lojista será redefinida para <strong>123456789</strong>. No próximo login, será obrigado a escolher uma nova senha.</p>
+            <div className="flex justify-end gap-2 text-xs">
+              <button onClick={() => setResetId(null)} className="px-4 py-2 border border-black rounded-full hover:bg-muted transition-colors">Cancelar</button>
+              <button onClick={() => handleResetPassword(resetId)} className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Confirmar Reset</button>
             </div>
           </div>
         </div>
