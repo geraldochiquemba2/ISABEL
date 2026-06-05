@@ -65,9 +65,13 @@ export default function Home() {
     }
   }
 
-  const featured = stores.slice(0, 4);
-  const trending = stores.slice(4, 8);
-  const recent = stores.slice(8, 12);
+  let featured = stores.filter((s) => s.isFeatured).slice(0, 4);
+  if (featured.length === 0) featured = stores.slice(0, 4);
+
+  let trending = stores.filter((s) => s.isTrending).slice(0, 4);
+  if (trending.length === 0 && stores.length > 4) trending = stores.slice(4, 8);
+
+  const recent = stores.slice(0, 4);
 
   return (
     <PageTransition>
