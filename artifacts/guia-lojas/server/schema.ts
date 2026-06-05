@@ -146,48 +146,8 @@ export async function initDB() {
       );
     }
 
-    // Inserir lojas de teste se a tabela estiver vazia
-    const storesCount = await client.query("SELECT COUNT(*) FROM stores");
-    if (parseInt(storesCount.rows[0].count) < 12) {
-      const testStores = [
-        { id: 'loja-test-2', name: 'Telefones Digital', category: 'Eletrônicos', province: 'Luanda', municipality: 'Talatona', address: 'Av. Agostinho Neto', phone: '914111111', whatsapp: '914111111' },
-        { id: 'loja-test-3', name: 'Restaurante O Sabor', category: 'Alimentação', province: 'Luanda', municipality: 'Benfica', address: 'Rua 17 de Setembro', phone: '924222222', whatsapp: '924222222' },
-        { id: 'loja-test-4', name: 'Salão de Beleza Encanto', category: 'Beleza', province: 'Luanda', municipality: 'Maianga', address: 'Av. Deolinda Rodrigues', phone: '934333333', whatsapp: '934333333' },
-        { id: 'loja-test-5', name: 'Padaria Pão Quente', category: 'Alimentação', province: 'Luanda', municipality: 'Samba', address: 'Rua de Portugal', phone: '944444444', whatsapp: '944444444' },
-        { id: 'loja-test-6', name: 'Loja de Roupas Estilo', category: 'Moda', province: 'Luanda', municipality: 'Rangel', address: 'Av. Zaire', phone: '954555555', whatsapp: '954555555' },
-        { id: 'loja-test-7', name: 'Farmácia Saúde Plus', category: 'Saúde', province: 'Luanda', municipality: 'Vila Alice', address: 'Rua Cmd Nzuji', phone: '964666666', whatsapp: '964666666' },
-        { id: 'loja-test-8', name: 'Oficina Auto Premium', category: 'Automotivo', province: 'Huambo', municipality: 'Huambo', address: 'Estrada da Belém', phone: '974777777', whatsapp: '974777777' },
-        { id: 'loja-test-9', name: 'Pet Shop Feliz', category: 'Pets', province: 'Luanda', municipality: 'Cazenga', address: 'Rua Dos Irmãos', phone: '984888888', whatsapp: '984888888' },
-        { id: 'loja-test-10', name: 'Instituto de Inglês', category: 'Educação', province: 'Luanda', municipality: 'Kilamba', address: 'Av. da Universidade', phone: '914999999', whatsapp: '914999999' },
-        { id: 'loja-test-11', name: 'Supermercado Nacional', category: 'Alimentação', province: 'Huambo', municipality: 'Bailundo', address: 'Av. Principal', phone: '925000000', whatsapp: '925000000' },
-        { id: 'loja-test-12', name: 'Studio Fotográfico Arte', category: 'Serviços', province: 'Luanda', municipality: 'Praia do Bispo', address: 'Rua da Praia', phone: '935111111', whatsapp: '935111111' },
-      ];
+    // As lojas de teste foram permanentemente removidas.
 
-      for (const store of testStores) {
-        await client.query(`
-          INSERT INTO stores (id, name, category, province, municipality, address, phone, whatsapp, is_open)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, TRUE)
-          ON CONFLICT (id) DO NOTHING;
-        `, [store.id, store.name, store.category, store.province, store.municipality, store.address, store.phone, store.whatsapp]);
-      }
-
-      // Criar usuários aprovados para as lojas de teste
-      for (let i = 2; i <= 12; i++) {
-        const phone = `91${i}111111`;
-        await client.query(`
-          INSERT INTO users (name, phone, password, province, municipality, address, store_id, status)
-          VALUES ($1, $2, '1234567890', $3, $4, $5, $6, 'APROVADO')
-          ON CONFLICT (phone) DO NOTHING;
-        `, [
-          `Loja Teste ${i}`,
-          phone,
-          'Luanda',
-          'Luanda',
-          `Endereço Teste ${i}`,
-          `loja-test-${i}`
-        ]);
-      }
-    }
 
     console.log("✅ Tabelas criadas/actualizadas e admin semeado com sucesso.");
   } finally {
