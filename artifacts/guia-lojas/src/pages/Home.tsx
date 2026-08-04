@@ -369,8 +369,8 @@ export default function Home() {
       {/* Footer strip */}
       <div className="border-t border-border py-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-medium text-foreground">Guia<span className="font-light">Local</span></span>
-          <p className="text-xs text-muted-foreground">© 2024 GuiaLocal. Todos os direitos reservados.</p>
+          <span className="text-sm font-medium text-foreground">Eliora<span className="font-light">Collection</span></span>
+          <p className="text-xs text-muted-foreground">© 2024 Eliora Collection. Todos os direitos reservados.</p>
         </div>
       </div>
     </PageTransition>

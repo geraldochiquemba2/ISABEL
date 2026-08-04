@@ -205,7 +205,7 @@ export default function StoreProfile() {
             </a>
 
             <a
-              href={`sms:${store.phone.replace(/\D/g, "")}?body=${encodeURIComponent("Olá, vim pelo GuiaLocal e gostaria de mais informações.")}`}
+              href={`sms:${store.phone.replace(/\D/g, "")}?body=${encodeURIComponent("Olá, vim pela Eliora Collection e gostaria de mais informações.")}`}
               data-testid="button-message"
             >
               <button className="flex items-center gap-2 border border-border text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">

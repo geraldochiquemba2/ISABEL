@@ -106,17 +106,17 @@ export default function Login() {
         <div className="hidden lg:flex flex-col justify-between w-5/12 bg-muted p-12">
           <Link href="/">
             <span className="text-sm font-medium text-foreground">
-              Guia<span className="font-light">Local</span>
+              Eliora<span className="font-light">Collection</span>
             </span>
           </Link>
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Depoimento</p>
             <blockquote className="text-xl font-light text-foreground leading-relaxed">
-              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem o GuiaLocal."
+              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem a Eliora Collection."
             </blockquote>
             <p className="text-sm text-muted-foreground mt-4">— Maria, Luanda</p>
           </div>
-          <p className="text-xs text-muted-foreground">© 2024 GuiaLocal</p>
+          <p className="text-xs text-muted-foreground">© 2024 Eliora Collection</p>
         </div>
 
         {/* Right — form */}
@@ -212,7 +212,7 @@ export default function Login() {
 
                 <div className="text-center pt-2">
                   <a
-                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe no GuiaLocal.")}`}
+                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na Eliora Collection.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"

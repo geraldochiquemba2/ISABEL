@@ -32,7 +32,7 @@ export function AdminPanel() {
             <ShieldAlert size={24} /> Painel de Administração
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gerencie contas, destaques e categorias do GuiaLocal
+            Gerencie contas, destaques e categorias da Eliora Collection
           </p>
         </div>
 
