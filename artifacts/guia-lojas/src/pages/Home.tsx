@@ -122,28 +122,12 @@ export default function Home() {
                   de quem carrega<br />a luz de Deus
                 </h1>
 
-                <form
-                  onSubmit={handleSearch}
-                  className="flex gap-0 w-full bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
-                >
-                  <div className="flex-1 relative min-w-0">
-                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400" />
-                    <input
-                      data-testid="input-search-hero"
-                      placeholder="Pesquisar..."
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 text-sm bg-transparent outline-none text-gray-900 placeholder:text-gray-400"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    data-testid="button-search-hero"
-                    className="px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all whitespace-nowrap flex-shrink-0"
-                  >
+                <Link href="/busca">
+                  <span className="inline-flex items-center gap-2 px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
+                    <Search size={18} />
                     Buscar
-                  </button>
-                </form>
+                  </span>
+                </Link>
               </motion.div>
             </div>
 
