@@ -284,7 +284,7 @@ export default function Home() {
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-900/50" />
+
               <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[240px]">
                 <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Para lojistas</span>
                 <div>
@@ -311,7 +311,7 @@ export default function Home() {
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/80 to-pink-600/80" />
+
               <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[240px]">
                 <span className="text-white/70 text-xs font-semibold uppercase tracking-widest">Descubra o teu estilo</span>
                 <div>
