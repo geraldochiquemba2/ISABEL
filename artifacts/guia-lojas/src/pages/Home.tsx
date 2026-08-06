@@ -115,11 +115,6 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 bg-yellow-100/80 text-yellow-700 text-xs font-semibold px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
-                  <MapPin size={13} />
-                  Lojas e serviços perto de você
-                </div>
-
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
                   Apresenta-te com a dignidade
                 </h1>
@@ -396,7 +391,6 @@ export default function Home() {
               />
               <div>
                 <span className="text-lg font-bold">Eliora<span className="font-light opacity-80">Collection</span></span>
-                <p className="text-gray-400 text-xs mt-0.5">Lojas e serviços perto de você</p>
               </div>
             </div>
             <p className="text-gray-500 text-sm">© 2024 Eliora Collection. Todos os direitos reservados.</p>
