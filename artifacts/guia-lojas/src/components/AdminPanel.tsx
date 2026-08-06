@@ -678,7 +678,6 @@ function DicasSection() {
   const [imagem, setImagem] = useState("");
   const [dicasList, setDicasList] = useState<string[]>([]);
   const [dicaInput, setDicaInput] = useState("");
-  const [ordem, setOrdem] = useState(0);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => { loadDicas(); }, []);
@@ -693,7 +692,7 @@ function DicasSection() {
   }
 
   function resetForm() {
-    setTitulo(""); setDescricao(""); setImagem(""); setDicasList([]); setDicaInput(""); setOrdem(0);
+    setTitulo(""); setDescricao(""); setImagem(""); setDicasList([]); setDicaInput("");
   }
 
   function startEdit(dica: any) {
@@ -702,7 +701,6 @@ function DicasSection() {
     setDescricao(dica.descricao);
     setImagem(dica.imagem || "");
     setDicasList(dica.dicas || []);
-    setOrdem(dica.ordem || 0);
     setShowAdd(true);
   }
 
@@ -739,7 +737,7 @@ function DicasSection() {
     if (!titulo.trim() || !descricao.trim()) return;
     setSaving(true);
     try {
-      const body = { titulo: titulo.trim(), descricao: descricao.trim(), imagem, dicas: dicasList, ordem };
+      const body = { titulo: titulo.trim(), descricao: descricao.trim(), imagem, dicas: dicasList };
       if (editId) {
         await fetch(`/api/style-tips/${editId}`, {
           method: "PUT",
@@ -854,11 +852,6 @@ function DicasSection() {
                   </div>
                 ))}
               </div>
-            </div>
-            <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Ordem</label>
-              <input type="number" value={ordem} onChange={(e) => setOrdem(parseInt(e.target.value) || 0)}
-                className="w-24 border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
             </div>
             <div className="flex justify-end gap-2 text-xs">
               <button onClick={() => { setShowAdd(false); setEditId(null); resetForm(); }}
