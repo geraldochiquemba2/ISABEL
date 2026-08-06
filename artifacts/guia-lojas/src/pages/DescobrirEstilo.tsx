@@ -59,10 +59,10 @@ export default function DescobrirEstilo() {
     <PageTransition>
       <div className="min-h-[calc(100vh-3.5rem)] bg-gradient-to-br from-stone-50 to-stone-100">
         {/* Header */}
-        <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white py-16">
+        <div className="bg-white text-gray-900 py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-3">Dicas de Estilo</h1>
-            <p className="text-white/90 text-lg">Descubra como expressar a sua personalidade através da moda</p>
+            <p className="text-gray-600 text-lg">Descubra como expressar a sua personalidade através da moda</p>
           </div>
         </div>
 
