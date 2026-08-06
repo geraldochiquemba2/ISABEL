@@ -61,6 +61,16 @@ export async function initDB() {
         status_reason TEXT,
         created_at    TIMESTAMPTZ DEFAULT NOW()
       );
+
+      CREATE TABLE IF NOT EXISTS style_tips (
+        id          SERIAL PRIMARY KEY,
+        titulo      TEXT NOT NULL,
+        descricao   TEXT NOT NULL,
+        imagem      TEXT,
+        dicas       TEXT[] DEFAULT '{}',
+        ordem       INTEGER DEFAULT 0,
+        created_at  TIMESTAMPTZ DEFAULT NOW()
+      );
     `);
 
     // Adicionar colunas em falta (caso as tabelas já existam sem essas colunas)

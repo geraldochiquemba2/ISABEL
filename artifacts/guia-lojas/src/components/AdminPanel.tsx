@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import {
   Check, X, ShieldAlert, Ban, Info, Phone, Search,
-  Star, TrendingUp, Tag, Plus, Trash2, Image, RefreshCw, KeyRound
+  Star, TrendingUp, Tag, Plus, Trash2, Image, RefreshCw, KeyRound, Lightbulb
 } from "lucide-react";
 import {
   fetchAdminUsers, approveLojista, rejectLojista, suspendLojista, reactivateLojista, resetUserPassword,
 } from "@/lib/api";
 
 // ── Types ──────────────────────────────────────────────────────────────
-type MainTab = "contas" | "lojas" | "categorias";
+type MainTab = "contas" | "lojas" | "categorias" | "dicas";
 type AccountTab = "PENDENTE" | "APROVADO" | "DESATIVADO";
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -42,6 +42,7 @@ export function AdminPanel() {
             { id: "contas",     label: "Contas",      icon: <Phone size={13} /> },
             { id: "lojas",      label: "Lojas",        icon: <Star size={13} /> },
             { id: "categorias", label: "Categorias",   icon: <Tag size={13} /> },
+            { id: "dicas",      label: "Dicas de Estilo", icon: <Lightbulb size={13} /> },
           ] as { id: MainTab; label: string; icon: React.ReactNode }[]).map((t) => (
             <button
               key={t.id}
@@ -61,6 +62,7 @@ export function AdminPanel() {
         {mainTab === "contas"     && <ContasSection />}
         {mainTab === "lojas"      && <LojasSection />}
         {mainTab === "categorias" && <CategoriasSection />}
+        {mainTab === "dicas"      && <DicasSection />}
       </div>
     </PageTransition>
   );
@@ -649,6 +651,197 @@ function CategoriasSection() {
               <button onClick={() => { setEditId(null); setEditName(""); setEditSubcategories([]); setEditSubInput(""); setEditCoverPreview(null); }}
                 className="px-4 py-2 border border-black rounded-full hover:bg-muted transition-colors">Cancelar</button>
               <button onClick={handleEdit} disabled={!editName.trim() || saving}
+                className="px-4 py-2 bg-foreground text-background rounded-full hover:opacity-80 transition-opacity disabled:opacity-50 flex items-center gap-1.5">
+                {saving ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />} Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// DICAS DE ESTILO
+// ═══════════════════════════════════════════════════════════════════════
+function DicasSection() {
+  const [dicas, setDicas] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAdd, setShowAdd] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+
+  const [titulo, setTitulo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [imagem, setImagem] = useState("");
+  const [dicasList, setDicasList] = useState<string[]>([]);
+  const [dicaInput, setDicaInput] = useState("");
+  const [ordem, setOrdem] = useState(0);
+
+  useEffect(() => { loadDicas(); }, []);
+
+  async function loadDicas() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/style-tips");
+      if (res.ok) setDicas(await res.json());
+    } catch { console.error("Erro ao carregar dicas"); }
+    finally { setLoading(false); }
+  }
+
+  function resetForm() {
+    setTitulo(""); setDescricao(""); setImagem(""); setDicasList([]); setDicaInput(""); setOrdem(0);
+  }
+
+  function startEdit(dica: any) {
+    setEditId(dica.id);
+    setTitulo(dica.titulo);
+    setDescricao(dica.descricao);
+    setImagem(dica.imagem || "");
+    setDicasList(dica.dicas || []);
+    setOrdem(dica.ordem || 0);
+    setShowAdd(true);
+  }
+
+  function handleAddDica() {
+    if (!dicaInput.trim()) return;
+    if (!dicasList.includes(dicaInput.trim())) {
+      setDicasList([...dicasList, dicaInput.trim()]);
+    }
+    setDicaInput("");
+  }
+
+  function handleRemoveDica(dica: string) {
+    setDicasList(dicasList.filter(d => d !== dica));
+  }
+
+  async function handleSave() {
+    if (!titulo.trim() || !descricao.trim()) return;
+    setSaving(true);
+    try {
+      const body = { titulo: titulo.trim(), descricao: descricao.trim(), imagem, dicas: dicasList, ordem };
+      if (editId) {
+        await fetch(`/api/style-tips/${editId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      } else {
+        await fetch("/api/style-tips", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      }
+      resetForm(); setEditId(null); setShowAdd(false);
+      loadDicas();
+    } catch { alert("Erro ao guardar dica."); }
+    finally { setSaving(false); }
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm("Tem certeza que deseja remover esta dica?")) return;
+    try {
+      await fetch(`/api/style-tips/${id}`, { method: "DELETE" });
+      loadDicas();
+    } catch { alert("Erro ao remover dica."); }
+  }
+
+  if (loading) return <div className="text-center py-12 text-sm text-muted-foreground">A carregar dicas...</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">{dicas.length} dicas de estilo</p>
+        <button onClick={() => { resetForm(); setEditId(null); setShowAdd(true); }}
+          className="flex items-center gap-1.5 bg-foreground text-background text-xs font-semibold px-4 py-2.5 rounded-full hover:opacity-80 transition-opacity">
+          <Plus size={13} /> Nova Dica
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {dicas.map((dica) => (
+          <div key={dica.id} className="border border-black rounded-2xl p-4 bg-white shadow-sm">
+            <div className="flex items-start gap-3">
+              {dica.imagem && (
+                <img src={dica.imagem} alt="" className="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold">{dica.titulo}</p>
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{dica.descricao}</p>
+                {dica.dicas?.length > 0 && (
+                  <p className="text-xs text-muted-foreground mt-1">{dica.dicas.length} subdicas</p>
+                )}
+              </div>
+              <div className="flex gap-1.5 flex-shrink-0">
+                <button onClick={() => startEdit(dica)}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-full border border-black hover:bg-muted transition-colors">
+                  Editar
+                </button>
+                <button onClick={() => handleDelete(dica.id)}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-full border border-red-200 text-red-500 hover:bg-red-50 transition-colors flex items-center gap-1">
+                  <Trash2 size={12} /> Remover
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {dicas.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground py-8 border border-dashed rounded-2xl">Nenhuma dica encontrada.</p>
+        )}
+      </div>
+
+      {/* Add/Edit Modal */}
+      {showAdd && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl border border-black shadow-xl p-6 w-full max-w-md space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-sm font-semibold flex items-center gap-1.5">
+              <Lightbulb size={16} /> {editId ? "Editar Dica" : "Nova Dica de Estilo"}
+            </h3>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Título</label>
+              <input type="text" placeholder="Ex: Como escolher as cores certas" value={titulo} onChange={(e) => setTitulo(e.target.value)}
+                className="w-full border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Descrição</label>
+              <textarea placeholder="Descrição da dica..." value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={3}
+                className="w-full border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">URL da Imagem</label>
+              <input type="text" placeholder="https://..." value={imagem} onChange={(e) => setImagem(e.target.value)}
+                className="w-full border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
+              {imagem && <img src={imagem} alt="" className="w-full h-28 object-cover rounded-xl mt-2 border border-border" />}
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Dicas (passos)</label>
+              <div className="flex gap-2 mb-2">
+                <input type="text" placeholder="Adicionar dica..." value={dicaInput} onChange={(e) => setDicaInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddDica(); } }}
+                  className="flex-1 border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
+                <button onClick={handleAddDica} className="px-4 py-2 bg-muted text-foreground font-semibold text-xs rounded-xl hover:bg-border transition-colors">Add</button>
+              </div>
+              <div className="space-y-1.5">
+                {dicasList.map((d, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-muted px-3 py-2 rounded-lg text-xs">
+                    <span className="font-bold text-muted-foreground">{i + 1}.</span>
+                    <span className="flex-1">{d}</span>
+                    <button onClick={() => handleRemoveDica(d)} className="text-foreground/70 hover:text-red-500 transition-colors"><X size={13} /></button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Ordem</label>
+              <input type="number" value={ordem} onChange={(e) => setOrdem(parseInt(e.target.value) || 0)}
+                className="w-24 border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
+            </div>
+            <div className="flex justify-end gap-2 text-xs">
+              <button onClick={() => { setShowAdd(false); setEditId(null); resetForm(); }}
+                className="px-4 py-2 border border-black rounded-full hover:bg-muted transition-colors">Cancelar</button>
+              <button onClick={handleSave} disabled={!titulo.trim() || !descricao.trim() || saving}
                 className="px-4 py-2 bg-foreground text-background rounded-full hover:opacity-80 transition-opacity disabled:opacity-50 flex items-center gap-1.5">
                 {saving ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />} Guardar
               </button>

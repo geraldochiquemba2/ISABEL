@@ -9,6 +9,7 @@ import { adminRouter } from "./routes/admin";
 import { mediaRouter } from "./routes/media";
 import { categoriesRouter } from "./routes/categories";
 import { statsRouter } from "./routes/stats";
+import { styleTipsRouter } from "./routes/style-tips";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api/media", mediaRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/stats", statsRouter);
+app.use("/api/style-tips", styleTipsRouter);
 
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 
