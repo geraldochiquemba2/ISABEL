@@ -52,7 +52,7 @@ export function Navbar() {
                   />
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <span className="text-lg font-bold tracking-tight text-white hidden sm:inline">
+                <span className="text-lg font-bold tracking-tight text-white">
                   Eliora<span className="font-light opacity-90">Collection</span>
                 </span>
               </div>
