@@ -8,7 +8,6 @@ import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { CATEGORIES } from "@/data/mock";
-import { PRODUCT_CATEGORIES } from "@/data/productCategories";
 
 type Section = "overview" | "loja" | "produtos" | "admin";
 
@@ -1017,6 +1016,24 @@ function ProdutosSection({ myStore }: { myStore: any }) {
     enabled: !!myStore?.id,
   });
 
+  const { data: dbCategories = [] } = useQuery<any[]>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories");
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const PRODUCT_CATEGORIES = dbCategories.map((cat: any) => ({
+    id: cat.id,
+    name: cat.name,
+    subcategories: (cat.subcategories || []).map((sub: any, idx: number) => ({
+      id: typeof sub === 'string' ? sub.toLowerCase().replace(/\s+/g, '-') : sub.id || `sub-${idx}`,
+      name: typeof sub === 'string' ? sub : sub.name,
+    })),
+  }));
+
   const [adding, setAdding] = useState(false);
 
   const [newName, setNewName] = useState("");
@@ -1422,6 +1439,24 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  const { data: dbCategories = [] } = useQuery<any[]>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories");
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const PRODUCT_CATEGORIES = dbCategories.map((cat: any) => ({
+    id: cat.id,
+    name: cat.name,
+    subcategories: (cat.subcategories || []).map((sub: any, idx: number) => ({
+      id: typeof sub === 'string' ? sub.toLowerCase().replace(/\s+/g, '-') : sub.id || `sub-${idx}`,
+      name: typeof sub === 'string' ? sub : sub.name,
+    })),
+  }));
 
   const [editName, setEditName] = useState(product.name);
   const [editPrice, setEditPrice] = useState(product.price.toString());

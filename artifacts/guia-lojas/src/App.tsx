@@ -8,6 +8,7 @@ import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
+import DescobrirEstilo from "@/pages/DescobrirEstilo";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();

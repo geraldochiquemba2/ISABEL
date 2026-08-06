@@ -103,60 +103,61 @@ export default function Home() {
   return (
     <PageTransition>
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-[1.2fr_1fr] lg:grid-cols-2 gap-0 min-h-[380px] lg:min-h-[520px] items-center relative">
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-50">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGRkY4ODAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMC0zMHY2aDZ2LTZoLTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+          <div className="grid grid-cols-[1.2fr_1fr] lg:grid-cols-2 gap-0 min-h-[400px] lg:min-h-[540px] items-center">
 
             {/* Left — text + search */}
-            <div className="py-14 lg:py-20 pr-0 lg:pr-12 relative z-10">
+            <div className="py-16 lg:py-24 pr-0 lg:pr-12 relative z-10">
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-1.5 bg-muted text-muted-foreground text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-                  <MapPin size={11} />
+                <div className="inline-flex items-center gap-2 bg-amber-100/80 text-amber-700 text-xs font-semibold px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
+                  <MapPin size={13} />
                   Lojas e serviços perto de você
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] tracking-tight mb-1 sm:mb-2">
-                  Descubra o
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
+                  Apresenta-te com a dignidade
                 </h1>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-foreground leading-[1.1] tracking-tight mb-6 sm:mb-8">
-                  melhor da<br />sua zona
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-amber-600 to-amber-800 bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
+                  de quem carrega<br />a luz de Deus
                 </h1>
 
                 <form
                   onSubmit={handleSearch}
-                  className="flex gap-0 max-w-md border border-border rounded-full overflow-hidden shadow-sm focus-within:shadow-md focus-within:border-foreground/30 transition-all bg-white"
+                  className="flex gap-0 max-w-md bg-white rounded-2xl overflow-hidden shadow-lg shadow-amber-100/50 focus-within:shadow-xl focus-within:shadow-amber-200/50 transition-all border border-amber-100"
                 >
                   <div className="flex-1 relative">
-                    <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400" />
                     <input
                       data-testid="input-search-hero"
                       placeholder="Lojas, serviços, produtos..."
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3.5 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+                      className="w-full pl-12 pr-4 py-4 text-sm bg-transparent outline-none text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                   <button
                     type="submit"
                     data-testid="button-search-hero"
-                    className="px-6 py-3.5 bg-foreground text-background text-sm font-medium hover:opacity-80 transition-opacity"
+                    className="px-7 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold hover:from-amber-600 hover:to-amber-700 transition-all"
                   >
                     Buscar
                   </button>
                 </form>
 
-                <div className="flex flex-wrap items-center gap-2 mt-4">
-                  {["Salão de beleza", "Encanador", "Eletrônicos", "Restaurante"].map((s) => (
+                <div className="flex flex-wrap items-center gap-2 mt-5">
+                  {apiCategories.slice(0, 4).map((cat: any) => (
                     <button
-                      key={s}
-                      onClick={() => setLocation(`/busca?q=${encodeURIComponent(s)}`)}
-                      className="text-xs text-muted-foreground border border-border rounded-full px-3 py-1.5 hover:border-foreground hover:text-foreground transition-colors bg-white"
+                      key={cat.id}
+                      onClick={() => setLocation(`/busca?q=${encodeURIComponent(cat.name)}`)}
+                      className="text-xs text-gray-600 border border-gray-200 rounded-full px-4 py-2 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-all bg-white"
                     >
-                      {s}
+                      {cat.name}
                     </button>
                   ))}
                 </div>
@@ -164,7 +165,7 @@ export default function Home() {
             </div>
 
             {/* Right — image collage */}
-            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[520px] mt-0">
+            <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
               <AnimatePresence>
               {visibleSlots.map(({ catIdx, rank }) => {
                 const img = heroItems[catIdx];
@@ -184,17 +185,17 @@ export default function Home() {
                     exit={{ opacity: 0, scale: 0.75 }}
                     transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
                     onClick={() => setFrontIdx(catIdx)}
-                    className="absolute cursor-pointer shadow-xl"
-                    style={{ width: "52%" }}
+                    className="absolute cursor-pointer shadow-2xl shadow-amber-900/20"
+                    style={{ width: "min(70%, 320px)" }}
                   >
-                    <div className="relative overflow-hidden rounded-2xl aspect-[3/4]">
+                    <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50">
                       <img
                         src={img.src}
                         alt={img.label}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                        <span className="text-white text-xs font-semibold">{img.label}</span>
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
+                        <span className="text-white text-sm font-semibold">{img.label}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -206,12 +207,14 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.4 }}
-                className="absolute bottom-4 lg:bottom-16 left-0 lg:left-4 z-40 bg-white rounded-xl lg:rounded-2xl shadow-lg px-2 lg:px-4 py-2 lg:py-3 flex items-center gap-2 lg:gap-3 scale-75 lg:scale-100 origin-bottom-left"
+                className="absolute bottom-6 lg:bottom-16 left-0 lg:left-4 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 flex items-center gap-3 scale-75 lg:scale-100 origin-bottom-left"
               >
-                <div className="w-6 h-6 lg:w-9 lg:h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-[10px] lg:text-xs font-bold">+</div>
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center text-white text-sm lg:text-base font-bold shadow-lg shadow-emerald-200">
+                  +
+                </div>
                 <div>
-                  <p className="text-xs lg:text-sm font-semibold text-foreground">{totalStores.toLocaleString("pt-AO")} negócios</p>
-                  <p className="text-[10px] lg:text-xs text-muted-foreground">cadastrados</p>
+                  <p className="text-sm lg:text-base font-bold text-gray-900">{totalStores.toLocaleString("pt-AO")} negócios</p>
+                  <p className="text-[10px] lg:text-xs text-gray-500">cadastrados</p>
                 </div>
               </motion.div>
 
@@ -219,10 +222,10 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.75, duration: 0.4 }}
-                className="absolute top-4 lg:top-12 right-0 lg:right-2 z-40 bg-white rounded-xl lg:rounded-2xl shadow-lg px-2 lg:px-4 py-2 lg:py-3 scale-75 lg:scale-100 origin-top-right"
+                className="absolute top-6 lg:top-12 right-0 lg:right-2 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 scale-75 lg:scale-100 origin-top-right"
               >
-                <p className="text-xs lg:text-sm font-semibold text-foreground">{totalCategories} categorias</p>
-                <p className="text-[10px] lg:text-xs text-muted-foreground">para explorar</p>
+                <p className="text-sm lg:text-base font-bold text-gray-900">{totalCategories} categorias</p>
+                <p className="text-[10px] lg:text-xs text-gray-500">para explorar</p>
               </motion.div>
             </div>
           </div>
@@ -230,9 +233,9 @@ export default function Home() {
       </section>
 
       {/* ── CATEGORIES ── */}
-      <section className="border-y border-border bg-white py-5">
+      <section className="border-y border-amber-100 bg-gradient-to-b from-white to-amber-50/30 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">Categorias</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-amber-600 mb-4">Categorias</p>
           <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
             {apiCategories.map((cat: any, i: number) => {
               const count = stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length;
@@ -252,9 +255,9 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* ── FEATURED ── */}
-        <section className="py-12">
+        <section className="py-14">
           <SectionHeader title="Em destaque" href="/busca" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
             {featured.map((store, i) => (
               <StoreCard
                 key={store.id}
@@ -267,31 +270,65 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="border-t border-border" />
+        {/* ── CONSULTORIA DE IMAGEM ── */}
+        <section className="py-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-500"
+          >
+            <div className="absolute inset-0 opacity-10">
+              <img
+                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=400&fit=crop&auto=format&q=80"
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+            <div className="relative z-10 p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="text-center md:text-left">
+                <span className="inline-block text-amber-100 text-xs font-semibold uppercase tracking-widest mb-3">Serviço exclusivo</span>
+                <h3 className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">Consultoria de Imagem Pessoal</h3>
+                <p className="text-white/80 text-sm md:text-base max-w-lg">Descubra o estilo que mais combina consigo com a ajuda dos nossos especialistas</p>
+              </div>
+              <a
+                href={`https://wa.me/244922001778?text=Olá! Gostaria de agendar uma consultoria de imagem!`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-amber-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 hover:shadow-xl transition-all flex items-center gap-2 whitespace-nowrap"
+              >
+                Agendar agora
+                <ArrowRight size={18} />
+              </a>
+            </div>
+          </motion.div>
+        </section>
 
         {/* ── BANNER CTA ── */}
         <section className="py-10">
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-5">
             <motion.div
-              initial={{ opacity: 0, x: -10 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-2xl min-h-[200px]"
+              className="relative overflow-hidden rounded-3xl min-h-[240px] group"
             >
               <img
                 src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format&q=80"
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/55" />
-              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[200px]">
-                <p className="text-white/60 text-xs font-medium uppercase tracking-widest">Para lojistas</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-900/50" />
+              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[240px]">
+                <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Para lojistas</span>
                 <div>
-                  <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
                     Cadastre sua<br />loja grátis
                   </h3>
                   <Link href="/dashboard">
-                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white hover:opacity-70 transition-opacity" data-testid="button-cta-register">
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full backdrop-blur-sm transition-all" data-testid="button-cta-register">
                       Começar agora <ArrowRight size={14} />
                     </span>
                   </Link>
@@ -300,26 +337,26 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 10 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-2xl min-h-[200px]"
+              className="relative overflow-hidden rounded-3xl min-h-[240px] group"
             >
               <img
-                src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&h=400&fit=crop&auto=format&q=80"
+                src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=400&fit=crop&auto=format&q=80"
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/45" />
-              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[200px]">
-                <p className="text-white/60 text-xs font-medium uppercase tracking-widest">Comunidade</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/80 to-pink-600/80" />
+              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[240px]">
+                <span className="text-white/70 text-xs font-semibold uppercase tracking-widest">Descubra o teu estilo</span>
                 <div>
-                  <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">
-                    +{totalStores.toLocaleString("pt-AO")} negócios<br />cadastrados
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
+                    Quero descobrir<br />o meu estilo
                   </h3>
-                  <Link href="/busca">
-                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white hover:opacity-70 transition-opacity">
-                      Explorar todos <ArrowRight size={14} />
+                  <Link href="/descobrir-estilo">
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full backdrop-blur-sm transition-all">
+                      Fazer quiz <ArrowRight size={14} />
                     </span>
                   </Link>
                 </div>
@@ -328,12 +365,10 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="border-t border-border" />
-
         {/* ── TRENDING ── */}
-        <section className="py-12">
+        <section className="py-10">
           <SectionHeader title="Mais buscados" href="/busca" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
             {trending.map((store, i) => (
               <StoreCard
                 key={store.id}
@@ -346,12 +381,31 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="border-t border-border" />
+        {/* ── EM PROMOÇÃO ── */}
+        <section className="py-10">
+          <SectionHeader title="Em promoção" href="/busca" />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
+            {stores.filter(s => s.isFeatured || s.isTrending).slice(0, 4).map((store, i) => (
+              <StoreCard
+                key={store.id}
+                store={store}
+                isFavorite={isFavorite(store.id)}
+                onToggleFavorite={toggleFavorite}
+                index={i}
+              />
+            ))}
+            {stores.filter(s => s.isFeatured || s.isTrending).length === 0 && (
+              <p className="col-span-full text-sm text-gray-400 py-12 text-center">
+                Nenhuma promoção disponível no momento.
+              </p>
+            )}
+          </div>
+        </section>
 
         {/* ── RECENT ── */}
-        <section className="py-12">
+        <section className="py-10">
           <SectionHeader title="Adicionados recentemente" href="/busca" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
             {recent.map((store, i) => (
               <StoreCard
                 key={store.id}
@@ -366,13 +420,25 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Footer strip */}
-      <div className="border-t border-border py-8 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-medium text-foreground">Eliora<span className="font-light">Collection</span></span>
-          <p className="text-xs text-muted-foreground">© 2024 Eliora Collection. Todos os direitos reservados.</p>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo-eliora.svg" 
+                alt="Eliora Collection" 
+                className="w-10 h-10"
+              />
+              <div>
+                <span className="text-lg font-bold">Eliora<span className="font-light opacity-80">Collection</span></span>
+                <p className="text-gray-400 text-xs mt-0.5">Lojas e serviços perto de você</p>
+              </div>
+            </div>
+            <p className="text-gray-500 text-sm">© 2024 Eliora Collection. Todos os direitos reservados.</p>
+          </div>
         </div>
-      </div>
+      </footer>
     </PageTransition>
   );
 }
@@ -380,10 +446,10 @@ export default function Home() {
 function SectionHeader({ title, href }: { title: string; href: string }) {
   return (
     <div className="flex items-center justify-between">
-      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
       <Link href={href}>
-        <span className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-          Ver todos <ArrowRight size={12} />
+        <span className="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors flex items-center gap-1">
+          Ver todos <ArrowRight size={14} />
         </span>
       </Link>
     </div>

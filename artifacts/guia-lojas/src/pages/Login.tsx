@@ -8,8 +8,8 @@ import { Link } from "wouter";
 import { useLocation as useWouterLocation } from "wouter";
 import { PageTransition } from "@/components/PageTransition";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { CATEGORIES } from "@/data/mock";
 import { registerLojista, loginLojista } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 /* ── schemas ─────────────────────────────────────────────── */
 const loginSchema = z.object({
@@ -38,9 +38,9 @@ type RegisterValues = z.infer<typeof registerSchema>;
 
 /* ── small helpers ───────────────────────────────────────── */
 const inputCls =
-  "w-full border-b border-border bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors";
+  "w-full border border-gray-200 bg-gray-50/50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 transition-all rounded-xl";
 
-const labelCls = "block text-xs text-black font-semibold uppercase tracking-widest mb-1";
+const labelCls = "block text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -54,6 +54,15 @@ export default function Login() {
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [, setLoc] = useWouterLocation();
+
+  const { data: CATEGORIES = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories");
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
 
   /* login form */
   const {
@@ -105,9 +114,16 @@ export default function Login() {
         {/* Left — decorative */}
         <div className="hidden lg:flex flex-col justify-between w-5/12 bg-muted p-12">
           <Link href="/">
-            <span className="text-sm font-medium text-foreground">
-              Eliora<span className="font-light">Collection</span>
-            </span>
+            <div className="flex items-center gap-2">
+              <img 
+                src="/logo-eliora.svg" 
+                alt="Eliora Collection" 
+                className="w-10 h-10"
+              />
+              <span className="text-sm font-medium text-foreground">
+                Eliora<span className="font-light">Collection</span>
+              </span>
+            </div>
           </Link>
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Depoimento</p>
@@ -116,7 +132,14 @@ export default function Login() {
             </blockquote>
             <p className="text-sm text-muted-foreground mt-4">— Maria, Luanda</p>
           </div>
-          <p className="text-xs text-muted-foreground">© 2024 Eliora Collection</p>
+          <div className="flex items-center gap-2">
+            <img 
+              src="/logo-eliora.svg" 
+              alt="Eliora Collection" 
+              className="w-6 h-6"
+            />
+            <p className="text-xs text-muted-foreground">© 2024 Eliora Collection</p>
+          </div>
         </div>
 
         {/* Right — form */}
