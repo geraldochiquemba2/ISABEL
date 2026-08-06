@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
-import { MessageCircle, Sparkles } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 const WHATSAPP_NUMBER = "922001778";
@@ -61,13 +61,6 @@ export default function DescobrirEstilo() {
         {/* Header */}
         <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4"
-            >
-              <Sparkles size={28} />
-            </motion.div>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">Dicas de Estilo</h1>
             <p className="text-white/90 text-lg">Descubra como expressar a sua personalidade através da moda</p>
           </div>
