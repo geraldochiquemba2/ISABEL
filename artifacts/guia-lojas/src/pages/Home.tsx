@@ -123,7 +123,7 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
                   Apresenta-te com a dignidade
                 </h1>
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-yellow-600 to-amber-700 bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
                   de quem carrega<br />a luz de Deus
                 </h1>
 
