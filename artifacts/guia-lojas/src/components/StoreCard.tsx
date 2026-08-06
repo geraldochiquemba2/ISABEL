@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { Store } from "@/data/mock";
 import { MapPin } from "lucide-react";
@@ -42,23 +42,25 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
       <Link href={`/loja/${store.id}`} className="block flex-1 flex flex-col">
         {/* Image */}
         <div className={`${imgHeight} w-full relative overflow-hidden bg-gray-100 flex-shrink-0`}>
-          {!imgError && currentImage ? (
+          {!imgError && images.length > 0 ? (
             <>
               <div 
-                key={`bg-${currentImageIndex}`}
                 className="absolute inset-0 bg-cover bg-center blur-2xl scale-125 opacity-60 transition-all duration-700 group-hover:scale-150"
                 style={{ backgroundImage: `url(${currentImage})` }} 
               />
-              <motion.img
-                key={`img-${currentImageIndex}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, ease: "easeInOut" }}
-                src={currentImage}
-                alt={store.name}
-                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105"
-                onError={() => setImgError(true)}
-              />
+              <AnimatePresence mode="popLayout">
+                <motion.img
+                  key={`img-${currentImageIndex}`}
+                  initial={{ x: "100%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  src={currentImage}
+                  alt={store.name}
+                  className="absolute inset-0 w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105"
+                  onError={() => setImgError(true)}
+                />
+              </AnimatePresence>
             </>
           ) : (
             <div 
