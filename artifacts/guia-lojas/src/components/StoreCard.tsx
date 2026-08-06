@@ -69,17 +69,6 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
             </div>
           )}
 
-          {/* Status badge */}
-          <div className="absolute top-3 left-3 z-20">
-            <span className={`text-[11px] font-semibold px-3 py-1 rounded-full backdrop-blur-sm ${
-              store.isOpen
-                ? "bg-emerald-500/90 text-white"
-                : "bg-gray-500/90 text-white"
-            }`}>
-              {store.isOpen ? "Aberto" : "Fechado"}
-            </span>
-          </div>
-
           {/* Image dots indicator */}
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
@@ -93,6 +82,17 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
               ))}
             </div>
           )}
+        </div>
+
+        {/* Status badge */}
+        <div className="px-4 pt-3">
+          <span className={`text-[11px] font-semibold px-3 py-1 rounded-full ${
+            store.isOpen
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-gray-100 text-gray-600"
+          }`}>
+            {store.isOpen ? "Aberto" : "Fechado"}
+          </span>
         </div>
 
         {/* Info */}
