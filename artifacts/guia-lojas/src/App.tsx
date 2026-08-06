@@ -1,8 +1,9 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/Navbar";
+import { useEffect } from "react";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
@@ -13,10 +14,19 @@ import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  return null;
+}
+
 function Router() {
   return (
     <>
       <Navbar />
+      <ScrollToTop />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/busca" component={SearchPage} />
