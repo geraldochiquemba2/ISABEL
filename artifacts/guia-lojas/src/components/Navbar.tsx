@@ -36,8 +36,8 @@ export function Navbar() {
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}>
       <div 
-        className="backdrop-blur-md bg-white/95 border-b border-orange-200/50"
-        style={{background: scrolled ? 'linear-gradient(135deg, rgba(249,115,22,0.95) 0%, rgba(234,88,12,0.95) 100%)' : 'linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%)'}}
+        className="backdrop-blur-md bg-white/95 border-b border-yellow-200/50"
+        style={{background: scrolled ? 'linear-gradient(135deg, rgba(212,168,67,0.95) 0%, rgba(184,134,11,0.95) 100%)' : 'linear-gradient(135deg, #D4A843 0%, #C9963A 50%, #B8860B 100%)'}}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
@@ -109,7 +109,7 @@ export function Navbar() {
                     </span>
                   </Link>
                   <Link href="/dashboard">
-                    <span className="text-sm bg-white text-orange-700 px-5 py-2 rounded-full font-semibold hover:bg-white/90 hover:shadow-lg transition-all">
+                    <span className="text-sm bg-white text-yellow-700 px-5 py-2 rounded-full font-semibold hover:bg-white/90 hover:shadow-lg transition-all">
                       Cadastrar loja
                     </span>
                   </Link>
@@ -136,8 +136,8 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden border-b border-orange-200/50"
-            style={{background: 'linear-gradient(180deg, #EA580C 0%, #C2410C 100%)'}}
+            className="md:hidden border-b border-yellow-200/50"
+            style={{background: 'linear-gradient(180deg, #C9963A 0%, #B8860B 100%)'}}
           >
             <div className="px-4 py-3 flex flex-col gap-1">
               {[
@@ -178,7 +178,7 @@ export function Navbar() {
                     </span>
                   </Link>
                   <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
-                    <span className="block px-4 py-3 rounded-xl text-sm text-orange-700 font-semibold bg-white text-center">
+                    <span className="block px-4 py-3 rounded-xl text-sm text-yellow-700 font-semibold bg-white text-center">
                       Cadastrar minha loja
                     </span>
                   </Link>
