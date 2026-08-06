@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import {
   fetchAdminUsers, approveLojista, rejectLojista, suspendLojista, reactivateLojista, resetUserPassword,
+  uploadImage,
 } from "@/lib/api";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -678,6 +679,7 @@ function DicasSection() {
   const [dicasList, setDicasList] = useState<string[]>([]);
   const [dicaInput, setDicaInput] = useState("");
   const [ordem, setOrdem] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => { loadDicas(); }, []);
 
@@ -714,6 +716,23 @@ function DicasSection() {
 
   function handleRemoveDica(dica: string) {
     setDicasList(dicasList.filter(d => d !== dica));
+  }
+
+  async function handleImageFile(file: File) {
+    setUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64 = e.target?.result as string;
+        const result = await uploadImage(base64, `dica-${Date.now()}.jpg`);
+        setImagem(result.imageUrl);
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      alert("Erro ao fazer upload da imagem.");
+      setUploading(false);
+    }
   }
 
   async function handleSave() {
@@ -810,10 +829,13 @@ function DicasSection() {
                 className="w-full border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
             </div>
             <div>
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">URL da Imagem</label>
-              <input type="text" placeholder="https://..." value={imagem} onChange={(e) => setImagem(e.target.value)}
-                className="w-full border border-black rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-black" />
-              {imagem && <img src={imagem} alt="" className="w-full h-28 object-cover rounded-xl mt-2 border border-border" />}
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Imagem</label>
+              {imagem && <img src={imagem} alt="" className="w-full h-28 object-cover rounded-xl mb-2 border border-border" />}
+              <label className="flex items-center gap-2 cursor-pointer border border-dashed border-border rounded-xl p-3 hover:bg-muted/40 transition-colors">
+                {uploading ? <RefreshCw size={14} className="text-muted-foreground animate-spin" /> : <Image size={14} className="text-muted-foreground" />}
+                <span className="text-xs text-muted-foreground">{uploading ? "A enviar..." : "Clique para escolher imagem"}</span>
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageFile(f); }} disabled={uploading} />
+              </label>
             </div>
             <div>
               <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Dicas (passos)</label>
