@@ -139,7 +139,7 @@ export default function Home() {
                   <button
                     type="submit"
                     data-testid="button-search-hero"
-                    className="px-6 sm:px-8 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all whitespace-nowrap flex-shrink-0"
+                    className="px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all whitespace-nowrap flex-shrink-0"
                   >
                     Buscar
                   </button>
