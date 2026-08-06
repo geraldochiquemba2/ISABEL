@@ -124,9 +124,9 @@ export default function Home() {
 
                 <form
                   onSubmit={handleSearch}
-                  className="flex gap-0 w-full max-w-lg bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
+                  className="flex gap-0 w-full sm:max-w-lg bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
                 >
-                  <div className="flex-1 relative">
+                  <div className="flex-1 relative min-w-0">
                     <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400" />
                     <input
                       data-testid="input-search-hero"
@@ -139,7 +139,7 @@ export default function Home() {
                   <button
                     type="submit"
                     data-testid="button-search-hero"
-                    className="px-7 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all"
+                    className="px-5 sm:px-7 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all whitespace-nowrap flex-shrink-0"
                   >
                     Buscar
                   </button>
