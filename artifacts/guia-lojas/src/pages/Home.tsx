@@ -130,7 +130,7 @@ export default function Home() {
                     <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400" />
                     <input
                       data-testid="input-search-hero"
-                      placeholder="Lojas, serviços, produtos..."
+                      placeholder="Pesquisar..."
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       className="w-full pl-12 pr-4 py-4 text-sm bg-transparent outline-none text-gray-900 placeholder:text-gray-400"
