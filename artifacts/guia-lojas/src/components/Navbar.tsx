@@ -37,7 +37,7 @@ export function Navbar() {
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}>
       <div 
         className="backdrop-blur-md bg-white/95 border-b border-yellow-200/50"
-        style={{background: scrolled ? 'linear-gradient(135deg, rgba(234,179,8,0.95) 0%, rgba(217,119,6,0.95) 100%)' : 'linear-gradient(135deg, #EAB308 0%, #D97706 50%, #B45309 100%)'}}
+        style={{background: scrolled ? 'linear-gradient(135deg, rgba(212,168,67,0.95) 0%, rgba(184,134,11,0.95) 100%)' : 'linear-gradient(135deg, #D4A843 0%, #C9963A 50%, #B8860B 100%)'}}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
@@ -137,7 +137,7 @@ export function Navbar() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className="md:hidden border-b border-yellow-200/50"
-            style={{background: 'linear-gradient(180deg, #D97706 0%, #B45309 100%)'}}
+            style={{background: 'linear-gradient(180deg, #C9963A 0%, #B8860B 100%)'}}
           >
             <div className="px-4 py-3 flex flex-col gap-1">
               {[
