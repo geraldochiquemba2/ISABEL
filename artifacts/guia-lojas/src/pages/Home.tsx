@@ -315,7 +315,7 @@ export default function Home() {
                   </h3>
                   <Link href="/descobrir-estilo">
                     <span className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full backdrop-blur-sm transition-all">
-                      Fazer quiz <ArrowRight size={14} />
+                      Ver <ArrowRight size={14} />
                     </span>
                   </Link>
                 </div>
