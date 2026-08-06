@@ -160,7 +160,7 @@ export default function Home() {
             </div>
 
             {/* Right — image collage */}
-            <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
+            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[540px] mt-8 lg:mt-0">
               <AnimatePresence>
               {visibleSlots.map(({ catIdx, rank }) => {
                 const img = heroItems[catIdx];
