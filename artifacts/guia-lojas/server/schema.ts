@@ -158,6 +158,47 @@ export async function initDB() {
 
     // As lojas de teste foram permanentemente removidas.
 
+    // Inserir Dicas de Estilo predefinidas se a tabela estiver vazia
+    const tipsCheck = await client.query("SELECT COUNT(*) FROM style_tips");
+    if (parseInt(tipsCheck.rows[0].count) === 0) {
+      const defaultTips = [
+        {
+          titulo: "Como escolher as cores certas para ti",
+          descricao: "Descubre quais cores combinam com o teu tom de pele e personalidade.",
+          imagem: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=500&fit=crop",
+          dicas: ["Observa as veias no teu pulso — se parecerem azuis, tens tom frio", "Pessoas com tom quente ficam lindas em dourados e terracota", "Pessoas com tom frio ficam lindas em prateados e azuis"],
+          ordem: 1
+        },
+        {
+          titulo: "Peças essenciais que toda mulher deve ter",
+          descricao: "Uma lista das peças básicas que nunca passam de moda.",
+          imagem: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=500&fit=crop",
+          dicas: ["Um blazer bem cortado", "Calça de ganga de boa qualidade", "Camisa branca impecável", "Vestido preto clássico"],
+          ordem: 2
+        },
+        {
+          titulo: "Como combinar estampas sem erro",
+          descricao: "Dicas para misturar estampas com confiança e estilo.",
+          imagem: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=500&fit=crop",
+          dicas: ["Mantenha uma cor em comum entre as estampas", "Misture estampas de tamanhos diferentes", "Comece com preto e branco"],
+          ordem: 3
+        },
+        {
+          titulo: "Acessórios que fazem a diferença",
+          descricao: "Como usar acessórios para elevar qualquer visual.",
+          imagem: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=500&fit=crop",
+          dicas: ["Um relógio elegante nunca sai de moda", "Colares em camadas estão em alta", "Óculos de sol são sempre um bom investimento"],
+          ordem: 4
+        }
+      ];
+      for (const tip of defaultTips) {
+        await client.query(
+          "INSERT INTO style_tips (titulo, descricao, imagem, dicas, ordem) VALUES ($1, $2, $3, $4, $5)",
+          [tip.titulo, tip.descricao, tip.imagem, tip.dicas, tip.ordem]
+        );
+      }
+    }
+
 
     console.log("✅ Tabelas criadas/actualizadas e admin semeado com sucesso.");
   } finally {
