@@ -270,42 +270,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── CONSULTORIA DE IMAGEM ── */}
-        <section className="py-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600"
-          >
-            <div className="absolute inset-0 opacity-10">
-              <img
-                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=400&fit=crop&auto=format&q=80"
-                alt=""
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
-            <div className="relative z-10 p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="text-center md:text-left">
-                <span className="inline-block text-yellow-100 text-xs font-semibold uppercase tracking-widest mb-3">Serviço exclusivo</span>
-                <h3 className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">Consultoria de Imagem Pessoal</h3>
-                <p className="text-white/80 text-sm md:text-base max-w-lg">Descubra o estilo que mais combina consigo com a ajuda dos nossos especialistas</p>
-              </div>
-              <a
-                href={`https://wa.me/244922001778?text=Olá! Gostaria de agendar uma consultoria de imagem!`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-yellow-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 hover:shadow-xl transition-all flex items-center gap-2 whitespace-nowrap"
-              >
-                Agendar agora
-                <ArrowRight size={18} />
-              </a>
-            </div>
-          </motion.div>
-        </section>
-
         {/* ── BANNER CTA ── */}
         <section className="py-10">
           <div className="grid sm:grid-cols-2 gap-5">
