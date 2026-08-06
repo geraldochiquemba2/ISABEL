@@ -124,7 +124,7 @@ export default function Home() {
 
                 <form
                   onSubmit={handleSearch}
-                  className="flex gap-0 max-w-md bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
+                  className="flex gap-0 w-full max-w-lg bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
                 >
                   <div className="flex-1 relative">
                     <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400" />
@@ -217,7 +217,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.75, duration: 0.4 }}
-                className="absolute top-2 lg:top-12 right-0 lg:right-2 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 scale-75 lg:scale-100 origin-top-right"
+                className="absolute -top-2 lg:top-12 right-4 lg:right-2 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 scale-75 lg:scale-100 origin-top-right"
               >
                 <p className="text-sm lg:text-base font-bold text-gray-900">{totalCategories} categorias</p>
                 <p className="text-[10px] lg:text-xs text-gray-500">para explorar</p>
