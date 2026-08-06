@@ -106,7 +106,7 @@ export default function Home() {
       <section className="relative overflow-hidden bg-gradient-to-br from-yellow-50 via-white to-amber-50">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGRkY4ODAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMC0zMHY2aDZ2LTZoLTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 min-h-[400px] lg:min-h-[540px] items-center">
+          <div className="grid grid-cols-[1.2fr_1fr] lg:grid-cols-2 gap-0 min-h-[400px] lg:min-h-[540px] items-center">
 
             {/* Left — text + search */}
             <div className="py-16 lg:py-24 pr-0 lg:pr-12 relative z-10">
@@ -160,7 +160,7 @@ export default function Home() {
             </div>
 
             {/* Right — image collage */}
-            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[540px] mt-8 lg:mt-0">
+            <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
               <AnimatePresence>
               {visibleSlots.map(({ catIdx, rank }) => {
                 const img = heroItems[catIdx];
