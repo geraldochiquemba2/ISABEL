@@ -25,7 +25,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -51,12 +51,12 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
               />
               <motion.img
                 key={`img-${currentImageIndex}`}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, ease: "easeInOut" }}
                 src={currentImage}
                 alt={store.name}
-                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105"
                 onError={() => setImgError(true)}
               />
             </>
