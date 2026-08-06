@@ -144,18 +144,6 @@ export default function Home() {
                     Buscar
                   </button>
                 </form>
-
-                <div className="flex flex-wrap items-center gap-2 mt-5">
-                  {apiCategories.slice(0, 4).map((cat: any) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setLocation(`/busca?q=${encodeURIComponent(cat.name)}`)}
-                      className="text-xs text-gray-600 border border-gray-200 rounded-full px-4 py-2 hover:border-yellow-300 hover:text-yellow-700 hover:bg-yellow-50 transition-all bg-white"
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </div>
               </motion.div>
             </div>
 
