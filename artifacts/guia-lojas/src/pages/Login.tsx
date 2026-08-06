@@ -38,7 +38,7 @@ type RegisterValues = z.infer<typeof registerSchema>;
 
 /* ── small helpers ───────────────────────────────────────── */
 const inputCls =
-  "w-full border border-gray-200 bg-gray-50/50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 transition-all rounded-xl";
+  "w-full border border-gray-200 bg-gray-50/50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-500/20 transition-all rounded-xl";
 
 const labelCls = "block text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1.5";
 

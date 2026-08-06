@@ -17,7 +17,7 @@ export function StarRating({ rating, reviewCount, size = "sm" }: StarRatingProps
             size={iconSize}
             className={
               star <= Math.round(rating)
-                ? "fill-amber-400 text-amber-400"
+                ? "fill-yellow-400 text-yellow-400"
                 : "fill-muted text-muted"
             }
           />

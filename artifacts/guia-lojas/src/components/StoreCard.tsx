@@ -105,12 +105,12 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
                 className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-sm flex-shrink-0"
               />
             ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center text-yellow-700 font-bold text-sm flex-shrink-0">
                 {store.name.charAt(0)}
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-semibold text-gray-900 leading-tight truncate group-hover:text-amber-600 transition-colors">
+              <h3 className="text-sm font-semibold text-gray-900 leading-tight truncate group-hover:text-yellow-600 transition-colors">
                 {store.name}
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">{store.category}</p>

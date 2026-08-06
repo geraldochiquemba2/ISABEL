@@ -103,7 +103,7 @@ export default function Home() {
   return (
     <PageTransition>
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-yellow-50 via-white to-amber-50">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGRkY4ODAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMC0zMHY2aDZ2LTZoLTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
           <div className="grid grid-cols-[1.2fr_1fr] lg:grid-cols-2 gap-0 min-h-[400px] lg:min-h-[540px] items-center">
@@ -115,7 +115,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 bg-amber-100/80 text-amber-700 text-xs font-semibold px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 bg-yellow-100/80 text-yellow-700 text-xs font-semibold px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
                   <MapPin size={13} />
                   Lojas e serviços perto de você
                 </div>
@@ -123,16 +123,16 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
                   Apresenta-te com a dignidade
                 </h1>
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-amber-600 to-amber-800 bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-yellow-600 to-amber-700 bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
                   de quem carrega<br />a luz de Deus
                 </h1>
 
                 <form
                   onSubmit={handleSearch}
-                  className="flex gap-0 max-w-md bg-white rounded-2xl overflow-hidden shadow-lg shadow-amber-100/50 focus-within:shadow-xl focus-within:shadow-amber-200/50 transition-all border border-amber-100"
+                  className="flex gap-0 max-w-md bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 focus-within:shadow-xl focus-within:shadow-yellow-200/50 transition-all border border-yellow-100"
                 >
                   <div className="flex-1 relative">
-                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400" />
+                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-400" />
                     <input
                       data-testid="input-search-hero"
                       placeholder="Lojas, serviços, produtos..."
@@ -144,7 +144,7 @@ export default function Home() {
                   <button
                     type="submit"
                     data-testid="button-search-hero"
-                    className="px-7 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold hover:from-amber-600 hover:to-amber-700 transition-all"
+                    className="px-7 py-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-white text-sm font-semibold hover:from-yellow-600 hover:to-amber-700 transition-all"
                   >
                     Buscar
                   </button>
@@ -155,7 +155,7 @@ export default function Home() {
                     <button
                       key={cat.id}
                       onClick={() => setLocation(`/busca?q=${encodeURIComponent(cat.name)}`)}
-                      className="text-xs text-gray-600 border border-gray-200 rounded-full px-4 py-2 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-all bg-white"
+                      className="text-xs text-gray-600 border border-gray-200 rounded-full px-4 py-2 hover:border-yellow-300 hover:text-yellow-700 hover:bg-yellow-50 transition-all bg-white"
                     >
                       {cat.name}
                     </button>
@@ -185,7 +185,7 @@ export default function Home() {
                     exit={{ opacity: 0, scale: 0.75 }}
                     transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
                     onClick={() => setFrontIdx(catIdx)}
-                    className="absolute cursor-pointer shadow-2xl shadow-amber-900/20"
+                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20"
                     style={{ width: "min(70%, 320px)" }}
                   >
                     <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50">
@@ -233,9 +233,9 @@ export default function Home() {
       </section>
 
       {/* ── CATEGORIES ── */}
-      <section className="border-y border-amber-100 bg-gradient-to-b from-white to-amber-50/30 py-6">
+      <section className="border-y border-yellow-100 bg-gradient-to-b from-white to-yellow-50/30 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-amber-600 mb-4">Categorias</p>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-600 mb-4">Categorias</p>
           <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
             {apiCategories.map((cat: any, i: number) => {
               const count = stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length;
@@ -276,7 +276,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-500"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600"
           >
             <div className="absolute inset-0 opacity-10">
               <img
@@ -289,7 +289,7 @@ export default function Home() {
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
             <div className="relative z-10 p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-center md:text-left">
-                <span className="inline-block text-amber-100 text-xs font-semibold uppercase tracking-widest mb-3">Serviço exclusivo</span>
+                <span className="inline-block text-yellow-100 text-xs font-semibold uppercase tracking-widest mb-3">Serviço exclusivo</span>
                 <h3 className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">Consultoria de Imagem Pessoal</h3>
                 <p className="text-white/80 text-sm md:text-base max-w-lg">Descubra o estilo que mais combina consigo com a ajuda dos nossos especialistas</p>
               </div>
@@ -297,7 +297,7 @@ export default function Home() {
                 href={`https://wa.me/244922001778?text=Olá! Gostaria de agendar uma consultoria de imagem!`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white text-amber-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 hover:shadow-xl transition-all flex items-center gap-2 whitespace-nowrap"
+                className="bg-white text-yellow-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 hover:shadow-xl transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 Agendar agora
                 <ArrowRight size={18} />
@@ -448,7 +448,7 @@ function SectionHeader({ title, href }: { title: string; href: string }) {
     <div className="flex items-center justify-between">
       <h2 className="text-xl font-bold text-gray-900">{title}</h2>
       <Link href={href}>
-        <span className="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors flex items-center gap-1">
+        <span className="text-sm text-yellow-600 hover:text-yellow-700 font-medium transition-colors flex items-center gap-1">
           Ver todos <ArrowRight size={14} />
         </span>
       </Link>
