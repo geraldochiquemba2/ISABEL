@@ -217,7 +217,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.75, duration: 0.4 }}
-                className="absolute -top-4 lg:top-12 right-4 lg:right-2 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 scale-75 lg:scale-100 origin-top-right"
+                className="absolute -top-6 lg:top-12 right-4 lg:right-2 z-40 bg-white rounded-2xl shadow-xl px-3 lg:px-5 py-3 lg:py-4 scale-75 lg:scale-100 origin-top-right"
               >
                 <p className="text-sm lg:text-base font-bold text-gray-900">{totalCategories} categorias</p>
                 <p className="text-[10px] lg:text-xs text-gray-500">para explorar</p>
