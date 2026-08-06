@@ -23,6 +23,7 @@ function Router() {
         <Route path="/loja/:id" component={StoreProfile} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/login" component={Login} />
+        <Route path="/descobrir-estilo" component={DescobrirEstilo} />
         <Route component={NotFound} />
       </Switch>
     </>
