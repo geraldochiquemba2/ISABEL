@@ -109,7 +109,7 @@ export default function DescobrirEstilo() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-8 text-center text-white"
+            className="mt-12 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 rounded-3xl p-8 text-center text-white"
           >
             <h3 className="text-2xl font-bold mb-3">Precisa de ajuda personalizada?</h3>
             <p className="text-white/90 mb-6">Fale com a nossa equipa de especialistas e descubra o estilo perfeito para si.</p>
@@ -117,7 +117,7 @@ export default function DescobrirEstilo() {
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-white text-green-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 transition-colors shadow-lg"
+              className="inline-flex items-center gap-3 bg-white text-yellow-600 px-8 py-4 rounded-full font-bold hover:bg-white/90 transition-colors shadow-lg"
             >
               <MessageCircle size={20} />
               <span>Falar no WhatsApp</span>
