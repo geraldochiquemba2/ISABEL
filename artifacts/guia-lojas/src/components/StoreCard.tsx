@@ -15,7 +15,7 @@ interface StoreCardProps {
 export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size = "md" }: StoreCardProps) {
   const [imgError, setImgError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const imgHeight = size === "lg" ? "h-72" : size === "sm" ? "h-48" : "h-56";
+  const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
 
   const images = store.coverImages && store.coverImages.length > 0 
     ? store.coverImages 
@@ -84,8 +84,19 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
           )}
         </div>
 
-        {/* Status badge */}
-        <div className="px-4 pt-3">
+        {/* Status badge with logo */}
+        <div className="px-4 pt-3 flex items-center gap-2">
+          {store.logoUrl ? (
+            <img
+              src={store.logoUrl}
+              alt={`${store.name} Logo`}
+              className="w-6 h-6 rounded-md object-cover flex-shrink-0"
+            />
+          ) : (
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center text-yellow-700 font-bold text-[10px] flex-shrink-0">
+              {store.name.charAt(0)}
+            </div>
+          )}
           <span className={`text-[11px] font-semibold px-3 py-1 rounded-full ${
             store.isOpen
               ? "bg-emerald-100 text-emerald-700"
@@ -97,25 +108,10 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
 
         {/* Info */}
         <div className="p-4 flex-1 flex flex-col">
-          <div className="flex items-start gap-3">
-            {store.logoUrl ? (
-              <img
-                src={store.logoUrl}
-                alt={`${store.name} Logo`}
-                className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-sm flex-shrink-0"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center text-yellow-700 font-bold text-sm flex-shrink-0">
-                {store.name.charAt(0)}
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-semibold text-gray-900 leading-tight truncate group-hover:text-yellow-600 transition-colors">
-                {store.name}
-              </h3>
-              <p className="text-xs text-gray-500 mt-0.5">{store.category}</p>
-            </div>
-          </div>
+          <h3 className="text-sm font-semibold text-gray-900 leading-tight truncate group-hover:text-yellow-600 transition-colors">
+            {store.name}
+          </h3>
+          <p className="text-xs text-gray-500 mt-0.5">{store.category}</p>
           
           {store.province && store.municipality && (
             <div className="flex items-center gap-1 mt-3 text-gray-400">
