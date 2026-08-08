@@ -32,7 +32,7 @@ export default function StoreProfile() {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 2000);
+    }, 3500);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -72,15 +72,15 @@ export default function StoreProfile() {
             {/* Fundo borrado */}
             <div 
               key={`bg-profile-${currentImageIndex}`}
-              className="absolute inset-0 bg-cover bg-center blur-xl scale-110 opacity-70"
+              className="absolute inset-0 bg-cover bg-center blur-xl scale-110 opacity-70 transition-all duration-1000 ease-out"
               style={{ backgroundImage: `url(${currentImage})` }} 
             />
             {/* Imagem principal contida */}
             <motion.img
               key={`img-profile-${currentImageIndex}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
               src={currentImage}
               alt={store.name}
               className="w-full h-full object-contain relative z-0"
