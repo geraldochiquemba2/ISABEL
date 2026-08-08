@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Search, ArrowRight, MapPin } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { CategoryCard } from "@/components/CategoryCard";
@@ -11,6 +11,13 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores, getCategories } from "@/lib/api";
 
+const HERO_CATEGORIES = [
+  { id: "moda", name: "Moda", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop&auto=format&q=75" },
+  { id: "alimentacao", name: "Restaurantes", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=500&fit=crop&auto=format&q=75" },
+  { id: "saude-beleza", name: "Beleza", image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=500&fit=crop&auto=format&q=75" },
+  { id: "eletronicos", name: "Eletrônicos", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=500&fit=crop&auto=format&q=75" },
+];
+
 async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
   const res = await fetch("/api/stats");
   if (!res.ok) throw new Error("Erro ao buscar stats");
@@ -18,11 +25,10 @@ async function fetchStats(): Promise<{ totalStores: number; totalCategories: num
 }
 
 export default function Home() {
-  const [query, setQuery] = useState("");
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  const { data: stores = [], isLoading } = useQuery({
+  const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
     queryFn: () => fetchStores(),
   });
@@ -51,36 +57,62 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-yellow-50 via-white to-amber-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
-              Apresenta-te com a dignidade
-            </h1>
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
-              de quem carrega<br />a luz de Deus
-            </h1>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Left — text */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
+                Apresenta-te com a dignidade
+              </h1>
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
+                de quem carrega<br />a luz de Deus
+              </h1>
 
-            <Link href="/busca">
-              <span className="inline-flex items-center gap-2 px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
-                <Search size={18} />
-                Buscar
-              </span>
-            </Link>
+              <Link href="/busca">
+                <span className="inline-flex items-center gap-2 px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
+                  <Search size={18} />
+                  Buscar
+                </span>
+              </Link>
 
-            <div className="flex items-center gap-6 mt-8 text-sm text-gray-500">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                {totalStores.toLocaleString("pt-AO")} negócios
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
-                {totalCategories} categorias
-              </span>
+              <div className="flex items-center gap-6 mt-8 text-sm text-gray-500">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  {totalStores.toLocaleString("pt-AO")} negócios
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+                  {totalCategories} categorias
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Right — category images grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {HERO_CATEGORIES.map((cat, i) => (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
+                  className="relative overflow-hidden rounded-2xl cursor-pointer group aspect-[3/4]"
+                >
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <span className="absolute bottom-3 left-3 text-white text-sm font-semibold">{cat.name}</span>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
