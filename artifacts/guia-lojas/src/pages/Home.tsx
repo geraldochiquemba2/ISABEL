@@ -90,27 +90,62 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right — category images grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {HERO_CATEGORIES.map((cat, i) => (
-                <motion.div
-                  key={cat.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
-                  className="relative overflow-hidden rounded-2xl cursor-pointer group aspect-[3/4]"
-                >
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 text-white text-sm font-semibold">{cat.name}</span>
-                </motion.div>
-              ))}
+            {/* Right — stacked cards */}
+            <div className="relative h-[400px] sm:h-[450px] lg:h-[500px] hidden sm:block">
+              {HERO_CATEGORIES.map((cat, i) => {
+                const offsets = [
+                  { left: "0%", bottom: "0%", rotate: -8, scale: 0.85, z: 10 },
+                  { left: "15%", bottom: "5%", rotate: -3, scale: 0.92, z: 20 },
+                  { left: "8%", bottom: "10%", rotate: 3, scale: 0.96, z: 30 },
+                  { left: "12%", bottom: "15%", rotate: -1, scale: 1, z: 40 },
+                ];
+                const pos = offsets[i] || offsets[0];
+                return (
+                  <div
+                    key={cat.id}
+                    onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
+                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20 rounded-2xl overflow-hidden ring-2 ring-white/50"
+                    style={{
+                      left: pos.left,
+                      bottom: pos.bottom,
+                      rotate: `${pos.rotate}deg`,
+                      scale: `${pos.scale}`,
+                      zIndex: pos.z,
+                      width: "min(65%, 280px)",
+                    }}
+                  >
+                    <div className="relative aspect-[3/4]">
+                      <img
+                        src={cat.image}
+                        alt={cat.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
+                        <span className="text-white text-sm font-semibold">{cat.name}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile — single featured image */}
+            <div className="sm:hidden relative h-[250px]">
+              <div
+                onClick={() => setLocation(`/busca?categoria=${HERO_CATEGORIES[2].id}`)}
+                className="relative rounded-2xl overflow-hidden shadow-xl cursor-pointer h-full"
+              >
+                <img
+                  src={HERO_CATEGORIES[2].image}
+                  alt={HERO_CATEGORIES[2].name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
+                  <span className="text-white text-sm font-semibold">{HERO_CATEGORIES[2].name}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
