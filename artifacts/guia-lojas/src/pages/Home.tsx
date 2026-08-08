@@ -160,17 +160,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-600 mb-4">Categorias</p>
           <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
-            {apiCategories.map((cat: any, i: number) => {
-              const count = stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length;
-              return (
+            {apiCategories
+              .map((cat: any) => ({
+                ...cat,
+                count: stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length,
+              }))
+              .sort((a: any, b: any) => b.count - a.count)
+              .map((cat: any, i: number) => (
                 <CategoryCard
                   key={cat.id}
-                  category={{ ...cat, count }}
+                  category={cat}
                   index={i}
                   onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
                 />
-              );
-            })}
+              ))}
           </div>
         </div>
       </section>
