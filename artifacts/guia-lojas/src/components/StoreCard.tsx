@@ -34,7 +34,8 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.4, delay: index * 0.08 }}
       className="group cursor-pointer rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
       data-testid={`card-store-${store.id}`}

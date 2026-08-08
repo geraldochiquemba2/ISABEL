@@ -25,7 +25,8 @@ export function CategoryCard({ category, index = 0, onClick, active }: CategoryC
   return (
     <motion.button
       initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.25, delay: index * 0.04 }}
       onClick={onClick}
       data-testid={`button-category-${category.id}`}
