@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowRight } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
@@ -18,11 +18,10 @@ const HERO_CATEGORIES = [
   { id: "eletronicos", name: "Eletrônicos", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=500&fit=crop&auto=format&q=75" },
 ];
 
-const SLOT_POSITIONS = [
-  { left: "0%",  bottom: "0%",  rotate: -8, scale: 0.85, zIndex: 10 },
-  { left: "15%", bottom: "5%",  rotate: -3, scale: 0.92, zIndex: 20 },
-  { left: "8%",  bottom: "10%", rotate: 3,  scale: 0.96, zIndex: 30 },
-  { left: "12%", bottom: "15%", rotate: -1, scale: 1,    zIndex: 40 },
+const POSITIONS = [
+  { x: "8%",  y: "10%", rotate: -6, scale: 0.82, zIndex: 10 },
+  { x: "22%", y: "4%",  rotate:  3, scale: 0.90, zIndex: 20 },
+  { x: "14%", y: "0%",  rotate: -1, scale: 1.00, zIndex: 30 },
 ];
 
 async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
@@ -34,14 +33,21 @@ async function fetchStats(): Promise<{ totalStores: number; totalCategories: num
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [frontIdx, setFrontIdx] = useState(0);
+  const [frontIdx, setFrontIdx] = useState(2);
+  const heroN = HERO_CATEGORIES.length;
 
   useEffect(() => {
     const t = setInterval(() => {
-      setFrontIdx((prev) => (prev + 1) % HERO_CATEGORIES.length);
-    }, 3000);
+      setFrontIdx((prev) => (prev + 1) % heroN);
+    }, 2800);
     return () => clearInterval(t);
-  }, []);
+  }, [heroN]);
+
+  const visibleSlots = [
+    { catIdx: (frontIdx - 2 + heroN) % heroN, rank: 0 },
+    { catIdx: (frontIdx - 1 + heroN) % heroN, rank: 1 },
+    { catIdx: frontIdx,                        rank: 2 },
+  ];
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -105,69 +111,45 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right — stacked cards (auto-cycling) */}
-            <div className="relative h-[400px] sm:h-[450px] lg:h-[500px] hidden sm:block">
-              {[0, 1, 2].map((rank) => {
-                const catIdx = (frontIdx + rank) % HERO_CATEGORIES.length;
-                const cat = HERO_CATEGORIES[catIdx];
-                const pos = SLOT_POSITIONS[rank];
+            {/* Right — animated image collage */}
+            <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
+              <AnimatePresence>
+              {visibleSlots.map(({ catIdx, rank }) => {
+                const img = HERO_CATEGORIES[catIdx];
+                const pos = POSITIONS[rank];
                 return (
-                  <div
-                    key={`${cat.id}-${rank}`}
-                    onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
-                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20 rounded-2xl overflow-hidden ring-2 ring-white/50 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                    style={{
-                      left: pos.left,
-                      bottom: pos.bottom,
-                      rotate: `${pos.rotate}deg`,
-                      scale: `${pos.scale}`,
+                  <motion.div
+                    key={catIdx}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    animate={{
+                      opacity: 1,
+                      left: pos.x,
+                      top: pos.y,
+                      rotate: pos.rotate,
+                      scale: pos.scale,
                       zIndex: pos.zIndex,
-                      width: "min(65%, 280px)",
                     }}
+                    exit={{ opacity: 0, scale: 0.75 }}
+                    transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                    onClick={() => setFrontIdx(catIdx)}
+                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20"
+                    style={{ width: "min(70%, 320px)" }}
                   >
-                    <div className="relative aspect-[3/4]">
+                    <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50">
                       <img
-                        src={cat.image}
-                        alt={cat.name}
+                        src={img.image}
+                        alt={img.name}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
-                        <span className="text-white text-sm font-semibold">{cat.name}</span>
+                        <span className="text-white text-sm font-semibold">{img.name}</span>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
-
-            {/* Mobile — single auto-cycling image */}
-            <div className="sm:hidden relative h-[250px]">
-              <div
-                key={HERO_CATEGORIES[frontIdx].id}
-                onClick={() => setLocation(`/busca?categoria=${HERO_CATEGORIES[frontIdx].id}`)}
-                className="relative rounded-2xl overflow-hidden shadow-xl cursor-pointer h-full transition-all duration-500"
-              >
-                <img
-                  src={HERO_CATEGORIES[frontIdx].image}
-                  alt={HERO_CATEGORIES[frontIdx].name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
-                  <span className="text-white text-sm font-semibold">{HERO_CATEGORIES[frontIdx].name}</span>
-                </div>
-              </div>
-              {/* Dots indicator */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-50">
-                {HERO_CATEGORIES.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                      i === frontIdx ? "bg-white w-4" : "bg-white/50"
-                    }`}
-                  />
-                ))}
-              </div>
+              </AnimatePresence>
             </div>
           </div>
         </div>
