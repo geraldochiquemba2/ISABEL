@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Search, ArrowRight } from "lucide-react";
@@ -18,6 +18,13 @@ const HERO_CATEGORIES = [
   { id: "eletronicos", name: "Eletrônicos", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=500&fit=crop&auto=format&q=75" },
 ];
 
+const SLOT_POSITIONS = [
+  { left: "0%",  bottom: "0%",  rotate: -8, scale: 0.85, zIndex: 10 },
+  { left: "15%", bottom: "5%",  rotate: -3, scale: 0.92, zIndex: 20 },
+  { left: "8%",  bottom: "10%", rotate: 3,  scale: 0.96, zIndex: 30 },
+  { left: "12%", bottom: "15%", rotate: -1, scale: 1,    zIndex: 40 },
+];
+
 async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
   const res = await fetch("/api/stats");
   if (!res.ok) throw new Error("Erro ao buscar stats");
@@ -27,6 +34,14 @@ async function fetchStats(): Promise<{ totalStores: number; totalCategories: num
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const [frontIdx, setFrontIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setFrontIdx((prev) => (prev + 1) % HERO_CATEGORIES.length);
+    }, 3000);
+    return () => clearInterval(t);
+  }, []);
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -90,27 +105,23 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right — stacked cards */}
+            {/* Right — stacked cards (auto-cycling) */}
             <div className="relative h-[400px] sm:h-[450px] lg:h-[500px] hidden sm:block">
-              {HERO_CATEGORIES.map((cat, i) => {
-                const offsets = [
-                  { left: "0%", bottom: "0%", rotate: -8, scale: 0.85, z: 10 },
-                  { left: "15%", bottom: "5%", rotate: -3, scale: 0.92, z: 20 },
-                  { left: "8%", bottom: "10%", rotate: 3, scale: 0.96, z: 30 },
-                  { left: "12%", bottom: "15%", rotate: -1, scale: 1, z: 40 },
-                ];
-                const pos = offsets[i] || offsets[0];
+              {[0, 1, 2].map((rank) => {
+                const catIdx = (frontIdx + rank) % HERO_CATEGORIES.length;
+                const cat = HERO_CATEGORIES[catIdx];
+                const pos = SLOT_POSITIONS[rank];
                 return (
                   <div
-                    key={cat.id}
+                    key={`${cat.id}-${rank}`}
                     onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
-                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20 rounded-2xl overflow-hidden ring-2 ring-white/50"
+                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20 rounded-2xl overflow-hidden ring-2 ring-white/50 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
                     style={{
                       left: pos.left,
                       bottom: pos.bottom,
                       rotate: `${pos.rotate}deg`,
                       scale: `${pos.scale}`,
-                      zIndex: pos.z,
+                      zIndex: pos.zIndex,
                       width: "min(65%, 280px)",
                     }}
                   >
@@ -130,21 +141,32 @@ export default function Home() {
               })}
             </div>
 
-            {/* Mobile — single featured image */}
+            {/* Mobile — single auto-cycling image */}
             <div className="sm:hidden relative h-[250px]">
               <div
-                onClick={() => setLocation(`/busca?categoria=${HERO_CATEGORIES[2].id}`)}
-                className="relative rounded-2xl overflow-hidden shadow-xl cursor-pointer h-full"
+                key={HERO_CATEGORIES[frontIdx].id}
+                onClick={() => setLocation(`/busca?categoria=${HERO_CATEGORIES[frontIdx].id}`)}
+                className="relative rounded-2xl overflow-hidden shadow-xl cursor-pointer h-full transition-all duration-500"
               >
                 <img
-                  src={HERO_CATEGORIES[2].image}
-                  alt={HERO_CATEGORIES[2].name}
+                  src={HERO_CATEGORIES[frontIdx].image}
+                  alt={HERO_CATEGORIES[frontIdx].name}
                   className="w-full h-full object-cover"
-                  loading="lazy"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
-                  <span className="text-white text-sm font-semibold">{HERO_CATEGORIES[2].name}</span>
+                  <span className="text-white text-sm font-semibold">{HERO_CATEGORIES[frontIdx].name}</span>
                 </div>
+              </div>
+              {/* Dots indicator */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-50">
+                {HERO_CATEGORIES.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      i === frontIdx ? "bg-white w-4" : "bg-white/50"
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>
