@@ -56,7 +56,8 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
                 transition={{ duration: 1, ease: "easeInOut" }}
                 src={currentImage}
                 alt={store.name}
-                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
                 onError={() => setImgError(true)}
               />
             </>
@@ -91,6 +92,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
               src={store.logoUrl}
               alt={`${store.name} Logo`}
               className="w-6 h-6 rounded-md object-cover flex-shrink-0"
+              loading="lazy"
             />
           ) : (
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center text-yellow-700 font-bold text-[10px] flex-shrink-0">

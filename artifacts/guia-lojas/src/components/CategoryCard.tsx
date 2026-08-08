@@ -37,6 +37,7 @@ export function CategoryCard({ category, index = 0, onClick, active }: CategoryC
           src={imageUrl}
           alt={category.name}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
         />
       )}
       {/* Gradient overlay */}
