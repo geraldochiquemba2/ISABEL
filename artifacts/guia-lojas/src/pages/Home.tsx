@@ -23,9 +23,9 @@ const FALLBACK_IMAGES: Record<string, string> = {
 };
 
 const POSITIONS = [
-  { x: "8%",  y: "10%", rotate: -6, scale: 0.82, zIndex: 10 },
-  { x: "22%", y: "4%",  rotate:  3, scale: 0.90, zIndex: 20 },
-  { x: "14%", y: "0%",  rotate: -1, scale: 1.00, zIndex: 30 },
+  { x: "0%",  y: "15%", rotate: -6, scale: 0.82, zIndex: 10 },
+  { x: "15%", y: "8%",  rotate:  3, scale: 0.90, zIndex: 20 },
+  { x: "8%",  y: "0%",  rotate: -1, scale: 1.00, zIndex: 30 },
 ];
 
 async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
@@ -99,29 +99,29 @@ export default function Home() {
     <PageTransition>
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-yellow-50 via-white to-amber-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-24">
+          <div className="grid grid-cols-2 gap-4 sm:gap-10 items-center">
             {/* Left — text */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-2">
+              <h1 className="text-2xl sm:text-4xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-1 sm:mb-2">
                 Apresenta-te com a dignidade
               </h1>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-8">
+              <h1 className="text-2xl sm:text-4xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-4 sm:mb-8">
                 de quem carrega<br />a luz de Deus
               </h1>
 
               <Link href="/busca">
-                <span className="inline-flex items-center gap-2 px-8 sm:px-10 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
-                  <Search size={18} />
+                <span className="inline-flex items-center gap-2 px-5 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-xs sm:text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
+                  <Search size={16} />
                   Buscar
                 </span>
               </Link>
 
-              <div className="flex items-center gap-6 mt-8 text-sm text-gray-500">
+              <div className="flex items-center gap-4 sm:gap-6 mt-5 sm:mt-8 text-xs sm:text-sm text-gray-500">
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                   {totalStores.toLocaleString("pt-AO")} negócios
@@ -134,7 +134,7 @@ export default function Home() {
             </motion.div>
 
             {/* Right — animated image collage */}
-            <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
+            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[540px] mt-8 lg:mt-0">
               <AnimatePresence>
               {visibleSlots.map(({ catIdx, rank }) => {
                 const img = heroItems[catIdx];
@@ -156,7 +156,7 @@ export default function Home() {
                     transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
                     onClick={() => setFrontIdx(catIdx)}
                     className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20"
-                    style={{ width: "min(70%, 320px)" }}
+                    style={{ width: "min(60%, 240px)" }}
                   >
                     <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50">
                       <img
