@@ -11,12 +11,16 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores, getCategories } from "@/lib/api";
 
-const HERO_CATEGORIES = [
-  { id: "moda", name: "Moda", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop&auto=format&q=75" },
-  { id: "alimentacao", name: "Restaurantes", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=500&fit=crop&auto=format&q=75" },
-  { id: "saude-beleza", name: "Beleza", image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=500&fit=crop&auto=format&q=75" },
-  { id: "eletronicos", name: "Eletrônicos", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=500&fit=crop&auto=format&q=75" },
-];
+const FALLBACK_IMAGES: Record<string, string> = {
+  moda: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=500&fit=crop&auto=format&q=75",
+  eletronicos: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400&h=500&fit=crop&auto=format&q=75",
+  alimentacao: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=500&fit=crop&auto=format&q=75",
+  "saude-beleza": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=500&fit=crop&auto=format&q=75",
+  "servicos-residenciais": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=500&fit=crop&auto=format&q=75",
+  automotivo: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=500&fit=crop&auto=format&q=75",
+  educacao: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=500&fit=crop&auto=format&q=75",
+  pets: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=500&fit=crop&auto=format&q=75",
+};
 
 const POSITIONS = [
   { x: "8%",  y: "10%", rotate: -6, scale: 0.82, zIndex: 10 },
@@ -34,20 +38,6 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [frontIdx, setFrontIdx] = useState(2);
-  const heroN = HERO_CATEGORIES.length;
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      setFrontIdx((prev) => (prev + 1) % heroN);
-    }, 2800);
-    return () => clearInterval(t);
-  }, [heroN]);
-
-  const visibleSlots = [
-    { catIdx: (frontIdx - 2 + heroN) % heroN, rank: 0 },
-    { catIdx: (frontIdx - 1 + heroN) % heroN, rank: 1 },
-    { catIdx: frontIdx,                        rank: 2 },
-  ];
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -67,6 +57,38 @@ export default function Home() {
 
   const totalStores = stats?.totalStores ?? stores.length;
   const totalCategories = stats?.totalCategories ?? apiCategories.length;
+
+  const heroItems: { id: string; name: string; image: string }[] = apiCategories.length > 0
+    ? apiCategories
+        .filter((cat: any) => cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id])
+        .slice(0, 8)
+        .map((cat: any) => ({
+          id: cat.id,
+          name: cat.name,
+          image: cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"],
+        }))
+    : [
+        { id: "moda", name: "Moda", image: FALLBACK_IMAGES["moda"] },
+        { id: "alimentacao", name: "Restaurantes", image: FALLBACK_IMAGES["alimentacao"] },
+        { id: "saude-beleza", name: "Beleza", image: FALLBACK_IMAGES["saude-beleza"] },
+        { id: "eletronicos", name: "Eletrônicos", image: FALLBACK_IMAGES["eletronicos"] },
+      ];
+
+  const heroN = heroItems.length || 1;
+
+  useEffect(() => {
+    if (heroN < 2) return;
+    const t = setInterval(() => {
+      setFrontIdx((prev) => (prev + 1) % heroN);
+    }, 2800);
+    return () => clearInterval(t);
+  }, [heroN]);
+
+  const visibleSlots = [
+    { catIdx: (frontIdx - 2 + heroN) % heroN, rank: 0 },
+    { catIdx: (frontIdx - 1 + heroN) % heroN, rank: 1 },
+    { catIdx: frontIdx,                        rank: 2 },
+  ];
 
   let featured = stores.filter((s) => s.isFeatured).slice(0, 4);
   if (featured.length === 0) featured = stores.slice(0, 4);
@@ -115,11 +137,12 @@ export default function Home() {
             <div className="flex items-center justify-center relative h-[380px] sm:h-[450px] lg:h-[540px] mt-0">
               <AnimatePresence>
               {visibleSlots.map(({ catIdx, rank }) => {
-                const img = HERO_CATEGORIES[catIdx];
+                const img = heroItems[catIdx];
+                if (!img) return null;
                 const pos = POSITIONS[rank];
                 return (
                   <motion.div
-                    key={catIdx}
+                    key={`${img.id}-${catIdx}`}
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{
                       opacity: 1,
