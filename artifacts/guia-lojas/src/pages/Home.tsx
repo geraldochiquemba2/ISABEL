@@ -80,7 +80,7 @@ export default function Home() {
     if (heroN < 2) return;
     const t = setInterval(() => {
       setFrontIdx((prev) => (prev + 1) % heroN);
-    }, 2800);
+    }, 3500);
     return () => clearInterval(t);
   }, [heroN]);
 
@@ -143,7 +143,7 @@ export default function Home() {
                 return (
                   <motion.div
                     key={`${img.id}-${catIdx}`}
-                    initial={{ opacity: 0, scale: 0.85 }}
+                    initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
                     animate={{
                       opacity: 1,
                       left: pos.x,
@@ -151,18 +151,19 @@ export default function Home() {
                       rotate: pos.rotate,
                       scale: pos.scale,
                       zIndex: pos.zIndex,
+                      filter: "blur(0px)",
                     }}
-                    exit={{ opacity: 0, scale: 0.75 }}
-                    transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                    exit={{ opacity: 0, scale: 0.85, filter: "blur(4px)" }}
+                    transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
                     onClick={() => setFrontIdx(catIdx)}
                     className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20"
                     style={{ width: "min(60%, 240px)" }}
                   >
-                    <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50">
+                    <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50 transition-shadow duration-500 hover:shadow-3xl">
                       <img
                         src={img.image}
                         alt={img.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out"
                         loading="lazy"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
