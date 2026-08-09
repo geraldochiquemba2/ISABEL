@@ -183,7 +183,7 @@ export default function Home() {
       <section className="border-y border-yellow-100 bg-gradient-to-b from-white to-yellow-50/30 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-600 mb-4">Categorias</p>
-          <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
+          <div className="flex overflow-x-auto overflow-y-hidden scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
             {apiCategories
               .map((cat: any) => ({
                 ...cat,
