@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowRight, Sparkles, ShoppingCart, MessageCircle, Compass, X } from "lucide-react";
@@ -39,6 +39,8 @@ export default function Home() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [frontIdx, setFrontIdx] = useState(2);
   const [showStoresModal, setShowStoresModal] = useState(false);
+  const [scrolledEnd, setScrolledEnd] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -76,6 +78,14 @@ export default function Home() {
       ];
 
   const heroN = heroItems.length || 1;
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el) {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setScrolledEnd(atEnd);
+    }
+  };
 
   useEffect(() => {
     if (heroN < 2) return;
@@ -182,7 +192,7 @@ export default function Home() {
       <section className="border-y border-yellow-100 bg-gradient-to-b from-white to-yellow-50/30 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-600 mb-4">Categorias</p>
-          <div className="flex overflow-x-auto overflow-y-hidden scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
+          <div ref={scrollRef} onScroll={handleScroll} className="flex overflow-x-auto overflow-y-hidden scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
             {apiCategories
               .map((cat: any) => ({
                 ...cat,
@@ -198,8 +208,15 @@ export default function Home() {
                 />
               ))}
           </div>
-          <div className="flex justify-center mt-3 sm:hidden">
-            <ArrowRight size={20} className="text-yellow-500 animate-pulse" />
+          <div className="flex justify-center items-center gap-2 mt-3 sm:hidden">
+            {scrolledEnd ? (
+              <span className="text-xs text-gray-400 font-medium">Fim</span>
+            ) : (
+              <>
+                <span className="text-xs text-yellow-500 font-medium">Deslize para ver mais</span>
+                <ArrowRight size={16} className="text-yellow-500 animate-pulse" />
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -245,7 +262,7 @@ export default function Home() {
                     <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
                       <MessageCircle size={18} className="text-white" />
                     </div>
-                    <span className="text-sm font-medium text-white drop-shadow">Conversar com um agente</span>
+                    <span className="text-sm font-medium text-white drop-shadow">Conversar com um agente de envio</span>
                   </span>
                 </a>
               </div>
