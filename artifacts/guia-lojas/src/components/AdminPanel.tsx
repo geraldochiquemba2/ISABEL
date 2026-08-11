@@ -10,7 +10,7 @@ import {
 } from "@/lib/api";
 
 // ── Types ──────────────────────────────────────────────────────────────
-type MainTab = "contas" | "lojas" | "categorias" | "dicas";
+type MainTab = "contas" | "lojas" | "categorias" | "dicas" | "carrinhos";
 type AccountTab = "PENDENTE" | "APROVADO" | "DESATIVADO";
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -42,6 +42,7 @@ export function AdminPanel() {
           {([
             { id: "contas",     label: "Contas",      icon: <Phone size={13} /> },
             { id: "lojas",      label: "Lojas",        icon: <Star size={13} /> },
+            { id: "carrinhos",  label: "Carrinhos",    icon: <Tag size={13} /> },
             { id: "categorias", label: "Categorias",   icon: <Tag size={13} /> },
             { id: "dicas",      label: "Dicas de Estilo", icon: <Lightbulb size={13} /> },
           ] as { id: MainTab; label: string; icon: React.ReactNode }[]).map((t) => (
@@ -62,6 +63,7 @@ export function AdminPanel() {
 
         {mainTab === "contas"     && <ContasSection />}
         {mainTab === "lojas"      && <LojasSection />}
+        {mainTab === "carrinhos"  && <CarrinhosAccessSection />}
         {mainTab === "categorias" && <CategoriasSection />}
         {mainTab === "dicas"      && <DicasSection />}
       </div>
@@ -862,6 +864,144 @@ function DicasSection() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CARRINHOS ACCESS
+// ═══════════════════════════════════════════════════════════════════════
+function CarrinhosAccessSection() {
+  const [pendingStores, setPendingStores] = useState<any[]>([]);
+  const [allStores, setAllStores] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<"pending" | "all">("pending");
+
+  useEffect(() => {
+    fetchPending();
+    fetchAll();
+  }, []);
+
+  const fetchPending = async () => {
+    try {
+      const res = await fetch("/api/stores/carrinho-access/pending");
+      const data = await res.json();
+      setPendingStores(data);
+    } catch (err) {
+      console.error("Erro ao buscar pedidos pendentes:", err);
+    }
+  };
+
+  const fetchAll = async () => {
+    try {
+      const res = await fetch("/api/stores/admin/all");
+      const data = await res.json();
+      setAllStores(data);
+    } catch (err) {
+      console.error("Erro ao buscar lojas:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAccess = async (storeId: string, status: string) => {
+    try {
+      await fetch(`/api/stores/${storeId}/carrinho-access`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      fetchPending();
+      fetchAll();
+    } catch (err) {
+      console.error("Erro ao atualizar acesso:", err);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-bold">Acesso ao Carrinho</h3>
+      
+      <div className="flex gap-2 border-b border-black pb-2">
+        <button
+          onClick={() => setTab("pending")}
+          className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-colors ${
+            tab === "pending" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Pendentes ({pendingStores.length})
+        </button>
+        <button
+          onClick={() => setTab("all")}
+          className={`px-4 py-2 text-sm font-semibold rounded-t-lg transition-colors ${
+            tab === "all" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Todas as Lojas
+        </button>
+      </div>
+
+      {tab === "pending" && (
+        <div className="space-y-3">
+          {pendingStores.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-8 text-center">Nenhum pedido pendente.</p>
+          ) : (
+            pendingStores.map((store) => (
+              <div key={store.id} className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div>
+                  <p className="text-sm font-semibold">{store.name}</p>
+                  <p className="text-xs text-muted-foreground">Proprietário: {store.ownerName} ({store.ownerPhone})</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleAccess(store.id, "APROVADO")}
+                    className="px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-semibold hover:bg-green-600 transition-colors flex items-center gap-1"
+                  >
+                    <Check size={12} /> Aprovar
+                  </button>
+                  <button
+                    onClick={() => handleAccess(store.id, "RECUSADO")}
+                    className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-semibold hover:bg-red-600 transition-colors flex items-center gap-1"
+                  >
+                    <X size={12} /> Recusar
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {tab === "all" && (
+        <div className="space-y-2">
+          {allStores.map((store) => (
+            <div key={store.id} className="flex items-center justify-between bg-white border border-gray-100 rounded-xl p-3">
+              <div>
+                <p className="text-sm font-medium">{store.name}</p>
+                <p className="text-xs text-muted-foreground">{store.category}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${
+                  store.carrinhoAccess === "APROVADO" ? "bg-green-100 text-green-700" :
+                  store.carrinhoAccess === "RECUSADO" ? "bg-red-100 text-red-700" :
+                  "bg-yellow-100 text-yellow-700"
+                }`}>
+                  {store.carrinhoAccess || "PENDENTE"}
+                </span>
+                <select
+                  value={store.carrinhoAccess || "PENDENTE"}
+                  onChange={(e) => handleAccess(store.id, e.target.value)}
+                  className="text-xs border border-gray-200 rounded-lg px-2 py-1"
+                >
+                  <option value="PENDENTE">Pendente</option>
+                  <option value="APROVADO">Aprovado</option>
+                  <option value="RECUSADO">Recusado</option>
+                </select>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

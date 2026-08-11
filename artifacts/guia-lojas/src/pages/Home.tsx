@@ -251,6 +251,14 @@ export default function Home() {
                     <span className="text-sm font-medium text-white drop-shadow">Quero descobrir o meu estilo</span>
                   </span>
                 </Link>
+                <Link href="/carrinhos">
+                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
+                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
+                      <ShoppingCart size={18} className="text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-white drop-shadow">Ver Carrinhos</span>
+                  </span>
+                </Link>
                 <button onClick={() => setShowStoresModal(true)} className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
                   <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
                     <ShoppingCart size={18} className="text-white" />

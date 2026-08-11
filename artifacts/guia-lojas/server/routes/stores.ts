@@ -182,6 +182,65 @@ storesRouter.patch("/:id/trending", async (req, res) => {
   }
 });
 
+// POST /api/stores/:id/carrinho-access — loja solicita acesso ao carrinho
+storesRouter.post("/:id/carrinho-access", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query(
+      `UPDATE stores SET carrinho_access='PENDENTE' WHERE id=$1`,
+      [id]
+    );
+    res.json({ success: true, message: "Solicitação enviada. Aguarde aprovação do admin." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao solicitar acesso ao carrinho" });
+  }
+});
+
+// PUT /api/stores/:id/carrinho-access — admin aprova/recusa acesso ao carrinho
+storesRouter.put("/:id/carrinho-access", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // APROVADO ou RECUSADO
+    if (!["APROVADO", "RECUSADO", "PENDENTE"].includes(status)) {
+      return res.status(400).json({ error: "Status inválido" });
+    }
+    await pool.query(
+      `UPDATE stores SET carrinho_access=$2 WHERE id=$1`,
+      [id, status]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao atualizar acesso ao carrinho" });
+  }
+});
+
+// GET /api/stores/carrinho-access/pending — lojas com pedido de acesso pendente (admin)
+storesRouter.get("/carrinho-access/pending", async (_req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT s.*, u.name as owner_name, u.phone as owner_phone
+      FROM stores s
+      JOIN users u ON u.store_id = s.id
+      WHERE s.carrinho_access = 'PENDENTE'
+      ORDER BY s.created_at DESC
+    `);
+    res.json(result.rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      category: r.category,
+      ownerName: r.owner_name,
+      ownerPhone: r.owner_phone,
+      carrinhoAccess: r.carrinho_access,
+      createdAt: r.created_at,
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar pedidos pendentes" });
+  }
+});
+
 // GET /api/stores/admin/all — todas as lojas para painel admin
 storesRouter.get("/admin/all", async (_req, res) => {
   try {

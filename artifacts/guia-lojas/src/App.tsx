@@ -10,6 +10,7 @@ import StoreProfile from "@/pages/StoreProfile";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import DescobrirEstilo from "@/pages/DescobrirEstilo";
+import VerCarrinhos from "@/pages/VerCarrinhos";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/login" component={Login} />
         <Route path="/descobrir-estilo" component={DescobrirEstilo} />
+        <Route path="/carrinhos" component={VerCarrinhos} />
         <Route component={NotFound} />
       </Switch>
     </>

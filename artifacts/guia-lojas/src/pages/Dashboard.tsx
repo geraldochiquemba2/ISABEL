@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { CATEGORIES } from "@/data/mock";
 
-type Section = "overview" | "loja" | "produtos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "carrinhos" | "admin";
 
 export default function Dashboard() {
   const [loc, setLoc] = useLocation();
@@ -300,6 +300,7 @@ export default function Dashboard() {
         { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
         { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
         { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
+        { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
       ];
 
   return (
@@ -448,6 +449,7 @@ export default function Dashboard() {
               {section === "overview" && <OverviewSection store={store} />}
               {section === "loja" && <LojaSection myStore={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
               {section === "produtos" && <ProdutosSection myStore={store} />}
+              {section === "carrinhos" && <CarrinhosSection myStore={store} />}
               {section === "admin" && <AdminPanel />}
             </motion.div>
           )}
@@ -1371,6 +1373,313 @@ function ProdutosSection({ myStore }: { myStore: any }) {
         ))}
         {products.length === 0 && (
           <p className="text-sm text-muted-foreground py-8 text-center">Nenhum produto cadastrado.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CarrinhosSection({ myStore }: { myStore: any }) {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    currency: "AOA",
+    category: "",
+    subcategory: "",
+    imageUrl: "",
+    imageUrls: [] as string[],
+    imageColor: "#f0f0f0",
+  });
+  const [uploading, setUploading] = useState(false);
+
+  const carrinhoAccess = myStore?.carrinhoAccess || "PENDENTE";
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`/api/products?store_id=${myStore.id}&is_carrinho=true`);
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error("Erro ao buscar carrinhos:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      console.error("Erro ao buscar categorias:", err);
+    }
+  };
+
+  const requestAccess = async () => {
+    try {
+      const res = await fetch(`/api/stores/${myStore.id}/carrinho-access`, { method: "POST" });
+      if (res.ok) {
+        alert("Solicitação enviada! Aguarde aprovação do administrador.");
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Erro ao solicitar acesso:", err);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const uploadedUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", files[i]);
+        const res = await fetch("/api/media/upload", { method: "POST", body: formDataUpload });
+        const data = await res.json();
+        if (data.url) uploadedUrls.push(data.url);
+      }
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: prev.imageUrl || uploadedUrls[0],
+        imageUrls: [...prev.imageUrls, ...uploadedUrls],
+      }));
+    } catch (err) {
+      console.error("Erro no upload:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.price) return alert("Nome e preço são obrigatórios");
+    try {
+      const productData = {
+        id: editingProduct?.id || `carr-${Date.now()}`,
+        storeId: myStore.id,
+        name: formData.name,
+        price: parseFloat(formData.price),
+        currency: formData.currency,
+        imageUrl: formData.imageUrl,
+        imageUrls: formData.imageUrls,
+        imageColor: formData.imageColor,
+        category: formData.category || null,
+        subcategory: formData.subcategory || null,
+        isCarrinho: true,
+      };
+      if (editingProduct) {
+        await fetch(`/api/products/${editingProduct.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(productData),
+        });
+      } else {
+        await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(productData),
+        });
+      }
+      setShowForm(false);
+      setEditingProduct(null);
+      setFormData({ name: "", price: "", currency: "AOA", category: "", subcategory: "", imageUrl: "", imageUrls: [], imageColor: "#f0f0f0" });
+      fetchProducts();
+    } catch (err) {
+      console.error("Erro ao salvar carrinho:", err);
+    }
+  };
+
+  const handleEdit = (product: any) => {
+    setEditingProduct(product);
+    setFormData({
+      name: product.name,
+      price: product.price?.toString() || "",
+      currency: product.currency || "AOA",
+      category: product.category || "",
+      subcategory: product.subcategory || "",
+      imageUrl: product.imageUrl || "",
+      imageUrls: product.imageUrls || [],
+      imageColor: product.imageColor || "#f0f0f0",
+    });
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Eliminar este item do carrinho?")) return;
+    try {
+      await fetch(`/api/products/${id}`, { method: "DELETE" });
+      fetchProducts();
+    } catch (err) {
+      console.error("Erro ao eliminar:", err);
+    }
+  };
+
+  if (carrinhoAccess !== "APROVADO") {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-bold">Carrinhos</h2>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+          <ShoppingCart size={48} className="mx-auto text-amber-400 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Acesso ao Carrinho</h3>
+          {carrinhoAccess === "PENDENTE" ? (
+            <p className="text-sm text-gray-600 mb-4">A sua solicitação está pendente de aprovação pelo administrador.</p>
+          ) : (
+            <>
+              <p className="text-sm text-gray-600 mb-4">Solicite acesso para publicar os seus carrinhos nesta plataforma.</p>
+              <button
+                onClick={requestAccess}
+                className="px-6 py-3 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+              >
+                Solicitar Acesso
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold">Carrinhos</h2>
+        <button
+          onClick={() => { setShowForm(true); setEditingProduct(null); setFormData({ name: "", price: "", currency: "AOA", category: "", subcategory: "", imageUrl: "", imageUrls: [], imageColor: "#f0f0f0" }); }}
+          className="px-4 py-2 bg-[#D4A843] text-white rounded-xl text-sm font-semibold hover:bg-[#B8860B] transition-colors"
+        >
+          + Adicionar Item
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 space-y-4">
+          <h3 className="font-semibold">{editingProduct ? "Editar Item" : "Novo Item do Carrinho"}</h3>
+          <input
+            type="text"
+            placeholder="Nome do produto"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
+          />
+          <div className="flex gap-3">
+            <input
+              type="number"
+              placeholder="Preço"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
+            />
+            <select
+              value={formData.currency}
+              onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
+            >
+              <option value="AOA">AOA</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+          <div className="flex gap-3">
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value, subcategory: "" })}
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
+            >
+              <option value="">Categoria</option>
+              {categories.map((cat: any) => (
+                <option key={cat.id} value={cat.name}>{cat.name}</option>
+              ))}
+            </select>
+            {formData.category && (
+              <select
+                value={formData.subcategory}
+                onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
+                className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
+              >
+                <option value="">Subcategoria</option>
+                {categories.find((c: any) => c.name === formData.category)?.subcategories?.map((sub: string) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+              </select>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 mb-1">Imagens</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="w-full text-sm"
+            />
+            {uploading && <p className="text-xs text-amber-600 mt-1">A enviar imagem...</p>}
+            {formData.imageUrls.length > 0 && (
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {formData.imageUrls.map((url, i) => (
+                  <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden">
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      onClick={() => {
+                        const newUrls = formData.imageUrls.filter((_, idx) => idx !== i);
+                        setFormData({ ...formData, imageUrls: newUrls, imageUrl: newUrls[0] || "" });
+                      }}
+                      className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center"
+                    >×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button onClick={handleSubmit} className="px-5 py-2.5 bg-[#D4A843] text-white rounded-xl text-sm font-semibold">
+              {editingProduct ? "Salvar" : "Adicionar"}
+            </button>
+            <button onClick={() => { setShowForm(false); setEditingProduct(null); }} className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {products.map((product) => (
+          <div key={product.id} className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-4">
+            {product.imageUrl ? (
+              <img src={product.imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover" />
+            ) : (
+              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center">
+                <ShoppingCart size={20} className="text-gray-400" />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 truncate">{product.name}</p>
+              <p className="text-xs text-gray-500">{product.category}</p>
+              <p className="text-sm font-bold text-[#D4A843]">{product.price?.toLocaleString("pt-AO")} {product.currency}</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => handleEdit(product)} className="p-2 text-gray-400 hover:text-[#D4A843] transition-colors">
+                ✏️
+              </button>
+              <button onClick={() => handleDelete(product.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+        {products.length === 0 && !loading && (
+          <p className="text-sm text-gray-500 py-8 text-center">Nenhum item no carrinho.</p>
         )}
       </div>
     </div>

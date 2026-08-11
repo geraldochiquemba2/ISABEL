@@ -24,6 +24,7 @@ export async function initDB() {
         is_open     BOOLEAN DEFAULT TRUE,
         is_featured BOOLEAN DEFAULT FALSE,
         is_trending BOOLEAN DEFAULT FALSE,
+        carrinho_access TEXT DEFAULT 'PENDENTE',
         description TEXT,
         cover_color TEXT,
         cover_image TEXT,
@@ -45,6 +46,7 @@ export async function initDB() {
         image_color   TEXT DEFAULT '#f0f0f0',
         category      TEXT,
         subcategory   TEXT,
+        is_carrinho   BOOLEAN DEFAULT FALSE,
         created_at    TIMESTAMPTZ DEFAULT NOW()
       );
 
@@ -100,6 +102,8 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_trending BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS subcategories TEXT[] DEFAULT '{}'`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'PENDENTE'`,
+      `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_carrinho BOOLEAN DEFAULT FALSE`,
     ];
 
     for (const sql of alterations) {
