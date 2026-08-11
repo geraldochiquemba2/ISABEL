@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ArrowRight, Sparkles, ShoppingCart, MessageCircle, Compass, X } from "lucide-react";
+import { Search, ArrowRight, Sparkles, ShoppingCart, MessageCircle, Compass } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { CategoryCard } from "@/components/CategoryCard";
@@ -38,7 +38,6 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [frontIdx, setFrontIdx] = useState(2);
-  const [showStoresModal, setShowStoresModal] = useState(false);
   const [scrolledEnd, setScrolledEnd] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -259,12 +258,6 @@ export default function Home() {
                     <span className="text-sm font-medium text-white drop-shadow">Ver Carrinhos</span>
                   </span>
                 </Link>
-                <button onClick={() => setShowStoresModal(true)} className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
-                  <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
-                    <ShoppingCart size={18} className="text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-white drop-shadow">Ver carrinhos Shein, Zara, AliExpress...</span>
-                </button>
                 <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer">
                   <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
                     <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
@@ -334,58 +327,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* Modal Lojas */}
-      {showStoresModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowStoresModal(false)}></div>
-          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="bg-gradient-to-r from-[#D4A843] to-[#B8860B] p-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <ShoppingCart size={22} className="text-white" />
-                  <h2 className="text-lg font-bold text-white">Escolha uma loja</h2>
-                </div>
-                <button onClick={() => setShowStoresModal(false)} className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
-                  <X size={18} className="text-white" />
-                </button>
-              </div>
-            </div>
-            <div className="p-5 flex flex-col gap-3">
-              <a href="https://www.shein.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-amber-200 hover:bg-amber-50/50 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4A843] to-[#B8860B] flex items-center justify-center shadow-lg">
-                  <ShoppingCart size={22} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-[#D4A843] transition-colors">Shein</h3>
-                  <p className="text-xs text-gray-500">Moda acessível</p>
-                </div>
-                <ArrowRight size={18} className="ml-auto text-gray-400 group-hover:text-[#D4A843] transition-colors" />
-              </a>
-              <a href="https://www.zara.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-amber-200 hover:bg-amber-50/50 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4A843] to-[#B8860B] flex items-center justify-center shadow-lg">
-                  <ShoppingCart size={22} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-[#D4A843] transition-colors">Zara</h3>
-                  <p className="text-xs text-gray-500">Moda premium</p>
-                </div>
-                <ArrowRight size={18} className="ml-auto text-gray-400 group-hover:text-[#D4A843] transition-colors" />
-              </a>
-              <a href="https://www.aliexpress.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-amber-200 hover:bg-amber-50/50 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4A843] to-[#B8860B] flex items-center justify-center shadow-lg">
-                  <ShoppingCart size={22} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-[#D4A843] transition-colors">AliExpress</h3>
-                  <p className="text-xs text-gray-500">Produtos variados</p>
-                </div>
-                <ArrowRight size={18} className="ml-auto text-gray-400 group-hover:text-[#D4A843] transition-colors" />
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
     </PageTransition>
   );
 }
