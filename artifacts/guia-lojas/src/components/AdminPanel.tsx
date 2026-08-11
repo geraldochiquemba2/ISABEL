@@ -888,9 +888,10 @@ function CarrinhosAccessSection() {
     try {
       const res = await fetch("/api/stores/carrinho-access/pending");
       const data = await res.json();
-      setPendingStores(data);
+      setPendingStores(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Erro ao buscar pedidos pendentes:", err);
+      setPendingStores([]);
     }
   };
 
@@ -898,9 +899,10 @@ function CarrinhosAccessSection() {
     try {
       const res = await fetch("/api/stores/admin/all");
       const data = await res.json();
-      setAllStores(data);
+      setAllStores(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Erro ao buscar lojas:", err);
+      setAllStores([]);
     } finally {
       setLoading(false);
     }
