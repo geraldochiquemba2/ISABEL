@@ -24,7 +24,7 @@ export async function initDB() {
         is_open     BOOLEAN DEFAULT TRUE,
         is_featured BOOLEAN DEFAULT FALSE,
         is_trending BOOLEAN DEFAULT FALSE,
-        carrinho_access TEXT DEFAULT 'PENDENTE',
+        carrinho_access TEXT DEFAULT 'NAO_SOLICITADO',
         description TEXT,
         cover_color TEXT,
         cover_image TEXT,
@@ -102,7 +102,7 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_trending BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS subcategories TEXT[] DEFAULT '{}'`,
-      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'PENDENTE'`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'NAO_SOLICITADO'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_carrinho BOOLEAN DEFAULT FALSE`,
     ];
 

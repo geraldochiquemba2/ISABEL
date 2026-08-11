@@ -202,7 +202,7 @@ storesRouter.put("/:id/carrinho-access", async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body; // APROVADO ou RECUSADO
-    if (!["APROVADO", "RECUSADO", "PENDENTE"].includes(status)) {
+    if (!["APROVADO", "RECUSADO", "NAO_SOLICITADO"].includes(status)) {
       return res.status(400).json({ error: "Status inválido" });
     }
     await pool.query(

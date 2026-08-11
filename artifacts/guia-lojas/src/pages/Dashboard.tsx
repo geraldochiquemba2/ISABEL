@@ -1397,7 +1397,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
   });
   const [uploading, setUploading] = useState(false);
 
-  const carrinhoAccess = myStore?.carrinhoAccess || "PENDENTE";
+  const carrinhoAccess = myStore?.carrinhoAccess || "NAO_SOLICITADO";
 
   useEffect(() => {
     fetchProducts();
