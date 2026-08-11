@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -13,6 +13,9 @@ import { fetchStoreById } from "@/lib/api";
 
 export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const tabParam = params.get("tab");
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -213,14 +216,16 @@ export default function StoreProfile() {
                 Mensagem
               </button>
             </a>
+
           </div>
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="produtos" className="py-6 pb-14">
+        <Tabs defaultValue={tabParam === "carrinhos" && store.carrinhoAccess === "APROVADO" ? "carrinhos" : "produtos"} className="py-6 pb-14">
           <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-border w-full justify-start rounded-none h-auto">
             {[
               { value: "produtos", label: "Produtos / Serviços" },
+              ...(store.carrinhoAccess === "APROVADO" ? [{ value: "carrinhos", label: "Carrinhos" }] : []),
               { value: "info", label: "Informações" },
             ].map((tab) => (
               <TabsTrigger
@@ -235,8 +240,14 @@ export default function StoreProfile() {
           </TabsList>
 
           <TabsContent value="produtos">
-            <ProductsTab products={store.products} storeName={store.name} storeWhatsapp={store.whatsapp} />
+            <ProductsTab products={store.products.filter((p: any) => !p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} />
           </TabsContent>
+
+          {store.carrinhoAccess === "APROVADO" && (
+            <TabsContent value="carrinhos">
+              <CarrinhoTab products={store.products.filter((p: any) => p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} />
+            </TabsContent>
+          )}
 
           <TabsContent value="info">
             <div className="grid sm:grid-cols-2 gap-6 max-w-2xl">
@@ -633,5 +644,238 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
         </a>
       </div>
     </motion.div>
+  );
+}
+
+function CarrinhoTab({ products, storeName, storeWhatsapp }: { products: any[]; storeName: string; storeWhatsapp: string }) {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState<number>(0);
+
+  const toggle = (id: string) => {
+    setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const selectedProducts = products.filter(p => selected.includes(p.id));
+  const totalPrice = selectedProducts.reduce((sum, p) => sum + (p.price || 0), 0);
+
+  const sendWhatsApp = () => {
+    if (selectedProducts.length === 0) return;
+    let msg = `Olá! Gostaria de pedir os seguintes carrinhos de *${storeName}*:\n\n`;
+    selectedProducts.forEach((p, i) => {
+      msg += `${i + 1}. ${p.name}\n   Preço: ${p.price?.toLocaleString("pt-AO")} ${p.currency}\n\n`;
+    });
+    msg += `💰 *Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\nAguardo confirmação!`;
+    window.open(`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+
+  const handlePrev = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (lightboxIndex !== null && products.length > 0) {
+      const p = products[lightboxIndex];
+      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      if (pImages.length > 1) {
+        setLightboxPhotoIndex((prev) => (prev - 1 + pImages.length) % pImages.length);
+      } else {
+        setLightboxIndex((lightboxIndex - 1 + products.length) % products.length);
+        setLightboxPhotoIndex(0);
+      }
+    }
+  };
+
+  const handleNext = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (lightboxIndex !== null && products.length > 0) {
+      const p = products[lightboxIndex];
+      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      if (pImages.length > 1) {
+        setLightboxPhotoIndex((prev) => (prev + 1) % pImages.length);
+      } else {
+        setLightboxIndex((lightboxIndex + 1) % products.length);
+        setLightboxPhotoIndex(0);
+      }
+    }
+  };
+
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <ShoppingCart size={40} className="mx-auto text-gray-300 mb-3" />
+        <p className="text-sm text-muted-foreground">Nenhum carrinho disponível nesta loja.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {products.map((product: any, i: number) => {
+          const isSelected = selected.includes(product.id);
+          const pImages = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+          return (
+            <div
+              key={product.id}
+              className={`relative rounded-2xl overflow-hidden border-2 transition-all ${
+                isSelected ? "border-[#D4A843] shadow-lg shadow-amber-500/20" : "border-transparent shadow-sm hover:shadow-md"
+              }`}
+            >
+              <div
+                className="aspect-square overflow-hidden cursor-zoom-in relative"
+                onClick={() => { setLightboxIndex(i); setLightboxPhotoIndex(0); }}
+              >
+                {pImages.length > 0 ? (
+                  <img src={pImages[0]} alt={product.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.imageColor }}>
+                    <ShoppingCart size={28} className="text-gray-300" />
+                  </div>
+                )}
+                {pImages.length > 1 && (
+                  <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                    📷 {pImages.length} fotos
+                  </div>
+                )}
+              </div>
+              <div className="p-2.5">
+                  <h4 className="text-xs font-semibold text-gray-900 line-clamp-2">{product.name}</h4>
+                  <p className="text-xs font-bold text-[#D4A843] mt-1">{product.price?.toLocaleString("pt-AO")} {product.currency}</p>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggle(product.id); }}
+                    className={`mt-2 w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-xl transition-all border ${
+                      isSelected
+                        ? "bg-[#D4A843] text-white border-[#D4A843]"
+                        : "bg-white text-[#D4A843] border-[#D4A843] hover:bg-[#D4A843] hover:text-white"
+                    }`}
+                  >
+                    <ShoppingCart size={12} />
+                    {isSelected ? "Adicionado ✓" : "Adicionar"}
+                  </button>
+                </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxIndex !== null && products[lightboxIndex] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors p-2.5 z-50 bg-white/10 rounded-full"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="relative w-full max-w-4xl h-[65vh] flex items-center justify-center px-4" onClick={(e) => e.stopPropagation()}>
+              {products.length > 1 && (
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 border border-white/10"
+                >
+                  <ChevronRight size={20} className="rotate-180" />
+                </button>
+              )}
+
+              <motion.div
+                key={`${lightboxIndex}-${lightboxPhotoIndex}`}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.2 }}
+                className="w-full h-full flex flex-col items-center justify-center p-2 touch-pan-y"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, { offset }) => {
+                  if (offset.x < -50) handleNext();
+                  else if (offset.x > 50) handlePrev();
+                }}
+              >
+                {(() => {
+                  const p = products[lightboxIndex];
+                  const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+                  const currentImg = pImages[lightboxPhotoIndex];
+
+                  if (currentImg) {
+                    return (
+                      <>
+                        <img
+                          src={currentImg}
+                          alt={p.name}
+                          className="max-w-full max-h-[85%] object-contain rounded-xl select-none shadow-2xl border border-white/5"
+                        />
+                        {pImages.length > 1 && (
+                          <div className="flex gap-1.5 mt-4">
+                            {pImages.map((_: any, idx: number) => (
+                              <button
+                                key={idx}
+                                onClick={(e) => { e.stopPropagation(); setLightboxPhotoIndex(idx); }}
+                                className={`w-2 h-2 rounded-full transition-all ${
+                                  idx === lightboxPhotoIndex ? "bg-white w-4" : "bg-white/40"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  }
+
+                  return (
+                    <div
+                      className="w-72 h-72 rounded-2xl flex items-center justify-center text-white font-semibold border border-white/10"
+                      style={{ backgroundColor: p.imageColor }}
+                    >
+                      Sem Foto
+                    </div>
+                  );
+                })()}
+              </motion.div>
+
+              {products.length > 1 && (
+                <button
+                  onClick={handleNext}
+                  className="absolute right-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 border border-white/10"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              )}
+            </div>
+
+            <div className="text-center text-white mt-5 px-4 max-w-md flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-base font-semibold tracking-tight">{products[lightboxIndex].name}</h2>
+              <p className="text-sm font-semibold text-[#D4A843] mt-1">
+                {products[lightboxIndex].price?.toLocaleString("pt-AO")} {products[lightboxIndex].currency}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {selected.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 p-4 shadow-xl">
+          <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-gray-900">{selected.length} selecionado{selected.length > 1 ? "s" : ""}</p>
+              <p className="text-sm font-bold text-[#D4A843]">{totalPrice.toLocaleString("pt-AO")} Kz</p>
+            </div>
+            <button
+              onClick={sendWhatsApp}
+              className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
+            >
+              <SiWhatsapp size={16} />
+              Pedir
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
