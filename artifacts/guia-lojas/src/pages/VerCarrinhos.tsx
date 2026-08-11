@@ -93,7 +93,7 @@ export default function VerCarrinhos() {
     });
     
     const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
-    message += `💰 *Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\n`;
+    message += `*Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\n`;
     message += "Aguardo confirmação!";
     
     const encodedMessage = encodeURIComponent(message);

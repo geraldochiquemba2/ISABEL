@@ -194,15 +194,15 @@ export default function StoreProfile() {
               rel="noopener noreferrer"
               data-testid="button-whatsapp"
             >
-              <button className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">
-                <SiWhatsapp size={15} />
+              <button className="flex items-center gap-1.5 sm:gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap">
+                <SiWhatsapp size={14} />
                 WhatsApp
               </button>
             </a>
 
             <a href={`tel:${store.phone.replace(/\D/g, "")}`} data-testid="button-call">
-              <button className="flex items-center gap-2 border border-border text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
-                <Phone size={14} />
+              <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                <Phone size={13} />
                 Ligar
               </button>
             </a>
@@ -211,8 +211,8 @@ export default function StoreProfile() {
               href={`sms:${store.phone.replace(/\D/g, "")}?body=${encodeURIComponent("Olá, vim pela Eliora Collection e gostaria de mais informações.")}`}
               data-testid="button-message"
             >
-              <button className="flex items-center gap-2 border border-border text-foreground text-sm font-medium px-5 py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
-                <MessageSquare size={14} />
+              <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                <MessageSquare size={13} />
                 Mensagem
               </button>
             </a>
@@ -222,19 +222,20 @@ export default function StoreProfile() {
 
         {/* Tabs */}
         <Tabs defaultValue={tabParam === "carrinhos" && store.carrinhoAccess === "APROVADO" ? "carrinhos" : "produtos"} className="py-6 pb-14">
-          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-border w-full justify-start rounded-none h-auto">
+          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-border w-full justify-start rounded-none h-auto overflow-x-auto">
             {[
-              { value: "produtos", label: "Produtos / Serviços" },
-              ...(store.carrinhoAccess === "APROVADO" ? [{ value: "carrinhos", label: "Carrinhos" }] : []),
-              { value: "info", label: "Informações" },
+              { value: "produtos", label: "Produtos", labelFull: "Produtos / Serviços" },
+              ...(store.carrinhoAccess === "APROVADO" ? [{ value: "carrinhos", label: "Carrinhos", labelFull: "Carrinhos" }] : []),
+              { value: "info", label: "Info", labelFull: "Informações" },
             ].map((tab) => (
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
                 data-testid={`tab-${tab.value}`}
-                className="rounded-none border-0 bg-transparent px-4 pb-3 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground"
+                className="rounded-none border-0 bg-transparent px-3 sm:px-4 pb-3 text-xs sm:text-sm font-medium text-muted-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground whitespace-nowrap flex-shrink-0"
               >
-                {tab.label}
+                <span className="hidden sm:inline">{tab.labelFull}</span>
+                <span className="sm:hidden">{tab.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -665,7 +666,7 @@ function CarrinhoTab({ products, storeName, storeWhatsapp }: { products: any[]; 
     selectedProducts.forEach((p, i) => {
       msg += `${i + 1}. ${p.name}\n   Preço: ${p.price?.toLocaleString("pt-AO")} ${p.currency}\n\n`;
     });
-    msg += `💰 *Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\nAguardo confirmação!`;
+    msg += `*Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\nAguardo confirmação!`;
     window.open(`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
