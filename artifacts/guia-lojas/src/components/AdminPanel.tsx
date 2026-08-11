@@ -988,15 +988,20 @@ function CarrinhosAccessSection() {
                 <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${
                   store.carrinhoAccess === "APROVADO" ? "bg-green-100 text-green-700" :
                   store.carrinhoAccess === "RECUSADO" ? "bg-red-100 text-red-700" :
-                  "bg-yellow-100 text-yellow-700"
+                  store.carrinhoAccess === "PENDENTE" ? "bg-yellow-100 text-yellow-700" :
+                  "bg-gray-100 text-gray-500"
                 }`}>
-                  {store.carrinhoAccess || "PENDENTE"}
+                  {store.carrinhoAccess === "NAO_SOLICITADO" ? "Não solicitado" :
+                   store.carrinhoAccess === "APROVADO" ? "Aprovado" :
+                   store.carrinhoAccess === "RECUSADO" ? "Recusado" :
+                   store.carrinhoAccess === "PENDENTE" ? "Pendente" : "Não solicitado"}
                 </span>
                 <select
-                  value={store.carrinhoAccess || "PENDENTE"}
+                  value={store.carrinhoAccess || "NAO_SOLICITADO"}
                   onChange={(e) => handleAccess(store.id, e.target.value)}
                   className="text-xs border border-gray-200 rounded-lg px-2 py-1"
                 >
+                  <option value="NAO_SOLICITADO">Não solicitado</option>
                   <option value="PENDENTE">Pendente</option>
                   <option value="APROVADO">Aprovado</option>
                   <option value="RECUSADO">Recusado</option>
