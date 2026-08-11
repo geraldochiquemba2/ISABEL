@@ -96,3 +96,19 @@ productsRouter.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao eliminar produto" });
   }
 });
+
+// PATCH /api/products/:id/toggle-carrinho — alternar is_carrinho
+productsRouter.patch("/:id/toggle-carrinho", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      `UPDATE products SET is_carrinho = NOT is_carrinho WHERE id=$1 RETURNING id, is_carrinho`,
+      [id]
+    );
+    if (!result.rows.length) return res.status(404).json({ error: "Produto não encontrado" });
+    res.json({ success: true, isCarrinho: result.rows[0].is_carrinho });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao alternar carrinho" });
+  }
+});

@@ -64,6 +64,7 @@ export function Navbar() {
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
                 { href: "/descobrir-estilo", label: "Estilo" },
+                { href: "/carrinhos", label: "Carrinhos" },
               ].map((link) => (
                 <Link key={link.href} href={link.href}>
                   <span
@@ -144,6 +145,7 @@ export function Navbar() {
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
                 { href: "/descobrir-estilo", label: "Descobrir Estilo" },
+                { href: "/carrinhos", label: "Carrinhos" },
               ].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
                   <span className={`block px-4 py-3 rounded-xl text-sm transition-all ${

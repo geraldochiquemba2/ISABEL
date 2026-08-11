@@ -9,6 +9,39 @@ import {
   uploadImage,
 } from "@/lib/api";
 
+function usePendingCarrinhoCount() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/stores/carrinho-access/pending");
+        const data = await res.json();
+        setCount(Array.isArray(data) ? data.length : 0);
+      } catch { setCount(0); }
+    };
+    load();
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
+  }, []);
+  return count;
+}
+
+function usePendingAccountsCount() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const users = await fetchAdminUsers();
+        setCount(Array.isArray(users) ? users.filter((u: any) => u.status === "PENDENTE").length : 0);
+      } catch { setCount(0); }
+    };
+    load();
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
+  }, []);
+  return count;
+}
+
 // ── Types ──────────────────────────────────────────────────────────────
 type MainTab = "contas" | "lojas" | "categorias" | "dicas" | "carrinhos";
 type AccountTab = "PENDENTE" | "APROVADO" | "DESATIVADO";
@@ -23,6 +56,8 @@ const ICON_OPTIONS = [
 // ─────────────────────────────────────────────────────────────────────────
 export function AdminPanel() {
   const [mainTab, setMainTab] = useState<MainTab>("contas");
+  const pendingCount = usePendingCarrinhoCount();
+  const pendingAccountsCount = usePendingAccountsCount();
 
   return (
     <PageTransition>
@@ -40,12 +75,12 @@ export function AdminPanel() {
         {/* Main Tabs */}
         <div className="flex border-b border-black gap-1">
           {([
-            { id: "contas",     label: "Contas",      icon: <Phone size={13} /> },
+            { id: "contas",     label: "Contas",      icon: <Phone size={13} />, badge: pendingAccountsCount },
             { id: "lojas",      label: "Lojas",        icon: <Star size={13} /> },
-            { id: "carrinhos",  label: "Carrinhos",    icon: <Tag size={13} /> },
+            { id: "carrinhos",  label: "Carrinhos",    icon: <Tag size={13} />, badge: pendingCount },
             { id: "categorias", label: "Categorias",   icon: <Tag size={13} /> },
             { id: "dicas",      label: "Dicas de Estilo", icon: <Lightbulb size={13} /> },
-          ] as { id: MainTab; label: string; icon: React.ReactNode }[]).map((t) => (
+          ] as { id: MainTab; label: string; icon: React.ReactNode; badge?: number }[]).map((t) => (
             <button
               key={t.id}
               onClick={() => setMainTab(t.id)}
@@ -56,6 +91,11 @@ export function AdminPanel() {
               }`}
             >
               {t.icon} {t.label}
+              {t.badge != null && t.badge > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full leading-none">
+                  {t.badge}
+                </span>
+              )}
               {mainTab === t.id && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
             </button>
           ))}

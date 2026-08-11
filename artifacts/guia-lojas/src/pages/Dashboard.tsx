@@ -1427,37 +1427,64 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
   };
 
   const requestAccess = async () => {
+    if (!myStore?.id) {
+      console.error("myStore não disponível:", myStore);
+      alert("Erro: dados da loja não encontrados. Faça login novamente.");
+      return;
+    }
     try {
+      console.log("Solicitando acesso para loja:", myStore.id);
       const res = await fetch(`/api/stores/${myStore.id}/carrinho-access`, { method: "POST" });
-      if (res.ok) {
+      const data = await res.json();
+      console.log("Resposta:", data);
+      if (res.ok && data.success) {
         alert("Solicitação enviada! Aguarde aprovação do administrador.");
         window.location.reload();
+      } else {
+        alert("Erro: " + (data.error || "Não foi possível enviar a solicitação"));
       }
     } catch (err) {
       console.error("Erro ao solicitar acesso:", err);
+      alert("Erro ao conectar ao servidor: " + (err as Error).message);
     }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    const localPreviews: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      localPreviews.push(URL.createObjectURL(files[i]));
+    }
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: [...prev.imageUrls, ...localPreviews],
+    }));
+
     setUploading(true);
     try {
+      const { uploadImage } = await import("@/lib/api");
       const uploadedUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
-        const formDataUpload = new FormData();
-        formDataUpload.append("file", files[i]);
-        const res = await fetch("/api/media/upload", { method: "POST", body: formDataUpload });
-        const data = await res.json();
-        if (data.url) uploadedUrls.push(data.url);
+        const file = files[i];
+        const base64String = await compressImage(file);
+        const res = await uploadImage(base64String, `carr_${Date.now()}_${file.name}`);
+        uploadedUrls.push(res.imageUrl);
       }
-      setFormData(prev => ({
-        ...prev,
-        imageUrl: prev.imageUrl || uploadedUrls[0],
-        imageUrls: [...prev.imageUrls, ...uploadedUrls],
-      }));
+      setFormData(prev => {
+        const newUrls = prev.imageUrls.map(u => {
+          const idx = localPreviews.indexOf(u);
+          return idx !== -1 && uploadedUrls[idx] ? uploadedUrls[idx] : u;
+        });
+        return { ...prev, imageUrl: prev.imageUrl || uploadedUrls[0] || "", imageUrls: newUrls };
+      });
     } catch (err) {
       console.error("Erro no upload:", err);
+      setFormData(prev => ({
+        ...prev,
+        imageUrls: prev.imageUrls.filter(u => !localPreviews.includes(u)),
+      }));
     } finally {
       setUploading(false);
     }
@@ -1628,7 +1655,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
             {formData.imageUrls.length > 0 && (
               <div className="flex gap-2 mt-2 flex-wrap">
                 {formData.imageUrls.map((url, i) => (
-                  <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden">
+                  <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
                     <img src={url} alt="" className="w-full h-full object-cover" />
                     <button
                       onClick={() => {
