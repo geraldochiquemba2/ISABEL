@@ -197,9 +197,9 @@ export default function Home() {
                   onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
                 />
               ))}
-            <div className="flex items-center justify-center min-w-[60px] text-yellow-500 sm:hidden">
-              <ArrowRight size={20} className="animate-pulse" />
-            </div>
+          </div>
+          <div className="flex justify-center mt-3 sm:hidden">
+            <ArrowRight size={20} className="text-yellow-500 animate-pulse" />
           </div>
         </div>
       </section>
