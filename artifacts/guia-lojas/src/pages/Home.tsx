@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ArrowRight } from "lucide-react";
+import { Search, ArrowRight, Sparkles, ShoppingCart, MessageCircle, Compass } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { CategoryCard } from "@/components/CategoryCard";
@@ -123,11 +123,9 @@ export default function Home() {
 
               <div className="flex items-center gap-4 sm:gap-6 mt-5 sm:mt-8 text-xs sm:text-sm text-gray-500">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                   {totalStores.toLocaleString("pt-AO")} negócios
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
                   {totalCategories} categorias
                 </span>
               </div>
@@ -198,6 +196,56 @@ export default function Home() {
                   onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
                 />
               ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PROMO CARDS ── */}
+      <section className="py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 gap-6">
+          {/* Card 2 — Carrinhos */}
+          <div className="group relative rounded-[2rem] overflow-hidden shadow-xl shadow-amber-500/20 hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-500 hover:-translate-y-1 min-h-[300px]">
+            <img 
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&auto=format&q=80" 
+              alt="Carrinhos Online" 
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#D4A843]/20 to-transparent"></div>
+            
+            <div className="relative h-full flex flex-col justify-end p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#D4A843] to-[#B8860B] flex items-center justify-center shadow-lg shadow-amber-500/40">
+                  <ShoppingCart size={20} className="text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-white drop-shadow-lg">Carrinhos Shein, Zara, AliExpress...</h3>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <Link href="/descobrir-estilo">
+                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
+                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
+                      <Compass size={18} className="text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-white drop-shadow">Quero descobrir o meu estilo</span>
+                  </span>
+                </Link>
+                <button className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn">
+                  <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
+                    <ShoppingCart size={18} className="text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-white drop-shadow">Ver carrinhos Shein, Zara, AliExpress...</span>
+                </button>
+                <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer">
+                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
+                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
+                      <MessageCircle size={18} className="text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-white drop-shadow">Conversar com um agente</span>
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
