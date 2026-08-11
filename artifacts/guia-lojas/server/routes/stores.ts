@@ -3,6 +3,78 @@ import { pool } from "../db";
 
 export const storesRouter = Router();
 
+// ── Rotas FIXAS (antes de /:id para evitar conflito) ──
+
+// GET /api/stores/admin/all — todas as lojas para painel admin
+storesRouter.get("/admin/all", async (_req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT s.*,
+        json_agg(
+          json_build_object(
+            'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
+            'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
+            'category', p.category, 'subcategory', p.subcategory
+          )
+        ) FILTER (WHERE p.id IS NOT NULL) AS products
+      FROM stores s
+      LEFT JOIN products p ON p.store_id = s.id
+      GROUP BY s.id
+      ORDER BY s.created_at DESC
+    `);
+    res.json(result.rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      category: r.category,
+      address: r.address,
+      phone: r.phone,
+      whatsapp: r.whatsapp,
+      isOpen: r.is_open,
+      isFeatured: r.is_featured,
+      isTrending: r.is_trending,
+      description: r.description,
+      coverColor: r.cover_color,
+      coverImage: r.cover_image,
+      coverImages: r.cover_images || [],
+      logoUrl: r.logo_url,
+      province: r.province,
+      municipality: r.municipality,
+      carrinhoAccess: r.carrinho_access,
+      products: r.products || [],
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar lojas (admin)" });
+  }
+});
+
+// GET /api/stores/carrinho-access/pending — lojas com pedido de acesso pendente (admin)
+storesRouter.get("/carrinho-access/pending", async (_req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT s.*, u.name as owner_name, u.phone as owner_phone
+      FROM stores s
+      JOIN users u ON u.store_id = s.id
+      WHERE s.carrinho_access = 'PENDENTE'
+      ORDER BY s.created_at DESC
+    `);
+    res.json(result.rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      category: r.category,
+      ownerName: r.owner_name,
+      ownerPhone: r.owner_phone,
+      carrinhoAccess: r.carrinho_access,
+      createdAt: r.created_at,
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar pedidos pendentes" });
+  }
+});
+
+// ── Rotas com /:id ──
+
 // GET /api/stores — listar todas as lojas
 storesRouter.get("/", async (req, res) => {
   try {
@@ -61,6 +133,7 @@ storesRouter.get("/", async (req, res) => {
       isFeatured: r.is_featured,
       isTrending: r.is_trending,
       municipality: r.municipality,
+      carrinhoAccess: r.carrinho_access,
       products: r.products || [],
     }));
     res.json(rows);
@@ -97,6 +170,7 @@ storesRouter.get("/:id", async (req, res) => {
       logoUrl: store.logo_url,
       province: store.province,
       municipality: store.municipality,
+      carrinhoAccess: store.carrinho_access,
       products: productsRes.rows.map((p) => ({
         id: p.id,
         name: p.name,
@@ -201,7 +275,7 @@ storesRouter.post("/:id/carrinho-access", async (req, res) => {
 storesRouter.put("/:id/carrinho-access", async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body; // APROVADO ou RECUSADO
+    const { status } = req.body;
     if (!["APROVADO", "RECUSADO", "NAO_SOLICITADO"].includes(status)) {
       return res.status(400).json({ error: "Status inválido" });
     }
@@ -213,72 +287,5 @@ storesRouter.put("/:id/carrinho-access", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erro ao atualizar acesso ao carrinho" });
-  }
-});
-
-// GET /api/stores/carrinho-access/pending — lojas com pedido de acesso pendente (admin)
-storesRouter.get("/carrinho-access/pending", async (_req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT s.*, u.name as owner_name, u.phone as owner_phone
-      FROM stores s
-      JOIN users u ON u.store_id = s.id
-      WHERE s.carrinho_access = 'PENDENTE'
-      ORDER BY s.created_at DESC
-    `);
-    res.json(result.rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      category: r.category,
-      ownerName: r.owner_name,
-      ownerPhone: r.owner_phone,
-      carrinhoAccess: r.carrinho_access,
-      createdAt: r.created_at,
-    })));
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro ao buscar pedidos pendentes" });
-  }
-});
-
-// GET /api/stores/admin/all — todas as lojas para painel admin
-storesRouter.get("/admin/all", async (_req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT s.*,
-        json_agg(
-          json_build_object(
-            'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
-            'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
-            'category', p.category, 'subcategory', p.subcategory
-          )
-        ) FILTER (WHERE p.id IS NOT NULL) AS products
-      FROM stores s
-      LEFT JOIN products p ON p.store_id = s.id
-      GROUP BY s.id
-      ORDER BY s.created_at DESC
-    `);
-    res.json(result.rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      category: r.category,
-      address: r.address,
-      phone: r.phone,
-      whatsapp: r.whatsapp,
-      isOpen: r.is_open,
-      isFeatured: r.is_featured,
-      isTrending: r.is_trending,
-      description: r.description,
-      coverColor: r.cover_color,
-      coverImage: r.cover_image,
-      coverImages: r.cover_images || [],
-      logoUrl: r.logo_url,
-      province: r.province,
-      municipality: r.municipality,
-      products: r.products || [],
-    })));
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro ao buscar lojas (admin)" });
   }
 });
