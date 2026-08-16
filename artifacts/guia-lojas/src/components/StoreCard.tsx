@@ -45,16 +45,11 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
         <div className={`${imgHeight} w-full relative overflow-hidden bg-gray-100 flex-shrink-0`}>
           {!imgError && currentImage ? (
             <>
-              <div 
-                key={`bg-${currentImageIndex}`}
-                className="absolute inset-0 bg-cover bg-center blur-2xl scale-125 opacity-60 transition-all duration-700 group-hover:scale-150"
-                style={{ backgroundImage: `url(${currentImage})` }} 
-              />
               <motion.img
                 key={`img-${currentImageIndex}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 1, ease: "easeInOut" }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
                 src={currentImage}
                 alt={store.name}
                 className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover:scale-105"
