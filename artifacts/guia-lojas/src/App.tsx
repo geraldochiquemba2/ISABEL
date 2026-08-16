@@ -64,6 +64,16 @@ function Router() {
     return <StoreSelector onSelect={handleStoreSelect} />;
   }
 
+  const floatingButton = (
+    <button
+      onClick={handleBackToSelector}
+      className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#2c3035] text-white text-sm font-medium rounded-full shadow-lg hover:bg-[#1a1d20] transition-all hover:scale-105"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Trocar loja
+    </button>
+  );
+
   if (selectedStore === "weddings") {
     return (
       <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
@@ -77,6 +87,7 @@ function Router() {
             <ElioraWeddings onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
+        {floatingButton}
       </StoreContext.Provider>
     );
   }
@@ -88,6 +99,7 @@ function Router() {
           <Route path="/" component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
           <Route component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
         </Switch>
+        {floatingButton}
       </StoreContext.Provider>
     );
   }
@@ -106,13 +118,7 @@ function Router() {
         <Route path="/carrinhos" component={VerCarrinhos} />
         <Route component={NotFound} />
       </Switch>
-      <button
-        onClick={handleBackToSelector}
-        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-gray-900 text-white text-sm font-medium rounded-full shadow-lg hover:bg-gray-800 transition-all hover:scale-105"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Trocar loja
-      </button>
+      {floatingButton}
     </StoreContext.Provider>
   );
 }

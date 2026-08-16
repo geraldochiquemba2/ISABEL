@@ -1,13 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, ArrowRight, Sparkles, ShoppingCart, MessageCircle, Compass } from "lucide-react";
+import { ArrowDown, ArrowRight, Mail, Phone, Instagram } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
-import { CategoryCard } from "@/components/CategoryCard";
-import { PageTransition } from "@/components/PageTransition";
-import { Link } from "wouter";
-
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores, getCategories } from "@/lib/api";
 
@@ -22,24 +17,22 @@ const FALLBACK_IMAGES: Record<string, string> = {
   pets: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=500&fit=crop&auto=format&q=75",
 };
 
-const POSITIONS = [
-  { x: "0%",  y: "15%", rotate: -6, scale: 0.82, zIndex: 10 },
-  { x: "15%", y: "8%",  rotate:  3, scale: 0.90, zIndex: 20 },
-  { x: "8%",  y: "0%",  rotate: -1, scale: 1.00, zIndex: 30 },
-];
-
-async function fetchStats(): Promise<{ totalStores: number; totalCategories: number }> {
-  const res = await fetch("/api/stats");
-  if (!res.ok) throw new Error("Erro ao buscar stats");
-  return res.json();
+function Monogram() {
+  return (
+    <div className="flex items-center gap-3">
+      <img src="/logo-eliora-dark.svg" alt="Eliora Collection" className="w-10 h-10" />
+      <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">Eliora <i className="font-normal">Collection</i></span>
+    </div>
+  );
 }
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [frontIdx, setFrontIdx] = useState(2);
-  const [scrolledEnd, setScrolledEnd] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [sent, setSent] = useState(false);
+  const [heroIdx, setHeroIdx] = useState(0);
+
+  const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -51,295 +44,172 @@ export default function Home() {
     queryFn: () => getCategories(),
   });
 
-  const { data: stats } = useQuery({
-    queryKey: ["stats"],
-    queryFn: fetchStats,
-    staleTime: 60_000,
-  });
-
-  const totalStores = stats?.totalStores ?? stores.length;
-  const totalCategories = stats?.totalCategories ?? apiCategories.length;
-
-  const heroItems: { id: string; name: string; image: string }[] = apiCategories.length > 0
+  const heroImages = apiCategories.length > 0
     ? apiCategories
         .filter((cat: any) => cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id])
         .slice(0, 8)
         .map((cat: any) => ({
-          id: cat.id,
+          src: cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"],
           name: cat.name,
-          image: cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"],
         }))
     : [
-        { id: "moda", name: "Moda", image: FALLBACK_IMAGES["moda"] },
-        { id: "alimentacao", name: "Restaurantes", image: FALLBACK_IMAGES["alimentacao"] },
-        { id: "saude-beleza", name: "Beleza", image: FALLBACK_IMAGES["saude-beleza"] },
-        { id: "eletronicos", name: "Eletrônicos", image: FALLBACK_IMAGES["eletronicos"] },
+        { src: FALLBACK_IMAGES["moda"], name: "Moda" },
+        { src: FALLBACK_IMAGES["alimentacao"], name: "Restaurantes" },
+        { src: FALLBACK_IMAGES["saude-beleza"], name: "Beleza" },
+        { src: FALLBACK_IMAGES["eletronicos"], name: "Eletrônicos" },
       ];
 
-  const heroN = heroItems.length || 1;
-
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (el) {
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
-      setScrolledEnd(atEnd);
-    }
-  };
-
   useEffect(() => {
-    if (heroN < 2) return;
-    const t = setInterval(() => {
-      setFrontIdx((prev) => (prev + 1) % heroN);
-    }, 3500);
+    if (heroImages.length < 2) return;
+    const t = setInterval(() => setHeroIdx((p) => (p + 1) % heroImages.length), 3500);
     return () => clearInterval(t);
-  }, [heroN]);
+  }, [heroImages.length]);
 
-  const visibleSlots = [
-    { catIdx: (frontIdx - 2 + heroN) % heroN, rank: 0 },
-    { catIdx: (frontIdx - 1 + heroN) % heroN, rank: 1 },
-    { catIdx: frontIdx,                        rank: 2 },
-  ];
+  const hero = heroImages[heroIdx] || heroImages[0];
 
   let featured = stores.filter((s) => s.isFeatured).slice(0, 4);
   if (featured.length === 0) featured = stores.slice(0, 4);
-
   const recent = stores.slice(0, 4);
 
   return (
-    <PageTransition>
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-yellow-50 via-white to-amber-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-24">
-          <div className="grid grid-cols-2 gap-4 sm:gap-10 items-center">
-            {/* Left — text */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="text-2xl sm:text-4xl lg:text-[3.5rem] font-light text-gray-900 leading-[1.1] tracking-tight mb-1 sm:mb-2">
-                Apresenta-te com a dignidade
-              </h1>
-              <h1 className="text-2xl sm:text-4xl lg:text-[3.5rem] font-bold bg-gradient-to-r from-[#D4A843] to-[#B8860B] bg-clip-text text-transparent leading-[1.1] tracking-tight mb-4 sm:mb-8">
-                de quem carrega<br />a luz de Deus
-              </h1>
+    <main className="min-h-[100dvh] overflow-x-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+        .eliora-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+        @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}} .rise{animation:rise .8s ease both}.delay-1{animation-delay:.14s}.delay-2{animation-delay:.26s}
+        @keyframes heroFade{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:scale(1)}}
+      `}</style>
 
-              <Link href="/busca">
-                <span className="inline-flex items-center gap-2 px-5 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white text-xs sm:text-sm font-semibold hover:from-[#C9963A] hover:to-[#A67C0A] transition-all rounded-2xl shadow-lg cursor-pointer">
-                  <Search size={16} />
-                  Buscar
-                </span>
-              </Link>
-
-              <div className="flex items-center gap-4 sm:gap-6 mt-5 sm:mt-8 text-xs sm:text-sm text-gray-500">
-                <span className="flex items-center gap-1.5">
-                  {totalStores.toLocaleString("pt-AO")} negócios
-                </span>
-                <span className="flex items-center gap-1.5">
-                  {totalCategories} categorias
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Right — animated image collage */}
-            <div className="flex items-center justify-center relative h-[300px] sm:h-[450px] lg:h-[540px] mt-8 lg:mt-0">
-              <AnimatePresence>
-              {visibleSlots.map(({ catIdx, rank }) => {
-                const img = heroItems[catIdx];
-                if (!img) return null;
-                const pos = POSITIONS[rank];
-                return (
-                  <motion.div
-                    key={`${img.id}-${catIdx}`}
-                    initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
-                    animate={{
-                      opacity: 1,
-                      left: pos.x,
-                      top: pos.y,
-                      rotate: pos.rotate,
-                      scale: pos.scale,
-                      zIndex: pos.zIndex,
-                      filter: "blur(0px)",
-                    }}
-                    exit={{ opacity: 0, scale: 0.85, filter: "blur(4px)" }}
-                    transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                    onClick={() => setFrontIdx(catIdx)}
-                    className="absolute cursor-pointer shadow-2xl shadow-yellow-900/20"
-                    style={{ width: "min(60%, 240px)" }}
-                  >
-                    <div className="relative overflow-hidden rounded-3xl aspect-[3/4] ring-4 ring-white/50 transition-shadow duration-500 hover:shadow-3xl">
-                      <img
-                        src={img.image}
-                        alt={img.name}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out"
-                        loading="lazy"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5">
-                        <span className="text-white text-sm font-semibold">{img.name}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-              </AnimatePresence>
+      <div className="eliora-grain">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-14 px-6 pb-24 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-36 md:pt-20">
+          <div className="relative z-10">
+            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
+            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
+            <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Descubra peças, negócios e histórias de quem carrega a luz de Deus com elegância e propósito.</p>
+            <button onClick={() => scrollTo("categorias")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Explorar categorias <ArrowDown size={15} /></button>
+          </div>
+          <div className="relative mx-auto aspect-[.82] w-full max-w-[450px]">
+            <div className="absolute inset-0 rotate-[-5deg] rounded-[48%_48%_4%_4%] border border-[#cbd0d5]" />
+            <div className="absolute inset-[8%] rotate-[4deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e5e7e9]">
+              <img
+                key={heroIdx}
+                src={hero.src}
+                alt={hero.name}
+                className="h-full w-full object-cover object-center"
+                style={{ filter: "grayscale(0.4) contrast(0.9) brightness(1.05)", animation: "heroFade 0.8s ease both" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/50 via-transparent to-white/10" />
+              <span className="absolute bottom-5 left-5 font-serif text-xl text-white drop-shadow-lg" style={{ animation: "heroFade 0.8s ease both" }}>{hero.name}</span>
             </div>
+            <span className="absolute -bottom-4 -left-7 font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98] md:-left-12">01 — {hero.name}</span>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── CATEGORIES ── */}
-      <section className="border-y border-yellow-100 bg-gradient-to-b from-white to-yellow-50/30 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-600 mb-4">Categorias</p>
-          <div ref={scrollRef} onScroll={handleScroll} className="flex overflow-x-auto overflow-y-hidden scrollbar-hide gap-3 -mx-4 px-4 sm:-mx-6 sm:px-6">
-            {apiCategories
-              .map((cat: any) => ({
-                ...cat,
-                count: stores.filter(s => s.category?.toLowerCase() === cat.name.toLowerCase()).length,
-              }))
-              .sort((a: any, b: any) => b.count - a.count)
-              .map((cat: any, i: number) => (
-                <CategoryCard
-                  key={cat.id}
-                  category={cat}
-                  index={i}
-                  onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
-                />
-              ))}
-          </div>
-          <div className="flex justify-center items-center gap-2 mt-3 sm:hidden">
-            {scrolledEnd ? (
-              <span className="text-xs text-gray-400 font-medium">Fim</span>
-            ) : (
-              <>
-                <span className="text-xs text-yellow-500 font-medium">Deslize para ver mais</span>
-                <ArrowRight size={16} className="text-yellow-500 animate-pulse" />
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PROMO CARDS ── */}
-      <section className="py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 gap-6">
-          {/* Card 2 — Carrinhos */}
-          <div className="group relative rounded-[2rem] overflow-hidden shadow-xl shadow-amber-500/20 hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-500 hover:-translate-y-1 min-h-[300px]">
-            <img 
-              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&auto=format&q=80" 
-              alt="Carrinhos Online" 
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        <section className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
+          <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
+            <img
+              src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop&auto=format&q=80"
+              alt="Promoções"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#D4A843]/20 to-transparent"></div>
-            
-            <div className="relative h-full flex flex-col justify-end p-7">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#D4A843] to-[#B8860B] flex items-center justify-center shadow-lg shadow-amber-500/40">
-                  <ShoppingCart size={20} className="text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-white drop-shadow-lg">Promoções</h3>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                <Link href="/descobrir-estilo">
-                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
-                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
-                      <Compass size={18} className="text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-white drop-shadow">Quero descobrir o meu estilo</span>
-                  </span>
-                </Link>
-                <Link href="/carrinhos">
-                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
-                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
-                      <ShoppingCart size={18} className="text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-white drop-shadow">Ver Carrinhos</span>
-                  </span>
-                </Link>
-                <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer">
-                  <span className="flex items-center gap-3.5 w-full text-left px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 hover:border-white/30 transition-all duration-300 group/btn cursor-pointer">
-                    <div className="w-9 h-9 rounded-xl bg-[#D4A843]/80 flex items-center justify-center transition-colors group-hover/btn:bg-[#D4A843]">
-                      <MessageCircle size={18} className="text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-white drop-shadow">Conversar com um agente de envio</span>
-                  </span>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/80 via-[#252a2f]/30 to-transparent" />
+            <div className="relative h-full flex flex-col justify-end p-8">
+              <p className="font-mono text-[10px] uppercase tracking-[.25em] text-white mb-3">Promoções</p>
+              <div className="flex flex-col gap-3 max-w-sm">
+                <a href="/descobrir-estilo" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                  <span>Quero descobrir o meu estilo</span>
+                </a>
+                <a href="/carrinhos" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                  <span>Ver Carrinhos</span>
+                </a>
+                <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                  <span>Conversar com um agente de envio</span>
                 </a>
               </div>
             </div>
           </div>
+        </section>
+
+        <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
+          <div className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
+            {apiCategories.slice(0, 10).map((cat: any) => (
+              <button
+                key={cat.id}
+                onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
+                className="flex-shrink-0 group flex items-center gap-3 px-5 py-3 rounded-full border border-[#d9dde1] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all"
+              >
+                <img
+                  src={cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"]}
+                  alt={cat.name}
+                  className="w-8 h-8 rounded-full object-cover"
+                  style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
+                />
+                <span className="text-xs font-medium text-[#30343a] whitespace-nowrap">{cat.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-        {/* ── FEATURED ── */}
-        <section className="py-14">
-          <SectionHeader title="Em destaque" href="/busca" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
-            {featured.map((store, i) => (
-              <StoreCard
-                key={store.id}
-                store={store}
-                isFavorite={isFavorite(store.id)}
-                onToggleFavorite={toggleFavorite}
-                index={i}
-              />
-            ))}
+        <section id="lojas" className="mx-auto max-w-[1380px] px-6 py-20 md:px-12 md:py-32">
+          <div className="mb-14 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#87909a]">O nosso universo</p>
+              <h2 className="mt-4 font-serif text-5xl tracking-[-.03em] md:text-7xl">Tudo começa<br /><i>com o vosso estilo.</i></h2>
+            </div>
+            <a href="/busca" className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors">
+              Ver todos <ArrowRight size={14} />
+            </a>
           </div>
-        </section>
 
-        {/* ── RECENT ── */}
-        <section className="py-10">
-          <SectionHeader title="Adicionados recentemente" href="/busca" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mt-6">
-            {recent.map((store, i) => (
-              <StoreCard
-                key={store.id}
-                store={store}
-                isFavorite={isFavorite(store.id)}
-                onToggleFavorite={toggleFavorite}
-                index={i}
-                size="sm"
-              />
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <img 
-                src="/logo-eliora.svg" 
-                alt="Eliora Collection" 
-                className="w-10 h-10"
-                loading="lazy"
-              />
-              <div>
-                <span className="text-lg font-bold">Eliora<span className="font-light opacity-80">Collection</span></span>
+          {featured.length > 0 && (
+            <div className="mb-16">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Em destaque</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+                {featured.map((store, i) => (
+                  <StoreCard key={store.id} store={store} isFavorite={isFavorite(store.id)} onToggleFavorite={toggleFavorite} index={i} />
+                ))}
               </div>
             </div>
-            <p className="text-gray-500 text-sm">© 2024 Eliora Collection. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
-    </PageTransition>
-  );
-}
+          )}
 
-function SectionHeader({ title, href }: { title: string; href: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-      <Link href={href}>
-        <span className="text-sm text-yellow-600 hover:text-yellow-700 font-medium transition-colors flex items-center gap-1">
-          Ver todos <ArrowRight size={14} />
-        </span>
-      </Link>
-    </div>
+          {recent.length > 0 && (
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Recentes</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+                {recent.map((store, i) => (
+                  <StoreCard key={store.id} store={store} isFavorite={isFavorite(store.id)} onToggleFavorite={toggleFavorite} index={i} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
+          <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b9c1ca]">O primeiro passo</p>
+              <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Tem uma ideia<br /><i>em mente?</i></h2>
+            </div>
+            <div className="mt-10 md:mt-0 md:w-80">
+              <p className="text-sm leading-6 text-[#cbd0d5]">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p>
+              <button onClick={() => { window.open("https://wa.me/244922001778", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button>
+            </div>
+          </div>
+        </section>
+
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12">
+          <Monogram />
+          <p className="text-xs text-[#747b84]">Estilo e elegância, em Angola e além.</p>
+          <div className="flex items-center gap-5 text-[#747b84]">
+            <a href="mailto:ola@elioracollection.com" aria-label="Email"><Mail size={16} /></a>
+            <a href="tel:+244922001778" aria-label="Telefone"><Phone size={16} /></a>
+            <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
+            <span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span>
+          </div>
+        </footer>
+      </div>
+    </main>
   );
 }

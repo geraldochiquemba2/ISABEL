@@ -254,16 +254,6 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
         @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}} .rise{animation:rise .8s ease both}.delay-1{animation-delay:.14s}.delay-2{animation-delay:.26s}
       `}</style>
       
-      {onBackToSelector && (
-        <button
-          onClick={onBackToSelector}
-          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#2c3035] text-white text-sm font-medium rounded-full shadow-lg hover:bg-[#1a1d20] transition-all hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Trocar loja
-        </button>
-      )}
-
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fafafa]/90 backdrop-blur-md">
         <Monogram />
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-[#fafafa] px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>

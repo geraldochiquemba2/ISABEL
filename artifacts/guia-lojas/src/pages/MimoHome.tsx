@@ -110,15 +110,6 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
 
   return (
     <div className="mimo-page">
-      {onBackToSelector && (
-        <button
-          onClick={onBackToSelector}
-          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#173a42] text-white text-sm font-medium rounded-full shadow-lg hover:bg-[#0f2a30] transition-all hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Trocar loja
-        </button>
-      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
         .mimo-page { --ink:#203b43; --deep:#173a42; --cream:#f8f1e7; --coral:#d96f5c; --saffron:#e5a546; --teal:#68aaa0; --plum:#8d6e78; background:var(--cream); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
