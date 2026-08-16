@@ -25,7 +25,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [images.length]);
 
