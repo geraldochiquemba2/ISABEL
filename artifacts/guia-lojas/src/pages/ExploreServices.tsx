@@ -20,6 +20,7 @@ interface Store {
   description?: string;
   isOpen?: boolean;
   province?: string;
+  products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
 const groups: ServiceGroup[] = [
@@ -60,8 +61,19 @@ const groups: ServiceGroup[] = [
   },
 ];
 
-function StoreCard({ store }: { store: Store }) {
+function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
   const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <div 
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
@@ -69,7 +81,7 @@ function StoreCard({ store }: { store: Store }) {
     >
       <div className="relative h-28 overflow-hidden">
         <img
-          src={store.coverImage || store.image || fallbackImage}
+          src={images[currentIdx] || fallbackImage}
           alt={store.name}
           className="w-full h-full object-cover"
         />
@@ -79,6 +91,17 @@ function StoreCard({ store }: { store: Store }) {
             alt={`Logo ${store.name}`}
             className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
           />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`}
+              />
+            ))}
+          </div>
         )}
         {store.isOpen !== undefined && (
           <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
@@ -121,9 +144,9 @@ export default function ExploreServices() {
   }, []);
 
   const { data: stores = [] } = useQuery({
-    queryKey: ["stores"],
+    queryKey: ["stores", "weddings"],
     queryFn: async () => {
-      const res = await fetch("/api/stores");
+      const res = await fetch("/api/stores?store_type=weddings");
       if (!res.ok) return [];
       return res.json();
     },
@@ -156,12 +179,22 @@ export default function ExploreServices() {
   const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
 
   const getStoresForGroup = (category: string) => {
-    return stores.filter((s: Store) => {
+    const matched = stores.filter((s: Store) => {
       const matchesCategory = s.category?.toLowerCase().includes(category.toLowerCase());
-      const matchesStore = !currentStoreId || s.id === currentStoreId;
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
-      return matchesCategory && matchesStore && matchesProvince && matchesMunicipality;
+      return matchesCategory && matchesProvince && matchesMunicipality;
+    });
+    return matched.map((store) => {
+      const productImages: string[] = [];
+      (store.products || []).forEach((p) => {
+        const urls = typeof p.imageUrls === "string"
+          ? p.imageUrls.split(" ").filter(Boolean)
+          : Array.isArray(p.imageUrls) ? p.imageUrls : [];
+        if (urls.length > 0) productImages.push(...urls);
+        else if (p.imageUrl) productImages.push(p.imageUrl);
+      });
+      return { store, productImages };
     });
   };
 
@@ -310,8 +343,8 @@ export default function ExploreServices() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
                   {getStoresForGroup(group.category).length > 0 ? (
                     <div className="flex flex-col gap-3">
-                      {getStoresForGroup(group.category).slice(0, 2).map((store) => (
-                        <StoreCard key={store.id} store={store} />
+                      {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }) => (
+                        <StoreCard key={store.id} store={store} productImages={productImages} />
                       ))}
                     </div>
                   ) : (
