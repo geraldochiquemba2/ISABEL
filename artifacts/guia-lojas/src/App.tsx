@@ -60,6 +60,7 @@ function Router() {
   const handleBackToSelector = () => {
     localStorage.removeItem("eliora-selected-store");
     setSelectedStore(null);
+    window.scrollTo(0, 0);
   };
 
   if (!selectedStore) {
