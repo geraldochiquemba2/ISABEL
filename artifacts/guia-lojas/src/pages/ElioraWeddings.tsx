@@ -105,6 +105,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
             <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#77818c]">Serviços</button>
             <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
             <button onClick={() => scrollTo("contacto")} className="flex items-center gap-2 text-left text-[#68727c]">Falar com a Eliora <ArrowUpRight size={14} /></button>
+            {onBackToSelector && (
+              <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Trocar loja
+              </button>
+            )}
           </nav>
           <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? <X size={20} /> : <Menu size={21} />}</button>
         </header>
