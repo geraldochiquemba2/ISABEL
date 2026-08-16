@@ -54,17 +54,18 @@ productsRouter.get("/", async (req, res) => {
 // POST /api/products — criar produto
 productsRouter.post("/", async (req, res) => {
   try {
-    const { id, storeId, name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho } = req.body;
+    const { id, storeId, name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho, description } = req.body;
     const result = await pool.query(
-      `INSERT INTO products (id, store_id, name, price, currency, image_url, image_urls, image_color, category, subcategory, is_carrinho)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
-      [id, storeId, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false]
+      `INSERT INTO products (id, store_id, name, price, currency, image_url, image_urls, image_color, category, subcategory, is_carrinho, description)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+      [id, storeId, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false, description || ""]
     );
     const p = result.rows[0];
     res.json({
       id: p.id, storeId: p.store_id, name: p.name,
       price: parseFloat(p.price), currency: p.currency, imageUrl: p.image_url, imageUrls: p.image_urls || [],
       imageColor: p.image_color, category: p.category, subcategory: p.subcategory, isCarrinho: p.is_carrinho,
+      description: p.description,
     });
   } catch (err) {
     console.error(err);
@@ -76,11 +77,11 @@ productsRouter.post("/", async (req, res) => {
 productsRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho } = req.body;
+    const { name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho, description } = req.body;
     await pool.query(
-      `UPDATE products SET name=$2, price=$3, currency=$4, image_url=$5, image_urls=$6, image_color=$7, category=$8, subcategory=$9, is_carrinho=$10
+      `UPDATE products SET name=$2, price=$3, currency=$4, image_url=$5, image_urls=$6, image_color=$7, category=$8, subcategory=$9, is_carrinho=$10, description=$11
        WHERE id=$1`,
-      [id, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false]
+      [id, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false, description || ""]
     );
     res.json({ success: true });
   } catch (err) {

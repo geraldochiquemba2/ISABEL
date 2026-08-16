@@ -128,6 +128,7 @@ export async function initDB() {
       `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_store_type_unique') THEN ALTER TABLE users ADD CONSTRAINT users_phone_store_type_unique UNIQUE (phone, store_type); END IF; END $$`,
       `UPDATE stores SET store_type = 'weddings' WHERE name ILIKE '%weddings%' OR category ILIKE '%weddings%'`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS schedule JSONB DEFAULT NULL`,
+      `ALTER TABLE products ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`,
       `CREATE TABLE IF NOT EXISTS weddings_page_content (
         id TEXT PRIMARY KEY DEFAULT 'main',
         content JSONB NOT NULL DEFAULT '{}',

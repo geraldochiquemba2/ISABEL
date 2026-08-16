@@ -250,60 +250,80 @@ export default function ExploreServices() {
         </div>
 
         {/* Filtro por província */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] self-center mr-2">Província:</span>
-          <button
-            onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
-            className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeProvince === null
-                ? "bg-[#68727c] text-white"
-                : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
-            }`}
+        <div className="mb-6">
+          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <select
+            value={activeProvince || ""}
+            onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
           >
-            Todas
-          </button>
-          {provinces.map((province) => (
+            <option value="">Todas</option>
+            {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+          <div className="hidden md:flex flex-wrap gap-3 mt-2">
             <button
-              key={province}
-              onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
+              onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeProvince === province
+                activeProvince === null
                   ? "bg-[#68727c] text-white"
                   : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
               }`}
             >
-              {province}
+              Todas
             </button>
-          ))}
+            {provinces.map((province) => (
+              <button
+                key={province}
+                onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
+                className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                  activeProvince === province
+                    ? "bg-[#68727c] text-white"
+                    : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                }`}
+              >
+                {province}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Filtro por município */}
         {municipalities.length > 0 && (
-          <div className="flex flex-wrap gap-3 mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] self-center mr-2">Município:</span>
-            <button
-              onClick={() => setActiveMunicipality(null)}
-              className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeMunicipality === null
-                  ? "bg-[#87909a] text-white"
-                  : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
-              }`}
+          <div className="mb-12">
+            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <select
+              value={activeMunicipality || ""}
+              onChange={(e) => setActiveMunicipality(e.target.value || null)}
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
             >
-              Todos
-            </button>
-            {municipalities.map((m) => (
+              <option value="">Todos</option>
+              {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <div className="hidden md:flex flex-wrap gap-3 mt-2">
               <button
-                key={m}
-                onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
+                onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeMunicipality === m
+                  activeMunicipality === null
                     ? "bg-[#87909a] text-white"
                     : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
                 }`}
               >
-                {m}
+                Todos
               </button>
-            ))}
+              {municipalities.map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
+                  className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                    activeMunicipality === m
+                      ? "bg-[#87909a] text-white"
+                      : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

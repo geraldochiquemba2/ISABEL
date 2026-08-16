@@ -21,7 +21,7 @@ import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "collection" | null;
+type StoreType = "weddings" | "love-services" | "collection" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -76,6 +76,17 @@ function Router() {
           <Route>
             <ElioraWeddings onBackToSelector={handleBackToSelector} />
           </Route>
+        </Switch>
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "love-services") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <Switch>
+          <Route path="/" component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
+          <Route component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
         </Switch>
       </StoreContext.Provider>
     );

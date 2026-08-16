@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight, HeartHandshake } from "lucide-react";
 
 const stores = [
   {
@@ -11,6 +11,16 @@ const stores = [
     gradient: "from-rose-500/80 to-pink-600/80",
     icon: <Heart size={24} className="text-white" />,
     accent: "#E8A0BF",
+  },
+  {
+    id: "love-services",
+    name: "Eliora Love Services",
+    subtitle: "Cuidar é estar perto",
+    description: "Pessoas de confiança para transformar a sua intenção em cuidado — presentes, buquês, fotografia e muito mais.",
+    image: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-teal-500/80 to-emerald-600/80",
+    icon: <HeartHandshake size={24} className="text-white" />,
+    accent: "#68AAA0",
   },
   {
     id: "collection",
@@ -54,7 +64,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </motion.div>
 
       {/* Store Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-8 max-w-4xl w-full">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8 max-w-5xl w-full">
         {stores.map((store, index) => (
           <motion.div
             key={store.id}

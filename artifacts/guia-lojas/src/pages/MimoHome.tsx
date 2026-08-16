@@ -8,6 +8,7 @@ import {
   Clock3,
   Gift,
   HeartHandshake,
+  Home,
   MapPin,
   Menu,
   MessageCircle,
@@ -52,7 +53,7 @@ const services: Service[] = [
   {
     title: "Gestão do Lar e Refeições",
     description: "Mais tempo para si. Uma casa que respira.",
-    icon: Sparkles,
+    icon: Home,
     tone: "plum",
     items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"],
   },
@@ -84,12 +85,14 @@ function ServiceCard({ service, onRequest }: { service: Service; onRequest: (tit
   );
 }
 
-export function MimoHome() {
+export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [request, setRequest] = useState(false);
-  const [sent, setSent] = useState(false);
   const [selected, setSelected] = useState("");
+  const [nome, setNome] = useState("");
+  const [contacto, setContacto] = useState("");
+  const [mensagem, setMensagem] = useState("");
 
   const visibleServices = useMemo(() => {
     const term = query.toLowerCase().trim();
@@ -97,13 +100,28 @@ export function MimoHome() {
     return services.filter((s) => `${s.title} ${s.items.join(" ")}`.toLowerCase().includes(term));
   }, [query]);
 
-  const openRequest = (title = "") => { setSelected(title); setRequest(true); setSent(false); };
+  const openRequest = (title = "") => { setSelected(title); setRequest(true); setNome(""); setContacto(""); setMensagem(""); };
+
+  const sendToWhatsApp = () => {
+    const text = `Olá! Gostaria de pedir um serviço.\n\nServiço: ${selected || "Geral"}\nNome: ${nome}\nContacto: ${contacto}\nMensagem: ${mensagem}`;
+    window.open(`https://wa.me/244922001778?text=${encodeURIComponent(text)}`, "_blank");
+    setRequest(false);
+  };
 
   return (
     <div className="mimo-page">
+      {onBackToSelector && (
+        <button
+          onClick={onBackToSelector}
+          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#173a42] text-white text-sm font-medium rounded-full shadow-lg hover:bg-[#0f2a30] transition-all hover:scale-105"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Trocar loja
+        </button>
+      )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
-        .mimo-page { --ink:#203b43; --deep:#173a42; --cream:#f8f1e7; --coral:#d96f5c; --saffron:#e5a546; --teal:#68aaa0; --plum:#8d6e78; background:var(--cream); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow:hidden; }
+        .mimo-page { --ink:#203b43; --deep:#173a42; --cream:#f8f1e7; --coral:#d96f5c; --saffron:#e5a546; --teal:#68aaa0; --plum:#8d6e78; background:var(--cream); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
         .mimo-page * { box-sizing:border-box; } .mimo-page button { font:inherit; cursor:pointer; }
         .mimo-nav { display:flex; align-items:center; justify-content:space-between; max-width:1240px; margin:auto; padding:24px 30px; position:relative; z-index:2; }
         .mimo-logo { display:flex; align-items:center; gap:9px; color:var(--deep); font-size:23px; font-weight:700; letter-spacing:-1px; }
@@ -132,10 +150,11 @@ export function MimoHome() {
         .mimo-modal-wrap{position:fixed;inset:0;background:#173a426e;z-index:10;display:grid;place-items:center;padding:20px}.mimo-modal{background:#fffaf4;border-radius:22px;padding:30px;max-width:450px;width:100%;box-shadow:0 25px 80px #173a4260;position:relative}.mimo-modal h3{font:500 32px 'Fraunces',serif;color:var(--deep);margin:0 0 8px}.mimo-modal p{font-size:13px;color:#6b7d7d;line-height:1.5}.mimo-close{position:absolute;right:18px;top:18px;border:0;background:none;color:#6b7d7d}.mimo-modal input,.mimo-modal textarea{width:100%;border:1px solid #ded2c3;border-radius:10px;background:#fff;padding:12px;margin-top:10px;font:inherit;font-size:13px;outline-color:var(--coral)}.mimo-modal textarea{height:90px;resize:vertical}.mimo-modal .mimo-primary{margin-top:14px;width:100%;justify-content:center}
         @media(max-width:800px){.mimo-nav{padding:18px 20px}.mimo-nav-links{display:none}.mimo-menu{display:block}.mimo-nav-links.open{display:flex;position:absolute;top:68px;left:20px;right:20px;background:#fffaf4;padding:18px;border-radius:14px;box-shadow:0 10px 30px #173a4220;flex-direction:column;align-items:flex-start}.mimo-nav-cta{display:none}.mimo-hero{grid-template-columns:1fr;padding:40px 20px 70px;gap:48px}.mimo-hero h1{font-size:55px}.mimo-hero-art{min-height:360px}.mimo-photo{inset:0 25px 18px 0}.mimo-section{padding:62px 20px}.mimo-section-head{display:block}.mimo-section-head p{margin-top:14px}.mimo-section h2{font-size:36px}.mimo-grid{display:block}.mimo-service{margin-bottom:14px;min-height:0!important}.mimo-trust{padding:58px 20px}.mimo-trust-inner{display:block}.mimo-trust h2{font-size:36px}.mimo-points{margin-top:37px}.mimo-bottom{padding:68px 20px 35px}.mimo-bottom h2{font-size:42px}.mimo-footer{display:block;line-height:2.4}.mimo-footer a{margin:0 14px 0 0}}
       `}</style>
-      <nav className="mimo-nav">
-        <div className="mimo-logo"><span className="mimo-logo-mark"><HeartHandshake size={18} /></span>Eliora Love Services</div>
+      <nav className="mimo-nav" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(248,241,231,0.9)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+        <div className="mimo-logo"><img src="/logo-eliora-dark.svg" alt="Eliora" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }} />Eliora Love Services</div>
         <div className={`mimo-nav-links ${menu ? "open" : ""}`}>
           <a href="#servicos">Explorar serviços</a><a href="#como-funciona">Como funciona</a><a href="#confianca">Confiança</a><button className="mimo-nav-cta" onClick={() => openRequest()}>Pedir um serviço <ArrowRight size={14} /></button>
+          {onBackToSelector && <button onClick={onBackToSelector} className="mimo-nav-cta">Trocar loja</button>}
         </div>
         <button className="mimo-menu" onClick={() => setMenu(!menu)} aria-label="Abrir menu">{menu ? <X /> : <Menu />}</button>
       </nav>
@@ -157,7 +176,7 @@ export function MimoHome() {
          <section className="mimo-trust" id="confianca"><div className="mimo-trust-inner"><div><div className="mimo-kicker" style={{color:"#e5a546"}}><span style={{background:"#e5a546"}} /> cuidado com responsabilidade</div><h2>Confiança não se promete.<br />Constrói-se.</h2><p>Cada pessoa e cada negócio na Eliora Love Services passa por um processo de verificação. Porque quando cuidamos de quem ama, todos os detalhes contam.</p></div><div className="mimo-points"><div className="mimo-point"><ShieldCheck size={21}/><strong>Profissionais verificados</strong><span>Identidade, referências e experiência confirmadas.</span></div><div className="mimo-point"><Star size={21}/><strong>Avaliações reais</strong><span>Escolha com a tranquilidade de quem já experimentou.</span></div><div className="mimo-point"><MapPin size={21}/><strong>Feito em Angola</strong><span>Conhecemos os bairros, os ritmos e o que importa.</span></div><div className="mimo-point"><MessageCircle size={21}/><strong>Apoio próximo</strong><span>Estamos aqui antes, durante e depois do seu pedido.</span></div></div></div></section>
          <section className="mimo-bottom" id="como-funciona"><h2>Tem uma ideia em mente?</h2><p>Conte-nos o que precisa. Nós tratamos do resto.</p><button className="mimo-primary" onClick={() => openRequest()}>Fazer um pedido <ArrowRight size={17}/></button><footer className="mimo-footer"><span>© 2024 Eliora Love Services · Cuidar é estar perto.</span><span><a href="#servicos">Serviços</a><a href="#confianca">Segurança</a><a href="#como-funciona">Ajuda</a></span></footer></section>
       </main>
-      {request && <div className="mimo-modal-wrap" onClick={(e) => e.target === e.currentTarget && setRequest(false)}><div className="mimo-modal">{sent ? <><div className="mimo-icon" style={{background:"#c0ded5",marginBottom:15}}><Check /></div><h3>Recebemos o seu pedido.</h3><p>Vamos encontrar a pessoa certa para este gesto e entrar em contacto consigo em breve.</p><button className="mimo-primary" onClick={() => setRequest(false)}>Voltar à página <ArrowRight size={16}/></button></> : <><button className="mimo-close" onClick={() => setRequest(false)} aria-label="Fechar"><X /></button><h3>Vamos criar um gesto especial.</h3><p>{selected || "Conte-nos o que gostaria de tornar possível."}</p><input placeholder="O seu nome" /><input placeholder="Como podemos contactá-lo?" /><textarea placeholder="Descreva o que precisa, para quem é e quando..." /><button className="mimo-primary" onClick={() => setSent(true)}>Enviar pedido <ArrowRight size={16}/></button></>}</div></div>}
+      {request && <div className="mimo-modal-wrap" onClick={(e) => e.target === e.currentTarget && setRequest(false)}><div className="mimo-modal"><button className="mimo-close" onClick={() => setRequest(false)} aria-label="Fechar"><X /></button><h3>Vamos criar um gesto especial.</h3><p>{selected || "Conte-nos o que gostaria de tornar possível."}</p><input placeholder="O seu nome" value={nome} onChange={(e) => setNome(e.target.value)} /><input placeholder="Como podemos contactá-lo?" value={contacto} onChange={(e) => setContacto(e.target.value)} /><textarea placeholder="Descreva o que precisa, para quem é e quando..." value={mensagem} onChange={(e) => setMensagem(e.target.value)} /><button className="mimo-primary" onClick={sendToWhatsApp}>Enviar via WhatsApp <ArrowRight size={16}/></button></div></div>}
     </div>
   );
 }
