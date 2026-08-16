@@ -1,10 +1,70 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { ArrowDown, ArrowRight, ArrowUpRight, Mail, Phone, Instagram } from "lucide-react";
-import { useFavorites } from "@/lib/favorites";
-import { StoreCard } from "@/components/StoreCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores, getCategories } from "@/lib/api";
+import { Store } from "@/data/mock";
+
+function SimpleStoreCard({ store }: { store: Store }) {
+  const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = store.coverImages && store.coverImages.length > 0
+    ? store.coverImages
+    : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div
+      className="flex-shrink-0 w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      onClick={() => window.location.href = `/loja/${store.id}`}
+    >
+      <div className="relative h-40 overflow-hidden">
+        <img
+          src={images[currentIdx] || fallbackImage}
+          alt={store.name}
+          className="w-full h-full object-cover"
+        />
+        {store.logoUrl && (
+          <img
+            src={store.logoUrl}
+            alt={`Logo ${store.name}`}
+            className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20"
+          />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+            {images.slice(0, 5).map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`}
+              />
+            ))}
+          </div>
+        )}
+        {store.isOpen !== undefined && (
+          <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+            {store.isOpen ? "Aberto" : "Fechado"}
+          </span>
+        )}
+      </div>
+      <div className="p-3">
+        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <p className="text-[10px] text-[#87909a] mt-1">{store.category}</p>
+        {store.province && store.municipality && (
+          <p className="text-[10px] text-[#aeb6bf] mt-1">{store.municipality}, {store.province}</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const FALLBACK_IMAGES: Record<string, string> = {
   moda: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=500&fit=crop&auto=format&q=75",
@@ -28,7 +88,6 @@ function Monogram() {
 
 export default function Home() {
   const [, setLocation] = useLocation();
-  const { isFavorite, toggleFavorite } = useFavorites();
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolledEnd, setScrolledEnd] = useState(false);
@@ -72,7 +131,7 @@ export default function Home() {
 
   useEffect(() => {
     if (heroImages.length < 2) return;
-    const t = setInterval(() => setHeroIdx((p) => (p + 1) % heroImages.length), 3500);
+    const t = setInterval(() => setHeroIdx((p) => (p + 1) % heroImages.length), 3000);
     return () => clearInterval(t);
   }, [heroImages.length]);
 
@@ -85,7 +144,7 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    const t = setInterval(() => setPromoIdx((p) => (p + 1) % promoImages.length), 4000);
+    const t = setInterval(() => setPromoIdx((p) => (p + 1) % promoImages.length), 3000);
     return () => clearInterval(t);
   }, []);
 
@@ -200,7 +259,7 @@ export default function Home() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Em destaque</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                 {featured.map((store, i) => (
-                  <StoreCard key={store.id} store={store} isFavorite={isFavorite(store.id)} onToggleFavorite={toggleFavorite} index={i} />
+                  <SimpleStoreCard key={store.id} store={store} />
                 ))}
               </div>
             </div>
@@ -211,7 +270,7 @@ export default function Home() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Recentes</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                 {recent.map((store, i) => (
-                  <StoreCard key={store.id} store={store} isFavorite={isFavorite(store.id)} onToggleFavorite={toggleFavorite} index={i} />
+                  <SimpleStoreCard key={store.id} store={store} />
                 ))}
               </div>
             </div>
