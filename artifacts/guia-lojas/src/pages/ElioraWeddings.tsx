@@ -261,7 +261,10 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
           <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
           <a href="/explorar" className="text-left transition-colors hover:text-[#77818c]">Explorar</a>
           {isLoggedIn ? (
-            <a href="/dashboard-weddings" className="flex items-center gap-2 text-left text-[#2c3035] font-medium hover:text-[#30343a] transition-colors">Painel <ArrowUpRight size={14} /></a>
+            <>
+              <a href="/dashboard-weddings" className="flex items-center gap-2 text-left text-[#2c3035] font-medium hover:text-[#30343a] transition-colors">Painel <ArrowUpRight size={14} /></a>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.reload(); }} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">Sair</button>
+            </>
           ) : (
             <a href="/login-weddings" className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">Entrar <ArrowUpRight size={14} /></a>
           )}

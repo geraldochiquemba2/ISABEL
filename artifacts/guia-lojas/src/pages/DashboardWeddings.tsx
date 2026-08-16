@@ -212,7 +212,7 @@ export default function DashboardWeddings() {
         `}</style>
 
         {/* Sidebar */}
-        <aside className="w-64 bg-[#2c3035] text-white min-h-screen p-6 flex flex-col">
+        <aside className="w-64 bg-[#2c3035] text-white min-h-screen p-6 flex flex-col overflow-y-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-eliora-dark.svg" alt="Eliora Weddings" className="w-8 h-8 brightness-0 invert" />
             <div>
