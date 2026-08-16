@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { ArrowDown, ArrowRight, Mail, Phone, Instagram } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Mail, Phone, Instagram } from "lucide-react";
 import { useFavorites } from "@/lib/favorites";
 import { StoreCard } from "@/components/StoreCard";
 import { useQuery } from "@tanstack/react-query";
@@ -30,9 +30,20 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [sent, setSent] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrolledEnd, setScrolledEnd] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
+  const [promoIdx, setPromoIdx] = useState(0);
 
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el) {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setScrolledEnd(atEnd);
+    }
+  };
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
@@ -66,6 +77,17 @@ export default function Home() {
   }, [heroImages.length]);
 
   const hero = heroImages[heroIdx] || heroImages[0];
+
+  const promoImages = [
+    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop&auto=format&q=80",
+  ];
+
+  useEffect(() => {
+    const t = setInterval(() => setPromoIdx((p) => (p + 1) % promoImages.length), 4000);
+    return () => clearInterval(t);
+  }, []);
 
   let featured = stores.filter((s) => s.isFeatured).slice(0, 4);
   if (featured.length === 0) featured = stores.slice(0, 4);
@@ -108,10 +130,11 @@ export default function Home() {
         <section className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
           <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
             <img
-              src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop&auto=format&q=80"
+              key={promoIdx}
+              src={promoImages[promoIdx]}
               alt="Promoções"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
+              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)", animation: "heroFade 0.8s ease both" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/80 via-[#252a2f]/30 to-transparent" />
             <div className="relative h-full flex flex-col justify-end p-8">
@@ -132,7 +155,7 @@ export default function Home() {
         </section>
 
         <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
-          <div className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
+          <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
             {apiCategories.slice(0, 10).map((cat: any) => (
               <button
                 key={cat.id}
@@ -148,6 +171,16 @@ export default function Home() {
                 <span className="text-xs font-medium text-[#30343a] whitespace-nowrap">{cat.name}</span>
               </button>
             ))}
+          </div>
+          <div className="flex justify-center items-center gap-2 mt-2 md:hidden">
+            {scrolledEnd ? (
+              <span className="text-xs text-[#87909a] font-medium">Fim</span>
+            ) : (
+              <>
+                <span className="text-xs text-[#c9a84c] font-medium">Deslize para ver mais</span>
+                <ArrowRight size={14} className="text-[#c9a84c] animate-pulse" />
+              </>
+            )}
           </div>
         </div>
 
