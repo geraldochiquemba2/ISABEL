@@ -117,7 +117,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
 
         <section className="relative mx-auto grid max-w-[1380px] items-center gap-14 px-6 pb-24 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-36 md:pt-20">
           <div className="relative z-10">
-            <p className="rise flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-[#87909a]"><Sparkles size={13} /> Concierge de celebrações · Luanda e além</p>
+            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Concierge de celebrações · Luanda e além</p>
             <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">O amor,<br /><i className="font-medium text-[#9aa2ab]">bem celebrado.</i></h1>
             <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Bem-vindos à Eliora Weddings — onde cada promessa encontra o cuidado, a beleza e a calma para se tornar memória.</p>
             <button onClick={() => scrollTo("servicos")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Descobrir os serviços <ArrowDown size={15} /></button>

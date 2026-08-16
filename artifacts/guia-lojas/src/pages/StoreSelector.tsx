@@ -54,7 +54,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </motion.div>
 
       {/* Store Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl w-full">
+      <div className="grid grid-cols-2 gap-3 sm:gap-8 max-w-4xl w-full">
         {stores.map((store, index) => (
           <motion.div
             key={store.id}
@@ -64,7 +64,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             whileHover={{ y: -8, scale: 1.02 }}
             onClick={() => onSelect(store.id)}
             className="group relative rounded-3xl overflow-hidden shadow-xl cursor-pointer transition-shadow duration-500 hover:shadow-2xl"
-            style={{ minHeight: "380px" }}
+            style={{ minHeight: "280px" }}
           >
             {/* Background Image */}
             <img
@@ -78,27 +78,27 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             <div className={`absolute inset-0 bg-gradient-to-t ${store.gradient} via-black/30 to-transparent`} />
 
             {/* Content */}
-            <div className="relative h-full flex flex-col justify-end p-7">
+            <div className="relative h-full flex flex-col justify-end p-4 sm:p-7">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-lg"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center mb-3 sm:mb-5 shadow-lg"
                 style={{ backgroundColor: store.accent }}
               >
                 {store.icon}
               </div>
 
-              <h2 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">
+              <h2 className="text-lg sm:text-2xl font-bold text-white mb-1 drop-shadow-lg">
                 {store.name}
               </h2>
-              <p className="text-white/80 text-sm font-medium mb-3">
+              <p className="text-white/80 text-xs sm:text-sm font-medium mb-2 sm:mb-3">
                 {store.subtitle}
               </p>
-              <p className="text-white/70 text-sm leading-relaxed mb-5 max-w-xs">
+              <p className="text-white/70 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-5 max-w-xs hidden sm:block">
                 {store.description}
               </p>
 
-              <div className="flex items-center gap-2 text-white text-sm font-semibold group-hover:gap-3 transition-all duration-300">
+              <div className="flex items-center gap-2 text-white text-xs sm:text-sm font-semibold group-hover:gap-3 transition-all duration-300">
                 Entrar
-                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </div>
             </div>
 
