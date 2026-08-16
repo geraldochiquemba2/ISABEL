@@ -172,7 +172,6 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/50 via-transparent to-white/10" />
               <span className="absolute bottom-5 left-5 font-serif text-xl text-white drop-shadow-lg" style={{ animation: "heroFade 0.8s ease both" }}>{hero.name}</span>
             </div>
-            <span className="absolute -bottom-4 -left-7 font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98] md:-left-12">01 — {hero.name}</span>
           </div>
         </section>
 
