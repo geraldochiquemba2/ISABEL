@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
 import { WeddingAdminPanel } from "@/components/WeddingAdminPanel";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard } from "lucide-react";
+import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -170,10 +170,13 @@ export default function DashboardWeddings() {
     return () => window.removeEventListener("beforeunload", handle);
   }, [isDirty]);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const handleNavClick = (s: Section) => {
     if (isDirty && !window.confirm("Sair sem salvar?")) return;
     setIsDirty(false);
     setSection(s);
+    setMobileMenuOpen(false);
   };
 
   const { data: store, isLoading } = useQuery({
@@ -211,8 +214,24 @@ export default function DashboardWeddings() {
           @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
         `}</style>
 
+        {/* Mobile Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#2c3035] text-white px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/logo-eliora-dark.svg" alt="Eliora Weddings" className="w-7 h-7 brightness-0 invert" />
+            <span className="font-serif text-sm tracking-[0.08em]">Eliora <i className="font-normal">Weddings</i></span>
+          </div>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {mobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 bg-[#2c3035] text-white min-h-screen p-6 flex flex-col overflow-y-auto">
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#2c3035] text-white h-screen p-6 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-eliora-dark.svg" alt="Eliora Weddings" className="w-8 h-8 brightness-0 invert" />
             <div>
@@ -269,7 +288,7 @@ export default function DashboardWeddings() {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
           {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
           {section === "overview" && isAdmin && <AdminOverviewSection />}
           {section === "admin" && <WeddingAdminPanel />}
