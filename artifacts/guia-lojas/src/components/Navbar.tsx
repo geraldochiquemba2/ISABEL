@@ -123,7 +123,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
                       Entrar
                     </span>
                   </Link>
-                  <Link href="/dashboard">
+                  <Link href="/login?tab=register">
                     <span className="text-sm bg-white text-yellow-700 px-5 py-2 rounded-full font-semibold hover:bg-white/90 hover:shadow-lg transition-all">
                       Cadastrar loja
                     </span>
@@ -203,7 +203,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
                       Entrar
                     </span>
                   </Link>
-                  <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
+                  <Link href="/login?tab=register" onClick={() => setMobileOpen(false)}>
                     <span className="block px-4 py-3 rounded-xl text-sm text-yellow-700 font-semibold bg-white text-center">
                       Cadastrar minha loja
                     </span>

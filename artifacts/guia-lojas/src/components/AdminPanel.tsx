@@ -5,7 +5,7 @@ import {
   Star, TrendingUp, Tag, Plus, Trash2, Image, RefreshCw, KeyRound, Lightbulb
 } from "lucide-react";
 import {
-  fetchAdminUsers, approveLojista, rejectLojista, suspendLojista, reactivateLojista, resetUserPassword,
+  fetchAdminUsersFiltered, approveLojista, rejectLojista, suspendLojista, reactivateLojista, resetUserPassword,
   uploadImage,
 } from "@/lib/api";
 
@@ -14,7 +14,7 @@ function usePendingCarrinhoCount() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/stores/carrinho-access/pending");
+        const res = await fetch("/api/stores/carrinho-access/pending?store_type=collection");
         const data = await res.json();
         setCount(Array.isArray(data) ? data.length : 0);
       } catch { setCount(0); }
@@ -31,7 +31,7 @@ function usePendingAccountsCount() {
   useEffect(() => {
     const load = async () => {
       try {
-        const users = await fetchAdminUsers();
+        const users = await fetchAdminUsersFiltered("collection");
         setCount(Array.isArray(users) ? users.filter((u: any) => u.status === "PENDENTE").length : 0);
       } catch { setCount(0); }
     };
@@ -129,7 +129,7 @@ function ContasSection() {
 
   async function loadUsers() {
     setLoading(true);
-    try { setUsers(await fetchAdminUsers()); }
+    try { setUsers(await fetchAdminUsersFiltered("collection")); }
     catch (e) { console.error(e); }
     finally { setLoading(false); }
   }
@@ -329,7 +329,7 @@ function LojasSection() {
   async function loadStores() {
     setLoading(true);
     try {
-      const res = await fetch("/api/stores/admin/all");
+      const res = await fetch("/api/stores/admin/all?store_type=collection");
       if (res.ok) {
         setStores(await res.json());
       }
@@ -926,7 +926,7 @@ function CarrinhosAccessSection() {
 
   const fetchPending = async () => {
     try {
-      const res = await fetch("/api/stores/carrinho-access/pending");
+      const res = await fetch("/api/stores/carrinho-access/pending?store_type=collection");
       const data = await res.json();
       setPendingStores(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -937,7 +937,7 @@ function CarrinhosAccessSection() {
 
   const fetchAll = async () => {
     try {
-      const res = await fetch("/api/stores/admin/all");
+      const res = await fetch("/api/stores/admin/all?store_type=collection");
       const data = await res.json();
       setAllStores(Array.isArray(data) ? data : []);
     } catch (err) {

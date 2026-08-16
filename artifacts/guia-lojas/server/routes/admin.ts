@@ -3,17 +3,22 @@ import { pool } from "../db";
 
 export const adminRouter = Router();
 
-// GET /api/admin/users — Listar todos os utilizadores
+// GET /api/admin/users — Listar utilizadores (filtro por store_type opcional)
 adminRouter.get("/users", async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT u.id, u.name, u.phone, u.status, u.status_reason as "statusReason",
-              u.province, u.municipality, u.address, u.store_id as "storeId",
+    const { store_type } = req.query;
+    let query = `SELECT u.id, u.name, u.phone, u.status, u.status_reason as "statusReason",
+              u.province, u.municipality, u.address, u.store_id as "storeId", u.store_type as "storeType",
               s.name as "storeName", s.logo_url as "logoUrl", s.cover_image as "coverImage"
        FROM users u
-       LEFT JOIN stores s ON s.id = u.store_id
-       ORDER BY u.created_at DESC`
-    );
+       LEFT JOIN stores s ON s.id = u.store_id`;
+    const params: any[] = [];
+    if (store_type) {
+      query += ` WHERE u.store_type = $1`;
+      params.push(store_type);
+    }
+    query += ` ORDER BY u.created_at DESC`;
+    const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (err) {
     console.error(err);

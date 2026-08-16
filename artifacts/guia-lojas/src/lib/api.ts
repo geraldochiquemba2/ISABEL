@@ -255,3 +255,71 @@ export async function changePassword(userId: string, newPassword: string): Promi
   const json = await res.json();
   if (!res.ok) throw new Error(json?.error || "Erro ao alterar a senha");
 }
+
+// POST /api/auth/link-store — Associar loja a utilizador existente
+export async function linkStore(data: { userId?: string; phone?: string; storeName: string; category: string; province?: string; municipality?: string; address?: string }): Promise<any> {
+  const res = await fetch("/api/auth/link-store", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao associar loja");
+  return json;
+}
+
+// PUT /api/auth/rename-store — Renomear loja
+export async function renameStore(storeId: string, newName: string): Promise<any> {
+  const res = await fetch("/api/auth/rename-store", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ storeId, newName }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao renomear loja");
+  return json;
+}
+
+// ── Wedding Groups ──────────────────────────────────────────
+export async function fetchWeddingGroups(): Promise<any[]> {
+  const res = await fetch("/api/wedding-groups");
+  if (!res.ok) throw new Error("Erro ao buscar grupos de casamento");
+  return res.json();
+}
+
+export async function createWeddingGroup(data: any): Promise<any> {
+  const res = await fetch("/api/wedding-groups", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao criar grupo");
+  return json;
+}
+
+export async function updateWeddingGroup(id: string, data: any): Promise<any> {
+  const res = await fetch(`/api/wedding-groups/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao atualizar grupo");
+  return json;
+}
+
+export async function deleteWeddingGroup(id: string): Promise<any> {
+  const res = await fetch(`/api/wedding-groups/${id}`, { method: "DELETE" });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao eliminar grupo");
+  return json;
+}
+
+// ── Admin Users (with store_type filter) ────────────────────
+export async function fetchAdminUsersFiltered(storeType?: string): Promise<any[]> {
+  const url = storeType ? `/api/admin/users?store_type=${storeType}` : "/api/admin/users";
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Erro ao carregar utilizadores");
+  return res.json();
+}

@@ -32,6 +32,7 @@ export async function initDB() {
         logo_url    TEXT,
         province    TEXT,
         municipality TEXT,
+        store_type  TEXT DEFAULT 'collection',
         created_at  TIMESTAMPTZ DEFAULT NOW()
       );
 
@@ -53,15 +54,17 @@ export async function initDB() {
       CREATE TABLE IF NOT EXISTS users (
         id            SERIAL PRIMARY KEY,
         name          TEXT NOT NULL,
-        phone         TEXT UNIQUE NOT NULL,
+        phone         TEXT NOT NULL,
         password      TEXT NOT NULL,
         province      TEXT,
         municipality  TEXT,
         address       TEXT,
         store_id      TEXT,
+        store_type    TEXT DEFAULT 'collection',
         status        TEXT DEFAULT 'PENDENTE',
         status_reason TEXT,
-        created_at    TIMESTAMPTZ DEFAULT NOW()
+        created_at    TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(phone, store_type)
       );
 
       CREATE TABLE IF NOT EXISTS style_tips (
@@ -71,6 +74,17 @@ export async function initDB() {
         imagem      TEXT,
         dicas       TEXT[] DEFAULT '{}',
         ordem       INTEGER DEFAULT 0,
+        created_at  TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS wedding_groups (
+        id          TEXT PRIMARY KEY,
+        number      TEXT NOT NULL,
+        title       TEXT NOT NULL,
+        intro       TEXT,
+        items       TEXT[] DEFAULT '{}',
+        category    TEXT NOT NULL,
+        image       TEXT,
         created_at  TIMESTAMPTZ DEFAULT NOW()
       );
     `);
@@ -105,6 +119,15 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'NAO_SOLICITADO'`,
       `UPDATE stores SET carrinho_access = 'NAO_SOLICITADO' WHERE carrinho_access IS NULL OR carrinho_access = 'PENDENTE'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_carrinho BOOLEAN DEFAULT FALSE`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS store_type TEXT DEFAULT 'collection'`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS store_type TEXT DEFAULT 'collection'`,
+      `UPDATE users SET store_type = 'collection' WHERE store_type IS NULL`,
+      `UPDATE wedding_groups SET title = 'Pedidos de Casamento, Noivados & Momentos Românticos' WHERE id = 'wg-02'`,
+      `UPDATE wedding_groups SET image = NULL WHERE id = 'wg-01'`,
+      `DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_key') THEN ALTER TABLE users DROP CONSTRAINT users_phone_key; END IF; END $$`,
+      `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_store_type_unique') THEN ALTER TABLE users ADD CONSTRAINT users_phone_store_type_unique UNIQUE (phone, store_type); END IF; END $$`,
+      `UPDATE stores SET store_type = 'weddings' WHERE name ILIKE '%weddings%' OR category ILIKE '%weddings%'`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS schedule JSONB DEFAULT NULL`,
     ];
 
     for (const sql of alterations) {
@@ -113,9 +136,12 @@ export async function initDB() {
 
     // Inserir Admin se não existir
     await client.query(`
-      INSERT INTO users (name, phone, password, province, municipality, address, status)
-      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO')
-      ON CONFLICT (phone) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'collection')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'weddings')
+      ON CONFLICT (phone, store_type) DO NOTHING;
     `);
 
     // Inserir Categorias predefinidas se a tabela estiver vazia
@@ -200,6 +226,24 @@ export async function initDB() {
         await client.query(
           "INSERT INTO style_tips (titulo, descricao, imagem, dicas, ordem) VALUES ($1, $2, $3, $4, $5)",
           [tip.titulo, tip.descricao, tip.imagem, tip.dicas, tip.ordem]
+        );
+      }
+      }
+
+    // Inserir Wedding Groups predefinidos se a tabela estiver vazia
+    const wgCheck = await client.query("SELECT COUNT(*) FROM wedding_groups");
+    if (parseInt(wgCheck.rows[0].count) === 0) {
+      const defaultGroups = [
+        { id: "wg-01", number: "01", title: "Planeamento & Organização de Casamentos", intro: "Do primeiro sim ao último brinde, guardamos o fio invisível de tudo.", items: ["Wedding Planner & Assessoria do Evento", "Assistente Pessoal dos Noivos", "Weddings & Mini-Weddings", "Mestre de Cerimónias", "Hostesses e Acolhimento VIP"], category: "planeamento", image: null },
+        { id: "wg-02", number: "02", title: "Pedidos de Casamento, Noivados & Momentos Românticos", intro: "Gestos íntimos, pensados para a vossa história e para aquele instante único.", items: ["Criador de Pedidos de Casamento", "Aniversários de Namoro/Casamento", "Chefs ao Domicílio para Jantares Íntimos", "Serenatas e Músicos para Pedidos"], category: "noivados", image: null },
+        { id: "wg-03", number: "03", title: "Fotografia, Vídeo & Produção Audiovisual", intro: "A memória viva de cada detalhe, feita para durar gerações.", items: ["Fotógrafo de Casamento", "Videógrafo & Cinematografia", "Drone & Cobertura Aérea", "Aftermovie & Edição Cinematográfica", "Álbuns & Livros de Fotos"], category: "fotografia", image: null },
+        { id: "wg-04", number: "04", title: "Beleza & Estilismo para Noivas e Noivos", intro: "A vossa melhor versão, sentida e vista.", items: ["Maquilhagem Profissional para Noivas", "Penteado & Hair Styling", "Estilista Pessoal & Consultoria de Imagem", "Tratamentos de Pele e Corpo", "Grooming & Barba para Noivos"], category: "beleza", image: null },
+        { id: "wg-05", number: "05", title: "Decoração, Flores & Experiências", intro: "O cenário, os sabores e o ritmo que fazem cada celebração ganhar alma.", items: ["Locais e Espaços para Eventos", "Design Floral & Decoração Temática", "Catering, Bolos de Noiva e Bar de Cocktails", "DJs, Bandas e Entretenimento"], category: "decoracao", image: null },
+      ];
+      for (const g of defaultGroups) {
+        await client.query(
+          "INSERT INTO wedding_groups (id, number, title, intro, items, category, image) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING",
+          [g.id, g.number, g.title, g.intro, g.items, g.category, g.image]
         );
       }
     }

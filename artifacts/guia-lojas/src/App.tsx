@@ -12,6 +12,9 @@ import Login from "@/pages/Login";
 import DescobrirEstilo from "@/pages/DescobrirEstilo";
 import VerCarrinhos from "@/pages/VerCarrinhos";
 import ElioraWeddings from "@/pages/ElioraWeddings";
+import ExploreServices from "@/pages/ExploreServices";
+import LoginWeddings from "@/pages/LoginWeddings";
+import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
 import NotFound from "@/pages/not-found";
 
@@ -63,7 +66,15 @@ function Router() {
   if (selectedStore === "weddings") {
     return (
       <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
-        <ElioraWeddings onBackToSelector={handleBackToSelector} />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar" component={ExploreServices} />
+          <Route path="/login-weddings" component={LoginWeddings} />
+          <Route path="/dashboard-weddings" component={DashboardWeddings} />
+          <Route>
+            <ElioraWeddings onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
       </StoreContext.Provider>
     );
   }

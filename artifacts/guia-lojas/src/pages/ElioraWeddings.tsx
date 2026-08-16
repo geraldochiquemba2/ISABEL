@@ -1,49 +1,184 @@
-import { useState } from "react";
-import { ArrowDown, ArrowUpRight, ChevronRight, Menu, X, Sparkles, Instagram, Mail, Phone } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowDown, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 type ServiceGroup = {
+  id?: string;
   number: string;
   title: string;
   intro: string;
   items: string[];
+  category: string;
+  image?: string | null;
 };
+
+interface Store {
+  id: string;
+  name: string;
+  category: string;
+  image?: string;
+  coverImage?: string;
+  coverImages?: string[];
+  logoUrl?: string;
+  description?: string;
+  isOpen?: boolean;
+}
 
 interface ElioraWeddingsProps {
   onBackToSelector?: () => void;
 }
 
-const groups: ServiceGroup[] = [
+const hardcodedGroups: ServiceGroup[] = [
   {
     number: "01",
-    title: "Planeamento, Assessoria e Experiência do Casal",
+    title: "Planeamento & Organização de Casamentos",
     intro: "Do primeiro sim ao último brinde, guardamos o fio invisível de tudo.",
     items: ["Wedding Planner & Assessoria do Evento", "Assistente Pessoal dos Noivos", "Weddings & Mini-Weddings", "Mestre de Cerimónias", "Hostesses e Acolhimento VIP"],
+    category: "planeamento",
   },
   {
     number: "02",
-    title: "Pedidos de Casamento, Noivados e Momentos Românticos",
+    title: "Pedidos de Casamento, Noivados & Momentos Românticos",
     intro: "Gestos íntimos, pensados para a vossa história e para aquele instante único.",
     items: ["Criador de Pedidos de Casamento", "Aniversários de Namoro/Casamento", "Chefs ao Domicílio para Jantares Íntimos", "Serenatas e Músicos para Pedidos"],
+    category: "noivados",
   },
   {
     number: "03",
-    title: "Registo, Memória e Conteúdo Digital",
-    intro: "A beleza do dia, preservada com verdade, intenção e um olhar atento.",
-    items: ["Fotógrafos", "Videomakers e Criadores de Conteúdo"],
+    title: "Fotografia, Vídeo & Produção Audiovisual",
+    intro: "A memória viva de cada detalhe, feita para durar gerações.",
+    items: ["Fotógrafo de Casamento", "Videógrafo & Cinematografia", "Drone & Cobertura Aérea", "Aftermovie & Edição Cinematográfica", "Álbuns & Livros de Fotos"],
+    category: "fotografia",
   },
   {
     number: "04",
-    title: "Beleza, Estilo e Cuidados Pessoais dos Noivos",
-    intro: "Tempo para respirar, cuidar e chegar ao altar inteiramente presentes.",
-    items: ["Ateliê de Vestidos de Noiva", "Ateliê de Fatos de Noivos", "Make Up Artist & Hair Stylist (Dia da Noiva)", "Estética, SPA e Massagem para Noivos"],
+    title: "Beleza & Estilismo para Noivas e Noivos",
+    intro: "A vossa melhor versão, sentida e vista.",
+    items: ["Maquilhagem Profissional para Noivas", "Penteado & Hair Styling", "Estilista Pessoal & Consultoria de Imagem", "Tratamentos de Pele e Corpo", "Grooming & Barba para Noivos"],
+    category: "beleza",
   },
   {
     number: "05",
-    title: "Espaço, Decoração, Gastronomia e Animação",
+    title: "Decoração, Flores & Experiências",
     intro: "O cenário, os sabores e o ritmo que fazem cada celebração ganhar alma.",
     items: ["Locais e Espaços para Eventos", "Design Floral & Decoração Temática", "Catering, Bolos de Noiva e Bar de Cocktails", "DJs, Bandas e Entretenimento"],
+    category: "decoracao",
   },
 ];
+
+function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
+  const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div 
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
+    >
+        <div className="relative h-28 overflow-hidden">
+          <img
+            src={images[currentIdx] || fallbackImage}
+            alt={store.name}
+            className="w-full h-full object-cover"
+          />
+          {store.logoUrl && (
+            <img
+              src={store.logoUrl}
+              alt={`Logo ${store.name}`}
+              className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
+            />
+          )}
+          {images.length > 1 && (
+            <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`}
+                />
+              ))}
+            </div>
+          )}
+          {store.isOpen !== undefined && (
+            <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+              {store.isOpen ? "Aberto" : "Fechado"}
+            </span>
+          )}
+        </div>
+        <div className="p-3">
+          <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+          {store.description && (
+            <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          )}
+        </div>
+      </div>
+  );
+}
+
+function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceGroup; index: number; stores: Store[]; storeProducts?: Record<string, string[]> }) {
+  return (
+    <article className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${index % 2 ? "md:ml-20" : ""}`}>
+      <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
+        <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+        <div>
+          <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
+          <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
+          <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
+            {group.items.map((item) => (
+              <li key={item}>
+                <a
+                  href={`/explorar?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`}
+                  className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                >
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />{item}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={`/explorar?categoria=${group.category}`}
+            className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors"
+          >
+            Ver mais <ChevronRight size={14} />
+          </a>
+        </div>
+        <div className="hidden md:block">
+          {group.image ? (
+            <div className="relative overflow-hidden rounded-2xl border border-[#d1d4d8]">
+              <img src={group.image} alt={group.title} className="w-full h-64 object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/40 via-transparent to-transparent" />
+              <p className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">#{group.number}</p>
+            </div>
+          ) : (
+            <>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+              {stores.length > 0 ? (
+                <div className="flex flex-col gap-3">
+                  {stores.slice(0, 2).map((store) => (
+                    <StoreCard key={store.id} store={store} productImages={storeProducts?.[store.id]} />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
+                  <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 function Monogram() {
   return (
@@ -58,27 +193,58 @@ function Monogram() {
   );
 }
 
-function ServiceBlock({ group, index }: { group: ServiceGroup; index: number }) {
-  return (
-    <article className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${index % 2 ? "md:ml-20" : ""}`}>
-      <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-        <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
-        <div>
-          <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
-          <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
-        </div>
-        <ul className="space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
-          {group.items.map((item) => <li key={item} className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1"><span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />{item}</li>)}
-        </ul>
-      </div>
-    </article>
-  );
-}
-
 export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };
+
+  const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
+  const isLoggedIn = !!localUserStr;
+
+  const { data: stores = [] } = useQuery({
+    queryKey: ["stores", "weddings"],
+    queryFn: async () => {
+      const res = await fetch("/api/stores?store_type=weddings");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products", "weddings"],
+    queryFn: async () => {
+      const res = await fetch("/api/products?store_type=weddings");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: dbGroups = [] } = useQuery({
+    queryKey: ["wedding-groups"],
+    queryFn: async () => {
+      const res = await fetch("/api/wedding-groups");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const groups = dbGroups.length > 0 ? dbGroups : hardcodedGroups;
+
+  const getStoresForGroup = (category: string) => {
+    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
+    const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
+    const storesWithProducts = stores.filter((s: Store) => storeIdsWithProducts.has(s.id));
+    const storeProductsMap: Record<string, string[]> = {};
+    categoryProducts.forEach((p: any) => {
+      const imgs = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      if (!storeProductsMap[p.storeId]) storeProductsMap[p.storeId] = [];
+      storeProductsMap[p.storeId].push(...imgs);
+    });
+    return { stores: storesWithProducts, storeProducts: storeProductsMap };
+  };
 
   return (
     <main className="min-h-[100dvh] overflow-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -104,6 +270,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
           <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-[#fafafa] px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
             <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#77818c]">Serviços</button>
             <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
+            <a href="/explorar" className="text-left transition-colors hover:text-[#77818c]">Explorar</a>
+            {isLoggedIn ? (
+              <a href="/dashboard-weddings" className="flex items-center gap-2 text-left text-[#2c3035] font-medium hover:text-[#30343a] transition-colors">Painel <ArrowUpRight size={14} /></a>
+            ) : (
+              <a href="/login-weddings" className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">Entrar <ArrowUpRight size={14} /></a>
+            )}
             <button onClick={() => scrollTo("contacto")} className="flex items-center gap-2 text-left text-[#68727c]">Falar com a Eliora <ArrowUpRight size={14} /></button>
             {onBackToSelector && (
               <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">
@@ -183,15 +355,18 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
               <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">04 — Detalhe & intenção</figcaption>
             </figure>
           </div>
-          <div>{groups.map((group, i) => <ServiceBlock key={group.number} group={group} index={i} />)}</div>
+          <div>{groups.map((group, i) => {
+            const { stores: groupStores, storeProducts } = getStoresForGroup(group.category);
+            return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} />;
+          })}</div>
         </section>
 
         <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
-          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b9c1ca]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Vamos criar espaço<br /><i>para a vossa história?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => setSent(true)} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} /></button></div></div>
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b9c1ca]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Vamos criar espaço<br /><i>para a vossa história?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} /></button></div></div>
         </section>
 
-        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p><div className="flex items-center gap-5 text-[#747b84]"><a href="mailto:ola@elioraweddings.com" aria-label="Email"><Mail size={16} /></a><a href="tel:+244900000000" aria-label="Telefone"><Phone size={16} /></a><a href="#" aria-label="Instagram"><Instagram size={16} /></a><span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span></div></footer>
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p><div className="flex items-center gap-5 text-[#747b84]"><a href="mailto:ola@elioraweddings.com" aria-label="Email"><Mail size={16} /></a><a href="tel:+244922001778" aria-label="Telefone"><Phone size={16} /></a><a href="#" aria-label="Instagram"><Instagram size={16} /></a><span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span></div></footer>
       </div>
     </main>
   );

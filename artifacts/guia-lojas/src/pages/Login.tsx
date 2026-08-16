@@ -48,7 +48,10 @@ function FieldError({ msg }: { msg?: string }) {
 
 /* ── component ───────────────────────────────────────────── */
 export default function Login() {
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register">(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("tab") === "register" ? "register" : "login";
+  });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);
@@ -87,7 +90,7 @@ export default function Login() {
   const onLoginSubmit = async (values: LoginValues) => {
     setError("");
     try {
-      const res = await loginLojista(values);
+      const res = await loginLojista({ ...values, storeType: "collection" });
       localStorage.setItem("guialocal_user", JSON.stringify(res.user));
       setSubmitted(true);
       setTimeout(() => setLoc("/dashboard"), 1000);

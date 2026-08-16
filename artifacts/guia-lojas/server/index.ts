@@ -10,6 +10,7 @@ import { mediaRouter } from "./routes/media";
 import { categoriesRouter } from "./routes/categories";
 import { statsRouter } from "./routes/stats";
 import { styleTipsRouter } from "./routes/style-tips";
+import { weddingGroupsRouter } from "./routes/wedding-groups";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/api/media", mediaRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/stats", statsRouter);
 app.use("/api/style-tips", styleTipsRouter);
+app.use("/api/wedding-groups", weddingGroupsRouter);
 
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 

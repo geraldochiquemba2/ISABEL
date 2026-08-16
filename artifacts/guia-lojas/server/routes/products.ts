@@ -3,10 +3,10 @@ import { pool } from "../db";
 
 export const productsRouter = Router();
 
-// GET /api/products?store_id=xxx&is_carrinho=true — listar produtos
+// GET /api/products?store_id=xxx&is_carrinho=true&store_type=weddings — listar produtos
 productsRouter.get("/", async (req, res) => {
   try {
-    const { store_id, is_carrinho } = req.query;
+    const { store_id, is_carrinho, store_type } = req.query;
     let query = `
       SELECT p.*, s.name as store_name, s.logo_url as store_logo
       FROM products p
@@ -17,6 +17,10 @@ productsRouter.get("/", async (req, res) => {
     if (store_id) {
       params.push(store_id);
       conditions.push(`p.store_id=$${params.length}`);
+    }
+    if (store_type) {
+      params.push(store_type);
+      conditions.push(`s.store_type=$${params.length}`);
     }
     if (is_carrinho === "true") {
       conditions.push(`p.is_carrinho = TRUE`);

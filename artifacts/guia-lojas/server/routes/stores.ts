@@ -6,9 +6,10 @@ export const storesRouter = Router();
 // ── Rotas FIXAS (antes de /:id para evitar conflito) ──
 
 // GET /api/stores/admin/all — todas as lojas para painel admin
-storesRouter.get("/admin/all", async (_req, res) => {
+storesRouter.get("/admin/all", async (req, res) => {
   try {
-    const result = await pool.query(`
+    const { store_type } = req.query;
+    let query = `
       SELECT s.*,
         json_agg(
           json_build_object(
@@ -18,10 +19,14 @@ storesRouter.get("/admin/all", async (_req, res) => {
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s
-      LEFT JOIN products p ON p.store_id = s.id
-      GROUP BY s.id
-      ORDER BY s.created_at DESC
-    `);
+      LEFT JOIN products p ON p.store_id = s.id`;
+    const params: any[] = [];
+    if (store_type) {
+      params.push(store_type);
+      query += ` WHERE s.store_type = $1`;
+    }
+    query += ` GROUP BY s.id ORDER BY s.created_at DESC`;
+    const result = await pool.query(query, params);
     res.json(result.rows.map((r) => ({
       id: r.id,
       name: r.name,
@@ -49,15 +54,21 @@ storesRouter.get("/admin/all", async (_req, res) => {
 });
 
 // GET /api/stores/carrinho-access/pending — lojas com pedido de acesso pendente (admin)
-storesRouter.get("/carrinho-access/pending", async (_req, res) => {
+storesRouter.get("/carrinho-access/pending", async (req, res) => {
   try {
-    const result = await pool.query(`
+    const { store_type } = req.query;
+    let query = `
       SELECT s.*, u.name as owner_name, u.phone as owner_phone
       FROM stores s
       JOIN users u ON u.store_id = s.id
-      WHERE s.carrinho_access = 'PENDENTE'
-      ORDER BY s.created_at DESC
-    `);
+      WHERE s.carrinho_access = 'PENDENTE'`;
+    const params: any[] = [];
+    if (store_type) {
+      params.push(store_type);
+      query += ` AND s.store_type = $1`;
+    }
+    query += ` ORDER BY s.created_at DESC`;
+    const result = await pool.query(query, params);
     res.json(result.rows.map((r) => ({
       id: r.id,
       name: r.name,
@@ -78,7 +89,7 @@ storesRouter.get("/carrinho-access/pending", async (_req, res) => {
 // GET /api/stores — listar todas as lojas
 storesRouter.get("/", async (req, res) => {
   try {
-    const { province, municipality, category, q } = req.query;
+    const { province, municipality, category, q, store_type } = req.query;
     let query = `
       SELECT s.*, 
         json_agg(
@@ -94,6 +105,13 @@ storesRouter.get("/", async (req, res) => {
     `;
     const conditions: string[] = [];
     const params: unknown[] = [];
+
+    if (store_type) {
+      params.push(store_type);
+      conditions.push(`s.store_type = $${params.length}`);
+    } else {
+      conditions.push(`s.store_type = 'collection'`);
+    }
 
     if (province) {
       params.push(province);
@@ -171,6 +189,7 @@ storesRouter.get("/:id", async (req, res) => {
       province: store.province,
       municipality: store.municipality,
       carrinhoAccess: store.carrinho_access,
+      schedule: store.schedule || null,
       products: productsRes.rows.map((p) => ({
         id: p.id,
         name: p.name,
@@ -211,12 +230,12 @@ storesRouter.post("/", async (req, res) => {
 storesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, isOpen } = req.body;
+    const { name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, isOpen, schedule } = req.body;
     await pool.query(
       `UPDATE stores SET name=$2, category=$3, address=$4, phone=$5, whatsapp=$6,
-       description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13, is_open=$14
+       description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13, is_open=$14, schedule=$15
        WHERE id=$1`,
-      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, isOpen]
+      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, isOpen, schedule ? JSON.stringify(schedule) : null]
     );
     res.json({ success: true });
   } catch (err) {

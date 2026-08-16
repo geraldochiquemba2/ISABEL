@@ -16,6 +16,7 @@ export default function StoreProfile() {
   const search = useSearch();
   const params = new URLSearchParams(search);
   const tabParam = params.get("tab");
+  const isFromWeddings = params.get("from") === "weddings";
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -66,10 +67,15 @@ export default function StoreProfile() {
     { day: "Domingo", time: "Fechado" },
   ];
 
+  const weddingsBg = "bg-[#fafafa]";
+  const weddingsText = "text-[#30343a]";
+  const weddingsBorder = "border-[#d1d4d8]";
+
   return (
     <PageTransition>
+      <div className={isFromWeddings ? `${weddingsBg} min-h-screen` : ""}>
       {/* Cover com carrossel */}
-      <div className="relative h-72 sm:h-96 w-full overflow-hidden bg-muted">
+      <div className={`relative h-72 sm:h-96 w-full overflow-hidden ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-muted"}`}>
         {!coverError && currentImage ? (
           <>
             {/* Fundo borrado */}
@@ -111,16 +117,16 @@ export default function StoreProfile() {
         <button
           data-testid="button-back"
           onClick={() => window.history.back()}
-          className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors backdrop-blur-sm z-20"
+          className={`absolute top-4 left-4 w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-foreground"} flex items-center justify-center transition-colors backdrop-blur-sm z-20`}
         >
-          <ArrowLeft size={16} className="text-foreground" />
+          <ArrowLeft size={16} />
         </button>
 
 
       </div>
 
       {/* Store title row below cover */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4 border-b border-border">
+      <div className={`max-w-4xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4 border-b ${isFromWeddings ? weddingsBorder : "border-border"}`}>
         {store.logoUrl ? (
           <img
             src={store.logoUrl}
@@ -142,7 +148,7 @@ export default function StoreProfile() {
               {store.isOpen ? "Aberto agora" : "Fechado"}
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight truncate">{store.name}</h1>
+          <h1 className={`text-xl sm:text-2xl font-semibold tracking-tight truncate ${isFromWeddings ? weddingsText : "text-foreground"}`}>{store.name}</h1>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             <p className="text-sm text-muted-foreground">{store.category}</p>
             {store.province && store.municipality && (
@@ -163,12 +169,14 @@ export default function StoreProfile() {
           <p className="text-sm text-muted-foreground max-w-2xl">{store.description}</p>
 
           {/* Address */}
-          <div className="flex items-start gap-2">
-            <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-foreground">
-              {store.province && store.municipality ? `${store.province}, ${store.municipality} — ${store.address}` : store.address}
-            </p>
-          </div>
+          {(store.province || store.municipality || (store.address && store.address.trim())) && (
+            <div className="flex items-start gap-2">
+              <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-foreground">
+                {store.province && store.municipality ? `${store.province}, ${store.municipality}${store.address && store.address.trim() ? ` — ${store.address}` : ""}` : store.address}
+              </p>
+            </div>
+          )}
 
           {/* Horários */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
@@ -280,6 +288,7 @@ export default function StoreProfile() {
             </div>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </PageTransition>
   );
