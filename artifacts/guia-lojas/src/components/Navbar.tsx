@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Search, LogOut, User } from "lucide-react";
+import { Menu, X, Search, LogOut, User, Store } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function Navbar() {
+interface NavbarProps {
+  onBackToSelector?: () => void;
+}
+
+export function Navbar({ onBackToSelector }: NavbarProps) {
   const [location, setLoc] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -82,6 +86,16 @@ export function Navbar() {
 
             {/* Right actions */}
             <div className="hidden md:flex items-center gap-2">
+              {onBackToSelector && (
+                <button
+                  onClick={onBackToSelector}
+                  className="flex items-center gap-2 text-sm text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-full transition-all"
+                  title="Trocar de loja"
+                >
+                  <Store size={16} />
+                  <span>Trocar loja</span>
+                </button>
+              )}
               <Link href="/busca">
                 <button className="p-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all" data-testid="button-nav-search">
                   <Search size={18} />
@@ -141,6 +155,16 @@ export function Navbar() {
             style={{background: 'linear-gradient(180deg, #C9963A 0%, #B8860B 100%)'}}
           >
             <div className="px-4 py-3 flex flex-col gap-1">
+              {onBackToSelector && (
+                <button
+                  onClick={() => { onBackToSelector(); setMobileOpen(false); }}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm text-white/90 hover:bg-white/10 transition-all"
+                >
+                  <Store size={16} />
+                  Trocar de loja
+                </button>
+              )}
+              <div className="h-px bg-white/20 my-2" />
               {[
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },

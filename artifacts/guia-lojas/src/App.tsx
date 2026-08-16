@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/Navbar";
-import { useEffect } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
@@ -11,9 +11,27 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import DescobrirEstilo from "@/pages/DescobrirEstilo";
 import VerCarrinhos from "@/pages/VerCarrinhos";
+import ElioraWeddings from "@/pages/ElioraWeddings";
+import StoreSelector from "@/pages/StoreSelector";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
+
+type StoreType = "weddings" | "collection" | null;
+
+interface StoreContextType {
+  selectedStore: StoreType;
+  setSelectedStore: (store: StoreType) => void;
+}
+
+export const StoreContext = createContext<StoreContextType>({
+  selectedStore: null,
+  setSelectedStore: () => {},
+});
+
+export function useStore() {
+  return useContext(StoreContext);
+}
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -24,9 +42,35 @@ function ScrollToTop() {
 }
 
 function Router() {
+  const [selectedStore, setSelectedStore] = useState<StoreType>(
+    () => localStorage.getItem("eliora-selected-store") as StoreType
+  );
+
+  const handleStoreSelect = (storeId: string) => {
+    localStorage.setItem("eliora-selected-store", storeId);
+    setSelectedStore(storeId as StoreType);
+  };
+
+  const handleBackToSelector = () => {
+    localStorage.removeItem("eliora-selected-store");
+    setSelectedStore(null);
+  };
+
+  if (!selectedStore) {
+    return <StoreSelector onSelect={handleStoreSelect} />;
+  }
+
+  if (selectedStore === "weddings") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ElioraWeddings onBackToSelector={handleBackToSelector} />
+      </StoreContext.Provider>
+    );
+  }
+
   return (
-    <>
-      <Navbar />
+    <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+      <Navbar onBackToSelector={handleBackToSelector} />
       <ScrollToTop />
       <Switch>
         <Route path="/" component={Home} />
@@ -38,7 +82,14 @@ function Router() {
         <Route path="/carrinhos" component={VerCarrinhos} />
         <Route component={NotFound} />
       </Switch>
-    </>
+      <button
+        onClick={handleBackToSelector}
+        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-gray-900 text-white text-sm font-medium rounded-full shadow-lg hover:bg-gray-800 transition-all hover:scale-105"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Trocar loja
+      </button>
+    </StoreContext.Provider>
   );
 }
 
