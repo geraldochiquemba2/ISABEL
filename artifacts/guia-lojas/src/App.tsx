@@ -49,6 +49,8 @@ function Router() {
   const [selectedStore, setSelectedStore] = useState<StoreType>(
     () => localStorage.getItem("eliora-selected-store") as StoreType
   );
+  const [location] = useLocation();
+  const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
@@ -64,7 +66,7 @@ function Router() {
     return <StoreSelector onSelect={handleStoreSelect} />;
   }
 
-  const floatingButton = (
+  const floatingButton = !isDashboard ? (
     <button
       onClick={handleBackToSelector}
       className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#2c3035] text-white text-sm font-medium rounded-full shadow-lg hover:bg-[#1a1d20] transition-all hover:scale-105"
@@ -72,7 +74,7 @@ function Router() {
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       Trocar loja
     </button>
-  );
+  ) : null;
 
   if (selectedStore === "weddings") {
     return (
