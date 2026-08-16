@@ -92,7 +92,6 @@ export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolledEnd, setScrolledEnd] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
-  const [promoIdx, setPromoIdx] = useState(0);
 
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
 
@@ -137,16 +136,7 @@ export default function Home() {
 
   const hero = heroImages[heroIdx] || heroImages[0];
 
-  const promoImages = [
-    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop&auto=format&q=80",
-  ];
-
-  useEffect(() => {
-    const t = setInterval(() => setPromoIdx((p) => (p + 1) % promoImages.length), 3000);
-    return () => clearInterval(t);
-  }, []);
+  const promoImage = "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop&auto=format&q=80";
 
   let featured = stores.filter((s) => s.isFeatured).slice(0, 4);
   if (featured.length === 0) featured = stores.slice(0, 4);
@@ -189,11 +179,10 @@ export default function Home() {
         <section className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
           <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
             <img
-              key={promoIdx}
-              src={promoImages[promoIdx]}
+              src={promoImage}
               alt="Promoções"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)", animation: "heroFade 0.8s ease both" }}
+              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/80 via-[#252a2f]/30 to-transparent" />
             <div className="relative h-full flex flex-col justify-end p-8">
