@@ -11,6 +11,7 @@ import { categoriesRouter } from "./routes/categories";
 import { statsRouter } from "./routes/stats";
 import { styleTipsRouter } from "./routes/style-tips";
 import { weddingGroupsRouter } from "./routes/wedding-groups";
+import { weddingsPageContentRouter } from "./routes/weddings-page-content";
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use("/api/categories", categoriesRouter);
 app.use("/api/stats", statsRouter);
 app.use("/api/style-tips", styleTipsRouter);
 app.use("/api/wedding-groups", weddingGroupsRouter);
+app.use("/api/weddings-page-content", weddingsPageContentRouter);
 
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 

@@ -151,7 +151,7 @@ function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceG
             Ver mais <ChevronRight size={14} />
           </a>
         </div>
-        <div className="hidden md:block">
+        <div className="mt-4 md:mt-0">
           {group.image ? (
             <div className="relative overflow-hidden rounded-2xl border border-[#d1d4d8]">
               <img src={group.image} alt={group.title} className="w-full h-64 object-cover" />
@@ -247,7 +247,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
   };
 
   return (
-    <main className="min-h-[100dvh] overflow-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] overflow-x-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
         .eliora-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
@@ -264,29 +264,29 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
         </button>
       )}
 
-      <div className="eliora-grain">
-        <header className="relative z-20 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12">
-          <Monogram />
-          <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-[#fafafa] px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
-            <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#77818c]">Serviços</button>
-            <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
-            <a href="/explorar" className="text-left transition-colors hover:text-[#77818c]">Explorar</a>
-            {isLoggedIn ? (
-              <a href="/dashboard-weddings" className="flex items-center gap-2 text-left text-[#2c3035] font-medium hover:text-[#30343a] transition-colors">Painel <ArrowUpRight size={14} /></a>
-            ) : (
-              <a href="/login-weddings" className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">Entrar <ArrowUpRight size={14} /></a>
-            )}
-            <button onClick={() => scrollTo("contacto")} className="flex items-center gap-2 text-left text-[#68727c]">Falar com a Eliora <ArrowUpRight size={14} /></button>
-            {onBackToSelector && (
-              <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                Trocar loja
-              </button>
-            )}
-          </nav>
-          <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? <X size={20} /> : <Menu size={21} />}</button>
-        </header>
+      <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fafafa]/90 backdrop-blur-md">
+        <Monogram />
+        <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-[#fafafa] px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
+          <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#77818c]">Serviços</button>
+          <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
+          <a href="/explorar" className="text-left transition-colors hover:text-[#77818c]">Explorar</a>
+          {isLoggedIn ? (
+            <a href="/dashboard-weddings" className="flex items-center gap-2 text-left text-[#2c3035] font-medium hover:text-[#30343a] transition-colors">Painel <ArrowUpRight size={14} /></a>
+          ) : (
+            <a href="/login-weddings" className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">Entrar <ArrowUpRight size={14} /></a>
+          )}
+          <button onClick={() => scrollTo("contacto")} className="flex items-center gap-2 text-left text-[#68727c]">Falar com a Eliora <ArrowUpRight size={14} /></button>
+          {onBackToSelector && (
+            <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#30343a] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Trocar loja
+            </button>
+          )}
+        </nav>
+        <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? <X size={20} /> : <Menu size={21} />}</button>
+      </header>
 
+      <div className="eliora-grain">
         <section className="relative mx-auto grid max-w-[1380px] items-center gap-14 px-6 pb-24 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-36 md:pt-20">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Concierge de celebrações · Luanda e além</p>

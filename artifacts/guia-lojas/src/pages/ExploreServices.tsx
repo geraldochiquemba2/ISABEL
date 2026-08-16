@@ -339,7 +339,7 @@ export default function ExploreServices() {
                     </button>
                   )}
                 </div>
-                <div className="hidden md:block">
+                <div className="mt-4 md:mt-0">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
                   {getStoresForGroup(group.category).length > 0 ? (
                     <div className="flex flex-col gap-3">

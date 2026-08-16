@@ -16,6 +16,7 @@ import ExploreServices from "@/pages/ExploreServices";
 import LoginWeddings from "@/pages/LoginWeddings";
 import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
+import { MimoHome } from "@/pages/MimoHome";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ function Router() {
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
           <Route path="/explorar" component={ExploreServices} />
+          <Route path="/love-services" component={MimoHome} />
           <Route path="/login-weddings" component={LoginWeddings} />
           <Route path="/dashboard-weddings" component={DashboardWeddings} />
           <Route>
