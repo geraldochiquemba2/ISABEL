@@ -269,7 +269,7 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
             <div className="mimo-kicker"><span /> cuidado que chega até si</div>
             <h1>Estar presente<br />é um <em>gesto.</em></h1>
             <p className="mimo-hero-copy">Na Eliora Love Services, encontramos pessoas de confiança para transformar a sua intenção em cuidado — mesmo à distância.</p>
-            <div className="mimo-search"><Search size={18} /><input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="O que precisa hoje?" /><button onClick={() => document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" })}>Encontrar</button></div>
+            <button className="mimo-primary" onClick={() => document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" })} style={{ marginTop: 10 }}>Encontrar <ArrowRight size={16} /></button>
           </div>
           <div className="mimo-hero-art"><div className="mimo-photo" /><div className="mimo-float">feito com<br /><strong>intenção</strong></div><div className="mimo-note"><strong>Um gesto a caminho</strong><small>Entrega especial em Talatona<br />Chega hoje, até às 18h</small></div></div>
         </section>

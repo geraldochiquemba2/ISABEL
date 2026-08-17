@@ -1,0 +1,206 @@
+
+> @workspace/guia-lojas@0.0.0 dev C:\Users\geral\Desktop\ISABEL LOJA\artifacts\guia-lojas
+> vite --config vite.config.ts --host 0.0.0.0
+
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m6695[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.0.57:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.31.32.1:[1m3000[22m/[39m
+[2m14:53:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:53:45[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:53:46[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:53:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888430942,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888430943,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m14:54:16[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:24[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:25[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:27[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores/loja-1786888258749[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888474422,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888474422,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m14:54:37[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stores[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888489537,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888489538,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m14:54:50[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:54:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:08[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:10[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:14[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:17[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m14:55:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888919060,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888919060,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:02:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888967160,"name":"Error","message":"Rendered fewer hooks than expected. This may be caused by an accidental early return statement.","stack":"\n\n\n\n\n\n\n\n\n"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888995514,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786888995515,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:03:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889071776,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889071777,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:05:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889194002,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889194003,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889210006,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889210006,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889241676,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889241677,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:08:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:08:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889378750,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889378750,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:10:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[2m15:10:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889463630,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889463631,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889537117,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889537117,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889617675,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786889617675,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:19:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:19:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786890000190,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786890000190,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:20:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:22:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:22:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:22:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:25:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:29:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:30:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:30:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:30:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:32:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:32:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:32:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:33:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:33:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:34:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:36:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:36:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:37:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:39:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:39:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:39:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:39:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:39:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[2m15:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891291383,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891291384,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891304149,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891304150,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:42:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[2m15:42:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891377248,"name":"Error","message":"Cannot read properties of undefined (reading 'length')","stack":"    at ServiceBlock C:/Users/geral/Desktop/ISABEL LOJA/artifacts/guia-lojas/src/pages/ElioraWeddings.tsx:148:21\n\n\n\n\n\n\n\n\n","loc":{"line":148,"column":21,"file":"C:/Users/geral/Desktop/ISABEL LOJA/artifacts/guia-lojas/src/pages/ElioraWeddings.tsx"},"frame":"146|          <div className=\"hidden md:block\">\n147|            <p className=\"font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3\">Serviços recentes</p>\n148|            {products.length > 0 ? (\n   |                      ^\n149|              <div className=\"flex flex-col gap-3\">\n150|                {products.slice(0, 2).map((product) => ("}
+[2m15:43:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891388293,"name":"Error","message":"Cannot read properties of undefined (reading 'length')","stack":"    at ServiceBlock C:/Users/geral/Desktop/ISABEL LOJA/artifacts/guia-lojas/src/pages/ElioraWeddings.tsx:148:21\n\n\n\n\n\n\n\n\n","loc":{"line":148,"column":21,"file":"C:/Users/geral/Desktop/ISABEL LOJA/artifacts/guia-lojas/src/pages/ElioraWeddings.tsx"},"frame":"146|          <div className=\"hidden md:block\">\n147|            <p className=\"font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3\">Serviços recentes</p>\n148|            {products.length > 0 ? (\n   |                      ^\n149|              <div className=\"flex flex-col gap-3\">\n150|                {products.slice(0, 2).map((product) => ("}
+[2m15:43:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[2m15:44:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[2m15:44:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[2m15:45:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891510206,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891510206,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:45:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891541956,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891541957,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891561151,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891561152,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:46:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891593530,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891593530,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891604118,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891604118,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891628063,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891628063,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:47:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/DashboardWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891865449,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786891865449,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892095148,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892095149,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892123715,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892123716,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892135145,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892135146,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:55:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892150166,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892150168,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:55:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ElioraWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892191148,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892191149,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[2m15:58:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/LoginWeddings.tsx, /src/index.css[22m
+[2m15:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/LoginWeddings.tsx, /src/index.css[22m
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892345243,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892345244,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892360468,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892360468,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892488152,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892488152,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892515140,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892515142,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892555153,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892555154,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892601143,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+[RUNTIME_ERROR]{"type":"runtime-error","timestamp":1786892601143,"name":"Error","message":"Failed to connect to MetaMask","stack":"    at Object.connect (chrome-extension://ejbalbakoplchlghecdalmeeeajnimhm/scripts/inpage.js:7:84179)"}
+
+C:\Users\geral\Desktop\ISABEL LOJA\artifacts\guia-lojas>
