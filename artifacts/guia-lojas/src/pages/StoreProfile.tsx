@@ -555,6 +555,9 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
             {/* Bottom info */}
             <div className="text-center text-white mt-5 px-4 max-w-md flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
               <h2 className="text-base font-semibold tracking-tight">{filtered[lightboxIndex].name}</h2>
+              {filtered[lightboxIndex].description && (
+                <p className="text-xs text-white/70 mt-1 leading-relaxed max-w-xs">{filtered[lightboxIndex].description}</p>
+              )}
               <p className="text-sm font-semibold text-emerald-400 mt-1">
                 {filtered[lightboxIndex].price > 0 ? `${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Gratuito"}
               </p>
@@ -580,7 +583,7 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
   );
 }
 
-function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }; index: number; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
+function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }; index: number; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
   const [imgError, setImgError] = useState(false);
 
   const whatsappMessage = encodeURIComponent(
@@ -616,6 +619,9 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
           )}
         </div>
         <p className="text-sm font-medium text-foreground leading-tight">{product.name}</p>
+        {product.description && (
+          <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{product.description}</p>
+        )}
       </div>
       <div className="mt-2 flex flex-col justify-between">
         <div>

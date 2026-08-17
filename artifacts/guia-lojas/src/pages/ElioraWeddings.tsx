@@ -162,10 +162,18 @@ function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceG
             <>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
               {stores.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {stores.slice(0, 2).map((store) => (
-                    <StoreCard key={store.id} store={store} productImages={storeProducts?.[store.id]} />
-                  ))}
+                <div>
+                  <div className="flex flex-row flex-nowrap overflow-x-auto gap-3 scrollbar-hide">
+                    {stores.slice(0, 4).map((store) => (
+                      <StoreCard key={store.id} store={store} productImages={storeProducts?.[store.id]} />
+                    ))}
+                  </div>
+                  {stores.length > 1 && (
+                    <div className="flex justify-center items-center gap-2 mt-2 md:hidden">
+                      <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
+                      <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
@@ -231,8 +239,6 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
     staleTime: 60_000,
   });
 
-  const groups = dbGroups.length > 0 ? dbGroups : hardcodedGroups;
-
   const getStoresForGroup = (category: string) => {
     const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
     const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
@@ -245,6 +251,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
     });
     return { stores: storesWithProducts, storeProducts: storeProductsMap };
   };
+
+  const groups = (dbGroups.length > 0 ? dbGroups : hardcodedGroups).sort((a: any, b: any) => {
+    const storesA = getStoresForGroup(a.category).stores.length;
+    const storesB = getStoresForGroup(b.category).stores.length;
+    return storesB - storesA;
+  });
 
   return (
     <main className="min-h-[100dvh] overflow-x-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -280,7 +292,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       </header>
 
       <div className="eliora-grain">
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-14 px-6 pb-24 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-36 md:pt-20">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Concierge de celebrações · Luanda e além</p>
             <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">O amor,<br /><i className="font-medium text-[#9aa2ab]">bem celebrado.</i></h1>
@@ -299,12 +311,19 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-[#56616b]/35 via-transparent to-white/20" />
               <div className="absolute left-[17%] top-[14%] h-20 w-12 rounded-full border border-white/70 opacity-70" />
             </div>
-            <span className="absolute -bottom-4 -left-7 font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98] md:-left-12">01 — Intenção & presença</span>
           </div>
         </section>
 
+        <section id="servicos" className="mx-auto max-w-[1380px] px-6 py-10 md:px-12 md:py-16">
+          <div className="mb-6 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#87909a]">O nosso universo</p><h2 className="mt-4 font-serif text-5xl tracking-[-.03em] md:text-7xl">Tudo começa<br /><i>com vocês.</i></h2></div><p className="max-w-xs text-sm leading-6 text-[#747b84]">Uma rede de especialistas e experiências para os momentos que merecem mais.</p></div>
+          <div>{groups.map((group, i) => {
+            const { stores: groupStores, storeProducts } = getStoresForGroup(group.category);
+            return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} />;
+          })}</div>
+        </section>
+
         <section id="essencia" className="border-y border-[#d9dde1] bg-[#eef0f2]">
-          <div className="mx-auto grid max-w-[1380px] gap-10 px-6 py-16 md:grid-cols-[.75fr_1.25fr] md:px-12 md:py-24">
+          <div className="mx-auto grid max-w-[1380px] gap-10 px-6 py-10 md:grid-cols-[.75fr_1.25fr] md:px-12 md:py-14">
             <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98]">A nossa essência</p>
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
               <div>
@@ -324,9 +343,8 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
           </div>
         </section>
 
-        <section id="servicos" className="mx-auto max-w-[1380px] px-6 py-20 md:px-12 md:py-32">
-          <div className="mb-14 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#87909a]">O nosso universo</p><h2 className="mt-4 font-serif text-5xl tracking-[-.03em] md:text-7xl">Tudo começa<br /><i>com vocês.</i></h2></div><p className="max-w-xs text-sm leading-6 text-[#747b84]">Uma rede de especialistas e experiências para os momentos que merecem mais.</p></div>
-          <div className="mb-20 grid gap-4 md:grid-cols-[1.35fr_.65fr]">
+        <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
+          <div className="grid gap-4 md:grid-cols-[1.35fr_.65fr]">
             <figure className="group relative min-h-[280px] overflow-hidden bg-[#e4e7e9] md:min-h-[360px]">
               <img
                 src="/weddings/eliora-reception.jpg"
@@ -348,13 +366,9 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
               <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">04 — Detalhe & intenção</figcaption>
             </figure>
           </div>
-          <div>{groups.map((group, i) => {
-            const { stores: groupStores, storeProducts } = getStoresForGroup(group.category);
-            return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} />;
-          })}</div>
-        </section>
+        </div>
 
-        <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
+        <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-14 text-[#fafafa] md:px-12 md:py-20">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
           <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b9c1ca]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Vamos criar espaço<br /><i>para a vossa história?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} /></button></div></div>
         </section>

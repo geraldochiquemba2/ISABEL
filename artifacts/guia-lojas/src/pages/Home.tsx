@@ -152,7 +152,7 @@ export default function Home() {
       `}</style>
 
       <div className="eliora-grain">
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-14 px-6 pb-24 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-36 md:pt-20">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
             <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
@@ -175,33 +175,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
-          <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
-            <img
-              src={promoImage}
-              alt="Promoções"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/80 via-[#252a2f]/30 to-transparent" />
-            <div className="relative h-full flex flex-col justify-end p-8">
-              <p className="font-mono text-[10px] uppercase tracking-[.25em] text-white mb-3">Promoções</p>
-              <div className="flex flex-col gap-3 max-w-sm">
-                <a href="/descobrir-estilo" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
-                  <span>Quero descobrir o meu estilo</span>
-                </a>
-                <a href="/carrinhos" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
-                  <span>Ver Carrinhos</span>
-                </a>
-                <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
-                  <span>Conversar com um agente de envio</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
+        <div className="mx-auto max-w-[1380px] px-6 py-5 md:px-12">
           <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
             {apiCategories.slice(0, 10).map((cat: any) => (
               <button
@@ -231,8 +205,8 @@ export default function Home() {
           </div>
         </div>
 
-        <section id="lojas" className="mx-auto max-w-[1380px] px-6 py-20 md:px-12 md:py-32">
-          <div className="mb-14 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+        <section id="lojas" className="mx-auto max-w-[1380px] px-6 py-10 md:px-12 md:py-16">
+          <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#87909a]">O nosso universo</p>
               <h2 className="mt-4 font-serif text-5xl tracking-[-.03em] md:text-7xl">Tudo começa<br /><i>com o vosso estilo.</i></h2>
@@ -242,22 +216,48 @@ export default function Home() {
             </a>
           </div>
 
-          {featured.length > 0 && (
-            <div className="mb-16">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Em destaque</p>
+          {recent.length > 0 && (
+            <div className="mb-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Adicionados recentemente</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-                {featured.map((store, i) => (
+                {recent.map((store, i) => (
                   <SimpleStoreCard key={store.id} store={store} />
                 ))}
               </div>
             </div>
           )}
 
-          {recent.length > 0 && (
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Recentes</p>
+          <section className="mx-auto max-w-[1380px] py-5">
+            <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
+              <img
+                src={promoImage}
+                alt="Promoções"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/80 via-[#252a2f]/30 to-transparent" />
+              <div className="relative h-full flex flex-col justify-end p-8">
+                <p className="font-mono text-[10px] uppercase tracking-[.25em] text-white mb-3">Promoções</p>
+                <div className="flex flex-col gap-3 max-w-sm">
+                  <a href="/descobrir-estilo" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                    <span>Quero descobrir o meu estilo</span>
+                  </a>
+                  <a href="/carrinhos" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                    <span>Ver Carrinhos</span>
+                  </a>
+                  <a href="https://wa.me/244922001778?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20dicas%20de%20estilo!" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/15 transition-all text-sm text-white">
+                    <span>Conversar com um agente de envio</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {featured.length > 0 && (
+            <div className="mt-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Em destaque</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-                {recent.map((store, i) => (
+                {featured.map((store, i) => (
                   <SimpleStoreCard key={store.id} store={store} />
                 ))}
               </div>

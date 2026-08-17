@@ -3,6 +3,13 @@ import { pool } from "../db";
 
 export const productsRouter = Router();
 
+// Garantir que a coluna description existe
+(async () => {
+  try {
+    await pool.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`);
+  } catch (e) { /* ignore */ }
+})();
+
 // GET /api/products?store_id=xxx&is_carrinho=true&store_type=weddings — listar produtos
 productsRouter.get("/", async (req, res) => {
   try {
@@ -44,6 +51,7 @@ productsRouter.get("/", async (req, res) => {
       category: p.category,
       subcategory: p.subcategory,
       isCarrinho: p.is_carrinho,
+      description: p.description || "",
     })));
   } catch (err) {
     console.error(err);
@@ -78,6 +86,7 @@ productsRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho, description } = req.body;
+    console.log(`[PUT /api/products/${id}] description=`, description);
     await pool.query(
       `UPDATE products SET name=$2, price=$3, currency=$4, image_url=$5, image_urls=$6, image_color=$7, category=$8, subcategory=$9, is_carrinho=$10, description=$11
        WHERE id=$1`,

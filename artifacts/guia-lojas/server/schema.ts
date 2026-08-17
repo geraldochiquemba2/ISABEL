@@ -48,6 +48,7 @@ export async function initDB() {
         category      TEXT,
         subcategory   TEXT,
         is_carrinho   BOOLEAN DEFAULT FALSE,
+        description   TEXT DEFAULT '',
         created_at    TIMESTAMPTZ DEFAULT NOW()
       );
 

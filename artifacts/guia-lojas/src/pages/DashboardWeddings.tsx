@@ -198,7 +198,6 @@ export default function DashboardWeddings() {
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
     ] : [
       { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-      { id: "pagina-inicial" as Section, label: "Página Inicial", icon: <LayoutDashboard size={15} /> },
       { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
       { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
       { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },

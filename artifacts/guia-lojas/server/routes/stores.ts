@@ -201,6 +201,7 @@ storesRouter.get("/:id", async (req, res) => {
         category: p.category,
         subcategory: p.subcategory,
         isCarrinho: p.is_carrinho,
+        description: p.description || "",
       })),
     });
   } catch (err) {
