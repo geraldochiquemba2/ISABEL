@@ -15,7 +15,8 @@ storesRouter.get("/admin/all", async (req, res) => {
           json_build_object(
             'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
             'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
-            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho
+            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho,
+            'description', p.description
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s
@@ -96,7 +97,8 @@ storesRouter.get("/", async (req, res) => {
           json_build_object(
             'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
             'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
-            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho
+            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho,
+            'description', p.description
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s

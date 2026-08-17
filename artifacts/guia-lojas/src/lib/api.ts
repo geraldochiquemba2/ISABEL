@@ -41,12 +41,14 @@ export async function fetchStores(filters?: {
   municipality?: string;
   category?: string;
   q?: string;
+  storeType?: string;
 }): Promise<Store[]> {
   const params = new URLSearchParams();
   if (filters?.province) params.append("province", filters.province);
   if (filters?.municipality) params.append("municipality", filters.municipality);
   if (filters?.category) params.append("category", filters.category);
   if (filters?.q) params.append("q", filters.q);
+  if (filters?.storeType) params.append("store_type", filters.storeType);
 
   const res = await fetch(`/api/stores?${params.toString()}`);
   if (!res.ok) throw new Error("Erro ao buscar lojas");

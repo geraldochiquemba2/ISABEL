@@ -42,6 +42,19 @@ authRouter.post("/register", async (req, res) => {
     // Criar uma nova loja automaticamente para este utilizador
     const storeId = `loja-${Date.now()}`;
     const isWeddings = storeType === "weddings";
+    const isLove = storeType === "love-services";
+    const description = isLove
+      ? "A minha loja na Eliora Love Services."
+      : isWeddings
+      ? 'A minha nova loja na Eliora Weddings.'
+      : 'A minha loja na Eliora Collection.';
+    const coverColor = isLove ? '#d96f5c' : '#e8cfd9';
+    const coverImage = isLove
+      ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
+      : isWeddings
+      ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
+      : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
+
     await pool.query(
       `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type)
        VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11)`,
@@ -51,11 +64,9 @@ authRouter.post("/register", async (req, res) => {
         normalizedCategory,
         address || '',
         phone || '',
-        isWeddings ? 'A minha nova loja na Eliora Weddings.' : 'A minha loja na Eliora Collection.',
-        isWeddings ? '#e8cfd9' : '#e8cfd9',
-        isWeddings
-          ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
-          : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80',
+        description,
+        coverColor,
+        coverImage,
         province || '',
         municipality || '',
         storeType,
@@ -100,6 +111,15 @@ authRouter.post("/login", async (req, res) => {
     const user = result.rows[0];
     if (user.password !== password) {
       return res.status(400).json({ error: "Telefone ou senha incorretos." });
+    }
+    if (user.status === "PENDENTE") {
+      return res.status(403).json({ error: "A sua conta ainda está em análise. Aguarde aprovação do administrador." });
+    }
+    if (user.status === "SUSPENSO") {
+      return res.status(403).json({ error: "A sua conta foi suspensa. Contacte o administrador." });
+    }
+    if (user.status === "RECUSADO") {
+      return res.status(403).json({ error: "A sua conta foi recusada. Contacte o administrador." });
     }
 
     res.json({
@@ -165,7 +185,7 @@ authRouter.post("/link-store", async (req, res) => {
     // Se userId não fornecido, procurar por phone + store_type
     let userIdToUse = userId;
     if (!userIdToUse && phone) {
-      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : "collection";
+      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : "collection";
       const userResult = await pool.query("SELECT id FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
       if (!userResult.rows.length) {
         return res.status(404).json({ error: "Utilizador não encontrado." });

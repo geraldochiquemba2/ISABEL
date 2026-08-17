@@ -17,6 +17,9 @@ import LoginWeddings from "@/pages/LoginWeddings";
 import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
 import { MimoHome } from "@/pages/MimoHome";
+import LoginLove from "@/pages/LoginLove";
+import DashboardLove from "@/pages/DashboardLove";
+import ExploreLove from "@/pages/ExploreLove";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -100,8 +103,13 @@ function Router() {
     return (
       <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
         <Switch>
-          <Route path="/" component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
-          <Route component={() => <MimoHome onBackToSelector={handleBackToSelector} />} />
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-love" component={ExploreLove} />
+          <Route path="/login-love" component={LoginLove} />
+          <Route path="/dashboard-love" component={DashboardLove} />
+          <Route>
+            <MimoHome onBackToSelector={handleBackToSelector} />
+          </Route>
         </Switch>
         {floatingButton}
       </StoreContext.Provider>
