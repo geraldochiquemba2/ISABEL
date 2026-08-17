@@ -257,6 +257,33 @@ export async function initDB() {
 
 
     console.log("✅ Tabelas criadas/actualizadas e admin semeado com sucesso.");
+
+    // Índices para optimizar queries frequentes
+    const indexes = [
+      `CREATE INDEX IF NOT EXISTS idx_stores_store_type ON stores(store_type)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_phone ON stores(phone)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_province ON stores(province)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_municipality ON stores(municipality)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_category ON stores(category)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_is_open ON stores(is_open)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_created_at ON stores(created_at DESC)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_store_id ON products(store_id)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_subcategory ON products(subcategory)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_is_carrinho ON products(is_carrinho)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_store_category ON products(store_id, category)`,
+      `CREATE INDEX IF NOT EXISTS idx_users_phone_store_type ON users(phone, store_type)`,
+      `CREATE INDEX IF NOT EXISTS idx_users_store_id ON users(store_id)`,
+      `CREATE INDEX IF NOT EXISTS idx_users_status ON users(status)`,
+      `CREATE INDEX IF NOT EXISTS idx_users_store_type ON users(store_type)`,
+      `CREATE INDEX IF NOT EXISTS idx_style_tips_ordem ON style_tips(ordem)`,
+      `CREATE INDEX IF NOT EXISTS idx_wedding_groups_category ON wedding_groups(category)`,
+    ];
+    for (const idx of indexes) {
+      await client.query(idx);
+    }
+
+    console.log("✅ Índices criados com sucesso.");
   } finally {
     client.release();
   }
