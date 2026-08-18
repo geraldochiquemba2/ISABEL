@@ -89,8 +89,8 @@
 .eliora-footer { border-top:1px solid var(--line); max-width:1240px; margin:auto; padding:24px 5vw 35px; display:flex; justify-content:space-between; color:var(--muted); font-size:10px; letter-spacing:.04em; }
 @media (max-width: 760px) {
   .eliora-nav { padding-top:18px; padding-bottom:18px; } .eliora-navlinks { display:none; }
-  .eliora-mobile-dropdown { position:absolute; top:100%; left:0; right:0; background:rgba(255,253,250,.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); padding:16px 5vw; display:flex; flex-direction:column; gap:14px; z-index:50; }
-  .eliora-mobile-dropdown a, .eliora-mobile-dropdown button { background:none; border:0; color:var(--ink); font-size:13px; letter-spacing:.04em; text-decoration:none; text-align:left; cursor:pointer; padding:8px 0; border-bottom:1px solid var(--line); }
+  .eliora-mobile-dropdown { position:absolute; top:100%; left:0; right:0; background:#fffdfa; border:1px solid var(--line); border-radius:14px; padding:16px 20px; display:flex; flex-direction:column; gap:0; z-index:50; box-shadow:0 10px 30px rgba(60,39,49,0.12); margin:8px 5vw 0; }
+  .eliora-mobile-dropdown a, .eliora-mobile-dropdown button { background:none; border:0; color:var(--ink); font-size:13px; letter-spacing:.04em; text-decoration:none; text-align:left; cursor:pointer; padding:12px 0; border-bottom:1px solid var(--line); }
   .eliora-mobile-dropdown a:last-child, .eliora-mobile-dropdown button:last-child { border-bottom:0; }
   .eliora-hero h1 { font-size:clamp(2rem, 8vw, 3rem) !important; overflow-wrap:break-word; word-wrap:break-word; }
   .eliora-hero-copy { font-size:14px !important; }
