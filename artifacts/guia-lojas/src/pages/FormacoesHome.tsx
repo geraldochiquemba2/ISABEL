@@ -172,6 +172,12 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
         <div className="hidden items-center gap-8 text-[13px] font-semibold text-[#53727c] md:flex">
           <button className="text-[#123c4a] underline decoration-[#8bd8d1] decoration-2 underline-offset-8">Explorar formações</button>
           <button onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button>
+          {onBackToSelector && (
+            <button onClick={onBackToSelector} className="flex items-center gap-2 text-[#53727c] hover:text-[#123c4a] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Trocar loja
+            </button>
+          )}
           <button onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")} className="flex items-center gap-2 rounded-full border border-[#cfe4e4] bg-white px-4 py-2.5 text-[#123c4a] transition hover:border-[#0c9894]"><UserRound size={15} /> Entrar</button>
         </div>
         <button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">{menuOpen ? <X /> : <Menu />}</button>
