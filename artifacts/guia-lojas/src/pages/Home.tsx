@@ -173,7 +173,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <button className="rounded-lg p-2 md:hidden" onClick={() => {}} aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
           </div>
         </header>
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-24 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-28">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-20 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-24">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
             <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
