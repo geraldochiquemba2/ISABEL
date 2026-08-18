@@ -80,10 +80,14 @@ const FALLBACK_IMAGES: Record<string, string> = {
 
 function Monogram() {
   return (
-    <div className="flex items-center gap-3">
-      <img src="/logo-eliora-dark.svg" alt="Eliora Collection" className="w-10 h-10" />
-      <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">Eliora <i className="font-normal">Collection</i></span>
-    </div>
+    <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Collection">
+      <img
+        src="/logo-eliora-dark.svg"
+        alt="Eliora"
+        style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
+      />
+      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>Eliora<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
+    </a>
   );
 }
 

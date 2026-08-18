@@ -94,7 +94,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </motion.div>
 
       {/* Store Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-8 max-w-3xl w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 max-w-5xl w-full">
         {stores.map((store, index) => (
           <motion.div
             key={store.id}

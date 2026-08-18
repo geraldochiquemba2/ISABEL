@@ -166,10 +166,9 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           <img
             src="/logo-eliora-dark.svg"
             alt="Eliora"
-            className="h-9 w-9"
-            style={{ filter: "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(600%) hue-rotate(120deg) brightness(90%) contrast(85%)" }}
+            style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(600%) hue-rotate(120deg) brightness(90%) contrast(85%)" }}
           />
-          <span className="text-[22px] font-bold tracking-[-0.06em] text-[#123c4a]">eliora<span className="text-[#0c9894]"> Formações, Aulas e Treinamentos</span></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#123c4a" }}>Eliora<small style={{ display: "block", color: "#0c9894", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Formações, Aulas e Treinamentos</small></span>
         </button>
         <div className="hidden items-center gap-8 text-[13px] font-semibold text-[#53727c] md:flex">
           <button className="text-[#123c4a] underline decoration-[#8bd8d1] decoration-2 underline-offset-8">Explorar formações</button>

@@ -251,7 +251,14 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
         @media(max-width:800px){.mimo-nav{padding:18px 20px}.mimo-nav-links{display:none}.mimo-menu{display:block}.mimo-nav-links.open{display:flex;position:absolute;top:68px;left:20px;right:20px;background:#fffaf4;padding:18px;border-radius:14px;box-shadow:0 10px 30px #173a4220;flex-direction:column;align-items:flex-start}.mimo-nav-cta{display:none}.mimo-hero{grid-template-columns:1fr;padding:40px 20px 70px;gap:48px}.mimo-hero h1{font-size:55px}.mimo-hero-art{min-height:360px}.mimo-photo{inset:0 25px 18px 0}.mimo-section{padding:62px 20px}.mimo-section-head{display:block}.mimo-section-head p{margin-top:14px}.mimo-section h2{font-size:36px}.mimo-grid{display:block}.mimo-service{margin-bottom:14px;min-height:0!important}.mimo-trust{padding:58px 20px}.mimo-trust-inner{display:block}.mimo-trust h2{font-size:36px}.mimo-points{margin-top:37px}.mimo-bottom{padding:68px 20px 35px}.mimo-bottom h2{font-size:42px}.mimo-footer{display:block;line-height:2.4}.mimo-footer a{margin:0 14px 0 0}}
       `}</style>
       <nav className="mimo-nav" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(248,241,231,0.9)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
-        <div className="mimo-logo"><img src="/logo-eliora-dark.svg" alt="Eliora" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }} />Eliora Love Services</div>
+        <div className="mimo-logo" style={{ textDecoration: "none", color: "inherit" }}>
+          <img
+            src="/logo-eliora-dark.svg"
+            alt="Eliora"
+            style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }}
+          />
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>Eliora<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Love Services</small></span>
+        </div>
         <div className={`mimo-nav-links ${menu ? "open" : ""}`}>
           <a href="#servicos">Serviços</a>
           <a href="/explorar-love">Explorar</a>

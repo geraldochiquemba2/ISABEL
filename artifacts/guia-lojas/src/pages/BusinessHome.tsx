@@ -211,13 +211,9 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
             <img
               src="/logo-eliora-dark.svg"
               alt="Eliora"
-              className="h-10 w-10"
-              style={{ filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
+              style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
             />
-            <span>
-              <span className="block font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.22em] text-[#112844]/60">Eliora</span>
-              <span className="block font-['DM_Sans'] text-[10px] uppercase tracking-[0.13em] text-[#112844]">Business & Finances</span>
-            </span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>Eliora<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Business & Finances</small></span>
           </button>
           <nav className={navClass} aria-label="Navegação principal">
             <button onClick={scrollToServices} className="text-left font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.16em] text-[#112844]/65 transition hover:text-[#b88a3b]">

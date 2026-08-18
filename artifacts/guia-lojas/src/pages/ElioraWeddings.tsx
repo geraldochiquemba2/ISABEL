@@ -269,7 +269,14 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       `}</style>
       
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fafafa]/90 backdrop-blur-md">
-        <Monogram />
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Weddings">
+          <img
+            src="/logo-eliora-dark.svg"
+            alt="Eliora"
+            style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(30%) sepia(20%) saturate(300%) hue-rotate(320deg) brightness(90%) contrast(85%)" }}
+          />
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#30343a" }}>Eliora<small style={{ display: "block", color: "#E8A0BF", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Weddings</small></span>
+        </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-[#fafafa] px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#77818c]">Serviços</button>
           <button onClick={() => scrollTo("essencia")} className="text-left transition-colors hover:text-[#77818c]">A nossa essência</button>
