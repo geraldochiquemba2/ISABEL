@@ -136,7 +136,7 @@ function ServiceCard({ service, onRequest, stores, storeProducts }: { service: S
 }
 
 export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#68AAA0");
+  useThemeColor("#3d8a80");
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [request, setRequest] = useState(false);

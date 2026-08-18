@@ -27,7 +27,7 @@ const categoryImages: Record<string, string> = {
 };
 
 export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#ad696b");
+  useThemeColor("#8e5557");
   const [open, setOpen] = useState<number | null>(0);
   const [query, setQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);

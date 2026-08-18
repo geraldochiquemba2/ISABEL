@@ -159,7 +159,7 @@ function ServiceDetail({ category, SelectedIcon }: { category: ServiceCategory; 
 }
 
 export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#112844");
+  useThemeColor("#0d1f35");
   useEffect(() => {
     requestAnimationFrame(() => {
       window.scrollTo(0, 0);

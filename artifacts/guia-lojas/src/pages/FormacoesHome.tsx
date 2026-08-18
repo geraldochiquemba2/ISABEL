@@ -125,7 +125,7 @@ const categoryImages: Record<string, string> = {
 };
 
 export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#0c9894");
+  useThemeColor("#087a76");
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);

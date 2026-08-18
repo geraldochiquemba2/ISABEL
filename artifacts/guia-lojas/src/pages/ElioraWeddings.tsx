@@ -203,7 +203,7 @@ function Monogram() {
 }
 
 export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
-  useThemeColor("#E8A0BF");
+  useThemeColor("#c47a9b");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };

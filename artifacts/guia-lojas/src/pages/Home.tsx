@@ -92,7 +92,7 @@ function Monogram() {
 }
 
 export default function Home() {
-  useThemeColor("#D4A843");
+  useThemeColor("#a8872e");
   const [, setLocation] = useLocation();
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
