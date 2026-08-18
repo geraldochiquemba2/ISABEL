@@ -391,13 +391,13 @@ export default function ExploreServices() {
           <div className="mt-10 md:mt-0 md:w-80">
             <p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p>
             <div className="mt-7 flex items-center gap-4">
-              <a href="tel:+244922001778" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Weddings%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Phone size={14} /> Ligar
               </a>
-              <a href="mailto:ola@elioraweddings.com" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Weddings%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Mail size={14} /> Email
               </a>
-              <a href="https://wa.me/244922001778" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Weddings%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 WhatsApp
               </a>
             </div>
@@ -413,8 +413,8 @@ export default function ExploreServices() {
         </div>
         <p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p>
         <div className="flex items-center gap-5 text-[#747b84]">
-          <a href="mailto:ola@elioraweddings.com" aria-label="Email"><Mail size={16} /></a>
-          <a href="tel:+244922001778" aria-label="Telefone"><Phone size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Weddings%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Weddings%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
           <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
           <span className="font-mono text-[10px] tracking-[0.2em]">© 2024 ELIORA</span>
         </div>

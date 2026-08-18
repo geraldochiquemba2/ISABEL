@@ -209,7 +209,7 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
   const openRequest = (title = "") => { setSelected(title); setRequest(true); setNome(""); setContacto(""); setMensagem(""); };
 
   const sendToWhatsApp = () => {
-    const text = `Olá! Gostaria de pedir um serviço.\n\nServiço: ${selected || "Geral"}\nNome: ${nome}\nContacto: ${contacto}\nMensagem: ${mensagem}`;
+    const text = `Olá! Vim pela Eliora Love Services e gostaria de pedir um serviço.\n\nServiço: ${selected || "Geral"}\nNome: ${nome}\nContacto: ${contacto}\nMensagem: ${mensagem}`;
     window.open(`https://wa.me/244922001778?text=${encodeURIComponent(text)}`, "_blank");
     setRequest(false);
   };

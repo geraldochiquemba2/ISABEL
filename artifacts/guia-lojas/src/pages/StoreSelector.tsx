@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap, Crown } from "lucide-react";
 
 const stores = [
   {
@@ -37,10 +37,30 @@ const stores = [
     name: "Eliora Business & Finances",
     subtitle: "Clareza para crescer bem",
     description: "Consultoria, finanças e estratégia para empreendedores, empresas e famílias em Angola e além.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format&q=80",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#112844]/80 to-[#b88a3b]/80",
     icon: <Landmark size={24} className="text-white" />,
     accent: "#b88a3b",
+  },
+  {
+    id: "formacoes",
+    name: "Eliora Formações",
+    subtitle: "Aprender muda o caminho",
+    description: "Aulas, treinamentos e formações em Angola e além. Idiomas, tecnologia, carreira, artes e muito mais.",
+    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#0c9894]/80 to-[#123f4c]/80",
+    icon: <GraduationCap size={24} className="text-white" />,
+    accent: "#0c9894",
+  },
+  {
+    id: "eventos",
+    name: "Eliora Eventos & Celebrações",
+    subtitle: "Momentos que ficam",
+    description: "Planeamento, assessoria e tudo para o seu evento em Luanda e além. Decoração, catering, entretenimento e mais.",
+    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#ad696b]/80 to-[#3c2731]/80",
+    icon: <Crown size={24} className="text-white" />,
+    accent: "#ad696b",
   },
 ];
 
@@ -112,7 +132,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
               <p className="text-white/80 text-xs sm:text-sm font-medium mb-2 sm:mb-3">
                 {store.subtitle}
               </p>
-              <p className="text-white/70 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-5 max-w-xs hidden sm:block">
+              <p className="text-white/70 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-5 max-w-xs">
                 {store.description}
               </p>
 

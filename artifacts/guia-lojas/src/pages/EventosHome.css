@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap");
+
+.eliora-page {
+  --ink: #3c2731;
+  --muted: #826d73;
+  --cream: #fbf7f2;
+  --paper: #fffdfa;
+  --rose: #ead0cc;
+  --rose-deep: #ad696b;
+  --gold: #b48646;
+  --gold-pale: #f0dfc4;
+  --line: #eadfd7;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 85% 6%, rgba(238, 215, 196, .55), transparent 24rem),
+    var(--cream);
+  font-family: "DM Sans", sans-serif;
+  overflow-x: hidden;
+}
+.eliora-page *, .eliora-page *::before, .eliora-page *::after { box-sizing: border-box; }
+.eliora-page button, .eliora-page input { font: inherit; }
+.eliora-nav { position:fixed; top:0; left:0; right:0; z-index:50; max-width: 1240px; margin: auto; padding: 25px 5vw; display:flex; align-items:center; justify-content:space-between; background:rgba(255,253,250,.95); backdrop-filter:blur(12px); }
+.eliora-mark { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
+.eliora-mark-icon { width:39px; height:39px; border:1px solid var(--gold); border-radius:50%; display:grid; place-items:center; color:var(--gold); transform:rotate(-12deg); }
+.eliora-mark-name { font-family:"Playfair Display", serif; font-size:19px; letter-spacing:-.02em; }
+.eliora-mark-name small { display:block; color:var(--gold); font-family:"DM Sans"; text-transform:uppercase; letter-spacing:.23em; font-size:8px; margin-top:2px; }
+.eliora-navlinks { display:flex; gap:30px; align-items:center; }
+.eliora-navlinks a { text-decoration:none; color:var(--muted); font-size:12px; letter-spacing:.04em; transition:color .25s; }
+.eliora-navlinks a:hover { color:var(--rose-deep); }
+.eliora-nav-cta { border:0; background:var(--ink); color:#fff9f3; padding:12px 18px; border-radius:30px; font-size:11px; cursor:pointer; transition:transform .25s, background .25s; }
+.eliora-nav-cta:hover { background:var(--rose-deep); transform:translateY(-2px); }
+.eliora-hero { max-width:1240px; margin:22px auto 0; padding:0 5vw; display:grid; grid-template-columns:1.04fr .96fr; gap:6vw; align-items:center; min-height:520px; }
+.eliora-kicker { color:var(--rose-deep); text-transform:uppercase; letter-spacing:.22em; font-size:10px; font-weight:700; display:flex; gap:12px; align-items:center; }
+.eliora-kicker::before { content:""; width:36px; height:1px; background:var(--gold); }
+.eliora-hero h1 { font-family:"Playfair Display", serif; font-weight:500; font-size:clamp(50px, 6.3vw, 88px); line-height:.97; letter-spacing:-.065em; margin:22px 0 25px; max-width:650px; }
+.eliora-hero h1 em { color:var(--rose-deep); font-weight:500; }
+.eliora-hero-copy { max-width:460px; color:var(--muted); font-size:14px; line-height:1.8; }
+.eliora-hero-actions { margin-top:33px; display:flex; align-items:center; gap:22px; }
+.eliora-primary { border:0; background:var(--rose-deep); color:#fff9f3; border-radius:28px; padding:15px 22px; cursor:pointer; font-size:12px; font-weight:600; display:inline-flex; gap:10px; align-items:center; transition:transform .25s, background .25s; }
+.eliora-primary:hover { transform:translateY(-3px); background:var(--ink); }
+.eliora-text-link { color:var(--ink); font-size:12px; text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:4px; }
+.eliora-hero-art { position:relative; height:440px; }
+.eliora-art-block { position:absolute; inset:25px 25px 0 55px; background:var(--rose); border-radius:190px 190px 12px 12px; overflow:hidden; }
+.eliora-art-block::before { content:""; position:absolute; width:330px; height:330px; border:1px solid rgba(180,134,70,.55); border-radius:50%; left:-86px; top:34px; }
+.eliora-art-block::after { content:""; position:absolute; width:230px; height:230px; border:1px solid rgba(255,253,250,.65); border-radius:50%; right:-70px; bottom:-20px; }
+.eliora-art-arch { position:absolute; z-index:2; left:29%; top:48px; width:155px; height:285px; border:10px solid rgba(255,253,250,.8); border-bottom:0; border-radius:100px 100px 0 0; }
+.eliora-art-line { position:absolute; z-index:3; left:48%; top:0; width:1px; height:280px; background:var(--gold); transform:rotate(21deg); transform-origin:top; }
+.eliora-art-caption { position:absolute; z-index:4; bottom:22px; left:24px; color:var(--ink); font-family:"Playfair Display"; font-style:italic; font-size:21px; }
+.eliora-float { position:absolute; z-index:5; right:0; top:70px; background:var(--paper); padding:17px 18px; width:160px; box-shadow:0 17px 45px rgba(87,51,50,.13); }
+.eliora-float strong { display:block; font-family:"Playfair Display"; font-size:25px; color:var(--rose-deep); }
+.eliora-float span { font-size:10px; color:var(--muted); line-height:1.5; display:block; margin-top:4px; }
+.eliora-intro { max-width:1240px; margin:45px auto 0; padding:0 5vw; display:flex; align-items:end; justify-content:space-between; gap:20px; }
+.eliora-intro h2 { font:500 clamp(30px, 4vw, 52px)/1.05 "Playfair Display"; letter-spacing:-.045em; margin:0; }
+.eliora-intro p { max-width:330px; color:var(--muted); font-size:12px; line-height:1.7; margin:0; }
+.eliora-catalog { max-width:1240px; margin:38px auto 0; padding:0 5vw 90px; }
+.eliora-tools { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:18px; gap:20px; }
+.eliora-count { color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:.16em; }
+.eliora-search { width:240px; border:0; border-bottom:1px solid var(--line); background:transparent; padding:10px 4px; outline:0; color:var(--ink); font-size:12px; }
+.eliora-search:focus { border-color:var(--gold); }
+.eliora-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; margin-top:22px; }
+.eliora-card { background:rgba(255,253,250,.72); border:1px solid var(--line); transition:border-color .3s, transform .3s, box-shadow .3s; overflow:hidden; }
+.eliora-card:hover, .eliora-card.open { border-color:rgba(180,134,70,.7); box-shadow:0 12px 28px rgba(94,53,52,.07); transform:translateY(-2px); }
+.eliora-card:hover img { transform:scale(1.05); }
+.eliora-card-head { width:100%; background:transparent; border:0; color:var(--ink); display:flex; align-items:center; text-align:left; gap:16px; padding:25px 25px 22px; cursor:pointer; }
+.eliora-card-number { font-family:"Playfair Display"; color:var(--gold); font-size:14px; }
+.eliora-card-icon { width:36px; height:36px; border-radius:50%; background:var(--gold-pale); color:var(--rose-deep); display:grid; place-items:center; }
+.eliora-card-title { font:500 20px/1.15 "Playfair Display"; flex:1; }
+.eliora-chevron { color:var(--gold); transition:transform .3s; }
+.eliora-card.open .eliora-chevron { transform:rotate(180deg); }
+.eliora-items { margin:0 25px 22px 77px; padding:0; list-style:none; border-top:1px solid var(--line); max-height:0; opacity:0; overflow:hidden; transition:max-height .4s ease, opacity .3s, padding-top .3s; }
+.eliora-card.open .eliora-items { max-height:450px; opacity:1; padding-top:10px; }
+.eliora-items li { display:flex; gap:9px; align-items:start; color:var(--muted); font-size:12px; line-height:1.4; padding:8px 0; }
+.eliora-items svg { flex:0 0 auto; color:var(--gold); margin-top:2px; }
+.eliora-contact { max-width:1240px; margin:0 auto 90px; padding:0 5vw; }
+.eliora-contact-box { background:var(--ink); color:#fff9f3; padding:45px clamp(25px, 6vw, 80px); display:flex; align-items:center; justify-content:space-between; gap:30px; position:relative; overflow:hidden; }
+.eliora-contact-box::after { content:""; position:absolute; width:330px; height:330px; border:1px solid rgba(234,208,204,.28); border-radius:50%; right:-100px; top:-190px; }
+.eliora-contact h2 { font:500 clamp(28px, 4vw, 46px)/1.05 "Playfair Display"; margin:0 0 10px; }
+.eliora-contact p { color:#d9c9c7; font-size:12px; margin:0; max-width:430px; line-height:1.7; }
+.eliora-contact .eliora-primary { background:var(--gold-pale); color:var(--ink); position:relative; z-index:1; white-space:nowrap; }
+.eliora-form { display:none; margin-top:20px; position:relative; z-index:2; gap:10px; }
+.eliora-form.show { display:flex; }
+.eliora-form input { background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.25); color:white; padding:13px; outline:0; min-width:200px; }
+.eliora-form input::placeholder { color:#cbb9b6; }
+.eliora-success { color:var(--gold-pale); font-size:12px; display:none; margin-top:15px; }
+.eliora-success.show { display:block; }
+.eliora-footer { border-top:1px solid var(--line); max-width:1240px; margin:auto; padding:24px 5vw 35px; display:flex; justify-content:space-between; color:var(--muted); font-size:10px; letter-spacing:.04em; }
+@media (max-width: 760px) {
+  .eliora-nav { padding-top:18px; padding-bottom:18px; } .eliora-navlinks { display:none; }
+  .eliora-hero { grid-template-columns:1fr; margin-top:15px; min-height:0; gap:25px; }
+  .eliora-hero h1 { font-size:clamp(49px, 16vw, 72px); } .eliora-hero-art { height:330px; }
+  .eliora-art-block { inset:15px 12px 0 20px; } .eliora-art-arch { height:220px; top:38px; } .eliora-float { top:35px; width:145px; }
+  .eliora-intro { display:block; margin-top:58px; } .eliora-intro p { margin-top:18px; }
+  .eliora-grid { grid-template-columns:1fr; } .eliora-tools { align-items:start; flex-direction:column; }
+  .eliora-search { width:100%; } .eliora-card-title { font-size:18px; } .eliora-card-head { padding:20px 16px; gap:10px; }
+  .eliora-items { margin-left:61px; margin-right:16px; } .eliora-contact-box { display:block; padding:34px 25px; }
+  .eliora-contact .eliora-primary { margin-top:25px; } .eliora-form.show { flex-direction:column; } .eliora-form input { width:100%; }
+  .eliora-footer { display:block; line-height:2; }
+}

@@ -21,11 +21,13 @@ import LoginLove from "@/pages/LoginLove";
 import DashboardLove from "@/pages/DashboardLove";
 import ExploreLove from "@/pages/ExploreLove";
 import BusinessHome from "@/pages/BusinessHome";
+import { FormacoesHome } from "@/pages/FormacoesHome";
+import { EventosHome } from "@/pages/EventosHome";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -54,6 +56,11 @@ function Router() {
     () => localStorage.getItem("eliora-selected-store") as StoreType
   );
   const [location] = useLocation();
+
+  useEffect(() => {
+    history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
@@ -88,6 +95,7 @@ function Router() {
   if (selectedStore === "weddings") {
     return (
       <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
           <Route path="/explorar" component={ExploreServices} />
@@ -123,10 +131,41 @@ function Router() {
   if (selectedStore === "business") {
     return (
       <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
           <Route>
             <BusinessHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+        {floatingButton}
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "formacoes") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route>
+            <FormacoesHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+        {floatingButton}
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "eventos") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route>
+            <EventosHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
         {floatingButton}

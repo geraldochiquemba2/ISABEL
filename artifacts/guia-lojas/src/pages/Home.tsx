@@ -274,7 +274,7 @@ export default function Home() {
             </div>
             <div className="mt-10 md:mt-0 md:w-80">
               <p className="text-sm leading-6 text-[#cbd0d5]">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p>
-              <button onClick={() => { window.open("https://wa.me/244922001778", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button>
+              <button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button>
             </div>
           </div>
         </section>
@@ -283,8 +283,8 @@ export default function Home() {
           <Monogram />
           <p className="text-xs text-[#747b84]">Estilo e elegância, em Angola e além.</p>
           <div className="flex items-center gap-5 text-[#747b84]">
-            <a href="mailto:ola@elioracollection.com" aria-label="Email"><Mail size={16} /></a>
-            <a href="tel:+244922001778" aria-label="Telefone"><Phone size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
             <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
             <span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span>
           </div>
