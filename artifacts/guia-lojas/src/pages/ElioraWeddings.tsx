@@ -301,10 +301,10 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       </header>
 
       <div className="eliora-grain">
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10 overflow-hidden">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Concierge de celebrações · Luanda e além</p>
-            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[clamp(2.2rem,7vw,4.3rem)] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem] break-words">O amor,<br /><i className="font-medium text-[#9aa2ab]">bem celebrado.</i></h1>
+            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[clamp(2rem,8vw,4.3rem)] leading-[.94] tracking-normal text-[#252a2f] md:text-[7.6rem] md:tracking-[-.04em] md:mt-8 mt-12">O amor,<br /><i className="font-medium text-[#9aa2ab]">bem celebrado.</i></h1>
             <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Bem-vindos à Eliora Weddings — onde cada promessa encontra o cuidado, a beleza e a calma para se tornar memória.</p>
             <button onClick={() => scrollTo("servicos")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Descobrir os serviços <ArrowDown size={15} /></button>
           </div>
