@@ -185,7 +185,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
       </nav>
       {menuOpen && <div className="relative z-20 mx-5 rounded-2xl border border-[#d6ebea] bg-white p-4 shadow-lg md:hidden"><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => setMenuOpen(false)}>Explorar formações</button><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button>{onBackToSelector && <button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => { setMenuOpen(false); onBackToSelector(); }}>Trocar loja</button>}<button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")}>Entrar</button></div>}
 
-      <section className="relative mx-auto max-w-7xl px-5 pb-14 pt-14 sm:px-8 lg:px-12 lg:pb-20 lg:pt-20">
+      <section className="relative mx-auto max-w-7xl px-5 pb-14 pt-28 sm:px-8 lg:px-12 lg:pb-20 lg:pt-20">
         <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-[#d8f4f0] blur-3xl" />
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="relative max-w-3xl">
