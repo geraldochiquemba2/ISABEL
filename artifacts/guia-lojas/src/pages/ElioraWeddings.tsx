@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { ArrowDown, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -202,6 +203,7 @@ function Monogram() {
 }
 
 export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
+  useThemeColor("#E8A0BF");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };

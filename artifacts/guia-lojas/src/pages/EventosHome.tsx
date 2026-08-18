@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, type FormEvent } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import {
   ArrowDown, ArrowRight, Camera, Check, ChevronDown, Crown, Menu, Music2,
   Send, ShieldCheck, Sparkles, TentTree, Utensils,
@@ -26,10 +27,12 @@ const categoryImages: Record<string, string> = {
 };
 
 export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  useThemeColor("#ad696b");
   const [open, setOpen] = useState<number | null>(0);
   const [query, setQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -49,7 +52,17 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
           <span className="eliora-mark-name">Eliora<small>Eventos & Celebrações</small></span>
         </a>
         <div className="eliora-navlinks"><a href="#servicos">Serviços</a><a href="#processo">Como ajudamos</a>{onBackToSelector && <button onClick={onBackToSelector} style={{ fontSize: "12px", color: "var(--muted)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", transition: "color .25s" }}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Trocar loja</button>}<button className="eliora-nav-cta" onClick={() => { setFormOpen(true); document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" }); }}>Pedir orçamento</button></div>
-        <button className="eliora-nav-cta" aria-label="Abrir menu" onClick={scrollToCatalog}><Menu size={17} /></button>
+        <div className="eliora-mobile-menu">
+          {menuOpen && (
+            <div className="eliora-mobile-dropdown">
+              <a href="#servicos" onClick={() => setMenuOpen(false)}>Serviços</a>
+              <a href="#processo" onClick={() => setMenuOpen(false)}>Como ajudamos</a>
+              {onBackToSelector && <button onClick={() => { setMenuOpen(false); onBackToSelector(); }}>Trocar loja</button>}
+              <button onClick={() => { setMenuOpen(false); setFormOpen(true); document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" }); }}>Pedir orçamento</button>
+            </div>
+          )}
+        </div>
+        <button className="eliora-nav-cta" aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)}><Menu size={17} /></button>
       </nav>
       <section className="eliora-hero" id="top">
         <div>

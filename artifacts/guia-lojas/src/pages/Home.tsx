@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { ArrowDown, ArrowRight, ArrowUpRight, Mail, Phone, Instagram } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -87,6 +88,7 @@ function Monogram() {
 }
 
 export default function Home() {
+  useThemeColor("#D4A843");
   const [, setLocation] = useLocation();
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);

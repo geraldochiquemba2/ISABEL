@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import {
   ArrowRight,
   BookOpen,
@@ -124,6 +125,7 @@ const categoryImages: Record<string, string> = {
 };
 
 export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  useThemeColor("#0c9894");
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -182,7 +184,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
         </div>
         <button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">{menuOpen ? <X /> : <Menu />}</button>
       </nav>
-      {menuOpen && <div className="relative z-20 mx-5 rounded-2xl border border-[#d6ebea] bg-white p-4 shadow-lg md:hidden"><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => setMenuOpen(false)}>Explorar formações</button><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")}>Entrar</button></div>}
+      {menuOpen && <div className="relative z-20 mx-5 rounded-2xl border border-[#d6ebea] bg-white p-4 shadow-lg md:hidden"><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => setMenuOpen(false)}>Explorar formações</button><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button>{onBackToSelector && <button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => { setMenuOpen(false); onBackToSelector(); }}>Trocar loja</button>}<button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")}>Entrar</button></div>}
 
       <section className="relative mx-auto max-w-7xl px-5 pb-14 pt-14 sm:px-8 lg:px-12 lg:pb-20 lg:pt-20">
         <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-[#d8f4f0] blur-3xl" />

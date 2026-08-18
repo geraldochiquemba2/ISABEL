@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import {
   ArrowRight,
   ArrowDown,
@@ -158,6 +159,7 @@ function ServiceDetail({ category, SelectedIcon }: { category: ServiceCategory; 
 }
 
 export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  useThemeColor("#112844");
   useEffect(() => {
     requestAnimationFrame(() => {
       window.scrollTo(0, 0);

@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -135,6 +136,7 @@ function ServiceCard({ service, onRequest, stores, storeProducts }: { service: S
 }
 
 export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  useThemeColor("#68AAA0");
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [request, setRequest] = useState(false);
