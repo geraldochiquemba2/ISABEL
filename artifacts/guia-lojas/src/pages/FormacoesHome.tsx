@@ -190,7 +190,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="relative max-w-3xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#b9e5e1] bg-[#e8f8f6] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-[#087d7c]"><Compass size={14} /> Aprender muda o caminho</div>
-            <h1 className="max-w-2xl text-[clamp(2.65rem,7vw,5.7rem)] font-bold leading-[.96] tracking-[-0.075em] text-[#103e4c]">Encontre a formação que <span className="text-[#0c9894]">faz sentido</span> para si.</h1>
+            <h1 className="max-w-2xl text-[clamp(2rem,6vw,5.7rem)] font-bold leading-[.96] tracking-[-0.075em] text-[#103e4c] break-words">Encontre a formação que <span className="text-[#0c9894]">faz sentido</span> para si.</h1>
             <p className="mt-7 max-w-xl text-base leading-7 text-[#5c7880] sm:text-lg">Na Eliora, competências ganham direcção. Explore aulas e treinamentos com pessoas que sabem ensinar — em Angola e onde estiver.</p>
           </div>
           <div className="relative mx-auto w-full max-w-[420px] aspect-[0.82]">
