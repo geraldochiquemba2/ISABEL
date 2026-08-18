@@ -65,10 +65,7 @@ function Router() {
 
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
-    setSelectedStore(storeId as StoreType);
-    if (window.location.pathname !== "/") {
-      window.location.href = "/";
-    }
+    window.location.href = "/";
   };
 
   const handleBackToSelector = () => {
