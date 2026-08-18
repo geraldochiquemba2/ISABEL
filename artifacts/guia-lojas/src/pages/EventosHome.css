@@ -32,7 +32,7 @@
 .eliora-nav-cta:hover { background:var(--rose-deep); transform:translateY(-2px); }
 .eliora-mobile-menu { position:relative; }
 .eliora-mobile-dropdown { display:none; }
-.eliora-hero { max-width:1240px; margin:22px auto 0; padding:0 5vw; display:grid; grid-template-columns:1.04fr .96fr; gap:6vw; align-items:center; min-height:520px; }
+.eliora-hero { max-width:1240px; margin:0 auto; padding:90px 5vw 0; display:grid; grid-template-columns:1.04fr .96fr; gap:6vw; align-items:center; min-height:520px; }
 .eliora-kicker { color:var(--rose-deep); text-transform:uppercase; letter-spacing:.22em; font-size:10px; font-weight:700; display:flex; gap:12px; align-items:center; }
 .eliora-kicker::before { content:""; width:36px; height:1px; background:var(--gold); }
 .eliora-hero h1 { font-family:"Playfair Display", serif; font-weight:500; font-size:clamp(50px, 6.3vw, 88px); line-height:.97; letter-spacing:-.065em; margin:22px 0 25px; max-width:650px; }
@@ -92,9 +92,9 @@
   .eliora-mobile-dropdown { position:absolute; top:100%; left:0; right:0; background:rgba(255,253,250,.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); padding:16px 5vw; display:flex; flex-direction:column; gap:14px; z-index:50; }
   .eliora-mobile-dropdown a, .eliora-mobile-dropdown button { background:none; border:0; color:var(--ink); font-size:13px; letter-spacing:.04em; text-decoration:none; text-align:left; cursor:pointer; padding:8px 0; border-bottom:1px solid var(--line); }
   .eliora-mobile-dropdown a:last-child, .eliora-mobile-dropdown button:last-child { border-bottom:0; }
-  .eliora-hero h1 { font-size:clamp(2.4rem, 10vw, 4rem) !important; }
+  .eliora-hero h1 { font-size:clamp(2rem, 8vw, 3rem) !important; overflow-wrap:break-word; word-wrap:break-word; }
   .eliora-hero-copy { font-size:14px !important; }
-  .eliora-hero { grid-template-columns:1fr; margin-top:15px; min-height:0; gap:25px; padding-left:0; padding-right:0; }
+  .eliora-hero { grid-template-columns:1fr; margin-top:0; padding-top:80px; min-height:0; gap:25px; padding-left:5vw; padding-right:5vw; }
   .eliora-hero-art { height:330px; }
   .eliora-art-block { inset:15px 12px 0 20px; } .eliora-art-arch { height:220px; top:38px; } .eliora-float { top:35px; width:145px; }
   .eliora-intro { display:block; margin-top:58px; } .eliora-intro p { margin-top:18px; }
