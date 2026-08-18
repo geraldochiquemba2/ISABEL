@@ -178,7 +178,7 @@ function Router() {
       <Navbar onBackToSelector={handleBackToSelector} />
       <ScrollToTop />
       <Switch>
-        <Route path="/" component={Home} />
+        <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>
         <Route path="/busca" component={SearchPage} />
         <Route path="/loja/:id" component={StoreProfile} />
         <Route path="/dashboard" component={Dashboard} />

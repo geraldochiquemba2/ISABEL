@@ -91,8 +91,8 @@ function Monogram() {
   );
 }
 
-export default function Home() {
-  useThemeColor("#a8872e");
+export default function Home({ onBackToSelector }: { onBackToSelector?: () => void } = {}) {
+  useThemeColor("#2d2c2b");
   const [, setLocation] = useLocation();
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -158,7 +158,22 @@ export default function Home() {
       `}</style>
 
       <div className="eliora-grain">
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-[#fafafa]/95 backdrop-blur-md border-b border-[#e8e8e8]/60">
+          <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-5 md:px-12">
+            <Monogram />
+            <div className="hidden items-center gap-8 text-[13px] font-semibold text-[#68727c] md:flex">
+              <button onClick={() => scrollTo("categorias")}>Explorar</button>
+              {onBackToSelector && (
+                <button onClick={onBackToSelector} className="flex items-center gap-2 text-[#68727c] hover:text-[#2d2c2b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  Trocar loja
+                </button>
+              )}
+            </div>
+            <button className="rounded-lg p-2 md:hidden" onClick={() => {}} aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          </div>
+        </header>
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-24 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-28">
           <div className="relative z-10">
             <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
             <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
