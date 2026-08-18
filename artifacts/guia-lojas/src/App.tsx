@@ -20,11 +20,12 @@ import { MimoHome } from "@/pages/MimoHome";
 import LoginLove from "@/pages/LoginLove";
 import DashboardLove from "@/pages/DashboardLove";
 import ExploreLove from "@/pages/ExploreLove";
+import BusinessHome from "@/pages/BusinessHome";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -112,6 +113,20 @@ function Router() {
           <Route path="/dashboard-love" component={DashboardLove} />
           <Route>
             <MimoHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+        {floatingButton}
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "business") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route>
+            <BusinessHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
         {floatingButton}

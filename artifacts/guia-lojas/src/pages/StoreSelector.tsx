@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight, HeartHandshake } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark } from "lucide-react";
 
 const stores = [
   {
@@ -31,6 +31,16 @@ const stores = [
     gradient: "from-amber-500/80 to-yellow-600/80",
     icon: <ShoppingBag size={24} className="text-white" />,
     accent: "#D4A843",
+  },
+  {
+    id: "business",
+    name: "Eliora Business & Finances",
+    subtitle: "Clareza para crescer bem",
+    description: "Consultoria, finanças e estratégia para empreendedores, empresas e famílias em Angola e além.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#112844]/80 to-[#b88a3b]/80",
+    icon: <Landmark size={24} className="text-white" />,
+    accent: "#b88a3b",
   },
 ];
 
@@ -64,7 +74,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </motion.div>
 
       {/* Store Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8 max-w-5xl w-full">
+      <div className="grid grid-cols-2 gap-3 sm:gap-8 max-w-3xl w-full">
         {stores.map((store, index) => (
           <motion.div
             key={store.id}
