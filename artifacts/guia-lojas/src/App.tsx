@@ -26,6 +26,9 @@ import LoginBusiness from "@/pages/LoginBusiness";
 import DashboardBusiness from "@/pages/DashboardBusiness";
 import { FormacoesHome } from "@/pages/FormacoesHome";
 import { EventosHome } from "@/pages/EventosHome";
+import ExploreEventos from "@/pages/ExploreEventos";
+import LoginEventos from "@/pages/LoginEventos";
+import DashboardEventos from "@/pages/DashboardEventos";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -167,6 +170,9 @@ function Router() {
         <ScrollToTop />
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-eventos" component={ExploreEventos} />
+          <Route path="/login-eventos" component={LoginEventos} />
+          <Route path="/dashboard-eventos" component={DashboardEventos} />
           <Route>
             <EventosHome onBackToSelector={handleBackToSelector} />
           </Route>

@@ -33,6 +33,10 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
   const [formOpen, setFormOpen] = useState(false);
   const [sent, setSent] = useState(false);
 
+  const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
+  const localUser = localUserStr ? JSON.parse(localUserStr) : null;
+  const isLoggedIn = !!localUser && localUser.storeType === "eventos";
+
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const sortedCategories = useMemo(() =>
@@ -80,7 +84,16 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#8e5557]">Serviços</button>
+          <a href="/explorar-eventos" className="text-left transition-colors hover:text-[#8e5557]">Explorar</a>
           <button onClick={() => scrollTo("processo")} className="text-left transition-colors hover:text-[#8e5557]">Processo</button>
+          {isLoggedIn ? (
+            <>
+              <a href="/dashboard-eventos" className="flex items-center gap-2 text-left text-[#3c2731] font-medium hover:text-[#8e5557] transition-colors">Painel</a>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.reload(); }} className="flex items-center gap-2 text-left text-[#3c2731]/65 hover:text-[#3c2731] transition-colors">Sair</button>
+            </>
+          ) : (
+            <a href="/login-eventos" className="flex items-center gap-2 text-left text-[#3c2731]/65 hover:text-[#3c2731] transition-colors">Entrar</a>
+          )}
           {onBackToSelector && (
             <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#3c2731] transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -90,6 +103,24 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
         </nav>
         <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? "✕" : <Menu size={21} />}</button>
       </header>
+      {menuOpen && (
+        <div className="md:hidden absolute left-0 right-0 top-[72px] z-40 bg-white px-6 pb-7 shadow-lg flex flex-col gap-5 text-xs uppercase tracking-[0.18em]">
+          <button onClick={() => scrollTo("servicos")} className="text-left py-2">Serviços</button>
+          <a href="/explorar-eventos" className="text-left py-2">Explorar</a>
+          <button onClick={() => scrollTo("processo")} className="text-left py-2">Processo</button>
+          {isLoggedIn ? (
+            <>
+              <a href="/dashboard-eventos" className="text-left py-2 font-medium">Painel</a>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.reload(); }} className="text-left py-2">Sair</button>
+            </>
+          ) : (
+            <a href="/login-eventos" className="text-left py-2">Entrar</a>
+          )}
+          {onBackToSelector && (
+            <button onClick={() => { setMenuOpen(false); onBackToSelector(); }} className="text-left py-2">Trocar loja</button>
+          )}
+        </div>
+      )}
 
       <div className="eliora-grain">
         <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
