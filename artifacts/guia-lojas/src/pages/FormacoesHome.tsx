@@ -5,8 +5,6 @@ import {
   BookOpen,
   BriefcaseBusiness,
   Check,
-  ChevronDown,
-  ChevronUp,
   Code2,
   Compass,
   Dumbbell,
@@ -127,7 +125,6 @@ const categoryImages: Record<string, string> = {
 export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#087a76");
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
 
@@ -145,13 +142,9 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
     );
   }, [query]);
 
-  const toggleCategory = (title: string) => {
-    setExpanded((current) =>
-      current.includes(title)
-        ? current.filter((item) => item !== title)
-        : [...current, title],
-    );
-  };
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => b.items.length - a.items.length);
+  }, [filtered]);
 
   const showNotice = (message: string) => {
     setNotice(message);
@@ -159,148 +152,143 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
   };
 
   return (
-    <main className="min-h-[100dvh] overflow-x-hidden bg-[#f7fbfb] text-[#123c4a] [font-family:'DM_Sans',sans-serif]">
-      <div className="pointer-events-none fixed inset-0 opacity-[0.035]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E\")" }} />
-      <nav className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-12 bg-[#f7fbfb]/95 backdrop-blur">
-        <button className="flex items-center gap-2.5" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Voltar ao topo">
+    <main className="min-h-[100dvh] overflow-x-hidden bg-[#f7fbfb] text-[#123c4a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+        .formacoes-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+      `}</style>
+
+      <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-12 bg-[#f7fbfb]/90 backdrop-blur-md">
+        <a className="flex items-center gap-2.5 no-underline" href="#top" aria-label="Eliora Formações">
           <img
             src="/logo-eliora-dark.svg"
             alt="Eliora"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(50%) sepia(40%) saturate(600%) hue-rotate(120deg) brightness(90%) contrast(85%)" }}
           />
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#123c4a" }}>Eliora<small style={{ display: "block", color: "#0c9894", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Formações, Aulas e Treinamentos</small></span>
-        </button>
-        <div className="hidden items-center gap-8 text-[13px] font-semibold text-[#53727c] md:flex">
-          <button className="text-[#123c4a] underline decoration-[#8bd8d1] decoration-2 underline-offset-8">Explorar formações</button>
-          <button onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button>
+        </a>
+        <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-6 shadow-md flex-col gap-5" : "hidden"} md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
+          <button onClick={() => { document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); }} className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#123c4a] hover:text-[#0c9894] transition-colors">Explorar</button>
+          <button onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")} className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#0c9894] transition-colors">Para formadores</button>
           {onBackToSelector && (
-            <button onClick={onBackToSelector} className="flex items-center gap-2 text-[#53727c] hover:text-[#123c4a] transition-colors">
+            <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#0c9894] transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
               Trocar loja
             </button>
           )}
-          <button onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")} className="flex items-center gap-2 rounded-full border border-[#cfe4e4] bg-white px-4 py-2.5 text-[#123c4a] transition hover:border-[#0c9894]"><UserRound size={15} /> Entrar</button>
-        </div>
-        <button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">{menuOpen ? <X /> : <Menu />}</button>
-      </nav>
-      {menuOpen && <div className="relative z-20 mx-5 rounded-2xl border border-[#d6ebea] bg-white p-4 shadow-lg md:hidden"><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => setMenuOpen(false)}>Explorar formações</button><button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("Em breve poderá conhecer os formadores Eliora.")}>Para formadores</button>{onBackToSelector && <button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => { setMenuOpen(false); onBackToSelector(); }}>Trocar loja</button>}<button className="block w-full rounded-lg p-3 text-left text-sm font-semibold" onClick={() => showNotice("A sua conta Eliora estará disponível em breve.")}>Entrar</button></div>}
+        </nav>
+        <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="rounded-lg p-2 md:hidden">{menuOpen ? <X size={20} /> : <Menu size={21} />}</button>
+      </header>
 
-      <section className="relative mx-auto max-w-7xl px-5 pb-14 pt-28 sm:px-8 lg:px-12 lg:pb-20 lg:pt-20">
-        <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-[#d8f4f0] blur-3xl" />
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div className="relative max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#b9e5e1] bg-[#e8f8f6] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-[#087d7c]"><Compass size={14} /> Aprender muda o caminho</div>
-            <h1 className="max-w-2xl text-[clamp(2rem,6vw,5.7rem)] font-bold leading-[.96] tracking-[-0.075em] text-[#103e4c] break-words">Encontre a formação que <span className="text-[#0c9894]">faz sentido</span> para si.</h1>
-            <p className="mt-7 max-w-xl text-base leading-7 text-[#5c7880] sm:text-lg">Na Eliora, competências ganham direcção. Explore aulas e treinamentos com pessoas que sabem ensinar — em Angola e onde estiver.</p>
+      <div className="formacoes-grain">
+        <section className="mx-auto max-w-7xl px-4 pt-24 pb-4 md:px-12 md:pt-28 md:pb-4">
+          <div className="relative flex max-w-2xl flex-col gap-3 rounded-[22px] border border-[#cce8e6] bg-white p-2 shadow-[0_15px_45px_rgba(24,104,110,.09)] sm:flex-row sm:items-center">
+            <Search className="ml-3 hidden text-[#0c9894] sm:block" size={21} />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="O que quer aprender hoje?" className="min-w-0 flex-1 rounded-2xl bg-transparent px-4 py-3 text-[15px] outline-none placeholder:text-[#9ab1b3] focus-visible:ring-2 focus-visible:ring-[#9de0da] sm:px-1" aria-label="Pesquisar categorias e subcategorias" />
+            <button onClick={() => document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" })} className="flex items-center justify-center gap-2 rounded-[16px] bg-[#0c9894] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#087c7c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#b9e5e1]"><Search size={16} /> Pesquisar</button>
           </div>
-          <div className="relative mx-auto w-full max-w-[420px] aspect-[0.82]">
-            <div className="absolute inset-0 rotate-[-4deg] rounded-[48%_48%_4%_4%] border border-[#0c9894]/25" />
-            <div className="absolute inset-[6%] rotate-[3deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e2f5f2]">
-              <img
-                src="/formacoes/hero-formacoes.jpg"
-                alt="Formações Eliora"
-                className="h-full w-full object-cover object-center"
-                style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c9894]/25 via-transparent to-white/10" />
-              <div className="absolute left-[17%] top-[14%] h-20 w-12 rounded-full border border-white/70 opacity-70" />
-            </div>
-          </div>
-        </div>
-        <div className="relative mt-10 flex max-w-2xl flex-col gap-3 rounded-[22px] border border-[#cce8e6] bg-white p-2 shadow-[0_15px_45px_rgba(24,104,110,.09)] sm:flex-row sm:items-center">
-          <Search className="ml-3 hidden text-[#0c9894] sm:block" size={21} />
-          <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="O que quer aprender hoje?" className="min-w-0 flex-1 rounded-2xl bg-transparent px-4 py-3 text-[15px] outline-none placeholder:text-[#9ab1b3] focus-visible:ring-2 focus-visible:ring-[#9de0da] sm:px-1" aria-label="Pesquisar categorias e subcategorias" />
-          <button onClick={() => document.getElementById("categorias")?.scrollIntoView({ behavior: "smooth" })} className="flex items-center justify-center gap-2 rounded-[16px] bg-[#0c9894] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#087c7c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#b9e5e1]"><Search size={16} /> Pesquisar</button>
-        </div>
-        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-[#729096]"><span>Experimente:</span><button onClick={() => setQuery("Excel")} className="text-[#0c9894] underline underline-offset-4">Excel</button><button onClick={() => setQuery("Inglês")} className="text-[#0c9894] underline underline-offset-4">Inglês</button><button onClick={() => setQuery("Liderança")} className="text-[#0c9894] underline underline-offset-4">Liderança</button></div>
-      </section>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-[#729096]"><span>Experimente:</span><button onClick={() => setQuery("Excel")} className="text-[#0c9894] underline underline-offset-4">Excel</button><button onClick={() => setQuery("Inglês")} className="text-[#0c9894] underline underline-offset-4">Inglês</button><button onClick={() => setQuery("Liderança")} className="text-[#0c9894] underline underline-offset-4">Liderança</button></div>
+        </section>
 
-      <section id="categorias" className="relative mx-auto max-w-7xl px-5 pb-20 sm:px-8 lg:px-12">
-        <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="mx-auto max-w-7xl px-4 pt-1 pb-2 md:px-12 md:pt-2 md:pb-2">
+          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 pb-1" style={{ scrollbarWidth: "none" }}>
+            {sorted.map((cat, i) => (
+              <a
+                key={cat.title}
+                href="#servicos"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#cfe4e4] bg-white hover:border-[#0c9894] hover:bg-[#e8f8f6] transition-all text-[11px] font-semibold text-[#53727c]"
+                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
+              >
+                <span className="font-mono text-[9px] text-[#0c9894]">0{i + 1}</span>
+                {cat.title.split(",")[0].split(" e ")[0].trim()}
+              </a>
+            ))}
+          </div>
+          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
+            <span className="text-[10px] text-[#0c9894] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#0c9894] animate-pulse" />
+          </div>
+        </div>
+
+        <section id="servicos" className="mx-auto max-w-7xl px-6 pt-1 pb-4 md:px-12 md:pt-1 md:pb-4">
           <div>
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-[#0c9894]">Escolha a sua direcção</p>
-            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#123c4a] sm:text-3xl">Seis caminhos para começar</h2>
-          </div>
-          <span className="hidden rounded-full bg-[#e8f5f3] px-3 py-1.5 text-xs font-bold text-[#3f7779] sm:block">{filtered.length} {filtered.length === 1 ? "categoria" : "categorias"}</span>
-        </div>
-        {filtered.length === 0 ? (
-          <div className="rounded-[28px] border border-dashed border-[#b8dedd] bg-white px-6 py-16 text-center">
-            <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-[#e5f5f2] text-[#0c9894]"><Search size={24} /></div>
-            <h3 className="text-lg font-bold text-[#123c4a]">Não encontrámos esse caminho ainda.</h3>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#718b90]">Tente outra palavra ou explore todas as categorias para descobrir uma nova possibilidade.</p>
-            <button onClick={() => setQuery("")} className="mt-6 rounded-full bg-[#0c9894] px-5 py-2.5 text-sm font-bold text-white">Ver todas as categorias</button>
-          </div>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {filtered.map((category, index) => {
+            {sorted.map((category, index) => {
               const Icon = category.icon;
-              const isOpen = expanded.includes(category.title);
               const imgSrc = categoryImages[category.title];
+              const number = String(index + 1).padStart(2, "0");
               return (
-                <article
-                  key={category.title}
-                  className="group relative overflow-hidden rounded-[25px] border border-[#d7e9e8] bg-white transition duration-300 hover:-translate-y-1 hover:border-[#8bd8d1] hover:shadow-[0_16px_35px_rgba(22,110,116,.1)]"
-                  style={{ animationDelay: `${index * 60}ms` }}
-                >
-                  {imgSrc && (
-                    <div className="relative h-40 overflow-hidden">
-                      <img
-                        src={imgSrc}
-                        alt={category.title}
-                        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                        style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
-                      <div className="absolute bottom-3 left-3">
-                        <span className="grid h-10 w-10 place-items-center rounded-[14px] shadow-lg" style={{ backgroundColor: category.soft, color: category.tint }}>
-                          <Icon size={20} />
-                        </span>
-                      </div>
-                      <span className="absolute right-3 top-3 text-xs font-bold text-white/80">0{index + 1}</span>
-                    </div>
-                  )}
-                  <div className="relative p-6 sm:p-7">
-                    {!imgSrc && (
-                      <div className="mb-5 flex items-start justify-between">
-                        <span className="grid h-12 w-12 place-items-center rounded-[17px]" style={{ backgroundColor: category.soft, color: category.tint }}><Icon size={23} /></span>
-                        <span className="text-xs font-bold text-[#9ab1b3]">0{index + 1}</span>
-                      </div>
-                    )}
-                    <p className="text-[11px] font-bold uppercase tracking-[.14em]" style={{ color: category.tint }}>{category.eyebrow}</p>
-                    <h3 className="mt-2 max-w-[380px] text-xl font-bold leading-tight tracking-[-.035em] text-[#123c4a]">{category.title}</h3>
-                    <p className="mt-3 max-w-[390px] text-sm leading-6 text-[#6b858a]">{category.description}</p>
-                    <button onClick={() => toggleCategory(category.title)} aria-expanded={isOpen} className="mt-4 flex items-center gap-2 rounded-full border border-[#d0e6e5] px-4 py-2 text-xs font-bold text-[#3f7779] transition hover:bg-[#e8f8f6]">
-                      {isOpen ? "Fechar" : "Ver detalhes"} {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                    </button>
-                    {isOpen && (
-                      <div className="mt-5 space-y-2 border-t border-[#e4efee] pt-5">
+                <article key={category.title} className={`group border-t border-[#cfe4e4] py-6 md:py-8 ${index % 2 ? "md:ml-20" : ""}`}>
+                  <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
+                    <span className="font-mono text-xs tracking-[0.2em] text-[#0c9894]">{number}</span>
+                    <div>
+                      <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#123c4a]" style={{ fontFamily: "'Playfair Display', serif" }}>{category.title}</h3>
+                      <p className="mt-2 max-w-md text-[11px] font-bold uppercase tracking-[.14em] text-[#53727c]">{category.eyebrow}</p>
+                      <p className="mt-2 max-w-md text-sm leading-7 text-[#6b858a]">{category.description}</p>
+                      <ul className="mt-5 space-y-3 border-l border-[#cfe4e4] pl-5 text-sm leading-5 text-[#4a6e74]">
                         {category.items.map((item) => (
-                          <div key={item} className="flex items-start gap-2.5 text-sm leading-6 text-[#4a6e74]">
-                            <Check size={15} className="mt-1 shrink-0" style={{ color: category.tint }} />
-                            {item}
-                          </div>
+                          <li key={item}>
+                            <div className="flex gap-3 items-start transition-transform duration-300 group-hover:translate-x-1">
+                              <Check size={15} className="mt-0.5 shrink-0" style={{ color: category.tint }} />
+                              <span>{item}</span>
+                            </div>
+                          </li>
                         ))}
-                        <a
-                          href={`https://wa.me/244922001778?text=${encodeURIComponent(`Olá, vim pela Eliora Formações e gostaria de saber mais sobre: ${category.title}`)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-4 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
-                          style={{ backgroundColor: category.tint }}
-                        >
-                          Falar com um formador <ArrowRight size={15} />
-                        </a>
-                      </div>
-                    )}
+                      </ul>
+                      <a
+                        href={`https://wa.me/244922001778?text=${encodeURIComponent(`Olá, vim pela Eliora Formações e gostaria de saber mais sobre: ${category.title}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
+                        style={{ backgroundColor: category.tint }}
+                      >
+                        Falar com um formador <ArrowRight size={15} />
+                      </a>
+                    </div>
+                    <div className="mt-4 md:mt-0">
+                      {imgSrc && (
+                        <div className="relative overflow-hidden rounded-2xl border border-[#d7e9e8]">
+                          <img src={imgSrc} alt={category.title} className="w-full h-64 object-cover" style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
+                          <span className="absolute bottom-3 right-3 grid h-10 w-10 place-items-center rounded-[14px] shadow-lg" style={{ backgroundColor: category.soft, color: category.tint }}>
+                            <Icon size={20} />
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </article>
               );
             })}
           </div>
-        )}
-      </section>
+        </section>
 
-      <section className="mx-5 mb-12 overflow-hidden rounded-[30px] bg-[#123f4c] px-6 py-10 text-white sm:mx-8 sm:px-10 lg:mx-auto lg:max-w-7xl lg:px-14"><div className="flex flex-col justify-between gap-8 md:flex-row md:items-center"><div><p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.16em] text-[#8be0d8]"><BookOpen size={15} /> Uma escolha de cada vez</p><h2 className="max-w-xl text-2xl font-bold leading-tight tracking-[-.045em] sm:text-3xl">A próxima competência pode começar numa conversa.</h2><p className="mt-3 max-w-lg text-sm leading-6 text-[#b5d1d1]">Explore com calma. Quando encontrar o caminho certo, a Eliora ajuda a aproximá-lo de quem pode ensinar.</p></div><button onClick={() => { setQuery(""); document.getElementById("categorias")?.scrollIntoView({ behavior: "smooth" }); }} className="flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#8ee0d8] px-5 py-3 text-sm font-bold text-[#123f4c] transition hover:bg-white">Explorar categorias <ArrowRight size={17} /></button></div></section>
-      {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#123f4c] px-5 py-3 text-sm font-semibold text-white shadow-xl"><Check size={16} className="text-[#8ee0d8]" /> {notice}</div>}
+        <section id="contacto" className="relative overflow-hidden border-t border-[#0c9894]/30 bg-[#123c4a] px-6 py-14 text-white md:px-12 md:py-20">
+          <div className="relative mx-auto max-w-7xl md:flex md:items-end md:justify-between">
+            <div>
+              <p className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.25em] text-[#8be0d8]"><BookOpen size={14} /> Uma escolha de cada vez</p>
+              <h2 className="max-w-xl font-serif text-4xl leading-[1.05] md:text-5xl" style={{ fontFamily: "'Playfair Display', serif" }}>A próxima competência pode começar<br />numa conversa.</h2>
+            </div>
+            <div className="mt-8 md:mt-0 md:w-80">
+              <p className="text-sm leading-6 text-[#b5d1d1]">Explore com calma. Quando encontrar o caminho certo, a Eliora ajuda a aproximá-lo de quem pode ensinar.</p>
+              <a
+                href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá, vim pela Eliora Formações e gostaria de saber mais.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 flex items-center gap-4 border-b border-[#8be0d8] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb] hover:text-white transition-colors"
+              >
+                Falar com um formador <ArrowRight size={15} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <footer className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12">
+          <span className="font-mono text-[10px] tracking-[.2em] text-[#8ca4a7]">© Eliora Formações, Aulas e Treinamentos</span>
+          <span className="text-xs text-[#8ca4a7]">Aprender. Praticar. Avançar.</span>
+        </footer>
+      </div>
+
+      {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#123c4a] px-5 py-3 text-sm font-semibold text-white shadow-xl"><Check size={16} className="text-[#8be0d8]" /> {notice}</div>}
       {onBackToSelector && (
         <button
           onClick={onBackToSelector}
@@ -309,7 +297,6 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           Trocar loja
         </button>
       )}
-      <footer className="mx-auto flex max-w-7xl flex-col gap-2 px-5 pb-8 text-xs text-[#8ca4a7] sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12"><span>© Eliora Formações, Aulas e Treinamentos</span><span>Aprender. Praticar. Avançar.</span></footer>
     </main>
   );
 }

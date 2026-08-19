@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, type FormEvent } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import {
-  ArrowDown, ArrowRight, Camera, Check, ChevronDown, Crown, Menu, Music2,
+  ArrowRight, Camera, Check, ChevronDown, Menu, Music2,
   Send, ShieldCheck, Sparkles, TentTree, Utensils,
 } from "lucide-react";
 import "./EventosHome.css";
@@ -28,92 +28,183 @@ const categoryImages: Record<string, string> = {
 
 export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#8e5557");
-  const [open, setOpen] = useState<number | null>(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [sent, setSent] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  const filtered = useMemo(() => categories.map((cat, index) => ({ ...cat, index, items: cat.items.filter((item) => item.toLowerCase().includes(query.toLowerCase())) })).filter((cat) => !query || cat.title.toLowerCase().includes(query.toLowerCase()) || cat.items.length), [query]);
-  const scrollToCatalog = () => document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" });
-  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSent(true); };
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  const sortedCategories = useMemo(() =>
+    [...categories]
+      .sort((a, b) => b.items.length - a.items.length)
+      .map((cat, i) => ({ ...cat, number: String(i + 1).padStart(2, "0") })),
+    []
+  );
+
+  const filtered = useMemo(() =>
+    sortedCategories.filter((cat) =>
+      !query ||
+      cat.title.toLowerCase().includes(query.toLowerCase()) ||
+      cat.items.some((item) => item.toLowerCase().includes(query.toLowerCase()))
+    ),
+    [query, sortedCategories]
+  );
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
+  };
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSent(true);
+  };
+
   return (
-    <main className="eliora-page">
-      <nav className="eliora-nav">
-        <a className="eliora-mark" href="#top" aria-label="Eliora Eventos & Celebrações">
+    <main className="min-h-[100dvh] overflow-x-hidden text-[#3c2731]" style={{ fontFamily: "'DM Sans', sans-serif", background: "#fffcf9" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+        .eliora-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+        @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}} .rise{animation:rise .8s ease both}.delay-1{animation-delay:.14s}.delay-2{animation-delay:.26s}
+      `}</style>
+
+      <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fffcf9]/90 backdrop-blur-md">
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Eventos & Celebrações">
           <img
             src="/logo-eliora-dark.svg"
             alt="Eliora"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }}
           />
-          <span className="eliora-mark-name">Eliora<small>Eventos & Celebrações</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#3c2731" }}>Eliora<small style={{ display: "block", color: "#8e5557", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Eventos & Celebrações</small></span>
         </a>
-        <div className="eliora-navlinks"><a href="#servicos">Serviços</a><a href="#processo">Como ajudamos</a>{onBackToSelector && <button onClick={onBackToSelector} style={{ fontSize: "12px", color: "var(--muted)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", transition: "color .25s" }}><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Trocar loja</button>}<button className="eliora-nav-cta" onClick={() => { setFormOpen(true); document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" }); }}>Pedir orçamento</button></div>
-        <div className="eliora-mobile-menu">
-          {menuOpen && (
-            <div className="eliora-mobile-dropdown">
-              <a href="#servicos" onClick={() => setMenuOpen(false)}>Serviços</a>
-              <a href="#processo" onClick={() => setMenuOpen(false)}>Como ajudamos</a>
-              {onBackToSelector && <button onClick={() => { setMenuOpen(false); onBackToSelector(); }}>Trocar loja</button>}
-              <button onClick={() => { setMenuOpen(false); setFormOpen(true); document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" }); }}>Pedir orçamento</button>
-            </div>
+        <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
+          <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#8e5557]">Serviços</button>
+          <button onClick={() => scrollTo("processo")} className="text-left transition-colors hover:text-[#8e5557]">Processo</button>
+          {onBackToSelector && (
+            <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#3c2731] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Trocar loja
+            </button>
           )}
-        </div>
-        <button className="eliora-nav-cta" aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)}><Menu size={17} /></button>
-      </nav>
-      <section className="eliora-hero" id="top">
-        <div>
-          <div className="eliora-kicker">Momentos que ficam</div>
-          <h1>O seu dia merece <em>brilho.</em></h1>
-          <p className="eliora-hero-copy">Em Luanda e onde a sua celebração nos levar, reunimos pessoas, ideias e fornecedores para transformar planos bonitos em memórias inesquecíveis.</p>
-          <div className="eliora-hero-actions"><button className="eliora-primary" onClick={scrollToCatalog}>Explorar serviços <ArrowDown size={15} /></button><a href="#contacto" className="eliora-text-link">Fale connosco</a></div>
-        </div>
-        <div style={{ position: "relative", width: "100%", maxWidth: "420px", aspectRatio: "0.82", margin: "0 auto" }}>
-          <div style={{ position: "absolute", inset: 0, rotate: "-4deg", borderRadius: "48% 48% 4% 4%", border: "1px solid rgba(173,105,107,0.3)" }} />
-          <div style={{ position: "absolute", inset: "6%", rotate: "3deg", borderRadius: "48% 48% 4% 4%", overflow: "hidden", background: "#f0dfc4" }}>
-            <img
-              src="/eventos/hero-eventos.jpg"
-              alt="Eventos Eliora"
-              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }}
-            />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(173,105,107,0.25), transparent, rgba(255,253,250,0.1))" }} />
-            <div style={{ position: "absolute", left: "17%", top: "14%", width: "48px", height: "72px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.7)", opacity: 0.7 }} />
+        </nav>
+        <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? "✕" : <Menu size={21} />}</button>
+      </header>
+
+      <div className="eliora-grain">
+        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+            {filtered.map((cat) => (
+              <a
+                key={cat.title}
+                href="#servicos"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#8e5557] hover:bg-[#fff5f6] transition-all text-[11px] font-semibold text-[#68727c]"
+                onClick={(e) => { e.preventDefault(); scrollTo("servicos"); }}
+              >
+                <span className="font-mono text-[9px] text-[#8e5557]">{cat.number}</span>
+                {cat.title.split(",")[0].trim()}
+              </a>
+            ))}
+          </div>
+          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
+            <span className="text-[10px] text-[#8e5557] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#8e5557] animate-pulse" />
           </div>
         </div>
-      </section>
-      <section className="eliora-intro" id="processo"><h2>Encontre a peça<br /><em>que faltava.</em></h2><p>Escolha uma categoria para descobrir os detalhes. A nossa equipa ajuda a compor cada parte com cuidado, bom gosto e parceiros de confiança.</p></section>
-      <section className="eliora-catalog" id="servicos">
-        <div className="eliora-tools"><span className="eliora-count">{filtered.length.toString().padStart(2, "0")} categorias disponíveis</span><input className="eliora-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Procurar um serviço..." aria-label="Procurar um serviço" /></div>
-        <div className="eliora-grid">
-          {filtered.map((category) => { const Icon = category.icon; const isOpen = open === category.index; const imgSrc = categoryImages[category.title]; return <article className={`eliora-card ${isOpen ? "open" : ""}`} key={category.title}>
-            {imgSrc && (
-              <div style={{ position: "relative", height: "160px", overflow: "hidden" }}>
-                <img src={imgSrc} alt={category.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s", filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(255,253,250,1), rgba(255,253,250,0.2), transparent)" }} />
-                <div style={{ position: "absolute", bottom: "12px", left: "12px" }}>
-                  <span className="eliora-card-icon"><Icon size={17} strokeWidth={1.6} /></span>
-                </div>
-              </div>
-            )}
-            <button className="eliora-card-head" onClick={() => setOpen(isOpen ? null : category.index)} aria-expanded={isOpen}><span className="eliora-card-number">0{category.index + 1}</span>{!imgSrc && <span className="eliora-card-icon"><Icon size={17} strokeWidth={1.6} /></span>}<span className="eliora-card-title">{category.title}</span><ChevronDown className="eliora-chevron" size={18} /></button>
-            <ul className="eliora-items">{category.items.map((item) => <li key={item}><Check size={13} />{item}</li>)}</ul>
-          </article>; })}
-        </div>
-      </section>
-      <section className="eliora-contact" id="contacto"><div className="eliora-contact-box"><div><div className="eliora-kicker">Vamos conversar</div><h2>Já imaginou o momento?</h2><p>Conte-nos o que tem em mente. Respondemos com uma proposta pensada para si, sem compromissos.</p>
-        <form className={`eliora-form ${formOpen ? "show" : ""}`} onSubmit={submit}><input type="text" placeholder="O seu nome" required /><input type="email" placeholder="O seu e-mail" required /><button className="eliora-primary" type="submit"><Send size={14} /> Enviar pedido</button></form>{sent && <div className="eliora-success show"><Check size={14} /> Pedido recebido. Falamos consigo em breve.</div>}</div><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Eventos%20%26%20Celebra%C3%A7%C3%B5es%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento." target="_blank" rel="noopener noreferrer" className="eliora-primary" style={{ textDecoration: "none" }}>{formOpen ? "Preencha os seus dados" : "Pedir orçamento"} <ArrowRight size={15} /></a></div>      </section>
-      {onBackToSelector && (
-        <button
-          onClick={onBackToSelector}
-          style={{ position: "fixed", bottom: "20px", left: "20px", zIndex: 50, padding: "10px 18px", borderRadius: "30px", border: "1px solid #eadfd7", background: "#fffdfa", color: "#3c2731", fontSize: "11px", fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}
-        >
-          Trocar loja
-        </button>
-      )}
-      <footer className="eliora-footer"><span>© Eliora Eventos & Celebrações</span><span>Luanda · Angola &nbsp;|&nbsp; Celebrar com intenção</span></footer>
+
+        <section id="servicos" className="mx-auto max-w-[1380px] px-6 pt-1 pb-4 md:px-12 md:pt-1 md:pb-4">
+          <div>
+            {filtered.map((cat, i) => {
+              const Icon = cat.icon;
+              const imgSrc = categoryImages[cat.title];
+              return (
+                <article key={cat.title} className={`border-t border-[#d1d4d8] py-4 md:py-8 ${i % 2 ? "md:ml-20" : ""}`}>
+                  <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
+                    <span className="font-mono text-xs tracking-[0.2em] text-[#8e5557]">{cat.number}</span>
+                    <div>
+                      <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#3c2731] md:text-[2.8rem]">{cat.title}</h3>
+                      <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
+                        {cat.items.map((item) => (
+                          <li key={item} className="flex gap-3 items-start">
+                            <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="mt-4 md:mt-0">
+                      {imgSrc ? (
+                        <div className="relative overflow-hidden rounded-2xl border border-[#d1d4d8]">
+                          <img src={imgSrc} alt={cat.title} className="w-full h-64 object-cover" style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#3c2731]/40 via-transparent to-transparent" />
+                          <p className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">#{cat.number}</p>
+                        </div>
+                      ) : (
+                        <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
+                          <Icon size={20} className="mx-auto mb-2 text-[#8e5557]" />
+                          <p className="text-xs text-[#87909a]">Imagem em breve</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-[1380px] px-6 py-4 md:px-12">
+          <div className="flex items-center gap-3">
+            <input
+              className="flex-1 rounded-full border border-[#d1d4d8] bg-white px-4 py-2 text-sm text-[#3c2731] outline-none focus:border-[#8e5557] transition-colors"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Procurar um serviço..."
+              aria-label="Procurar um serviço"
+            />
+            <span className="font-mono text-[10px] text-[#87909a]">{filtered.length} categorias</span>
+          </div>
+        </section>
+
+        <section id="contacto" className="relative overflow-hidden border-t border-[#d4b0a8] px-6 py-14 md:px-12 md:py-20" style={{ background: "#f0d5cc" }}>
+          <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#8e5557]/10" />
+          <div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#8e5557]/8" />
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#8e5557]">Vamos conversar</p>
+              <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] text-[#3c2731] md:text-7xl">Já imaginou o<br /><i>momento?</i></h2>
+              <p className="mt-4 max-w-md text-sm leading-6 text-[#6b4a4c]">Conte-nos o que tem em mente. Respondemos com uma proposta pensada para si, sem compromissos.</p>
+            </div>
+            <div className="mt-10 md:mt-0 md:w-80">
+              <form className="flex flex-col gap-3" onSubmit={submit}>
+                <input type="text" placeholder="O seu nome" required className="rounded-full border border-[#d1d4d8] bg-white px-4 py-2 text-sm text-[#3c2731] outline-none focus:border-[#8e5557] transition-colors" />
+                <input type="email" placeholder="O seu e-mail" required className="rounded-full border border-[#d1d4d8] bg-white px-4 py-2 text-sm text-[#3c2731] outline-none focus:border-[#8e5557] transition-colors" />
+                <button type="submit" className="flex items-center justify-center gap-2 rounded-full bg-[#8e5557] px-5 py-2.5 text-xs uppercase tracking-[.15em] text-white hover:bg-[#7a4849] transition-colors">
+                  <Send size={14} /> Enviar pedido
+                </button>
+              </form>
+              {sent && <p className="mt-3 flex items-center gap-2 text-sm text-[#8e5557]"><Check size={14} /> Pedido recebido. Falamos consigo em breve.</p>}
+              <a
+                href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Eventos%20%26%20Celebra%C3%A7%C3%B5es%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-7 flex items-center gap-4 border-b border-[#8e5557] pb-3 text-xs uppercase tracking-[.2em] text-[#3c2731] hover:text-[#8e5557] transition-colors"
+              >
+                {formOpen ? "Preencha os seus dados" : "Pedir orçamento"} <ArrowRight size={15} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12">
+          <div className="flex items-center gap-3">
+            <img src="/logo-eliora-dark.svg" alt="Eliora" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", letterSpacing: "-.02em", color: "#3c2731" }}>Eliora</span>
+          </div>
+          <p className="text-xs text-[#747b84]">© Eliora Eventos & Celebrações · Luanda, Angola</p>
+          <p className="text-xs text-[#747b84]">Celebrar com intenção</p>
+        </footer>
+      </div>
     </main>
   );
 }

@@ -158,277 +158,182 @@ function ServiceDetail({ category, SelectedIcon }: { category: ServiceCategory; 
   );
 }
 
+function Monogram() {
+  return (
+    <div className="flex items-center gap-3">
+      <img
+        src="/logo-eliora-dark.svg"
+        alt="Eliora Business & Finances"
+        className="w-10 h-10"
+        style={{ filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
+      />
+      <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#112844]">Eliora <i className="font-normal">Business & Finances</i></span>
+    </div>
+  );
+}
+
 export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#0d1f35");
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    });
-  }, []);
-
-  const [active, setActive] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [heroImage, setHeroImage] = useState(0);
-  const selected = categories[active];
-  const SelectedIcon = selected.icon;
+  const [sent, setSent] = useState(false);
+  const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };
 
-  const heroImages = [
-    "/business/hero-business.jpg",
-    "/business/strategy.jpg",
-    "/business/finance.jpg",
-    "/business/marketing.jpg",
-    "/business/legal.jpg",
-    "/business/team.jpg",
-    "/business/investment.jpg",
-    "/business/approach.jpg",
-  ];
+  const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
+  const localUser = localUserStr ? JSON.parse(localUserStr) : null;
+  const isLoggedIn = !!localUser && localUser.storeType === "business";
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroImage((prev) => (prev + 1) % heroImages.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const scrollToServices = () => {
-    document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
-  const navClass = `${menuOpen ? "flex" : "hidden"} absolute left-5 right-5 top-[76px] flex-col gap-5 rounded-2xl border border-[#112844]/10 bg-[#f4f1eb] p-6 shadow-xl md:static md:flex md:flex-row md:items-center md:gap-8 md:border-0 md:bg-transparent md:p-0 md:shadow-none`;
+  const sortedCategories = [...categories]
+    .sort((a, b) => b.services.length - a.services.length)
+    .map((c, i) => ({ ...c, number: String(i + 1).padStart(2, "0") }));
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f4f1eb] text-[#112844] selection:bg-[#c7a15a] selection:text-[#112844]">
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#112844]/10 bg-[#f4f1eb]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="group flex items-center gap-3 text-left"
-            aria-label="Voltar ao topo"
-          >
-            <img
-              src="/logo-eliora-dark.svg"
-              alt="Eliora"
-              style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
-            />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>Eliora<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Business & Finances</small></span>
-          </button>
-          <nav className={navClass} aria-label="Navegação principal">
-            <button onClick={scrollToServices} className="text-left font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.16em] text-[#112844]/65 transition hover:text-[#b88a3b]">
-              Serviços
+    <main className="min-h-[100dvh] overflow-x-hidden bg-[#f4f1eb] text-[#112844]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+        .eliora-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+        @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}} .rise{animation:rise .8s ease both}.delay-1{animation-delay:.14s}.delay-2{animation-delay:.26s}
+      `}</style>
+
+      <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#f4f1eb]/90 backdrop-blur-md">
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Business & Finances">
+          <img
+            src="/logo-eliora-dark.svg"
+            alt="Eliora"
+            style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
+          />
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>Eliora<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Business & Finances</small></span>
+        </a>
+        <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-lg" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
+          <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#b88a3b]">Serviços</button>
+          <a href="/explorar-business" className="text-left transition-colors hover:text-[#b88a3b]">Explorar</a>
+          <button onClick={() => scrollTo("abordagem")} className="text-left transition-colors hover:text-[#b88a3b]">A nossa abordagem</button>
+          <button onClick={() => scrollTo("contacto")} className="text-left transition-colors hover:text-[#b88a3b]">Contacto</button>
+          {isLoggedIn ? (
+            <>
+              <a href="/dashboard-business" className="flex items-center gap-2 text-left text-[#112844] font-medium hover:text-[#b88a3b] transition-colors">Painel</a>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.reload(); }} className="flex items-center gap-2 text-left text-[#112844]/65 hover:text-[#112844] transition-colors">Sair</button>
+            </>
+          ) : (
+            <a href="/login-business" className="flex items-center gap-2 text-left text-[#112844]/65 hover:text-[#112844] transition-colors">Entrar</a>
+          )}
+          {onBackToSelector && (
+            <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-[#112844]/65 hover:text-[#112844] transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Trocar loja
             </button>
-            <a href="#abordagem" className="font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.16em] text-[#112844]/65 transition hover:text-[#b88a3b]">
-              A nossa abordagem
-            </a>
-            <a href="#contacto" className="font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.16em] text-[#112844]/65 transition hover:text-[#b88a3b]">
-              Contacto
-            </a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="rounded-full p-2 md:hidden"
-              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-            >
-              {menuOpen ? <XIcon size={22} /> : <Menu size={22} />}
-            </button>
-            <a
-              href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden items-center gap-2 rounded-full bg-[#112844] px-5 py-3 font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.14em] text-[#f4f1eb] transition hover:bg-[#b88a3b] hover:text-[#112844] focus:outline-none focus:ring-2 focus:ring-[#b88a3b] sm:flex"
-            >
-              Fale connosco
-              <ArrowRight size={15} />
-            </a>
-            {onBackToSelector && (
-              <button
-                onClick={onBackToSelector}
-                className="rounded-full border border-[#112844]/20 px-4 py-2.5 font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.14em] text-[#112844] transition hover:bg-[#112844] hover:text-[#f4f1eb]"
-              >
-                Trocar loja
-              </button>
-            )}
-          </div>
-        </div>
+          )}
+        </nav>
+        <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? <XIcon size={20} /> : <Menu size={21} />}</button>
       </header>
 
-      <section className="relative mx-auto max-w-[1280px] px-5 pb-24 pt-16 sm:px-8 sm:pt-24 lg:px-12 lg:pb-32">
-        <div className="absolute -right-24 top-4 hidden h-72 w-72 rounded-full border border-[#b88a3b]/25 lg:block" />
-        <div className="absolute -right-8 top-20 hidden h-56 w-56 rounded-full border border-[#b88a3b]/20 lg:block" />
-        <div className="grid gap-12 md:grid-cols-[1fr_0.6fr] md:items-center lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="max-w-4xl">
-            <div className="mb-8 flex items-center gap-3 font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.23em] text-[#b88a3b]">
-              <span className="h-px w-10 bg-[#b88a3b]" />
-              Angola · Mercados Lusófonos
-            </div>
-            <h1 className="max-w-4xl font-['Playfair_Display'] text-[clamp(3.4rem,8vw,7.6rem)] font-medium leading-[0.9] tracking-[-0.055em] text-[#112844]">
-              Clareza para
-              <br />
-              <em className="text-[#b88a3b]">crescer bem.</em>
-            </h1>
-            <div className="mt-10 grid max-w-3xl gap-8 md:grid-cols-[1fr_220px] md:items-end">
-              <p className="font-['DM_Sans'] text-lg leading-8 text-[#112844]/70">
-                A Eliora é o parceiro de confiança para transformar decisões complexas em próximos passos seguros — para empreendedores, empresas e famílias.
-              </p>
-              <button onClick={scrollToServices} className="group flex items-center gap-3 font-['DM_Sans'] text-xs font-bold uppercase tracking-[0.14em] text-[#112844]">
-                Explorar serviços
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-[#112844]/25 transition group-hover:border-[#b88a3b] group-hover:bg-[#b88a3b]">
-                  <ArrowDown size={16} />
-                </span>
-              </button>
-            </div>
+      <div className="eliora-grain">
+        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+            {sortedCategories.map((cat) => (
+              <a
+                key={cat.number}
+                href="#servicos"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#b88a3b]/20 bg-white hover:border-[#b88a3b] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#112844]/70"
+                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
+              >
+                <span className="font-mono text-[9px] text-[#b88a3b]">{cat.number}</span>
+                {cat.title.split(",")[0].trim()}
+              </a>
+            ))}
           </div>
-          <div className="relative mx-auto w-full max-w-[420px] aspect-[0.82]">
-            <div className="absolute inset-0 rotate-[-4deg] rounded-[48%_48%_4%_4%] border border-[#b88a3b]/25" />
-            <div className="absolute inset-[6%] rotate-[3deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e9e2d6]">
-              <img
-                src={heroImages[heroImage]}
-                alt="Escritório profissional"
-                className="h-full w-full object-cover object-center transition-opacity duration-700"
-                style={{ filter: "grayscale(0.55) contrast(0.92) brightness(1.05)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112844]/25 via-transparent to-white/10" />
-              <div className="absolute left-[17%] top-[14%] h-20 w-12 rounded-full border border-white/70 opacity-70" />
-            </div>
+          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
+            <span className="text-[10px] text-[#b88a3b] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#b88a3b] animate-pulse" />
           </div>
         </div>
-        <div className="mt-20 grid grid-cols-2 gap-8 border-t border-[#112844]/15 pt-6 font-['DM_Sans'] sm:grid-cols-4">
-          {[
-            ["01", "Visão integrada", "Estratégia, finanças e pessoas na mesma mesa."],
-            ["02", "Conhecimento local", "Experiência ancorada em Angola e além."],
-            ["03", "Relações duradouras", "Acompanhamento que não termina no diagnóstico."],
-            ["04", "Decisões sólidas", "Rigor para avançar com confiança."],
-          ].map(([n, title, body]) => (
-            <div key={n}>
-              <span className="text-xs font-bold text-[#b88a3b]">{n}</span>
-              <h2 className="mt-4 text-sm font-bold">{title}</h2>
-              <p className="mt-2 text-xs leading-5 text-[#112844]/55">{body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      <section id="servicos" className="bg-[#112844] px-5 py-20 text-[#f4f1eb] sm:px-8 lg:px-12 lg:py-28">
-        <div className="mx-auto max-w-[1280px]">
+        <section id="servicos" className="mx-auto max-w-[1380px] px-6 pt-1 pb-4 md:px-12 md:pt-1 md:pb-4">
           <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <p className="mb-5 font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.23em] text-[#c7a15a]">
+              <p className="mb-5 font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.23em] text-[#b88a3b]">
                 O que fazemos
               </p>
               <h2 className="max-w-2xl font-['Playfair_Display'] text-5xl leading-[0.95] tracking-[-0.04em] sm:text-6xl">
                 Uma visão completa
                 <br />
-                <em className="text-[#c7a15a]">do seu próximo capítulo.</em>
+                <em className="text-[#b88a3b]">do seu próximo capítulo.</em>
               </h2>
             </div>
-            <p className="max-w-xs font-['DM_Sans'] text-sm leading-6 text-[#f4f1eb]/60">
+            <p className="max-w-xs font-['DM_Sans'] text-sm leading-6 text-[#112844]/60">
               Escolha uma área para conhecer como podemos tornar a sua ambição mais simples de executar.
             </p>
           </div>
-
-          {/* Desktop: side by side */}
-          <div className="hidden lg:grid lg:grid-cols-[0.95fr_1.05fr] lg:gap-10">
-            <div className="space-y-1 border-t border-[#f4f1eb]/20">
-              {categories.map((category, index) => {
-                const Icon = category.icon;
-                const isActive = active === index;
-                return (
-                  <button
-                    key={category.number}
-                    onClick={() => setActive(index)}
-                    aria-expanded={isActive}
-                    className={`group flex w-full items-start gap-4 border-b border-[#f4f1eb]/15 py-5 text-left transition ${
-                      isActive ? "text-[#c7a15a]" : "text-[#f4f1eb]/65 hover:text-[#f4f1eb]"
-                    }`}
-                  >
-                    <span className="w-8 pt-1 font-['DM_Sans'] text-[11px]">{category.number}</span>
-                    <Icon size={19} strokeWidth={1.5} className="mt-0.5 shrink-0" />
-                    <span className="flex-1 font-['Playfair_Display'] text-xl leading-tight sm:text-2xl">
-                      {category.title}
-                    </span>
-                    <ChevronDown
-                      size={17}
-                      className={`mt-1 shrink-0 transition-transform ${isActive ? "rotate-180" : "-rotate-90"}`}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-            <ServiceDetail category={selected} SelectedIcon={SelectedIcon} />
-          </div>
-
-          {/* Mobile: accordion */}
-          <div className="lg:hidden space-y-1 border-t border-[#f4f1eb]/20">
-            {categories.map((category, index) => {
-              const Icon = category.icon;
-              const isActive = active === index;
-              const CatIcon = category.icon;
-              return (
-                <div key={category.number}>
-                  <button
-                    onClick={() => {
-                      if (!isActive) {
-                        setActive(index);
-                        setTimeout(() => {
-                          const el = document.getElementById(`detail-${category.number}`);
-                          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                        }, 50);
-                      } else {
-                        setActive(-1);
-                      }
-                    }}
-                    aria-expanded={isActive}
-                    className={`group flex w-full items-start gap-4 border-b border-[#f4f1eb]/15 py-5 text-left transition ${
-                      isActive ? "text-[#c7a15a]" : "text-[#f4f1eb]/65 hover:text-[#f4f1eb]"
-                    }`}
-                  >
-                    <span className="w-8 pt-1 font-['DM_Sans'] text-[11px]">{category.number}</span>
-                    <Icon size={19} strokeWidth={1.5} className="mt-0.5 shrink-0" />
-                    <span className="flex-1 font-['Playfair_Display'] text-xl leading-tight">
-                      {category.title}
-                    </span>
-                    <ChevronDown
-                      size={17}
-                      className={`mt-1 shrink-0 transition-transform duration-300 ${isActive ? "rotate-180" : "-rotate-90"}`}
-                    />
-                  </button>
-                  {isActive && (
-                    <div id={`detail-${category.number}`} className="overflow-hidden pb-4">
-                      <ServiceDetail category={category} SelectedIcon={CatIcon} />
-                    </div>
-                  )}
+          {sortedCategories.map((cat, i) => {
+            const CatIcon = cat.icon;
+            return (
+              <article className={`group border-t border-[#112844]/15 py-4 md:py-8 ${i % 2 ? "md:ml-20" : ""}`}>
+                <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#b88a3b]">{cat.number}</span>
+                  <div>
+                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#112844] md:text-[2.8rem]">{cat.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#112844]/65">{cat.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#112844]/15 pl-5 text-sm leading-5 text-[#112844]/80">
+                      {cat.services.map((service) => (
+                        <li key={service}>
+                          <a
+                            href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
+                            className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#112844] cursor-pointer"
+                          >
+                            <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />
+                            {service}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
+                      className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#112844]/60 hover:text-[#112844] transition-colors"
+                    >
+                      Ver mais
+                    </a>
+                  </div>
+                  <div className="mt-4 md:mt-0">
+                    {categoryImages[cat.number] ? (
+                      <div className="relative overflow-hidden rounded-2xl border border-[#112844]/10">
+                        <img src={categoryImages[cat.number]} alt={cat.title} className="w-full h-64 object-cover" style={{ filter: "grayscale(0.45) contrast(0.95) brightness(1.05)" }} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#112844]/40 via-transparent to-transparent" />
+                        <p className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">#{cat.number}</p>
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl border border-dashed border-[#112844]/15 p-6 text-center">
+                        <p className="text-xs text-[#112844]/50">Em breve novas lojas</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+              </article>
+            );
+          })}
+        </section>
 
-      <section id="abordagem" className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-        <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
-            <p className="mb-5 font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.23em] text-[#b88a3b]">
-              A nossa abordagem
-            </p>
-            <h2 className="font-['Playfair_Display'] text-5xl leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-              Pensar com rigor.
-              <br />
-              <em className="text-[#b88a3b]">Agir com proximidade.</em>
-            </h2>
-            <div className="relative mt-10 overflow-hidden rounded-[2px]">
-              <img
-                src="/business/approach.jpg"
-                alt="Equipa Eliora em reunião de trabalho"
-                className="h-64 w-full object-cover object-center sm:h-80"
-                style={{ filter: "grayscale(0.5) contrast(0.93) brightness(1.06)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112844]/25 via-transparent to-white/10" />
+        <section id="abordagem" className="border-y border-[#112844]/10 bg-[#112844] text-[#f4f1eb]">
+          <div className="mx-auto grid max-w-[1380px] gap-10 px-6 py-10 md:grid-cols-[.75fr_1.25fr] md:px-12 md:py-14">
+            <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b88a3b]">A nossa abordagem</p>
+            <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
+              <div>
+                <p className="max-w-3xl font-['Playfair_Display'] text-3xl leading-[1.2] text-[#f4f1eb] md:text-5xl">Pensar com rigor. <i>Agir com proximidade.</i></p>
+                <p className="mt-8 max-w-xl text-sm leading-7 text-[#f4f1eb]/60">Na Eliora, combinamos estratégia com execução rigorosa. Cada decisão é pensada para gerar valor real, sustentável e mensurável para o seu negócio.</p>
+              </div>
+              <figure className="relative aspect-[.78] overflow-hidden border border-[#f4f1eb]/10 bg-[#112844]">
+                <img
+                  src="/business/approach.jpg"
+                  alt="Equipa Eliora em reunião de trabalho"
+                  className="h-full w-full object-cover object-center"
+                  style={{ filter: "grayscale(0.5) contrast(0.93) brightness(1.06)" }}
+                />
+                <figcaption className="absolute bottom-3 left-3 font-mono text-[9px] uppercase tracking-[.2em] text-white drop-shadow">02 — Estratégia & execução</figcaption>
+              </figure>
             </div>
           </div>
-          <div className="grid gap-8 border-t border-[#112844]/15 pt-6 sm:grid-cols-3">
+        </section>
+
+        <section id="abordagem-details" className="mx-auto max-w-[1380px] px-6 py-10 md:px-12 md:py-16">
+          <div className="grid gap-8 border-t border-[#112844]/15 pt-8 sm:grid-cols-3">
             {[
               ["01", "Ouvir primeiro", "Começamos por compreender o contexto, a ambição e o que realmente está em jogo."],
               ["02", "Traçar o essencial", "Organizamos a complexidade numa estratégia prática, com prioridades que fazem sentido."],
@@ -436,45 +341,19 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
             ].map(([n, title, body]) => (
               <div key={n}>
                 <span className="font-['DM_Sans'] text-xs font-bold text-[#b88a3b]">{n}</span>
-                <h3 className="mt-5 font-['Playfair_Display'] text-2xl">{title}</h3>
+                <h3 className="mt-5 font-['Playfair_Display'] text-2xl text-[#112844]">{title}</h3>
                 <p className="mt-3 font-['DM_Sans'] text-sm leading-6 text-[#112844]/60">{body}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="contacto" className="mx-5 mb-5 overflow-hidden bg-[#c7a15a] px-6 py-16 sm:mx-8 sm:px-12 lg:mx-12 lg:px-20 lg:py-20">
-        <div className="flex flex-col justify-between gap-10 md:flex-row md:items-end">
-          <div>
-            <p className="mb-5 font-['DM_Sans'] text-[11px] font-bold uppercase tracking-[0.23em] text-[#112844]/60">
-              Vamos conversar
-            </p>
-            <h2 className="max-w-3xl font-['Playfair_Display'] text-5xl leading-[0.95] tracking-[-0.04em] sm:text-7xl">
-              O seu próximo passo
-              <br />
-              <em>começa aqui.</em>
-            </h2>
-          </div>
-          <a
-            href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20marcar%20uma%20consulta."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex shrink-0 items-center gap-3 border-b border-[#112844] pb-3 font-['DM_Sans'] text-sm font-bold uppercase tracking-[0.13em] transition hover:gap-5"
-          >
-            Marcar uma consulta
-            <ArrowRight size={18} />
-          </a>
-        </div>
-        <div className="mt-16 flex flex-col justify-between gap-5 border-t border-[#112844]/20 pt-5 font-['DM_Sans'] text-xs text-[#112844]/65 sm:flex-row">
-          <span>Luanda · Angola</span>
-          <span>hello@eliora.co.ao</span>
-          <span>© {new Date().getFullYear()} Eliora Business & Finances</span>
-        </div>
-      </section>
-      <div className="fixed bottom-5 right-5 z-10 hidden items-center gap-2 rounded-full border border-[#112844]/10 bg-[#f4f1eb]/90 px-3 py-2 font-['DM_Sans'] text-[10px] uppercase tracking-[0.15em] text-[#112844]/60 shadow-lg backdrop-blur sm:flex">
-        <ShieldCheck size={13} className="text-[#b88a3b]" />
-        Confiança para decidir
+        <section id="contacto" className="relative overflow-hidden border-t border-[#b88a3b]/20 bg-[#112844] px-6 py-14 text-[#f4f1eb] md:px-12 md:py-20">
+          <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#b88a3b]/15" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#b88a3b]/10" />
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b88a3b]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Vamos construir<br /><i>o próximo capítulo?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#f4f1eb]/60">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20marcar%20uma%20consulta.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b88a3b] pb-3 text-xs uppercase tracking-[.2em] text-[#f4f1eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button></div></div>
+        </section>
+
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#112844]/60">Estratégia com rigor, em Angola e além.</p><div className="flex items-center gap-5 text-[#112844]/60"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WhatsApp</a><span className="font-mono text-[10px] tracking-[.2em]">© {new Date().getFullYear()} ELIORA</span></div></footer>
       </div>
     </main>
   );

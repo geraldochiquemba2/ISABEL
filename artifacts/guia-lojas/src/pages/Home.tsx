@@ -109,12 +109,12 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
     }
   };
 
-  const { data: stores = [] } = useQuery({
+  const { data: stores = [], isLoading: storesLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: () => fetchStores(),
   });
 
-  const { data: apiCategories = [] } = useQuery({
+  const { data: apiCategories = [], isLoading: catsLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategories(),
   });
@@ -173,32 +173,17 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <button className="rounded-lg p-2 md:hidden" onClick={() => {}} aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
           </div>
         </header>
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-20" style={{ gridTemplateColumns: "1fr" }}>
-          <div className="relative mx-auto aspect-[.82] w-full max-w-[450px] md:order-1 order-2">
-            <div className="absolute inset-0 rotate-[-5deg] rounded-[48%_48%_4%_4%] border border-[#cbd0d5]" />
-            <div className="absolute inset-[8%] rotate-[4deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e5e7e9]">
-              <img
-                key={heroIdx}
-                src={hero.src}
-                alt={hero.name}
-                className="h-full w-full object-cover object-center"
-                style={{ filter: "grayscale(0.4) contrast(0.9) brightness(1.05)", animation: "heroFade 0.8s ease both" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/50 via-transparent to-white/10" />
-              <span className="absolute bottom-5 left-5 font-serif text-xl text-white drop-shadow-lg" style={{ animation: "heroFade 0.8s ease both" }}>{hero.name}</span>
-            </div>
-          </div>
-          <div className="relative z-10 md:order-2 order-1">
-            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
-            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
-            <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Descubra peças, negócios e histórias de quem carrega a luz de Deus com elegância e propósito.</p>
-            <button onClick={() => scrollTo("categorias")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Explorar categorias <ArrowDown size={15} /></button>
-          </div>
-        </section>
 
         <div className="mx-auto max-w-[1380px] px-6 py-5 md:px-12">
           <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
-            {apiCategories.slice(0, 10).map((cat: any) => (
+            {catsLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full border border-[#d9dde1] bg-white animate-pulse">
+                  <div className="w-8 h-8 rounded-full bg-gray-200" />
+                  <div className="w-16 h-3 rounded bg-gray-200" />
+                </div>
+              ))
+            ) : apiCategories.slice(0, 10).map((cat: any) => (
               <button
                 key={cat.id}
                 onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
@@ -237,7 +222,22 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             </a>
           </div>
 
-          {recent.length > 0 && (
+          {storesLoading ? (
+            <div className="mb-8">
+              <div className="w-40 h-3 rounded bg-gray-200 animate-pulse mb-5" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden bg-white border border-[#e8eaed] animate-pulse">
+                    <div className="h-40 bg-gray-200" />
+                    <div className="p-3 space-y-2">
+                      <div className="w-3/4 h-3 rounded bg-gray-200" />
+                      <div className="w-1/2 h-2 rounded bg-gray-200" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : recent.length > 0 && (
             <div className="mb-8">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-5">Adicionados recentemente</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
@@ -248,7 +248,13 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             </div>
           )}
 
-          <section className="mx-auto max-w-[1380px] py-5">
+          <section className="mx-auto max-w-[1380px] py-5 grid md:grid-cols-[1fr_1fr] gap-10 items-center">
+            <div>
+              <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
+              <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[clamp(2rem,7vw,4.3rem)] leading-[.94] tracking-normal text-[#252a2f] md:text-[5rem] md:tracking-[-.04em]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
+              <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Descubra peças, negócios e histórias de quem carrega a luz de Deus com elegância e propósito.</p>
+              <button onClick={() => scrollTo("categorias")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Explorar categorias <ArrowDown size={15} /></button>
+            </div>
             <div className="group relative rounded-2xl overflow-hidden min-h-[300px]">
               <img
                 src={promoImage}

@@ -273,17 +273,27 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
         <button className="mimo-menu" onClick={() => setMenu(!menu)} aria-label="Abrir menu">{menu ? <X /> : <Menu />}</button>
       </nav>
       <main>
-        <section className="mimo-hero">
-          <div>
-            <div className="mimo-kicker"><span /> cuidado que chega até si</div>
-            <h1>Estar presente<br />é um <em>gesto.</em></h1>
-            <p className="mimo-hero-copy">Na Eliora Love Services, encontramos pessoas de confiança para transformar a sua intenção em cuidado — mesmo à distância.</p>
-            <button className="mimo-primary" onClick={() => document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" })} style={{ marginTop: 10 }}>Encontrar <ArrowRight size={16} /></button>
+        <div style={{ padding: "80px 16px 4px", maxWidth: "1380px", margin: "0 auto" }}>
+          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" as any }}>
+            {services.map((service, i) => (
+              <a
+                key={service.title}
+                href="#servicos"
+                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
+                style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 99, border: "1px solid #d9dde1", background: "#fff", fontSize: 11, fontWeight: 600, color: "#68727c", textDecoration: "none" }}
+              >
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: "#aeb6bf" }}>0{i + 1}</span>
+                {service.title.split(",")[0].trim()}
+              </a>
+            ))}
           </div>
-          <div className="mimo-hero-art"><div className="mimo-photo" /><div className="mimo-float">feito com<br /><strong>intenção</strong></div><div className="mimo-note"><strong>Um gesto a caminho</strong><small>Entrega especial em Talatona<br />Chega hoje, até às 18h</small></div></div>
-        </section>
-        <section className="mimo-section" id="servicos">
-          <div className="mimo-inner"><div className="mimo-section-head"><div><div className="mimo-kicker"><span /> escolha como quer cuidar</div><h2>Pequenos gestos.<br />Grande diferença.</h2></div><p>De Luanda para onde o seu carinho for preciso. Explore por intenção ou encontre o profissional certo.</p></div>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 6, marginTop: 4 }}>
+            <span style={{ fontSize: 10, color: "#68AAA0", fontWeight: 500 }}>Deslize para ver mais</span>
+            <ArrowRight size={12} style={{ color: "#68AAA0", animation: "pulse 2s infinite" }} />
+          </div>
+        </div>
+        <section className="mimo-section" id="servicos" style={{ paddingTop: "16px" }}>
+          <div className="mimo-inner" style={{ paddingTop: "4px" }}><div className="mimo-section-head"><div><div className="mimo-kicker"><span /> escolha como quer cuidar</div><h2>Pequenos gestos.<br />Grande diferença.</h2></div></div>
             {visibleServices.length ? <div className="mimo-grid">{visibleServices.map((service) => {
               const matchedStores = getStoresForService(service);
               const storeProductsMap = new Map<string, string[]>();

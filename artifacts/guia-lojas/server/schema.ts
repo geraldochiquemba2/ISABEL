@@ -149,6 +149,18 @@ export async function initDB() {
       INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
       VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'weddings')
       ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'love-services')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'business')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'formacoes')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'eventos')
+      ON CONFLICT (phone, store_type) DO NOTHING;
     `);
 
     // Inserir Categorias predefinidas se a tabela estiver vazia

@@ -43,16 +43,31 @@ authRouter.post("/register", async (req, res) => {
     const storeId = `loja-${Date.now()}`;
     const isWeddings = storeType === "weddings";
     const isLove = storeType === "love-services";
+    const isBusiness = storeType === "business";
+    const isFormacoes = storeType === "formacoes";
+    const isEventos = storeType === "eventos";
     const description = isLove
       ? "A minha loja na Eliora Love Services."
       : isWeddings
       ? 'A minha nova loja na Eliora Weddings.'
+      : isBusiness
+      ? 'A minha loja na Eliora Business & Finances.'
+      : isFormacoes
+      ? 'A minha loja na Eliora Formações.'
+      : isEventos
+      ? 'A minha loja na Eliora Eventos & Celebrações.'
       : 'A minha loja na Eliora Collection.';
-    const coverColor = isLove ? '#d96f5c' : '#e8cfd9';
+    const coverColor = isLove ? '#d96f5c' : isBusiness ? '#112844' : isFormacoes ? '#087a76' : isEventos ? '#ad696b' : '#e8cfd9';
     const coverImage = isLove
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
       ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
+      : isBusiness
+      ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=500&fit=crop&auto=format&q=80'
+      : isFormacoes
+      ? 'https://images.unsplash.com/photo-1524178232363-6fb168ff49fe?w=800&h=500&fit=crop&auto=format&q=80'
+      : isEventos
+      ? 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
 
     await pool.query(

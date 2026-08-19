@@ -208,14 +208,17 @@ export default function ExploreServices() {
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
       `}</style>
 
-      <div className="mx-auto max-w-[1380px] px-6 py-12 md:px-12">
-        <button 
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors mb-12"
-        >
-          <ArrowLeft size={16} />
-          Voltar
-        </button>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fafafa]/95 backdrop-blur-md border-b border-[#d9dde1]/60">
+        <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
+            <ArrowLeft size={16} /> Voltar
+          </button>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>Eliora<small style={{ display: "block", color: "#c47a9b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Weddings</small></span>
+          <a href="/explorar" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#c47a9b] transition-colors hidden md:block">Explorar</a>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#87909a]">Explorar serviços</p>

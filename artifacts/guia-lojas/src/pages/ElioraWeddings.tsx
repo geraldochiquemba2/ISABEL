@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { ArrowDown, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 type ServiceGroup = {
@@ -127,7 +127,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
 
 function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceGroup; index: number; stores: Store[]; storeProducts?: Record<string, string[]> }) {
   return (
-    <article className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${index % 2 ? "md:ml-20" : ""}`}>
+    <article className={`group border-t border-[#d1d4d8] py-4 md:py-8 ${index % 2 ? "md:ml-20" : ""}`}>
       <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
         <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
         <div>
@@ -171,8 +171,8 @@ function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceG
                   </div>
                   {stores.length > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-2 md:hidden">
-                      <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
-                      <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
+            <span className="text-[10px] text-[#c47a9b] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#c47a9b] animate-pulse" />
                     </div>
                   )}
                 </div>
@@ -254,11 +254,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
     return { stores: storesWithProducts, storeProducts: storeProductsMap };
   };
 
-  const groups = (dbGroups.length > 0 ? dbGroups : hardcodedGroups).sort((a: any, b: any) => {
+  const sortedGroups = (dbGroups.length > 0 ? dbGroups : [...hardcodedGroups]).sort((a: any, b: any) => {
     const storesA = getStoresForGroup(a.category).stores.length;
     const storesB = getStoresForGroup(b.category).stores.length;
     return storesB - storesA;
   });
+  const groups = sortedGroups.map((g: any, i: number) => ({ ...g, number: String(i + 1).padStart(2, "0") }));
 
   return (
     <main className="min-h-[100dvh] overflow-x-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -301,30 +302,27 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       </header>
 
       <div className="eliora-grain">
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-6 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-10">
-          <div className="relative z-10">
-            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Concierge de celebrações · Luanda e além</p>
-            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[clamp(2rem,8vw,4.3rem)] leading-[.94] tracking-normal text-[#252a2f] md:text-[7.6rem] md:tracking-[-.04em] md:mt-8 mt-12">O amor,<br /><i className="font-medium text-[#9aa2ab]">bem celebrado.</i></h1>
-            <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Bem-vindos à Eliora Weddings — onde cada promessa encontra o cuidado, a beleza e a calma para se tornar memória.</p>
-            <button onClick={() => scrollTo("servicos")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Descobrir os serviços <ArrowDown size={15} /></button>
+        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+            {groups.map((group) => (
+              <a
+                key={group.category}
+                href={`#servicos`}
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#68727c]"
+                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
+              >
+                <span className="font-mono text-[9px] text-[#aeb6bf]">{group.number}</span>
+                {group.title.split("&")[0].trim()}
+              </a>
+            ))}
           </div>
-          <div className="relative mx-auto aspect-[.82] w-full max-w-[450px]">
-            <div className="absolute inset-0 rotate-[-5deg] rounded-[48%_48%_4%_4%] border border-[#cbd0d5]" />
-            <div className="absolute inset-[8%] rotate-[4deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e5e7e9]">
-              <img
-                src="/weddings/eliora-hero-couple.jpg"
-                alt="Casal a celebrar uma ocasião especial"
-                className="h-full w-full object-cover object-center"
-                style={{ filter: "grayscale(0.78) contrast(0.88) brightness(1.08)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#56616b]/35 via-transparent to-white/20" />
-              <div className="absolute left-[17%] top-[14%] h-20 w-12 rounded-full border border-white/70 opacity-70" />
-            </div>
+          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
+            <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
           </div>
-        </section>
+        </div>
 
-        <section id="servicos" className="mx-auto max-w-[1380px] px-6 py-10 md:px-12 md:py-16">
-          <div className="mb-6 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#87909a]">O nosso universo</p><h2 className="mt-4 font-serif text-5xl tracking-[-.03em] md:text-7xl">Tudo começa<br /><i>com vocês.</i></h2></div><p className="max-w-xs text-sm leading-6 text-[#747b84]">Uma rede de especialistas e experiências para os momentos que merecem mais.</p></div>
+        <section id="servicos" className="mx-auto max-w-[1380px] px-6 pt-1 pb-4 md:px-12 md:pt-1 md:pb-4">
           <div>{groups.map((group, i) => {
             const { stores: groupStores, storeProducts } = getStoresForGroup(group.category);
             return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} />;
@@ -348,8 +346,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
                 />
                 <figcaption className="absolute bottom-3 left-3 font-mono text-[9px] uppercase tracking-[.2em] text-white drop-shadow">02 — Beleza & presença</figcaption>
               </figure>
-            </div>
           </div>
+          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
+            <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
+            <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
+          </div>
+        </div>
         </section>
 
         <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
