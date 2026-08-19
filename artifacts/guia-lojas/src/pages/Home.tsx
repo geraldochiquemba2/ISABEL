@@ -173,14 +173,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <button className="rounded-lg p-2 md:hidden" onClick={() => {}} aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
           </div>
         </header>
-        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-20">
-          <div className="relative z-10">
-            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
-            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
-            <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Descubra peças, negócios e histórias de quem carrega a luz de Deus com elegância e propósito.</p>
-            <button onClick={() => scrollTo("categorias")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Explorar categorias <ArrowDown size={15} /></button>
-          </div>
-          <div className="relative mx-auto aspect-[.82] w-full max-w-[450px]">
+        <section className="relative mx-auto grid max-w-[1380px] items-center gap-10 px-6 pb-10 pt-14 md:grid-cols-[1.1fr_.9fr] md:px-12 md:pb-16 md:pt-20" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="relative mx-auto aspect-[.82] w-full max-w-[450px] md:order-1 order-2">
             <div className="absolute inset-0 rotate-[-5deg] rounded-[48%_48%_4%_4%] border border-[#cbd0d5]" />
             <div className="absolute inset-[8%] rotate-[4deg] overflow-hidden rounded-[48%_48%_4%_4%] bg-[#e5e7e9]">
               <img
@@ -193,6 +187,12 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
               <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/50 via-transparent to-white/10" />
               <span className="absolute bottom-5 left-5 font-serif text-xl text-white drop-shadow-lg" style={{ animation: "heroFade 0.8s ease both" }}>{hero.name}</span>
             </div>
+          </div>
+          <div className="relative z-10 md:order-2 order-1">
+            <p className="rise text-[10px] uppercase tracking-[0.28em] text-[#87909a]">Moda, acessórios e lifestyle · Luanda e além</p>
+            <h1 className="rise delay-1 mt-8 max-w-3xl font-serif text-[4.3rem] leading-[.94] tracking-[-.04em] text-[#252a2f] md:text-[7.6rem]">Estilo com<br /><i className="font-medium text-[#c9a84c]">dignidade.</i></h1>
+            <p className="rise delay-2 mt-9 max-w-md text-base leading-7 text-[#6d737b]">Descubra peças, negócios e histórias de quem carrega a luz de Deus com elegância e propósito.</p>
+            <button onClick={() => scrollTo("categorias")} className="rise delay-2 mt-9 flex items-center gap-4 border-b border-[#aeb6bf] pb-3 text-xs uppercase tracking-[0.2em] text-[#68727c] transition-all hover:gap-6">Explorar categorias <ArrowDown size={15} /></button>
           </div>
         </section>
 
