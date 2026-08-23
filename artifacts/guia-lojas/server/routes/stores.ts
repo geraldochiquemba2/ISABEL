@@ -102,7 +102,7 @@ storesRouter.get("/", async (req, res) => {
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s
-      JOIN users u ON u.store_id = s.id AND u.status = 'APROVADO'
+      JOIN users u ON u.store_id = s.id
       LEFT JOIN products p ON p.store_id = s.id
     `;
     const conditions: string[] = [];

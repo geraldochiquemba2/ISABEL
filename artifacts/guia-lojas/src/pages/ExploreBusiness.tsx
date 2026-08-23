@@ -157,7 +157,7 @@ export default function ExploreBusiness() {
   };
 
   const filteredGroups = activeFilter
-    ? BUSINESS_CATEGORIES.filter((g) => g.category === activeFilter)
+    ? BUSINESS_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
     : BUSINESS_CATEGORIES;
 
   return (

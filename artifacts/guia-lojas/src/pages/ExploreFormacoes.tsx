@@ -202,7 +202,7 @@ export default function ExploreFormacoes() {
   };
 
   const filteredGroups = activeFilter
-    ? groups.filter((g) => g.category === activeFilter)
+    ? groups.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
     : groups;
 
   return (

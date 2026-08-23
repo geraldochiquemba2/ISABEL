@@ -590,8 +590,16 @@ function ProductsManager({ store }: { store: any }) {
   });
 
   const createMut = useMutation({
-    mutationFn: () => createProduct({ ...form, storeId: store.id, price: parseFloat(form.price) || 0, images: productImages }),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["products"] }); setShowForm(false); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); },
+    mutationFn: () => {
+      if (editProduct) {
+        return updateProduct(editProduct.id, { ...form, price: Number(form.price) || 0, imageUrl: productImages[0] || "", imageUrls: productImages });
+      }
+      const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const selectedCat = FORMACOES_CATEGORIES.find((g) => g.title === form.category);
+      return createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
+    },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["products"] }); },
+    onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
@@ -600,12 +608,27 @@ function ProductsManager({ store }: { store: any }) {
   });
 
   const handleImgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const remaining = 5 - productImages.length;
+    if (remaining <= 0) { alert("Máximo de 5 imagens por serviço."); return; }
+    const toUpload = Array.from(files).slice(0, remaining);
     setUploadingImg(true);
     try {
-      const url = await uploadImage(file);
-      setProductImages((prev) => [...prev, url]);
+      for (const file of toUpload) {
+        const res = await new Promise<{ imageUrl: string }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            try {
+              const imgRes = await uploadImage(reader.result as string, `form-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+              resolve(imgRes);
+            } catch (err) { reject(err); }
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        setProductImages((prev) => [...prev, res.imageUrl]);
+      }
     } catch (err: any) { alert(err.message); } finally { setUploadingImg(false); }
   };
 
@@ -643,7 +666,7 @@ function ProductsManager({ store }: { store: any }) {
               <label className={labelCls}>Categoria</label>
               <select value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className={inputCls}>
                 <option value="">Selecione</option>
-                {FORMACOES_CATEGORIES.map((c) => <option key={c.category} value={c.category}>{c.title}</option>)}
+                {FORMACOES_CATEGORIES.map((c) => <option key={c.category} value={c.title}>{c.title}</option>)}
               </select>
             </div>
             <div>
@@ -651,7 +674,7 @@ function ProductsManager({ store }: { store: any }) {
               <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Imagens</label>
+              <label className={labelCls}>Imagens do serviço (até 5)</label>
               <div className="flex flex-wrap gap-2 mb-2">
                 {productImages.map((url, i) => (
                   <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#e8eced]">
@@ -661,8 +684,8 @@ function ProductsManager({ store }: { store: any }) {
                 ))}
               </div>
               <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#0c9894] cursor-pointer transition-colors">
-                <Camera size={14} /> {uploadingImg ? "A enviar..." : "Adicionar imagem"}
-                <input type="file" accept="image/*" className="hidden" onChange={handleImgUpload} disabled={uploadingImg} />
+                <Camera size={14} /> {uploadingImg ? "A enviar..." : `Adicionar imagem (até 5)`}
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handleImgUpload} disabled={uploadingImg} />
               </label>
             </div>
             <div className="flex gap-2">

@@ -155,7 +155,7 @@ export default function ExploreEventos() {
   };
 
   const filteredGroups = activeFilter
-    ? EVENTOS_CATEGORIES.filter((g) => g.category === activeFilter)
+    ? EVENTOS_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
     : EVENTOS_CATEGORIES;
 
   return (

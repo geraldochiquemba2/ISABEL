@@ -229,21 +229,33 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
   });
 
   const getStoresForGroup = (title: string) => {
-    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(title.split(",")[0].trim().toLowerCase()));
-    const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
-    const storesWithProducts = stores.filter((s: any) => !["999999999"].includes(s.phone) && storeIdsWithProducts.has(s.id));
-    const storeProductsMap: Record<string, string[]> = {};
-    categoryProducts.forEach((p: any) => {
-      const imgs = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
-      if (!storeProductsMap[p.storeId]) storeProductsMap[p.storeId] = [];
-      storeProductsMap[p.storeId].push(...imgs);
+    const catKey = title.split(",")[0].trim().toLowerCase();
+    const matched = stores.filter((s: any) => {
+      return !["999999999"].includes(s.phone) && (
+        s.category?.toLowerCase().includes(catKey) ||
+        (s.products || []).some((p: any) => p.category?.toLowerCase().includes(catKey))
+      );
     });
-    return { stores: storesWithProducts, storeProducts: storeProductsMap };
+    const storeProductsMap: Record<string, string[]> = {};
+    matched.forEach((s: any) => {
+      const imgs: string[] = [];
+      (s.products || []).forEach((p: any) => {
+        const urls = Array.isArray(p.imageUrls) ? p.imageUrls : (typeof p.imageUrls === "string" ? p.imageUrls.split(" ").filter(Boolean) : []);
+        if (urls.length > 0) imgs.push(...urls);
+        else if (p.imageUrl) imgs.push(p.imageUrl);
+      });
+      storeProductsMap[s.id] = imgs;
+    });
+    return { stores: matched, storeProducts: storeProductsMap };
   };
 
   const sorted = useMemo(() => {
-    return [...categories].sort((a, b) => b.items.length - a.items.length);
-  }, []);
+    return [...categories].sort((a, b) => {
+      const storesA = getStoresForGroup(a.title).stores.length;
+      const storesB = getStoresForGroup(b.title).stores.length;
+      return storesB - storesA;
+    });
+  }, [stores, products]);
 
   return (
     <main className="min-h-[100dvh] overflow-x-hidden bg-white text-[#30343a]">
@@ -286,9 +298,8 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
             {sorted.map((cat, i) => (
               <a
                 key={cat.title}
-                href="#servicos"
+                href={`/explorar-formacoes?categoria=${cat.title}`}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 md:py-2.5 rounded-full border border-[#d1d4d8] bg-white hover:border-[#89919a] hover:bg-[#f0f1f3] transition-all text-[11px] font-semibold text-[#565d66]"
-                onClick={(e) => { e.preventDefault(); scrollTo("servicos"); }}
               >
                 <span className="font-mono text-[9px] text-[#89919a]">0{i + 1}</span>
                 {cat.title.split(",")[0].split(" e ")[0].trim()}

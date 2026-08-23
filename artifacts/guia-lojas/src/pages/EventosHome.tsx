@@ -129,9 +129,13 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
 
   const sortedCategories = useMemo(() =>
     [...categories]
-      .sort((a, b) => b.items.length - a.items.length)
+      .sort((a, b) => {
+        const storesA = getStoresForGroup(a.title).stores.length;
+        const storesB = getStoresForGroup(b.title).stores.length;
+        return storesB - storesA;
+      })
       .map((cat, i) => ({ ...cat, number: String(i + 1).padStart(2, "0") })),
-    []
+    [stores, products]
   );
 
   const filtered = useMemo(() =>
@@ -216,9 +220,8 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
             {filtered.map((cat) => (
               <a
                 key={cat.title}
-                href="#servicos"
+                href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#8e5557] hover:bg-[#fff5f6] transition-all text-[11px] font-semibold text-[#68727c]"
-                onClick={(e) => { e.preventDefault(); scrollTo("servicos"); }}
               >
                 <span className="font-mono text-[9px] text-[#8e5557]">{cat.number}</span>
                 {cat.title.split(",")[0].trim()}

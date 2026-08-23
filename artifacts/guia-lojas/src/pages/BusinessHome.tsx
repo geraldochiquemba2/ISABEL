@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -232,9 +232,15 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
     return { stores: storesWithProducts, storeProducts: storeProductsMap };
   };
 
-  const sortedCategories = [...categories]
-    .sort((a, b) => b.services.length - a.services.length)
-    .map((c, i) => ({ ...c, number: String(i + 1).padStart(2, "0") }));
+  const sortedCategories = useMemo(() => {
+    return [...categories]
+      .sort((a, b) => {
+        const storesA = getStoresForGroup(a.title).stores.length;
+        const storesB = getStoresForGroup(b.title).stores.length;
+        return storesB - storesA;
+      })
+      .map((c, i) => ({ ...c, number: String(i + 1).padStart(2, "0") }));
+  }, [stores, products]);
 
   return (
     <main className="min-h-[100dvh] overflow-x-hidden bg-[#f4f1eb] text-[#112844]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -282,9 +288,8 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
             {sortedCategories.map((cat) => (
               <a
                 key={cat.number}
-                href="#servicos"
+                href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#b88a3b]/20 bg-white hover:border-[#b88a3b] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#112844]/70"
-                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
               >
                 <span className="font-mono text-[9px] text-[#b88a3b]">{cat.number}</span>
                 {cat.title.split(",")[0].trim()}

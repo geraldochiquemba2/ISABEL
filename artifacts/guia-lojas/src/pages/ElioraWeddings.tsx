@@ -317,9 +317,8 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
             {groups.map((group) => (
               <a
                 key={group.category}
-                href={`#servicos`}
+                href={`/explorar?categoria=${group.category}`}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#68727c]"
-                onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
               >
                 <span className="font-mono text-[9px] text-[#aeb6bf]">{group.number}</span>
                 {group.title.split("&")[0].trim()}
