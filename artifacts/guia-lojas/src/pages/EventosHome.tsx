@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useRef, type FormEvent } from "react";
+import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -43,7 +44,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=eventos`}
+      onClick={() => navigate(`/loja/${store.id}?from=eventos`)}
     >
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
@@ -73,6 +74,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
 export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#8e5557");
+  const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);
@@ -221,6 +223,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
               <a
                 key={cat.title}
                 href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
+                onClick={(e) => { e.preventDefault(); navigate(`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#8e5557] hover:bg-[#fff5f6] transition-all text-[11px] font-semibold text-[#68727c]"
               >
                 <span className="font-mono text-[9px] text-[#8e5557]">{cat.number}</span>

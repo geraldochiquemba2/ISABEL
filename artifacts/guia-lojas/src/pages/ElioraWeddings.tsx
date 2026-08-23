@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ArrowDown, ArrowRight, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -83,7 +84,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
   return (
     <div 
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
+      onClick={() => navigate(`/loja/${store.id}?from=weddings`)}
     >
         <div className="relative h-28 overflow-hidden">
           <img
@@ -204,6 +205,7 @@ function Monogram() {
 
 export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
   useThemeColor("#c47a9b");
+  const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -318,6 +320,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
               <a
                 key={group.category}
                 href={`/explorar?categoria=${group.category}`}
+                onClick={(e) => { e.preventDefault(); navigate(`/explorar?categoria=${group.category}`); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#68727c]"
               >
                 <span className="font-mono text-[9px] text-[#aeb6bf]">{group.number}</span>

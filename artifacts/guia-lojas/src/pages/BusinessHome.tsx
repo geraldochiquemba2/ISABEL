@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -43,7 +44,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=business`}
+      onClick={() => navigate(`/loja/${store.id}?from=business`)}
     >
       <div className="relative h-28 overflow-hidden">
         <img
@@ -181,6 +182,7 @@ function Monogram() {
 
 export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#0d1f35");
+  const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -289,6 +291,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
               <a
                 key={cat.number}
                 href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
+                onClick={(e) => { e.preventDefault(); navigate(`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#b88a3b]/20 bg-white hover:border-[#b88a3b] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#112844]/70"
               >
                 <span className="font-mono text-[9px] text-[#b88a3b]">{cat.number}</span>

@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -140,7 +141,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=formacoes`}
+      onClick={() => navigate(`/loja/${store.id}?from=formacoes`)}
     >
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
@@ -183,6 +184,7 @@ function Monogram() {
 
 export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#087a76");
+  const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolledEnd, setScrolledEnd] = useState(false);
@@ -299,6 +301,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
               <a
                 key={cat.title}
                 href={`/explorar-formacoes?categoria=${cat.title}`}
+                onClick={(e) => { e.preventDefault(); navigate(`/explorar-formacoes?categoria=${cat.title}`); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 md:py-2.5 rounded-full border border-[#d1d4d8] bg-white hover:border-[#89919a] hover:bg-[#f0f1f3] transition-all text-[11px] font-semibold text-[#565d66]"
               >
                 <span className="font-mono text-[9px] text-[#89919a]">0{i + 1}</span>
