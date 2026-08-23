@@ -331,16 +331,15 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
                         ))}
                       </ul>
                       <a
-                        href="#contacto"
+                        href={`/explorar-formacoes?categoria=${category.title}`}
                         className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors"
-                        onClick={(e) => { e.preventDefault(); scrollTo("contacto"); }}
                       >
                         Ver mais <ChevronRight size={14} />
                       </a>
                     </div>
                     <div className="mt-4 md:mt-0">
                       {(() => {
-                        const { stores: groupStores, storeProducts } = getStoresForGroup(cat.title);
+                        const { stores: groupStores, storeProducts } = getStoresForGroup(category.title);
                         if (groupStores.length === 0) {
                           return (
                             <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
