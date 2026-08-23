@@ -486,6 +486,26 @@ export default function DashboardLove() {
   const user = localUserStr ? JSON.parse(localUserStr) : null;
   const isAdmin = user?.phone === "999999999";
 
+  useEffect(() => {
+    if (!user) setLoc("/login-love");
+  }, [user, setLoc]);
+
+  useEffect(() => {
+    if (!user || user.status === "APROVADO" || isAdmin) return;
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/auth/status/${user.id}`);
+        const data = await res.json();
+        if (data.status && data.status !== user.status) {
+          const updated = { ...user, status: data.status, statusReason: data.statusReason };
+          localStorage.setItem("guialocal_user", JSON.stringify(updated));
+          window.location.reload();
+        }
+      } catch {}
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [user]);
+
   const { data: store, isLoading } = useQuery({
     queryKey: ["myStore"],
     queryFn: () => fetchStoreById(user?.storeId),

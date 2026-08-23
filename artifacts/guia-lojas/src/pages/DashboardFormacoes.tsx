@@ -61,6 +61,22 @@ export default function DashboardFormacoes() {
     if (!localUser) setLoc("/login-formacoes");
   }, [localUser, setLoc]);
 
+  useEffect(() => {
+    if (!localUser || localUser.status === "APROVADO") return;
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/auth/status/${localUser.id}`);
+        const data = await res.json();
+        if (data.status && data.status !== localUser.status) {
+          const updated = { ...localUser, status: data.status, statusReason: data.statusReason };
+          localStorage.setItem("guialocal_user", JSON.stringify(updated));
+          window.location.reload();
+        }
+      } catch {}
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [localUser]);
+
   const handleRefreshStatus = async () => {
     try {
       const res = await fetch(`/api/auth/status/${localUser.id}`);
