@@ -1,5 +1,6 @@
-import { useMemo, useState, useEffect, type FormEvent } from "react";
+import { useMemo, useState, useEffect, useRef, type FormEvent } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight, Camera, Check, ChevronDown, Menu, Music2,
   Send, ShieldCheck, Sparkles, TentTree, Utensils,
@@ -26,16 +27,103 @@ const categoryImages: Record<string, string> = {
   "Registo, Memória e Fotografia": "/eventos/fotografia.jpg",
 };
 
+function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const fallbackImage = "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      onClick={() => window.location.href = `/loja/${store.id}?from=eventos`}
+    >
+      <div className="relative h-28 overflow-hidden">
+        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
+        {store.logoUrl && (
+          <img src={store.logoUrl} alt={`Logo ${store.name}`} className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+            {images.map((_: string, i: number) => (
+              <button key={i} onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }} className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`} />
+            ))}
+          </div>
+        )}
+        {store.isOpen !== undefined && (
+          <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+            {store.isOpen ? "Aberto" : "Fechado"}
+          </span>
+        )}
+      </div>
+      <div className="p-3">
+        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        {store.description && <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>}
+      </div>
+    </div>
+  );
+}
+
 export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#8e5557");
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrolledEnd, setScrolledEnd] = useState(false);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el) {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setScrolledEnd(atEnd);
+    }
+  };
 
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const localUser = localUserStr ? JSON.parse(localUserStr) : null;
   const isLoggedIn = !!localUser && localUser.storeType === "eventos";
+
+  const { data: stores = [] } = useQuery({
+    queryKey: ["stores", "eventos"],
+    queryFn: async () => {
+      const res = await fetch("/api/stores?store_type=eventos");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products", "eventos"],
+    queryFn: async () => {
+      const res = await fetch("/api/products?store_type=eventos");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const getStoresForGroup = (title: string) => {
+    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(title.split(",")[0].trim().toLowerCase()));
+    const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
+    const storesWithProducts = stores.filter((s: any) => !["999999999"].includes(s.phone) && storeIdsWithProducts.has(s.id));
+    const storeProductsMap: Record<string, string[]> = {};
+    categoryProducts.forEach((p: any) => {
+      const imgs = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      if (!storeProductsMap[p.storeId]) storeProductsMap[p.storeId] = [];
+      storeProductsMap[p.storeId].push(...imgs);
+    });
+    return { stores: storesWithProducts, storeProducts: storeProductsMap };
+  };
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -123,13 +211,13 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
       )}
 
       <div className="eliora-grain">
-        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
-          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+        <div className="mx-auto max-w-[1380px] px-4 pt-[6.3rem] pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
             {filtered.map((cat) => (
               <a
                 key={cat.title}
                 href="#servicos"
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#8e5557] hover:bg-[#fff5f6] transition-all text-[11px] font-semibold text-[#68727c]"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#8e5557] hover:bg-[#fff5f6] transition-all text-[11px] font-semibold text-[#68727c]"
                 onClick={(e) => { e.preventDefault(); scrollTo("servicos"); }}
               >
                 <span className="font-mono text-[9px] text-[#8e5557]">{cat.number}</span>
@@ -138,8 +226,14 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
             ))}
           </div>
           <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
-            <span className="text-[10px] text-[#8e5557] font-medium">Deslize para ver mais</span>
-            <ArrowRight size={12} className="text-[#8e5557] animate-pulse" />
+            {scrolledEnd ? (
+              <span className="text-[10px] text-[#8e5557] font-medium">Fim</span>
+            ) : (
+              <>
+                <span className="text-[10px] text-[#8e5557] font-medium">Deslize para ver mais</span>
+                <ArrowRight size={12} className="text-[#8e5557] animate-pulse" />
+              </>
+            )}
           </div>
         </div>
 
@@ -162,20 +256,42 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
                           </li>
                         ))}
                       </ul>
+                      <a
+                        href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#8e5557]/60 hover:text-[#8e5557] transition-colors"
+                      >
+                        Ver mais <ChevronDown size={14} />
+                      </a>
                     </div>
                     <div className="mt-4 md:mt-0">
-                      {imgSrc ? (
-                        <div className="relative overflow-hidden rounded-2xl border border-[#d1d4d8]">
-                          <img src={imgSrc} alt={cat.title} className="w-full h-64 object-cover" style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }} />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#3c2731]/40 via-transparent to-transparent" />
-                          <p className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">#{cat.number}</p>
-                        </div>
-                      ) : (
-                        <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
-                          <Icon size={20} className="mx-auto mb-2 text-[#8e5557]" />
-                          <p className="text-xs text-[#87909a]">Imagem em breve</p>
-                        </div>
-                      )}
+                      {(() => {
+                        const { stores: groupStores, storeProducts } = getStoresForGroup(cat.title);
+                        if (groupStores.length === 0) {
+                          return (
+                            <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
+                              <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                            </div>
+                          );
+                        }
+                        return (
+                          <>
+                            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                            <div>
+                              <div className="flex flex-row flex-nowrap overflow-x-auto gap-3 scrollbar-hide">
+                                {groupStores.slice(0, 4).map((store: any) => (
+                                  <StoreCard key={store.id} store={store} productImages={storeProducts[store.id]} />
+                                ))}
+                              </div>
+                              {groupStores.length > 1 && (
+                                <div className="flex justify-center items-center gap-2 mt-2 md:hidden">
+                                  <span className="text-[10px] text-[#8e5557] font-medium">Deslize para ver mais</span>
+                                  <ArrowRight size={12} className="text-[#8e5557] animate-pulse" />
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 </article>

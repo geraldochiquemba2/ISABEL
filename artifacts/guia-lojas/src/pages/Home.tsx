@@ -189,12 +189,6 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
                 onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
                 className="flex-shrink-0 group flex items-center gap-3 px-5 py-3 rounded-full border border-[#d9dde1] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all"
               >
-                <img
-                  src={cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"]}
-                  alt={cat.name}
-                  className="w-8 h-8 rounded-full object-cover"
-                  style={{ filter: "grayscale(0.3) contrast(0.9) brightness(1.05)" }}
-                />
                 <span className="text-xs font-medium text-[#30343a] whitespace-nowrap">{cat.name}</span>
               </button>
             ))}

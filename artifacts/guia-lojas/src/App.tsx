@@ -25,6 +25,9 @@ import ExploreBusiness from "@/pages/ExploreBusiness";
 import LoginBusiness from "@/pages/LoginBusiness";
 import DashboardBusiness from "@/pages/DashboardBusiness";
 import { FormacoesHome } from "@/pages/FormacoesHome";
+import LoginFormacoes from "@/pages/LoginFormacoes";
+import DashboardFormacoes from "@/pages/DashboardFormacoes";
+import ExploreFormacoes from "@/pages/ExploreFormacoes";
 import { EventosHome } from "@/pages/EventosHome";
 import ExploreEventos from "@/pages/ExploreEventos";
 import LoginEventos from "@/pages/LoginEventos";
@@ -155,6 +158,9 @@ function Router() {
         <ScrollToTop />
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/login-formacoes" component={LoginFormacoes} />
+          <Route path="/dashboard-formacoes" component={DashboardFormacoes} />
+          <Route path="/explorar-formacoes" component={ExploreFormacoes} />
           <Route>
             <FormacoesHome onBackToSelector={handleBackToSelector} />
           </Route>

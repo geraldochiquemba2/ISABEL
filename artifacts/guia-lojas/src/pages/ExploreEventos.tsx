@@ -1,7 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Sparkles, TentTree, Utensils, Music2, ShieldCheck, Camera } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+
+interface Store {
+  id: string;
+  name: string;
+  category: string;
+  image?: string;
+  coverImage?: string;
+  logoUrl?: string;
+  description?: string;
+  isOpen?: boolean;
+  province?: string;
+  municipality?: string;
+  products?: { imageUrl?: string; imageUrls?: string | string[] }[];
+}
 
 const EVENTOS_CATEGORIES = [
   { number: "01", title: "Planeamento, Design e Assessoria de Eventos", intro: "Momentos que ficam na memória.", category: "decoracao", icon: Sparkles, items: ["Decoração Temática", "Organização e Assessoria de Festas Infantis e Batizados", "Planeamento de Aniversários, Chás de Bebé e Chás de Panela", "Organização de Eventos Corporativos, Jantares e Galas"] },
@@ -12,20 +26,47 @@ const EVENTOS_CATEGORIES = [
   { number: "06", title: "Registo, Memória e Fotografia", intro: "Imortalize cada momento especial.", category: "fotografia", icon: Camera, items: ["Fotógrafos de Festas e Eventos Sociais", "Fotógrafos Corporativos e de Galas", "Videomakers", "Cabines Fotográficas (Photobooth / 360º)"] },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const fallbackImage = "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=eventos`}
     >
-      <div className="relative h-28 overflow-hidden bg-[#f0e6df]">
+      <div className="relative h-28 overflow-hidden">
+        <img
+          src={images[currentIdx] || fallbackImage}
+          alt={store.name}
+          className="w-full h-full object-cover"
+        />
         {store.logoUrl && (
           <img
             src={store.logoUrl}
-            alt=""
+            alt={`Logo ${store.name}`}
             className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
-            style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }}
           />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+            {images.map((_: string, i: number) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`}
+              />
+            ))}
+          </div>
         )}
         {store.isOpen !== undefined && (
           <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
@@ -51,6 +92,30 @@ export default function ExploreEventos() {
     }
     return null;
   });
+  const [activeProvince, setActiveProvince] = useState<string | null>(null);
+  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(null);
+
+  const angolaProvinces: Record<string, string[]> = {
+    "Bengo": ["Ambriz", "Bula", "Dembos", "N'dalatando", "São José das Matas"],
+    "Benguela": ["Benguela", "Caimbambo", "Catumbela", "Chiley", "Baía Farta", "Lobito"],
+    "Bié": ["Camacupa", "Catabola", "Chinguar", "Chitembo", "Cuito", "Andulo", "N'harea"],
+    "Cabinda": ["Cabinda", "Cacongo", "Belize", "Buco-Zau"],
+    "Cuando-Cubango": ["Calai", "Cuangar", "Curoca", "Mavinga", "Menongue", "Rivungo"],
+    "Cuanza Norte": ["Ambaca", "Bolongongo", "Cazengo", "Golungo Alto", "Lucala", "Samba Cajù"],
+    "Cuanza Sul": ["Amboim", "Cassongue", "Cela", "Conda", "Ebo", "Mussende", "Porto Amboim", "Quilenda", "Quirimbo"],
+    "Cunene": ["Cahama", "Cuanhala", "Curoca", "Cuvelai", "Namacunde", "Ombadja"],
+    "Huambo": ["Huambo", "Caála", "Ecunha", "Londuimbali", "Mungo", "Bailundo", "Ukuma", "Chipica"],
+    "Huíla": ["Cacula", "Chibia", "Chinjenje", "Cuiva", "Cuvango", "Humpata", "Lubango", "Matala", "Quilengues", "Quipungo"],
+    "Icolo e Bengo": ["Dondo", "Dembos", "Icolo e Bengo", "Catete"],
+    "Luanda": ["Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Maianga", "Rangel", "Samba", "Talatona", "Viana"],
+    "Lunda Norte": ["Caungula", "Cazombo", "Cambulo", "Capenda-Camulemba", "Catchiungo", "Chitato", "Cuango", "Luau", "Luremo"],
+    "Lunda Sul": ["Dala", "Muconda", "Saurimo"],
+    "Malanje": ["Cacuso", "Calandula", "Cambundi-Catembo", "Cangandala", "Caombo", "Cuaba Ndongu", "Luquembo", "Malanje", "Marimba", "Massango", "Mucari", "Quela", "Quiçama"],
+    "Moxico": ["Alto Zambeze", "Bundas", "Luccala", "Cameia", "Moxico", "Nacu-Curo"],
+    "Namibe": ["Bibala", "Lacuando", "Mossâmedes", "Namibe", "Tômbua", "Virei"],
+    "Uíge": ["Alto Cauale", "Ambuíla", "Bembe", "Buengas", "Bungo", "Cassanje", "Cazombo", "Damba", "Milunga", "Mucaba", "Negage", "Puri", "Quimavunde", "Santa Comba Dao", "Songo", "Uíge", "Vimoque"],
+    "Zaire": ["Cuimba", "Iombe", "M'banza-Kongo", "Nóqui", "Soyo", "Terras do Zaire"],
+  };
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores", "eventos"],
@@ -58,12 +123,34 @@ export default function ExploreEventos() {
     staleTime: 60_000,
   });
 
+  const { data: products = [] } = useQuery({
+    queryKey: ["products", "eventos"],
+    queryFn: async () => {
+      const res = await fetch("/api/products?store_type=eventos");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const getProductsForStore = (storeId: string) => {
+    return products.filter((p: any) => p.storeId === storeId).flatMap((p: any) =>
+      (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])
+    );
+  };
+
+  const provinces = Object.keys(angolaProvinces);
+  const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
+
   const getStoresForGroup = (category: string) => {
     const group = EVENTOS_CATEGORIES.find((g) => g.category === category);
     return stores.filter((s: any) => {
       if (s.phone === "999999999") return false;
       const cat = (s.category || "").toLowerCase();
-      return (group && cat.includes(group.title.toLowerCase())) || cat.includes(category.replace(/-/g, " "));
+      const matchesCategory = (group && cat.includes(group.title.toLowerCase())) || cat.includes(category.replace(/-/g, " "));
+      const matchesProvince = !activeProvince || s.province === activeProvince;
+      const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
+      return matchesCategory && matchesProvince && matchesMunicipality;
     });
   };
 
@@ -103,6 +190,82 @@ export default function ExploreEventos() {
           ))}
         </div>
 
+        <div className="mb-6">
+          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <select
+            value={activeProvince || ""}
+            onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#3c2731] outline-none"
+          >
+            <option value="">Todas</option>
+            {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+          <div className="hidden md:flex flex-wrap gap-3 mt-2">
+            <button
+              onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
+              className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                activeProvince === null
+                  ? "bg-[#68727c] text-white"
+                  : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+              }`}
+            >
+              Todas
+            </button>
+            {provinces.map((province) => (
+              <button
+                key={province}
+                onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
+                className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                  activeProvince === province
+                    ? "bg-[#68727c] text-white"
+                    : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                }`}
+              >
+                {province}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {municipalities.length > 0 && (
+          <div className="mb-12">
+            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <select
+              value={activeMunicipality || ""}
+              onChange={(e) => setActiveMunicipality(e.target.value || null)}
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#3c2731] outline-none"
+            >
+              <option value="">Todos</option>
+              {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <div className="hidden md:flex flex-wrap gap-3 mt-2">
+              <button
+                onClick={() => setActiveMunicipality(null)}
+                className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                  activeMunicipality === null
+                    ? "bg-[#87909a] text-white"
+                    : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                }`}
+              >
+                Todos
+              </button>
+              {municipalities.map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
+                  className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
+                    activeMunicipality === m
+                      ? "bg-[#87909a] text-white"
+                      : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div>
           {filteredGroups.map((group, i) => {
             const groupStores = getStoresForGroup(group.category);
@@ -135,7 +298,7 @@ export default function ExploreEventos() {
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map((store: any) => (
-                          <StoreCard key={store.id} store={store} />
+                          <StoreCard key={store.id} store={store} productImages={getProductsForStore(store.id)} />
                         ))}
                       </div>
                     ) : (

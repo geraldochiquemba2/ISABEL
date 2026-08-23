@@ -206,7 +206,17 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
   useThemeColor("#c47a9b");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrolledEnd, setScrolledEnd] = useState(false);
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el) {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setScrolledEnd(atEnd);
+    }
+  };
 
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const isLoggedIn = !!localUserStr;
@@ -302,13 +312,13 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       </header>
 
       <div className="eliora-grain">
-        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
-          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+        <div className="mx-auto max-w-[1380px] px-4 pt-[6.3rem] pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
             {groups.map((group) => (
               <a
                 key={group.category}
                 href={`#servicos`}
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#68727c]"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#d1d4d8] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#68727c]"
                 onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
               >
                 <span className="font-mono text-[9px] text-[#aeb6bf]">{group.number}</span>
@@ -317,8 +327,14 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
             ))}
           </div>
           <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
-            <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
-            <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
+            {scrolledEnd ? (
+              <span className="text-[10px] text-[#c9a84c] font-medium">Fim</span>
+            ) : (
+              <>
+                <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
+                <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
+              </>
+            )}
           </div>
         </div>
 

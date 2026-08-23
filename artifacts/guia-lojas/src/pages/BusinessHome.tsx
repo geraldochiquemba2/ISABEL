@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
   ArrowDown,
@@ -26,14 +27,63 @@ type ServiceCategory = {
   services: string[];
 };
 
-const categoryImages: Record<string, string> = {
-  "01": "/business/strategy.jpg",
-  "02": "/business/finance.jpg",
-  "03": "/business/marketing.jpg",
-  "04": "/business/legal.jpg",
-  "05": "/business/team.jpg",
-  "06": "/business/investment.jpg",
-};
+function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const fallbackImage = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&auto=format&q=75";
+  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      onClick={() => window.location.href = `/loja/${store.id}?from=business`}
+    >
+      <div className="relative h-28 overflow-hidden">
+        <img
+          src={images[currentIdx] || fallbackImage}
+          alt={store.name}
+          className="w-full h-full object-cover"
+        />
+        {store.logoUrl && (
+          <img
+            src={store.logoUrl}
+            alt={`Logo ${store.name}`}
+            className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
+          />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-20 flex gap-1">
+            {images.map((_: string, i: number) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentIdx ? "bg-white w-3" : "bg-white/50"}`}
+              />
+            ))}
+          </div>
+        )}
+        {store.isOpen !== undefined && (
+          <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+            {store.isOpen ? "Aberto" : "Fechado"}
+          </span>
+        )}
+      </div>
+      <div className="p-3">
+        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        {store.description && (
+          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const categories: ServiceCategory[] = [
   {
@@ -115,49 +165,6 @@ const categories: ServiceCategory[] = [
   },
 ];
 
-function ServiceDetail({ category, SelectedIcon }: { category: ServiceCategory; SelectedIcon: typeof Compass }) {
-  return (
-    <article
-      className="relative overflow-hidden rounded-[2px] bg-[#e9e2d6] p-7 text-[#112844] sm:p-10"
-      style={{ borderTop: `4px solid ${category.accent}` }}
-    >
-      <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full border border-[#112844]/10" />
-      <div className="relative">
-        <div className="mb-6 flex items-center justify-between">
-          <span className="grid h-14 w-14 place-items-center rounded-full bg-[#112844] text-[#c7a15a]">
-            <SelectedIcon size={24} strokeWidth={1.4} />
-          </span>
-          <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#112844]/40">
-            ÁREA {category.number}
-          </span>
-        </div>
-        <div className="mb-6 overflow-hidden rounded-[2px]">
-          <img
-            src={categoryImages[category.number]}
-            alt={category.title}
-            className="h-48 w-full object-cover object-center sm:h-56"
-            style={{ filter: "grayscale(0.45) contrast(0.95) brightness(1.05)" }}
-          />
-        </div>
-        <h3 className="max-w-lg font-['Playfair_Display'] text-3xl leading-[0.98] tracking-[-0.035em] sm:text-5xl">
-          {category.title}
-        </h3>
-        <p className="mt-5 max-w-md font-['DM_Sans'] text-sm leading-6 text-[#112844]/65">
-          {category.intro}
-        </p>
-        <div className="mt-9 grid gap-3 sm:grid-cols-2">
-          {category.services.map((service) => (
-            <div key={service} className="flex gap-3 border-t border-[#112844]/15 pt-3 font-['DM_Sans'] text-[13px] leading-5">
-              <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />
-              {service}
-            </div>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function Monogram() {
   return (
     <div className="flex items-center gap-3">
@@ -176,11 +183,54 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
   useThemeColor("#0d1f35");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrolledEnd, setScrolledEnd] = useState(false);
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el) {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 10;
+      setScrolledEnd(atEnd);
+    }
+  };
 
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const localUser = localUserStr ? JSON.parse(localUserStr) : null;
   const isLoggedIn = !!localUser && localUser.storeType === "business";
+
+  const { data: stores = [] } = useQuery({
+    queryKey: ["stores", "business"],
+    queryFn: async () => {
+      const res = await fetch("/api/stores?store_type=business");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products", "business"],
+    queryFn: async () => {
+      const res = await fetch("/api/products?store_type=business");
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const getStoresForGroup = (category: string) => {
+    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
+    const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
+    const storesWithProducts = stores.filter((s: any) => !["999999999"].includes(s.phone) && storeIdsWithProducts.has(s.id));
+    const storeProductsMap: Record<string, string[]> = {};
+    categoryProducts.forEach((p: any) => {
+      const imgs = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      if (!storeProductsMap[p.storeId]) storeProductsMap[p.storeId] = [];
+      storeProductsMap[p.storeId].push(...imgs);
+    });
+    return { stores: storesWithProducts, storeProducts: storeProductsMap };
+  };
 
   const sortedCategories = [...categories]
     .sort((a, b) => b.services.length - a.services.length)
@@ -227,13 +277,13 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
       </header>
 
       <div className="eliora-grain">
-        <div className="mx-auto max-w-[1380px] px-4 pt-20 pb-1 md:px-12 md:pt-24 md:pb-2">
-          <div className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
+        <div className="mx-auto max-w-[1380px] px-4 pt-[6.3rem] pb-1 md:px-12 md:pt-24 md:pb-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
             {sortedCategories.map((cat) => (
               <a
                 key={cat.number}
                 href="#servicos"
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#b88a3b]/20 bg-white hover:border-[#b88a3b] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#112844]/70"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-full border border-[#b88a3b]/20 bg-white hover:border-[#b88a3b] hover:bg-[#faf8f0] transition-all text-[11px] font-semibold text-[#112844]/70"
                 onClick={(e) => { e.preventDefault(); document.getElementById("servicos")?.scrollIntoView({ behavior: "smooth" }); }}
               >
                 <span className="font-mono text-[9px] text-[#b88a3b]">{cat.number}</span>
@@ -242,8 +292,14 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
             ))}
           </div>
           <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
-            <span className="text-[10px] text-[#b88a3b] font-medium">Deslize para ver mais</span>
-            <ArrowRight size={12} className="text-[#b88a3b] animate-pulse" />
+            {scrolledEnd ? (
+              <span className="text-[10px] text-[#b88a3b] font-medium">Fim</span>
+            ) : (
+              <>
+                <span className="text-[10px] text-[#b88a3b] font-medium">Deslize para ver mais</span>
+                <ArrowRight size={12} className="text-[#b88a3b] animate-pulse" />
+              </>
+            )}
           </div>
         </div>
 
@@ -293,17 +349,34 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
                     </a>
                   </div>
                   <div className="mt-4 md:mt-0">
-                    {categoryImages[cat.number] ? (
-                      <div className="relative overflow-hidden rounded-2xl border border-[#112844]/10">
-                        <img src={categoryImages[cat.number]} alt={cat.title} className="w-full h-64 object-cover" style={{ filter: "grayscale(0.45) contrast(0.95) brightness(1.05)" }} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#112844]/40 via-transparent to-transparent" />
-                        <p className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white drop-shadow">#{cat.number}</p>
-                      </div>
-                    ) : (
-                      <div className="rounded-2xl border border-dashed border-[#112844]/15 p-6 text-center">
-                        <p className="text-xs text-[#112844]/50">Em breve novas lojas</p>
-                      </div>
-                    )}
+                    {(() => {
+                      const { stores: groupStores, storeProducts } = getStoresForGroup(cat.title.split(",")[0].trim());
+                      if (groupStores.length === 0) {
+                        return (
+                          <div className="rounded-2xl border border-dashed border-[#112844]/15 p-6 text-center">
+                            <p className="text-xs text-[#112844]/50">Em breve novas lojas</p>
+                          </div>
+                        );
+                      }
+                      return (
+                        <>
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                          <div>
+                            <div className="flex flex-row flex-nowrap overflow-x-auto gap-3 scrollbar-hide">
+                              {groupStores.slice(0, 4).map((store: any) => (
+                                <StoreCard key={store.id} store={store} productImages={storeProducts[store.id]} />
+                              ))}
+                            </div>
+                            {groupStores.length > 1 && (
+                              <div className="flex justify-center items-center gap-2 mt-2 md:hidden">
+                                <span className="text-[10px] text-[#b88a3b] font-medium">Deslize para ver mais</span>
+                                <ArrowRight size={12} className="text-[#b88a3b] animate-pulse" />
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </article>

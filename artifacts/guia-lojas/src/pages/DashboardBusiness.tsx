@@ -5,6 +5,7 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
+import { BusinessAdminPanel } from "@/components/BusinessAdminPanel";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
@@ -211,7 +212,7 @@ export default function DashboardBusiness() {
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
           {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
           {section === "overview" && isAdmin && <AdminOverviewSection />}
-          {section === "admin" && <div className="max-w-4xl"><h2 className="text-xl font-semibold text-[#30343a] flex items-center gap-2"><ShieldAlert size={20} /> Administração</h2><p className="text-sm text-[#87909a] mt-2">Painel de administração em desenvolvimento.</p></div>}
+          {section === "admin" && <BusinessAdminPanel />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
