@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu } from "lucide-react";
+import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { FormacoesAdminPanel } from "@/components/FormacoesAdminPanel";
@@ -426,7 +426,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
   const [uploading, setUploading] = useState<string | null>(null);
 
   const mutation = useMutation({
-    mutationFn: () => updateStore(store.id, { ...form, schedule }),
+    mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
     onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -438,15 +438,33 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
 
   const handleChange = (field: string, value: string) => { setForm((f) => ({ ...f, [field]: value })); setIsDirty(true); };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: "logoUrl" | "coverImage" | "coverImages") => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading("logo");
+    setUploading(field);
     try {
-      const url = await uploadImage(file);
-      await updateStore(store.id, { logoUrl: url });
-      queryClient.invalidateQueries({ queryKey: ["myStore"] });
-    } catch (err: any) { alert(err.message); } finally { setUploading(null); }
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result as string;
+        const res = await uploadImage(base64, `${store.id}-${field}`);
+        if (field === "coverImages") {
+          const currentImages = store.coverImages || [];
+          await updateStore(store.id, { ...store, coverImages: [...currentImages, res.imageUrl] });
+        } else {
+          await updateStore(store.id, { ...store, [field]: res.imageUrl });
+        }
+        queryClient.invalidateQueries({ queryKey: ["myStore"] });
+        setUploading(null);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) { console.error("Upload error:", err); setUploading(null); }
+  };
+
+  const handleRemoveCoverImage = async (index: number) => {
+    const currentImages = store.coverImages || [];
+    const newImages = currentImages.filter((_: any, i: number) => i !== index);
+    await updateStore(store.id, { ...store, coverImages: newImages });
+    queryClient.invalidateQueries({ queryKey: ["myStore"] });
   };
 
   return (
@@ -457,64 +475,97 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
       </div>
 
       <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            {store.logoUrl ? (
-              <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#e8eced]" />
-            ) : (
-              <div className="w-16 h-16 rounded-xl bg-[#f0f7f7] border border-[#e8eced] flex items-center justify-center text-[#0c9894]"><Camera size={24} /></div>
-            )}
-            <label className="absolute -bottom-1 -right-1 bg-[#0c9894] text-white p-1 rounded-full cursor-pointer hover:bg-[#087c7c] transition-colors">
-              <Camera size={12} />
-              <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+        <h3 className="text-sm font-bold text-[#123c4a]">Imagens</h3>
+        <div>
+          <label className={labelCls}>Logo da loja</label>
+          <div className="flex items-center gap-4">
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#e8eced]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+              <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
             </label>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-[#123c4a]">{store.name}</p>
-            <p className="text-xs text-[#87909a]">Logótipo da loja</p>
+        </div>
+        <div>
+          <label className={labelCls}>Imagem de capa</label>
+          <div className="flex items-center gap-4">
+            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#e8eced]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+              <Image size={14} />{uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
+            </label>
           </div>
         </div>
-
         <div>
-          <label className={labelCls}>Nome da Loja</label>
-          <input type="text" value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} />
+          <label className={labelCls}>Galeria de imagens</label>
+          <div className="flex flex-wrap gap-3 mb-3">
+            {(store.coverImages || []).map((img: string, i: number) => (
+              <div key={i} className="relative group">
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#e8eced]" />
+                <button onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
+              </div>
+            ))}
+            <label className="w-24 h-24 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+              <Camera size={16} className="mb-1" />{uploading === "coverImages" ? "..." : "Adicionar"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />
+            </label>
+          </div>
         </div>
-
-        <div>
-          <label className={labelCls}>Descrição</label>
-          <textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} />
-        </div>
-
-        <div>
-          <label className={labelCls}>Telefone</label>
-          <input type="tel" value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} />
-        </div>
-
-        <div>
-          <label className={labelCls}>Província</label>
-          <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={inputCls}>
-            <option value="">Selecione</option>
-            {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label className={labelCls}>Município</label>
-          <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={inputCls} disabled={!form.province}>
-            <option value="">{form.province ? "Selecione" : "Selecione a província"}</option>
-            {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
-          </select>
-        </div>
-
-        <div>
-          <label className={labelCls}>Endereço</label>
-          <input type="text" value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} />
-        </div>
-
-        <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#0c9894] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors disabled:opacity-50">
-          {mutation.isPending ? "A guardar..." : "Guardar alterações"}
-        </button>
       </div>
+
+      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
+        <h3 className="text-sm font-bold text-[#123c4a]">Dados da loja</h3>
+        <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
+        <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
+        <div className="grid grid-cols-2 gap-4">
+          <div><label className={labelCls}>Telefone</label><input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} /></div>
+          <div><label className={labelCls}>Endereço</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={labelCls}>Província</label>
+            <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={`${inputCls} cursor-pointer`}>
+              <option value="">Selecione a Província</option>
+              {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Município</label>
+            <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={`${inputCls} cursor-pointer disabled:opacity-50`} disabled={!form.province}>
+              <option value="">{form.province ? "Selecione o Município" : "Selecione a província primeiro"}</option>
+              {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
+        <h3 className="text-sm font-bold text-[#123c4a]">Horários de funcionamento</h3>
+        <div className="space-y-3">
+          {schedule.map((day, i) => (
+            <div key={day.label} className="border border-[#e8eced] rounded-2xl p-4 bg-[#fafafa]">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-[#123c4a]">{day.label}</p>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${day.closed ? "bg-red-50 text-red-600 border border-red-200" : "bg-emerald-50 text-emerald-600 border border-emerald-200"}`}>{day.closed ? "Fechado" : "Aberto"}</span>
+                </div>
+                <button type="button" onClick={() => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, closed: !d.closed } : d)); setIsDirty(true); }}
+                  className={`relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 cursor-pointer ${!day.closed ? "bg-emerald-500" : "bg-red-400"}`}>
+                  <span className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${!day.closed ? "translate-x-4" : "translate-x-0"}`} />
+                </button>
+              </div>
+              <div className={`grid grid-cols-2 gap-3 transition-all duration-200 ${day.closed ? "opacity-50 pointer-events-none" : ""}`}>
+                <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
+                <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#0c9894] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors disabled:opacity-50">
+        {mutation.isPending ? "A guardar..." : "Guardar alterações"}
+      </button>
     </div>
   );
 }
