@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ArrowDown, ArrowRight, ArrowUpRight, ChevronRight, Menu, X, Instagram, Mail, Phone } from "lucide-react";
