@@ -341,6 +341,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
                         <li key={service}>
                           <a
                             href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
+                            onClick={(e) => { e.preventDefault(); navigate(`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`); }}
                             className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#112844] cursor-pointer"
                           >
                             <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />

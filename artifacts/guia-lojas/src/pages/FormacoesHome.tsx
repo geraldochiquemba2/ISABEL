@@ -339,6 +339,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
                           <li key={item}>
                             <a
                               href={`/explorar-formacoes?categoria=${category.title}`}
+                              onClick={(e) => { e.preventDefault(); navigate(`/explorar-formacoes?categoria=${category.title}`); }}
                               className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
                             >
                               <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />

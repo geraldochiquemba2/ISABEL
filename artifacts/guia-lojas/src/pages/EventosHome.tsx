@@ -259,6 +259,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
                           <li key={item}>
                             <a
                               href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
+                              onClick={(e) => { e.preventDefault(); navigate(`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`); }}
                               className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#3c2731] cursor-pointer"
                             >
                               <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
