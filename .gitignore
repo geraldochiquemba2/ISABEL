@@ -50,3 +50,7 @@ Thumbs.db
 
 # App cache
 artifacts/guia-lojas/cache/
+
+# Capacitor native projects
+artifacts/guia-lojas/ios/
+artifacts/guia-lojas/android/

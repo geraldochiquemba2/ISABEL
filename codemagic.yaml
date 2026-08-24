@@ -1,0 +1,63 @@
+workflows:
+  elora-ios:
+    name: Eliora iOS Build
+    max_build_duration: 60
+    environment:
+      groups:
+        - app_store_credentials
+        - certificate
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: Install pnpm
+        script: |
+          npm install -g pnpm@latest
+          node --version
+          pnpm --version
+      - name: Install dependencies
+        script: |
+          cd artifacts/guia-lojas
+          pnpm install
+      - name: Build web assets
+        script: |
+          cd artifacts/guia-lojas
+          pnpm run build
+      - name: Sync Capacitor
+        script: |
+          cd artifacts/guia-lojas
+          npx cap sync ios
+      - name: Install CocoaPods
+        script: |
+          cd artifacts/guia-lojas/ios/App
+          pod install --repo-update
+      - name: Copy ExportOptions.plist
+        script: |
+          cp ExportOptions.plist artifacts/guia-lojas/ios/App/ExportOptions.plist
+      - name: Build iOS
+        script: |
+          cd artifacts/guia-lojas/ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath $PWD/build/App.xcarchive \
+            -allowProvisioningUpdates \
+            archive
+      - name: Export IPA
+        script: |
+          cd artifacts/guia-lojas/ios/App
+          xcodebuild -exportArchive \
+            -archivePath $PWD/build/App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath $PWD/build/output
+    artifacts:
+      - artifacts/guia-lojas/ios/App/build/output/**/*.ipa
+    publishing:
+      ios:
+        app_id:
+          from_variable: APP_STORE_APP_ID
+      submit_to_app_store: false
