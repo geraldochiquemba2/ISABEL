@@ -126,6 +126,7 @@ const categoryImages: Record<string, string> = {
 };
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop&auto=format&q=75";
   const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);

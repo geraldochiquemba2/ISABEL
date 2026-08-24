@@ -69,6 +69,7 @@ const hardcodedGroups: ServiceGroup[] = [
 ];
 
 function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
   const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);

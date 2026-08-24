@@ -29,6 +29,7 @@ const categoryImages: Record<string, string> = {
 };
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop&auto=format&q=75";
   const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -258,8 +259,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
                         {cat.items.map((item) => (
                           <li key={item}>
                             <a
-                              href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
-                              onClick={(e) => { e.preventDefault(); navigate(`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`); }}
+                              href={`/explorar-eventos?categoria=${encodeURIComponent(cat.title)}`}
                               className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#3c2731] cursor-pointer"
                             >
                               <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />

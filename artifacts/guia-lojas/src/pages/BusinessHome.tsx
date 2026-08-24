@@ -29,6 +29,7 @@ type ServiceCategory = {
 };
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&auto=format&q=75";
   const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
