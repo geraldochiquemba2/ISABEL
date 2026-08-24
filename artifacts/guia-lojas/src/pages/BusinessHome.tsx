@@ -223,9 +223,12 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
   });
 
   const getStoresForGroup = (category: string) => {
-    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
+    const catKey = category.toLowerCase();
+    const categoryProducts = products.filter((p: any) => p.category?.toLowerCase().includes(catKey));
     const storeIdsWithProducts = new Set(categoryProducts.map((p: any) => p.storeId));
-    const storesWithProducts = stores.filter((s: any) => !["999999999"].includes(s.phone) && storeIdsWithProducts.has(s.id));
+    const storesWithCategory = stores.filter((s: any) => s.category?.toLowerCase().includes(catKey));
+    const allStoreIds = new Set([...storeIdsWithProducts, ...storesWithCategory.map((s: any) => s.id)]);
+    const storesWithProducts = stores.filter((s: any) => !["999999999"].includes(s.phone) && allStoreIds.has(s.id));
     const storeProductsMap: Record<string, string[]> = {};
     categoryProducts.forEach((p: any) => {
       const imgs = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
