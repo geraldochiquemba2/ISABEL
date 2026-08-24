@@ -65,7 +65,7 @@ export default function ExploreLove() {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");
     if (cat) {
-      const group = LOVE_SERVICE_GROUPS.find((g) => g.title === cat);
+      const group = LOVE_SERVICE_GROUPS.find((g) => g.title.toLowerCase().includes(cat.toLowerCase()) || g.category?.toLowerCase() === cat.toLowerCase());
       return group ? group.category : null;
     }
     return null;

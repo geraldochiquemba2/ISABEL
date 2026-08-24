@@ -24,6 +24,7 @@ interface Store {
   logoUrl?: string;
   description?: string;
   isOpen?: boolean;
+  products?: any[];
 }
 
 interface ElioraWeddingsProps {
@@ -127,7 +128,8 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
   );
 }
 
-function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceGroup; index: number; stores: Store[]; storeProducts?: Record<string, string[]> }) {
+function ServiceBlock({ group, index, stores, storeProducts, serviceStoreMap }: { group: ServiceGroup; index: number; stores: Store[]; storeProducts?: Record<string, string[]>; serviceStoreMap?: Map<string, string> }) {
+  const [, navigate] = useLocation();
   return (
     <article className={`group border-t border-[#d1d4d8] py-4 md:py-8 ${index % 2 ? "md:ml-20" : ""}`}>
       <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
@@ -136,17 +138,30 @@ function ServiceBlock({ group, index, stores, storeProducts }: { group: ServiceG
           <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
           <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
           <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
-            {group.items.map((item) => (
-              <li key={item}>
-                <a
-                  href={`/explorar?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`}
-                  onClick={(e) => { e.preventDefault(); navigate(`/explorar?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`); }}
-                  className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
-                >
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />{item}
-                </a>
-              </li>
-            ))}
+            {group.items.map((item) => {
+              const storeId = serviceStoreMap?.get(item);
+              return (
+                <li key={item}>
+                  {storeId ? (
+                    <a
+                      href={`/loja/${storeId}?from=weddings&servico=${encodeURIComponent(item)}`}
+                      onClick={(e) => { e.preventDefault(); navigate(`/loja/${storeId}?from=weddings&servico=${encodeURIComponent(item)}`); }}
+                      className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                    >
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />{item}
+                    </a>
+                  ) : (
+                    <a
+                      href={`/explorar?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`}
+                      onClick={(e) => { e.preventDefault(); navigate(`/explorar?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`); }}
+                      className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                    >
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />{item}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           <a
             href={`/explorar?categoria=${group.category}`}
@@ -268,6 +283,29 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
     return { stores: storesWithProducts, storeProducts: storeProductsMap };
   };
 
+  const serviceStoreMap = useMemo(() => {
+    const map = new Map<string, string>();
+    const allGroups = dbGroups.length > 0 ? dbGroups : hardcodedGroups;
+    for (const group of allGroups) {
+      const { stores: catStores } = getStoresForGroup(group.category);
+      const catStoreIds = new Set(catStores.map((s: any) => s.id));
+      for (const item of group.items) {
+        if (!map.has(item)) {
+          for (const p of products) {
+            if (catStoreIds.has(p.storeId) && p.name.toLowerCase().includes(item.toLowerCase())) {
+              map.set(item, p.storeId);
+              break;
+            }
+          }
+          if (!map.has(item) && catStores.length > 0) {
+            map.set(item, catStores[0].id);
+          }
+        }
+      }
+    }
+    return map;
+  }, [dbGroups, stores, products]);
+
   const sortedGroups = (dbGroups.length > 0 ? dbGroups : [...hardcodedGroups]).sort((a: any, b: any) => {
     const storesA = getStoresForGroup(a.category).stores.length;
     const storesB = getStoresForGroup(b.category).stores.length;
@@ -345,7 +383,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
         <section id="servicos" className="mx-auto max-w-[1380px] px-6 pt-1 pb-4 md:px-12 md:pt-1 md:pb-4">
           <div>{groups.map((group, i) => {
             const { stores: groupStores, storeProducts } = getStoresForGroup(group.category);
-            return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} />;
+            return <ServiceBlock key={group.id || group.number} group={group} index={i} stores={groupStores} storeProducts={storeProducts} serviceStoreMap={serviceStoreMap} />;
           })}</div>
         </section>
 

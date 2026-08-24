@@ -89,7 +89,7 @@ export default function ExploreBusiness() {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");
     if (cat) {
-      const group = BUSINESS_CATEGORIES.find((g) => g.title === cat);
+      const group = BUSINESS_CATEGORIES.find((g) => g.title.toLowerCase().includes(cat.toLowerCase()) || g.category.toLowerCase() === cat.toLowerCase());
       return group ? group.category : null;
     }
     return null;

@@ -252,6 +252,28 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
     return { stores: matched, storeProducts: storeProductsMap };
   };
 
+  const serviceStoreMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const cat of categories) {
+      const { stores: catStores } = getStoresForGroup(cat.title);
+      const catStoreIds = new Set(catStores.map((s: any) => s.id));
+      for (const item of cat.items) {
+        if (!map.has(item)) {
+          for (const p of products) {
+            if (catStoreIds.has(p.storeId) && p.name.toLowerCase().includes(item.toLowerCase())) {
+              map.set(item, p.storeId);
+              break;
+            }
+          }
+          if (!map.has(item) && catStores.length > 0) {
+            map.set(item, catStores[0].id);
+          }
+        }
+      }
+    }
+    return map;
+  }, [categories, stores, products]);
+
   const sorted = useMemo(() => {
     return [...categories].sort((a, b) => {
       const storesA = getStoresForGroup(a.title).stores.length;
@@ -336,18 +358,32 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
                       <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]" style={{ fontFamily: "'Playfair Display', serif" }}>{category.title}</h3>
                       <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{category.description}</p>
                       <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
-                        {category.items.map((item) => (
-                          <li key={item}>
-                            <a
-                              href={`/explorar-formacoes?categoria=${category.title}`}
-                              onClick={(e) => { e.preventDefault(); navigate(`/explorar-formacoes?categoria=${category.title}`); }}
-                              className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
-                            >
-                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />
-                              {item}
-                            </a>
-                          </li>
-                        ))}
+                        {category.items.map((item) => {
+                          const storeId = serviceStoreMap.get(item);
+                          return (
+                            <li key={item}>
+                              {storeId ? (
+                                <a
+                                  href={`/loja/${storeId}?from=formacoes&servico=${encodeURIComponent(item)}`}
+                                  onClick={(e) => { e.preventDefault(); navigate(`/loja/${storeId}?from=formacoes&servico=${encodeURIComponent(item)}`); }}
+                                  className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                                >
+                                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />
+                                  {item}
+                                </a>
+                              ) : (
+                                <a
+                                  href={`/explorar-formacoes?categoria=${category.title}`}
+                                  onClick={(e) => { e.preventDefault(); navigate(`/explorar-formacoes?categoria=${category.title}`); }}
+                                  className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                                >
+                                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />
+                                  {item}
+                                </a>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                       <a
                         href={`/explorar-formacoes?categoria=${category.title}`}

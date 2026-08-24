@@ -130,6 +130,24 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
+  const serviceStoreMap = useMemo(() => {
+    const map = new Map<string, string>();
+    const storeList = stores.filter((s: any) => !["999999999"].includes(s.phone));
+    for (const cat of categories) {
+      const catKey = cat.title.split(",")[0].trim().toLowerCase();
+      const catStores = storeList.filter((s: any) => {
+        const sCat = (s.category || "").toLowerCase();
+        return sCat.includes(catKey);
+      });
+      for (const item of cat.items) {
+        if (!map.has(item) && catStores.length > 0) {
+          map.set(item, catStores[0].id);
+        }
+      }
+    }
+    return map;
+  }, [categories, stores]);
+
   const sortedCategories = useMemo(() =>
     [...categories]
       .sort((a, b) => {
@@ -256,17 +274,20 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
                     <div>
                       <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#3c2731] md:text-[2.8rem]">{cat.title}</h3>
                       <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
-                        {cat.items.map((item) => (
-                          <li key={item}>
-                            <a
-                              href={`/explorar-eventos?categoria=${encodeURIComponent(cat.title)}`}
-                              className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#3c2731] cursor-pointer"
-                            >
-                              <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
-                              {item}
-                            </a>
-                          </li>
-                        ))}
+                        {cat.items.map((item) => {
+                          const storeId = serviceStoreMap.get(item);
+                          return (
+                            <li key={item}>
+                              <a
+                                href={storeId ? `/loja/${storeId}?from=eventos&servico=${encodeURIComponent(item)}` : `/explorar-eventos?categoria=${encodeURIComponent(cat.title)}`}
+                                className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#3c2731] cursor-pointer"
+                              >
+                                <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
+                                {item}
+                              </a>
+                            </li>
+                          );
+                        })}
                       </ul>
                       <a
                         href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}

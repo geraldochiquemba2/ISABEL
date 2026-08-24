@@ -235,6 +235,28 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
     return { stores: storesWithProducts, storeProducts: storeProductsMap };
   };
 
+  const serviceStoreMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const cat of categories) {
+      const { stores: catStores } = getStoresForGroup(cat.title);
+      const catStoreIds = new Set(catStores.map((s: any) => s.id));
+      for (const service of cat.services) {
+        if (!map.has(service)) {
+          for (const p of products) {
+            if (catStoreIds.has(p.storeId) && p.name.toLowerCase().includes(service.toLowerCase())) {
+              map.set(service, p.storeId);
+              break;
+            }
+          }
+          if (!map.has(service) && catStores.length > 0) {
+            map.set(service, catStores[0].id);
+          }
+        }
+      }
+    }
+    return map;
+  }, [categories, stores, products]);
+
   const sortedCategories = useMemo(() => {
     return [...categories]
       .sort((a, b) => {
@@ -338,18 +360,32 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
                     <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#112844] md:text-[2.8rem]">{cat.title}</h3>
                     <p className="mt-4 max-w-md text-sm leading-7 text-[#112844]/65">{cat.intro}</p>
                     <ul className="mt-6 space-y-3 border-l border-[#112844]/15 pl-5 text-sm leading-5 text-[#112844]/80">
-                      {cat.services.map((service) => (
-                        <li key={service}>
-                          <a
-                            href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
-                            onClick={(e) => { e.preventDefault(); navigate(`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`); }}
-                            className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#112844] cursor-pointer"
-                          >
-                            <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />
-                            {service}
-                          </a>
-                        </li>
-                      ))}
+                      {cat.services.map((service) => {
+                        const storeId = serviceStoreMap.get(service);
+                        return (
+                          <li key={service}>
+                            {storeId ? (
+                              <a
+                                href={`/loja/${storeId}?from=business&servico=${encodeURIComponent(service)}`}
+                                onClick={(e) => { e.preventDefault(); navigate(`/loja/${storeId}?from=business&servico=${encodeURIComponent(service)}`); }}
+                                className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#112844] cursor-pointer"
+                              >
+                                <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />
+                                {service}
+                              </a>
+                            ) : (
+                              <a
+                                href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}
+                                onClick={(e) => { e.preventDefault(); navigate(`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`); }}
+                                className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#112844] cursor-pointer"
+                              >
+                                <Check size={15} className="mt-0.5 shrink-0 text-[#b88a3b]" />
+                                {service}
+                              </a>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                     <a
                       href={`/explorar-business?categoria=${cat.title.split(",")[0].trim()}`}

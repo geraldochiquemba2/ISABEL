@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart } from "lucide-react";
@@ -17,6 +17,7 @@ export default function StoreProfile() {
   const params = new URLSearchParams(search);
   const tabParam = params.get("tab");
   const isFromWeddings = params.get("from") === "weddings";
+  const servicoParam = params.get("servico");
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -251,7 +252,7 @@ export default function StoreProfile() {
           </TabsList>
 
           <TabsContent value="produtos">
-            <ProductsTab products={store.products.filter((p: any) => !p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} />
+            <ProductsTab products={store.products.filter((p: any) => !p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} highlightProduct={servicoParam} />
           </TabsContent>
 
           {store.carrinhoAccess === "APROVADO" && (
@@ -303,11 +304,13 @@ function formatPrice(price: number): string {
   return `${formatted},${dec}`;
 }
 
-function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeName: string; storeWhatsapp: string }) {
+function ProductsTab({ products, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState<number>(0);
+  const highlightIdRef = useRef<string | null>(null);
+  const highlightScrolledRef = useRef(false);
 
   const categories = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -329,6 +332,32 @@ function ProductsTab({ products, storeName, storeWhatsapp }: { products: { id: s
       return true;
     });
   }, [products, activeCategory, activeSubcategory]);
+
+  useEffect(() => {
+    if (highlightProduct && products.length > 0 && !highlightIdRef.current) {
+      const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const target = norm(highlightProduct);
+      const match = products.find((p) => norm(p.name).includes(target))
+        || products.find((p) => norm(p.category || "").includes(target) || norm(p.subcategory || "").includes(target));
+      if (match) {
+        highlightIdRef.current = `product-${match.id}`;
+        if (match.category) setActiveCategory(match.category);
+      }
+    }
+  }, [highlightProduct, products]);
+
+  useEffect(() => {
+    if (highlightIdRef.current && !highlightScrolledRef.current) {
+      const el = document.getElementById(highlightIdRef.current);
+      if (el) {
+        highlightScrolledRef.current = true;
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          window.scrollBy({ top: -120, behavior: "smooth" });
+        }, 200);
+      }
+    }
+  }, [filtered]);
 
   const hasCategoryData = categories.size > 0;
 
@@ -598,6 +627,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
 
   return (
     <motion.div
+      id={`product-${product.id}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.04 }}
