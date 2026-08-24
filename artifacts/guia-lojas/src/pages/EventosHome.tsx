@@ -256,9 +256,14 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
                       <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#3c2731] md:text-[2.8rem]">{cat.title}</h3>
                       <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
                         {cat.items.map((item) => (
-                          <li key={item} className="flex gap-3 items-start">
-                            <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
-                            <span>{item}</span>
+                          <li key={item}>
+                            <a
+                              href={`/explorar-eventos?categoria=${cat.title.split(",")[0].trim()}`}
+                              className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#3c2731] cursor-pointer"
+                            >
+                              <Check size={14} className="mt-0.5 shrink-0 text-[#8e5557]" />
+                              {item}
+                            </a>
                           </li>
                         ))}
                       </ul>

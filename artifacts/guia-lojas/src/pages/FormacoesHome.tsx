@@ -337,10 +337,13 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
                       <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
                         {category.items.map((item) => (
                           <li key={item}>
-                            <div className="flex gap-3 items-start transition-transform duration-300 group-hover:translate-x-1">
+                            <a
+                              href={`/explorar-formacoes?categoria=${category.title}`}
+                              className="flex gap-3 transition-transform duration-300 group-hover:translate-x-1 hover:text-[#30343a] cursor-pointer"
+                            >
                               <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />
-                              <span>{item}</span>
-                            </div>
+                              {item}
+                            </a>
                           </li>
                         ))}
                       </ul>
