@@ -196,8 +196,8 @@ export default function DashboardBusiness() {
         {mobileMenuOpen && <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)} />}
 
         {/* Sidebar */}
-        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#112844] text-white h-screen p-6 flex flex-col overflow-y-auto transition-transform duration-300`}>
-          <div className="flex items-center gap-3 mb-10">
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#112844] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+          <div className="flex items-center gap-3 mb-5">
             <div>
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>Eliora</span>
               <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#b88a3b", marginTop: "1px" }}>Business & Finances</p>
@@ -206,21 +206,21 @@ export default function DashboardBusiness() {
           </div>
 
           <nav className="flex-1 space-y-1">
-            <button onClick={() => window.location.href = "/"} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
+            <button onClick={() => window.location.href = "/"} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
               <Eye size={15} /> Ver site
             </button>
             {sidebarItems.map((item) => (
               <button key={item.id} onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all ${section === item.id ? "bg-white/15 text-white" : "text-white/60 hover:text-white hover:bg-white/5"}`}>
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition-all ${section === item.id ? "bg-white/15 text-white" : "text-white/60 hover:text-white hover:bg-white/5"}`}>
                 {item.icon} {item.label}
               </button>
             ))}
           </nav>
 
-          <div className="space-y-2 mt-auto pt-6 border-t border-white/10">
-            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><Store size={15} /> Trocar loja</button>
-            <button onClick={() => setShowChangePwd(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><KeyRound size={15} /> Alterar senha</button>
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"><LogOut size={15} /> Sair</button>
+          <div className="space-y-2 mt-auto pt-4 border-t border-white/10">
+            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><Store size={15} /> Trocar loja</button>
+            <button onClick={() => setShowChangePwd(true)} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><KeyRound size={15} /> Alterar senha</button>
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"><LogOut size={15} /> Sair</button>
           </div>
         </aside>
 

@@ -199,8 +199,8 @@ export default function DashboardFormacoes() {
         )}
 
         {/* Sidebar */}
-        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#0c9894] text-white h-screen p-6 flex flex-col overflow-y-auto transition-transform duration-300`}>
-          <div className="flex items-center gap-3 mb-10">
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#0c9894] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+          <div className="flex items-center gap-3 mb-5">
             <img src="/logo-eliora-dark.svg" alt="Eliora Formações" className="w-8 h-8 brightness-0 invert" />
             <div>
               <p className="font-serif text-sm tracking-[0.08em]">Eliora <i className="font-normal">Formações</i></p>
@@ -211,7 +211,7 @@ export default function DashboardFormacoes() {
           <nav className="flex-1 space-y-1">
             <button
               onClick={() => window.location.href = "/"}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2"
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2"
             >
               <Eye size={15} />
               Ver site
@@ -220,7 +220,7 @@ export default function DashboardFormacoes() {
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition-all ${
                   section === item.id ? "bg-white/15 text-white" : "text-white/60 hover:text-white hover:bg-white/5"
                 }`}
               >
@@ -230,24 +230,24 @@ export default function DashboardFormacoes() {
             ))}
           </nav>
 
-          <div className="space-y-2 mt-auto pt-6 border-t border-white/10">
+          <div className="space-y-2 mt-auto pt-4 border-t border-white/10">
             <button
               onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"
             >
               <Store size={15} />
               Trocar loja
             </button>
             <button
               onClick={() => setShowChangePwd(true)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"
             >
               <KeyRound size={15} />
               Alterar senha
             </button>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"
             >
               <LogOut size={15} />
               Sair
