@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap, Crown, Building2 } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap, Crown, Building2, Baby } from "lucide-react";
 
 const stores = [
   {
@@ -71,6 +71,16 @@ const stores = [
     gradient: "from-[#1a5276]/80 to-[#c9913a]/80",
     icon: <Building2 size={24} className="text-white" />,
     accent: "#1a5276",
+  },
+  {
+    id: "infantil",
+    name: "Eliora Infantil & Maternidade",
+    subtitle: "Cuidar com amor",
+    description: "Moda, brinquedos, cuidados e tudo para os pequenos. Enxoval, saúde e bem-estar para bebés e crianças em Angola.",
+    image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#8e44ad]/80 to-[#e74c8c]/80",
+    icon: <Baby size={24} className="text-white" />,
+    accent: "#8e44ad",
   },
 ];
 
