@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap, Crown } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap, Crown, Building2 } from "lucide-react";
 
 const stores = [
   {
@@ -61,6 +61,16 @@ const stores = [
     gradient: "from-[#ad696b]/80 to-[#3c2731]/80",
     icon: <Crown size={24} className="text-white" />,
     accent: "#ad696b",
+  },
+  {
+    id: "imoveis",
+    name: "Eliora Imóveis & Alojamento",
+    subtitle: "Conforto e confiança",
+    description: "Gestão imobiliária, arrendamento, estadias e hospitalidade. Hotéis, alojamento e imobiliária em Angola e além.",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#1a5276]/80 to-[#c9913a]/80",
+    icon: <Building2 size={24} className="text-white" />,
+    accent: "#1a5276",
   },
 ];
 

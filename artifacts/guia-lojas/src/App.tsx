@@ -32,11 +32,15 @@ import { EventosHome } from "@/pages/EventosHome";
 import ExploreEventos from "@/pages/ExploreEventos";
 import LoginEventos from "@/pages/LoginEventos";
 import DashboardEventos from "@/pages/DashboardEventos";
+import ImoveisHome from "@/pages/ImoveisHome";
+import ExploreImoveis from "@/pages/ExploreImoveis";
+import LoginImoveis from "@/pages/LoginImoveis";
+import DashboardImoveis from "@/pages/DashboardImoveis";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -181,6 +185,24 @@ function Router() {
           <Route path="/dashboard-eventos" component={DashboardEventos} />
           <Route>
             <EventosHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+        {floatingButton}
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "imoveis") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-imoveis" component={ExploreImoveis} />
+          <Route path="/login-imoveis" component={LoginImoveis} />
+          <Route path="/dashboard-imoveis" component={DashboardImoveis} />
+          <Route>
+            <ImoveisHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
         {floatingButton}
