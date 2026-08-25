@@ -208,7 +208,7 @@ export default function DashboardFormacoes() {
             </div>
           </div>
 
-          <nav className="flex-1 space-y-1">
+          <nav className="space-y-1">
             <button
               onClick={() => window.location.href = "/"}
               className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2"
@@ -230,7 +230,7 @@ export default function DashboardFormacoes() {
             ))}
           </nav>
 
-          <div className="space-y-2 mt-auto pt-4 border-t border-white/10">
+          <div className="space-y-2 pt-4 mt-4 border-t border-white/10">
             <button
               onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }}
               className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"

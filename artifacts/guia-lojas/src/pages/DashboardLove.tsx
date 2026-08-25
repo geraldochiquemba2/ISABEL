@@ -558,7 +558,7 @@ export default function DashboardLove() {
           </div>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <nav className="space-y-1">
           {sidebarItems.map((item) => (
             <button
               key={item.id}
@@ -575,7 +575,7 @@ export default function DashboardLove() {
           ))}
         </nav>
 
-        <div className="space-y-2 mt-auto pt-4 border-t border-white/10">
+        <div className="space-y-2 pt-4 mt-4 border-t border-white/10">
           <button onClick={() => window.location.href = "/love-services"} className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all">
             <Store size={15} /> Ver site
           </button>

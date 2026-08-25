@@ -206,7 +206,7 @@ export default function DashboardEventos() {
             </div>
           </div>
 
-          <nav className="flex-1 space-y-1">
+          <nav className="space-y-1">
             <button onClick={() => window.location.href = "/eventos"} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
               <Eye size={15} /> Ver site
             </button>
@@ -218,7 +218,7 @@ export default function DashboardEventos() {
             ))}
           </nav>
 
-          <div className="space-y-2 mt-auto pt-4 border-t border-white/10">
+          <div className="space-y-2 pt-4 mt-4 border-t border-white/10">
             <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><Store size={15} /> Trocar loja</button>
             <button onClick={() => setShowChangePwd(true)} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><KeyRound size={15} /> Alterar senha</button>
             <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"><LogOut size={15} /> Sair</button>
