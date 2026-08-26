@@ -41,6 +41,7 @@ import ExploreInfantil from "@/pages/ExploreInfantil";
 import LoginInfantil from "@/pages/LoginInfantil";
 import DashboardInfantil from "@/pages/DashboardInfantil";
 import NotFound from "@/pages/not-found";
+import ExploreCollection from "@/pages/ExploreCollection";
 
 const queryClient = new QueryClient();
 
@@ -234,16 +235,16 @@ function Router() {
 
   return (
     <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
-      <Navbar onBackToSelector={handleBackToSelector} />
       <ScrollToTop />
       <Switch>
-        <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>
         <Route path="/busca" component={SearchPage} />
         <Route path="/loja/:id" component={StoreProfile} />
+        <Route path="/explorar" component={ExploreCollection} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/login" component={Login} />
         <Route path="/descobrir-estilo" component={DescobrirEstilo} />
         <Route path="/carrinhos" component={VerCarrinhos} />
+        <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>
         <Route component={NotFound} />
       </Switch>
       {floatingButton}

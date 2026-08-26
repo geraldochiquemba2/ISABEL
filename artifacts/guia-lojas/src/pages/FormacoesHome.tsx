@@ -290,7 +290,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto max-w-[1380px] flex items-center justify-between px-6 py-5 md:px-12 bg-white/90 backdrop-blur-md">
         <a className="flex items-center gap-2.5 no-underline" href="#top" aria-label="YESOLA Formações">
-          <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-12 h-12" />
+          <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-9 h-9" />
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA <i className="font-normal">Formações</i></span>
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-6 shadow-md flex-col gap-5" : "hidden"} md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>

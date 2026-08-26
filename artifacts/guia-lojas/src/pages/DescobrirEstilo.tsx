@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ArrowLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 const WHATSAPP_NUMBER = "922001778";
@@ -58,6 +58,16 @@ export default function DescobrirEstilo() {
   return (
     <PageTransition>
       <div className="min-h-[calc(100vh-3.5rem)] bg-gradient-to-br from-stone-50 to-stone-100">
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#e8e8e8]/60">
+          <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
+            <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
+              <ArrowLeft size={16} /> Voltar
+            </button>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
+            <a href="/" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#c9a84c] transition-colors hidden md:block">Início</a>
+          </div>
+        </header>
+
         {/* Header */}
         <div className="bg-white text-gray-900 py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">

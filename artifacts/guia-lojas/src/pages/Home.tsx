@@ -3,7 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { ArrowDown, ArrowRight, ArrowUpRight, Mail, Phone, Instagram } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchStores, getCategories } from "@/lib/api";
+import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 
 function SimpleStoreCard({ store }: { store: Store }) {
@@ -84,7 +84,7 @@ function Monogram() {
       <img
         src="/logo-yesola-icon-dark.png"
         alt="YESOLA"
-        style={{ width: "48px", height: "48px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
+        style={{ width: "36px", height: "36px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
       />
       <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
     </a>
@@ -95,6 +95,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   useThemeColor("#2d2c2b");
   const [, setLocation] = useLocation();
   const [sent, setSent] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolledEnd, setScrolledEnd] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
@@ -114,25 +115,23 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
     queryFn: () => fetchStores(),
   });
 
-  const { data: apiCategories = [], isLoading: catsLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => getCategories(),
-  });
+  const collectionCategories = [
+    { id: "moda-feminina", name: "Moda Feminina" },
+    { id: "moda-masculina", name: "Moda Masculina" },
+    { id: "moda-infantil", name: "Moda Infantil" },
+    { id: "beleza-saude", name: "Saúde & Beleza" },
+    { id: "perucas", name: "Perucas" },
+    { id: "eletronicos", name: "Eletrônicos" },
+    { id: "casa-decoracao", name: "Casa & Decoração" },
+    { id: "alimentacao", name: "Alimentação" },
+  ];
 
-  const heroImages = apiCategories.length > 0
-    ? apiCategories
-        .filter((cat: any) => cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id])
-        .slice(0, 8)
-        .map((cat: any) => ({
-          src: cat.cover_image || cat.coverImage || FALLBACK_IMAGES[cat.id] || FALLBACK_IMAGES["moda"],
-          name: cat.name,
-        }))
-    : [
-        { src: FALLBACK_IMAGES["moda"], name: "Moda" },
-        { src: FALLBACK_IMAGES["alimentacao"], name: "Restaurantes" },
-        { src: FALLBACK_IMAGES["saude-beleza"], name: "Beleza" },
-        { src: FALLBACK_IMAGES["eletronicos"], name: "Eletrônicos" },
-      ];
+  const heroImages = [
+    { src: FALLBACK_IMAGES["moda"], name: "Moda" },
+    { src: FALLBACK_IMAGES["alimentacao"], name: "Restaurantes" },
+    { src: FALLBACK_IMAGES["saude-beleza"], name: "Beleza" },
+    { src: FALLBACK_IMAGES["eletronicos"], name: "Eletrônicos" },
+  ];
 
   useEffect(() => {
     if (heroImages.length < 2) return;
@@ -162,7 +161,11 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
           <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-5 md:px-12">
             <Monogram />
             <div className="hidden items-center gap-8 text-[13px] font-semibold text-[#68727c] md:flex">
-              <button onClick={() => scrollTo("categorias")}>Explorar</button>
+              <a href="/explorar">Explorar</a>
+              <a href="/descobrir-estilo">Quero descobrir o meu estilo</a>
+              <a href="/carrinhos">Ver Carrinhos</a>
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20falar%20com%20um%20agente%20de%20envio." target="_blank" rel="noopener noreferrer">Conversar com agente</a>
+              <a href="/login" className="flex items-center gap-2 text-left text-[#68727c] hover:text-[#2d2c2b] transition-colors">Entrar</a>
               {onBackToSelector && (
                 <button onClick={onBackToSelector} className="flex items-center gap-2 text-[#68727c] hover:text-[#2d2c2b] transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -170,23 +173,32 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
                 </button>
               )}
             </div>
-            <button className="rounded-lg p-2 md:hidden" onClick={() => {}} aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+              {menuOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              )}
+            </button>
           </div>
+          {menuOpen && (
+            <div className="md:hidden bg-[#fafafa] border-b border-[#e8e8e8]/60 px-6 py-4 flex flex-col gap-4 text-sm font-semibold text-[#68727c]">
+              <a href="/explorar" className="text-left">Explorar</a>
+              <a href="/descobrir-estilo" className="text-left">Quero descobrir o meu estilo</a>
+              <a href="/carrinhos" className="text-left">Ver Carrinhos</a>
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20falar%20com%20um%20agente%20de%20envio." target="_blank" rel="noopener noreferrer" className="text-left">Conversar com agente</a>
+              <a href="/login" className="text-left">Entrar</a>
+              {onBackToSelector && <button onClick={() => { onBackToSelector(); setMenuOpen(false); }} className="text-left">Trocar loja</button>}
+            </div>
+          )}
         </header>
 
-        <div className="mx-auto max-w-[1380px] px-6 py-5 md:px-12">
+        <div className="mx-auto max-w-[1380px] px-6 pt-24 pb-4 md:px-12 md:pt-20">
           <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-4 scrollbar-hide pb-4">
-            {catsLoading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full border border-[#d9dde1] bg-white animate-pulse">
-                  <div className="w-8 h-8 rounded-full bg-gray-200" />
-                  <div className="w-16 h-3 rounded bg-gray-200" />
-                </div>
-              ))
-            ) : apiCategories.slice(0, 10).map((cat: any) => (
+            {collectionCategories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setLocation(`/busca?categoria=${cat.id}`)}
+                onClick={() => setLocation(`/explorar?categoria=${cat.id}`)}
                 className="flex-shrink-0 group flex items-center gap-3 px-5 py-3 rounded-full border border-[#d9dde1] bg-white hover:border-[#c9a84c] hover:bg-[#faf8f0] transition-all"
               >
                 <span className="text-xs font-medium text-[#30343a] whitespace-nowrap">{cat.name}</span>
