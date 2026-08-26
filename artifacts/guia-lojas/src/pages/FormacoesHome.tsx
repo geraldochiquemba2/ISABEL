@@ -302,7 +302,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
             <a href="/login-formacoes" className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors">Entrar</a>
           )}
           <a
-            href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20saber%20mais."
+            href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20saber%20mais."
             target="_blank"
             rel="noopener noreferrer"
             className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors"
@@ -489,7 +489,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
             <div className="mt-10 md:mt-0 md:w-80">
               <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a YESOLA ajuda a aproximá-lo de quem pode ensinar.</p>
               <button
-                onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20saber%20mais.", "_blank"); setSent(true); }}
+                onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20saber%20mais.", "_blank"); setSent(true); }}
                 className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]"
               >
                 {sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} />
@@ -502,8 +502,8 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           <Monogram />
           <p className="text-xs text-[#747b84]">Aprender. Praticar. Avançar.</p>
           <div className="flex items-center gap-5 text-[#747b84]">
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
             <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
             <span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span>
           </div>

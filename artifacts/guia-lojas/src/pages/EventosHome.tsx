@@ -368,7 +368,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
               </form>
               {sent && <p className="mt-3 flex items-center gap-2 text-sm text-[#8e5557]"><Check size={14} /> Pedido recebido. Falamos consigo em breve.</p>}
               <a
-                href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
+                href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Eventos%20%26%20Celebra%C3%A7%C3%B5es%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-7 flex items-center gap-4 border-b border-[#8e5557] pb-3 text-xs uppercase tracking-[.2em] text-[#3c2731] hover:text-[#8e5557] transition-colors"
