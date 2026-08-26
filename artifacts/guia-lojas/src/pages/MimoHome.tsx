@@ -255,7 +255,7 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
           <img
             src="/logo-yesola-icon-dark.png"
             alt="YESOLA"
-            style={{ width: "64px", height: "64px", filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }}
+            style={{ width: "48px", height: "48px", filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }}
           />
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>YESOLA<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Love Services</small></span>
         </div>
