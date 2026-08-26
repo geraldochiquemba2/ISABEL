@@ -1,19 +1,19 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "pt.eliora.app",
-  appName: "Eliora",
+  appId: "pt.yesola.app",
+  appName: "YESOLA",
   webDir: "dist/public",
   server: {
     androidScheme: "https",
   },
   ios: {
     contentInset: "automatic",
-    backgroundColor: "#fffcf9",
+    backgroundColor: "#2c3035",
     scheme: "https",
   },
   android: {
-    backgroundColor: "#fffcf9",
+    backgroundColor: "#2c3035",
   },
 };
 

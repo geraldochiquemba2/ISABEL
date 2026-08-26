@@ -148,6 +148,10 @@ export default function Login() {
         {/* Right — form */}
         <div className="flex-1 flex items-center justify-center p-8 overflow-y-auto">
           <div className="w-full max-w-sm py-8">
+            <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+              Voltar
+            </button>
             {/* Tabs */}
             <div className="flex gap-6 mb-10 border-b border-border">
               {(["login", "register"] as const).map((m) => (
