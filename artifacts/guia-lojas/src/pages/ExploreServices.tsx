@@ -411,7 +411,7 @@ export default function ExploreServices() {
       {/* Footer */}
       <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#fafafa]">
         <div className="flex items-center gap-3">
-          <img src="/logo-eliora-dark.svg" alt="YESOLA Casamentos" className="w-8 h-8" />
+          <img src="/logo-yesola-icon-dark.png" alt="YESOLA Casamentos" className="w-8 h-8" />
           <span className="font-serif text-lg tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Casamentos</i></span>
         </div>
         <p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p>

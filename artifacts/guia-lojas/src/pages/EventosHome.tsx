@@ -192,7 +192,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fffcf9]/90 backdrop-blur-md">
         <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Eventos & Celebrações">
           <img
-            src="/logo-eliora-dark.svg"
+            src="/logo-yesola-icon-dark.png"
             alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }}
           />
@@ -381,7 +381,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
 
         <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12">
           <div className="flex items-center gap-3">
-            <img src="/logo-eliora-dark.svg" alt="YESOLA" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", letterSpacing: "-.02em", color: "#3c2731" }}>YESOLA</span>
           </div>
           <p className="text-xs text-[#747b84]">© YESOLA · Luanda, Angola</p>

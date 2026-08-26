@@ -171,7 +171,7 @@ function Monogram() {
   return (
     <div className="flex items-center gap-3">
       <img
-        src="/logo-eliora-dark.svg"
+        src="/logo-yesola-icon-dark.png"
         alt="YESOLA Negócios & Finanças"
         className="w-10 h-10"
         style={{ filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
@@ -281,7 +281,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#f4f1eb]/90 backdrop-blur-md">
         <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Negócios & Finanças">
           <img
-            src="/logo-eliora-dark.svg"
+            src="/logo-yesola-icon-dark.png"
             alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
           />

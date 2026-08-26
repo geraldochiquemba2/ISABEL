@@ -82,7 +82,7 @@ function Monogram() {
   return (
     <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Collection">
       <img
-        src="/logo-eliora-dark.svg"
+        src="/logo-yesola-icon-dark.png"
         alt="Eliora"
         style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
       />

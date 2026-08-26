@@ -253,7 +253,7 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
       <nav className="mimo-nav" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(248,241,231,0.9)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
         <div className="mimo-logo" style={{ textDecoration: "none", color: "inherit" }}>
           <img
-            src="/logo-eliora-dark.svg"
+            src="/logo-yesola-icon-dark.png"
             alt="Eliora"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }}
           />

@@ -211,7 +211,7 @@ function Monogram() {
   return (
     <div className="flex items-center gap-3">
       <img 
-        src="/logo-eliora-dark.svg" 
+        src="/logo-yesola-icon-dark.png" 
         alt="YESOLA Casamentos" 
         className="w-10 h-10"
       />
@@ -327,7 +327,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fafafa]/90 backdrop-blur-md">
         <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Casamentos">
           <img
-            src="/logo-eliora-dark.svg"
+            src="/logo-yesola-icon-dark.png"
             alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(30%) sepia(20%) saturate(300%) hue-rotate(320deg) brightness(90%) contrast(85%)" }}
           />
