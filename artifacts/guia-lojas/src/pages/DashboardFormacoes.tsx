@@ -185,8 +185,8 @@ export default function DashboardFormacoes() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#0c9894] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo-eliora-dark.svg" alt="Eliora Formações" className="w-7 h-7 brightness-0 invert" />
-            <span className="font-serif text-sm tracking-[0.08em]">Eliora <i className="font-normal">Formações</i></span>
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" />
+            <span className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Formações</i></span>
           </div>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -201,9 +201,9 @@ export default function DashboardFormacoes() {
         {/* Sidebar */}
         <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#0c9894] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
-            <img src="/logo-eliora-dark.svg" alt="Eliora Formações" className="w-8 h-8 brightness-0 invert" />
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
             <div>
-              <p className="font-serif text-sm tracking-[0.08em]">Eliora <i className="font-normal">Formações</i></p>
+              <p className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Formações</i></p>
               <p className="text-[10px] text-white/50">Painel da loja</p>
             </div>
           </div>

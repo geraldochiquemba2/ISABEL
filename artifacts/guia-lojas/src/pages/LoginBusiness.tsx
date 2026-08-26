@@ -111,7 +111,8 @@ export default function LoginBusiness() {
 
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>Eliora<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Business & Finances</small></span>
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>YESOLA<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Negócios</small></span>
           </div>
 
           <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
@@ -167,7 +168,7 @@ export default function LoginBusiness() {
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na Eliora Business & Finances.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#112844] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Negócios.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#112844] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>

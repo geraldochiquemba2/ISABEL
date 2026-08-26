@@ -26,7 +26,7 @@ export function WeddingAdminPanel() {
             <ShieldAlert size={24} /> Administração Weddings
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Weddings
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 

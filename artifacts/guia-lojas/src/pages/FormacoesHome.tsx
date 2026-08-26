@@ -175,10 +175,10 @@ function Monogram() {
     <div className="flex items-center gap-3">
       <img
         src="/logo-eliora-dark.svg"
-        alt="Eliora Formações"
+        alt="YESOLA Formações"
         className="w-10 h-10"
       />
-      <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">Eliora <i className="font-normal">Formações</i></span>
+      <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Formações</i></span>
     </div>
   );
 }
@@ -289,9 +289,9 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto max-w-[1380px] flex items-center justify-between px-6 py-5 md:px-12 bg-white/90 backdrop-blur-md">
-        <a className="flex items-center gap-2.5 no-underline" href="#top" aria-label="Eliora Formações">
-          <img src="/logo-eliora-dark.svg" alt="Eliora" className="w-[39px] h-[39px]" />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>Eliora <i className="font-normal">Formações</i></span>
+        <a className="flex items-center gap-2.5 no-underline" href="#top" aria-label="YESOLA Formações">
+          <img src="/logo-eliora-dark.svg" alt="YESOLA" className="w-[39px] h-[39px]" />
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA <i className="font-normal">Formações</i></span>
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-6 shadow-md flex-col gap-5" : "hidden"} md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors">Serviços</button>
@@ -302,11 +302,11 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
             <a href="/login-formacoes" className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors">Entrar</a>
           )}
           <a
-            href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20saber%20mais."
+            href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20saber%20mais."
             target="_blank"
             rel="noopener noreferrer"
             className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors"
-          >Falar com a Eliora</a>
+          >Falar com a YESOLA</a>
           {onBackToSelector && (
             <button onClick={onBackToSelector} className="flex items-center gap-2 text-left text-xs font-semibold uppercase tracking-[0.18em] text-[#68727c] hover:text-[#30343a] transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -435,7 +435,7 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
               <div>
                 <p className="max-w-3xl font-serif text-3xl leading-[1.2] text-[#34383d] md:text-5xl" style={{ fontFamily: "'Playfair Display', serif" }}>Há uma diferença entre aprender algo novo e <i>descobrir o que pode tornar-se.</i></p>
-                <p className="mt-8 max-w-xl text-sm leading-7 text-[#6c7279]">Na Eliora, conectamos quem quer crescer com quem sabe ensinar. Cuidamos do percurso, do ritmo e da confiança — para que o aprendizado seja tão meaningful quanto o resultado.</p>
+                <p className="mt-8 max-w-xl text-sm leading-7 text-[#6c7279]">Na YESOLA, conectamos quem quer crescer com quem sabe ensinar. Cuidamos do percurso, do ritmo e da confiança — para que o aprendizado seja tão meaningful quanto o resultado.</p>
               </div>
               <figure className="relative aspect-[.78] overflow-hidden border border-[#cbd0d5] bg-[#e6e8ea]">
                 <img
@@ -487,9 +487,9 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
               <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl" style={{ fontFamily: "'Playfair Display', serif" }}>A próxima competência pode começar<br /><i>numa conversa.</i></h2>
             </div>
             <div className="mt-10 md:mt-0 md:w-80">
-              <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a Eliora ajuda a aproximá-lo de quem pode ensinar.</p>
+              <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a YESOLA ajuda a aproximá-lo de quem pode ensinar.</p>
               <button
-                onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20saber%20mais.", "_blank"); setSent(true); }}
+                onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20saber%20mais.", "_blank"); setSent(true); }}
                 className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]"
               >
                 {sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} />
@@ -502,10 +502,10 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           <Monogram />
           <p className="text-xs text-[#747b84]">Aprender. Praticar. Avançar.</p>
           <div className="flex items-center gap-5 text-[#747b84]">
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
             <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
-            <span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span>
+            <span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span>
           </div>
         </footer>
       </div>

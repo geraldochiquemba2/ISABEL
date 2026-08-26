@@ -4,7 +4,7 @@ import { Heart, ShoppingBag, ArrowRight, HeartHandshake, Landmark, GraduationCap
 const stores = [
   {
     id: "weddings",
-    name: "Eliora Weddings",
+    name: "Casamentos",
     subtitle: "Celebrações com intenção",
     description: "Concierge de celebrações em Luanda e além. Planeamento, decoração, beleza e memória para o vosso dia especial.",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&auto=format&q=80",
@@ -14,7 +14,7 @@ const stores = [
   },
   {
     id: "love-services",
-    name: "Eliora Love Services",
+    name: "Serviços de Amor",
     subtitle: "Cuidar é estar perto",
     description: "Pessoas de confiança para transformar a sua intenção em cuidado — presentes, buquês, fotografia e muito mais.",
     image: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=800&h=600&fit=crop&auto=format&q=80",
@@ -24,7 +24,7 @@ const stores = [
   },
   {
     id: "collection",
-    name: "Eliora Collection",
+    name: "Coleção",
     subtitle: "Estilo e elegância",
     description: "Moda, acessórios e lifestyle para quem carrega a luz de Deus. Descubra o vosso estilo com dignidade.",
     image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=600&fit=crop&auto=format&q=80",
@@ -34,7 +34,7 @@ const stores = [
   },
   {
     id: "business",
-    name: "Eliora Business & Finances",
+    name: "Negócios & Finanças",
     subtitle: "Clareza para crescer bem",
     description: "Consultoria, finanças e estratégia para empreendedores, empresas e famílias em Angola e além.",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format&q=80",
@@ -44,7 +44,7 @@ const stores = [
   },
   {
     id: "formacoes",
-    name: "Eliora Formações",
+    name: "Formações",
     subtitle: "Aprender muda o caminho",
     description: "Aulas, treinamentos e formações em Angola e além. Idiomas, tecnologia, carreira, artes e muito mais.",
     image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop&auto=format&q=80",
@@ -54,7 +54,7 @@ const stores = [
   },
   {
     id: "eventos",
-    name: "Eliora Eventos & Celebrações",
+    name: "Eventos & Celebrações",
     subtitle: "Momentos que ficam",
     description: "Planeamento, assessoria e tudo para o seu evento em Luanda e além. Decoração, catering, entretenimento e mais.",
     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&auto=format&q=80",
@@ -64,7 +64,7 @@ const stores = [
   },
   {
     id: "imoveis",
-    name: "Eliora Imóveis & Alojamento",
+    name: "Imóveis & Alojamento",
     subtitle: "Conforto e confiança",
     description: "Gestão imobiliária, arrendamento, estadias e hospitalidade. Hotéis, alojamento e imobiliária em Angola e além.",
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&auto=format&q=80",
@@ -74,7 +74,7 @@ const stores = [
   },
   {
     id: "infantil",
-    name: "Eliora Infantil & Maternidade",
+    name: "Infantil & Maternidade",
     subtitle: "Cuidar com amor",
     description: "Moda, brinquedos, cuidados e tudo para os pequenos. Enxoval, saúde e bem-estar para bebés e crianças em Angola.",
     image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&h=600&fit=crop&auto=format&q=80",
@@ -100,14 +100,17 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       >
         <div className="flex items-center justify-center gap-3 mb-4">
           <img 
-            src="/logo-eliora-dark.svg" 
-            alt="Eliora" 
+            src="/logo-yesola-icon-dark.png" 
+            alt="YESOLA" 
             className="w-12 h-12"
           />
         </div>
         <h1 className="text-3xl sm:text-4xl font-light text-gray-900 tracking-tight">
-          Bem-vindos à <span className="font-serif italic">Eliora</span>
+          <span className="font-serif italic">YESOLA</span>
         </h1>
+        <p className="mt-2 text-sm sm:text-base text-gray-600 max-w-md mx-auto">
+          Tudo o que Procuras, encontras aqui
+        </p>
         <p className="mt-3 text-gray-500 text-sm sm:text-base max-w-md mx-auto">
           Escolham a experiência que desejam viver
         </p>
@@ -177,7 +180,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
         transition={{ delay: 0.8 }}
         className="mt-12 text-xs text-gray-400"
       >
-        © 2024 Eliora. Todos os direitos reservados.
+        © 2024 YESOLA. Todos os direitos reservados.
       </motion.p>
     </div>
   );

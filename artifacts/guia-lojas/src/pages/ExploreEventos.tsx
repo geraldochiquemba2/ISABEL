@@ -165,7 +165,7 @@ export default function ExploreEventos() {
           <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#3c2731] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#3c2731]">Eliora<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#8e5557] mt-0.5">Eventos & Celebrações</small></span>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#3c2731]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#8e5557] mt-0.5">Eventos & Celebrações</small></span>
           <a href="/explorar-eventos" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#8e5557] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
@@ -323,7 +323,7 @@ export default function ExploreEventos() {
           <div className="mt-10 md:mt-0 md:w-80">
             <p className="text-sm leading-6 text-[#c4b0b1]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
-              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Eliora%20Eventos%20%26%20Celebrações." target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Eventos%20%26%20Celebrações." target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#8e5557] text-white text-sm font-medium rounded-full hover:bg-[#7a4a4c] transition-colors">
                 Falar connosco
               </a>

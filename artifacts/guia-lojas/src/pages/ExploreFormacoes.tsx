@@ -216,7 +216,7 @@ export default function ExploreFormacoes() {
           <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>Eliora <i className="font-normal">Formações</i></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA <i className="font-normal">Formações</i></span>
           <a href="/explorar-formacoes" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#0c9894] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
@@ -390,15 +390,15 @@ export default function ExploreFormacoes() {
             <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl" style={{ fontFamily: "'Playfair Display', serif" }}>A próxima competência pode começar<br /><i>numa conversa.</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a Eliora ajuda a aproximá-lo de quem pode ensinar.</p>
+            <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a YESOLA ajuda a aproximá-lo de quem pode ensinar.</p>
             <div className="mt-7 flex items-center gap-4">
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Phone size={14} /> Ligar
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Mail size={14} /> Email
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 WhatsApp
               </a>
             </div>
@@ -408,15 +408,15 @@ export default function ExploreFormacoes() {
 
       <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#fafafa]">
         <div className="flex items-center gap-3">
-          <img src="/logo-eliora-dark.svg" alt="Eliora Formações" className="w-8 h-8" />
-          <span className="font-serif text-lg tracking-[0.08em] text-[#2d2c2b]">Eliora <i className="font-normal">Formações</i></span>
+          <img src="/logo-eliora-dark.svg" alt="YESOLA Formações" className="w-8 h-8" />
+          <span className="font-serif text-lg tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Formações</i></span>
         </div>
         <p className="text-xs text-[#747b84]">Aprender. Praticar. Avançar.</p>
         <div className="flex items-center gap-5 text-[#747b84]">
-          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
-          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
           <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
-          <span className="font-mono text-[10px] tracking-[0.2em]">© 2024 ELIORA</span>
+          <span className="font-mono text-[10px] tracking-[0.2em]">© 2024 YESOLA</span>
         </div>
       </footer>
     </main>

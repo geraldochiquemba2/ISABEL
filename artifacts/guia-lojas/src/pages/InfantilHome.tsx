@@ -134,11 +134,11 @@ function Monogram() {
     <div className="flex items-center gap-3">
       <img
         src="/logo-eliora-dark.svg"
-        alt="Eliora Infantil & Maternidade"
+        alt="YESOLA Infantil & Maternidade"
         className="w-10 h-10"
         style={{ filter: "brightness(0) saturate(100%) invert(55%) sepia(40%) saturate(600%) hue-rotate(270deg) brightness(85%) contrast(85%)" }}
       />
-      <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#8e44ad]">Eliora <i className="font-normal">Infantil & Maternidade</i></span>
+      <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#8e44ad]">YESOLA <i className="font-normal">Infantil & Maternidade</i></span>
     </div>
   );
 }
@@ -241,13 +241,13 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fdf8f5]/90 backdrop-blur-md">
-        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Infantil & Maternidade">
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Infantil & Maternidade">
           <img
             src="/logo-eliora-dark.svg"
-            alt="Eliora"
+            alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(55%) sepia(40%) saturate(600%) hue-rotate(270deg) brightness(85%) contrast(85%)" }}
           />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#8e44ad" }}>Eliora<small style={{ display: "block", color: "#e74c8c", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Infantil & Maternidade</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#8e44ad" }}>YESOLA<small style={{ display: "block", color: "#e74c8c", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Infantil & Maternidade</small></span>
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-lg" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#e74c8c]">Serviços</button>
@@ -401,12 +401,12 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
               <div>
                 <p className="max-w-3xl font-['Playfair_Display'] text-3xl leading-[1.2] text-[#fdf8f5] md:text-5xl">Cuidar é um ato de amor. <i>Que começa antes do primeiro sorriso.</i></p>
-                <p className="mt-8 max-w-xl text-sm leading-7 text-[#fdf8f5]/60">Na Eliora, tratamos cada peça, cada brinquedo e cada serviço com o mesmo cuidado que dedicamos aos nossos filhos. Porque cada detalhe importa na vida dos pequenos.</p>
+                <p className="mt-8 max-w-xl text-sm leading-7 text-[#fdf8f5]/60">Na YESOLA, tratamos cada peça, cada brinquedo e cada serviço com o mesmo cuidado que dedicamos aos nossos filhos. Porque cada detalhe importa na vida dos pequenos.</p>
               </div>
               <figure className="relative aspect-[.78] overflow-hidden border border-[#fdf8f5]/10 bg-[#8e44ad]">
                 <img
                   src="/business/approach.jpg"
-                  alt="Eliora Infantil"
+                  alt="YESOLA Infantil"
                   className="h-full w-full object-cover object-center"
                   style={{ filter: "grayscale(0.3) contrast(0.95) brightness(1.05)" }}
                 />
@@ -434,10 +434,10 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
 
         <section id="contacto" className="relative overflow-hidden border-t border-[#e74c8c]/20 bg-[#8e44ad] px-6 py-14 text-[#fdf8f5] md:px-12 md:py-20">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e74c8c]/15" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e74c8c]/10" />
-          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#e74c8c]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Vamos encontrar<br /><i>o melhor para o seu pequeno?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#fdf8f5]/60">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e as melhores opções.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Infantil%20%26%20Maternidade%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#e74c8c] pb-3 text-xs uppercase tracking-[.2em] text-[#fdf8f5]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button></div></div>
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#e74c8c]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Vamos encontrar<br /><i>o melhor para o seu pequeno?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#fdf8f5]/60">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e as melhores opções.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#e74c8c] pb-3 text-xs uppercase tracking-[.2em] text-[#fdf8f5]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button></div></div>
         </section>
 
-        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#8e44ad]/60">Amor e carinho, em Angola e além.</p><div className="flex items-center gap-5 text-[#8e44ad]/60"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Infantil%20%26%20Maternidade%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WhatsApp</a><span className="font-mono text-[10px] tracking-[.2em]">© {new Date().getFullYear()} ELIORA</span></div></footer>
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#8e44ad]/60">Amor e carinho, em Angola e além.</p><div className="flex items-center gap-5 text-[#8e44ad]/60"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WhatsApp</a><span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span></div></footer>
       </div>
     </main>
   );

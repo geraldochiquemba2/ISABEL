@@ -172,11 +172,11 @@ function Monogram() {
     <div className="flex items-center gap-3">
       <img
         src="/logo-eliora-dark.svg"
-        alt="Eliora Business & Finances"
+        alt="YESOLA Negócios & Finanças"
         className="w-10 h-10"
         style={{ filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
       />
-      <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#112844]">Eliora <i className="font-normal">Business & Finances</i></span>
+      <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#112844]">YESOLA <i className="font-normal">Negócios & Finanças</i></span>
     </div>
   );
 }
@@ -279,13 +279,13 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#f4f1eb]/90 backdrop-blur-md">
-        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Business & Finances">
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Negócios & Finanças">
           <img
             src="/logo-eliora-dark.svg"
-            alt="Eliora"
+            alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
           />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>Eliora<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Business & Finances</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>YESOLA<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Negócios & Finanças</small></span>
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-lg" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#b88a3b]">Serviços</button>
@@ -439,12 +439,12 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
             <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
               <div>
                 <p className="max-w-3xl font-['Playfair_Display'] text-3xl leading-[1.2] text-[#f4f1eb] md:text-5xl">Pensar com rigor. <i>Agir com proximidade.</i></p>
-                <p className="mt-8 max-w-xl text-sm leading-7 text-[#f4f1eb]/60">Na Eliora, combinamos estratégia com execução rigorosa. Cada decisão é pensada para gerar valor real, sustentável e mensurável para o seu negócio.</p>
+                <p className="mt-8 max-w-xl text-sm leading-7 text-[#f4f1eb]/60">Na YESOLA, combinamos estratégia com execução rigorosa. Cada decisão é pensada para gerar valor real, sustentável e mensurável para o seu negócio.</p>
               </div>
               <figure className="relative aspect-[.78] overflow-hidden border border-[#f4f1eb]/10 bg-[#112844]">
                 <img
                   src="/business/approach.jpg"
-                  alt="Equipa Eliora em reunião de trabalho"
+                  alt="Equipa YESOLA em reunião de trabalho"
                   className="h-full w-full object-cover object-center"
                   style={{ filter: "grayscale(0.5) contrast(0.93) brightness(1.06)" }}
                 />
@@ -472,10 +472,10 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
 
         <section id="contacto" className="relative overflow-hidden border-t border-[#b88a3b]/20 bg-[#112844] px-6 py-14 text-[#f4f1eb] md:px-12 md:py-20">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#b88a3b]/15" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#b88a3b]/10" />
-          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b88a3b]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Vamos construir<br /><i>o próximo capítulo?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#f4f1eb]/60">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20marcar%20uma%20consulta.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b88a3b] pb-3 text-xs uppercase tracking-[.2em] text-[#f4f1eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button></div></div>
+          <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b88a3b]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Vamos construir<br /><i>o próximo capítulo?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#f4f1eb]/60">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20marcar%20uma%20consulta.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b88a3b] pb-3 text-xs uppercase tracking-[.2em] text-[#f4f1eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button></div></div>
         </section>
 
-        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#112844]/60">Estratégia com rigor, em Angola e além.</p><div className="flex items-center gap-5 text-[#112844]/60"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Business%20%26%20Finances%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WhatsApp</a><span className="font-mono text-[10px] tracking-[.2em]">© {new Date().getFullYear()} ELIORA</span></div></footer>
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#112844]/60">Estratégia com rigor, em Angola e além.</p><div className="flex items-center gap-5 text-[#112844]/60"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WhatsApp</a><span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span></div></footer>
       </div>
     </main>
   );

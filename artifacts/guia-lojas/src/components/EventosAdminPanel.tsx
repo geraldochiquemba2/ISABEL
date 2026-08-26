@@ -35,7 +35,7 @@ export function EventosAdminPanel() {
             <ShieldAlert size={24} /> Administração Eventos
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Eventos & Celebrações
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 

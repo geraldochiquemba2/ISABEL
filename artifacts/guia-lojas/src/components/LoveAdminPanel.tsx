@@ -33,7 +33,7 @@ export function LoveAdminPanel() {
             <ShieldAlert size={24} /> Administração Love Services
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Love Services
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 

@@ -119,29 +119,29 @@ export default function Login() {
           <Link href="/">
             <div className="flex items-center gap-2">
               <img 
-                src="/logo-eliora.svg" 
-                alt="Eliora Collection" 
+                src="/logo-yesola-icon-dark.png" 
+                alt="YESOLA Collection" 
                 className="w-10 h-10"
               />
               <span className="text-sm font-medium text-foreground">
-                Eliora<span className="font-light">Collection</span>
+                YESOLA<span className="font-light">Collection</span>
               </span>
             </div>
           </Link>
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Depoimento</p>
             <blockquote className="text-xl font-light text-foreground leading-relaxed">
-              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem a Eliora Collection."
+              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem a YESOLA Collection."
             </blockquote>
             <p className="text-sm text-muted-foreground mt-4">— Maria, Luanda</p>
           </div>
           <div className="flex items-center gap-2">
             <img 
-              src="/logo-eliora.svg" 
-              alt="Eliora Collection" 
+              src="/logo-yesola-icon-dark.png" 
+              alt="YESOLA Collection" 
               className="w-6 h-6"
             />
-            <p className="text-xs text-muted-foreground">© 2024 Eliora Collection</p>
+            <p className="text-xs text-muted-foreground">© 2024 YESOLA Collection</p>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export default function Login() {
 
                 <div className="text-center pt-2">
                   <a
-                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na Eliora Collection.")}`}
+                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Collection.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"

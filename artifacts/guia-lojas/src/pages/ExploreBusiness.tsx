@@ -167,7 +167,7 @@ export default function ExploreBusiness() {
           <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#112844] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#112844]">Eliora<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#b88a3b] mt-0.5">Business & Finances</small></span>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#112844]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#b88a3b] mt-0.5">Negócios & Finanças</small></span>
           <a href="/explorar-business" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#b88a3b] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
@@ -325,7 +325,7 @@ export default function ExploreBusiness() {
           <div className="mt-10 md:mt-0 md:w-80">
             <p className="text-sm leading-6 text-[#b9c1ca]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
-              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Eliora%20Business%20%26%20Finances." target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Neg%C3%B3cios%20%26%20Finan%C3%A7as." target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#b88a3b] text-white text-sm font-medium rounded-full hover:bg-[#a07a33] transition-colors">
                 Falar connosco
               </a>

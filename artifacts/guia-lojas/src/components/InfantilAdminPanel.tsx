@@ -32,7 +32,7 @@ export function InfantilAdminPanel() {
             <ShieldAlert size={24} /> Administração Infantil
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Infantil & Maternidade
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 

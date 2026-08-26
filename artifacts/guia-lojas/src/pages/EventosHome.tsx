@@ -190,13 +190,13 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-[1380px] items-center justify-between px-6 py-6 md:px-12 bg-[#fffcf9]/90 backdrop-blur-md">
-        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Eventos & Celebrações">
+        <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA Eventos & Celebrações">
           <img
             src="/logo-eliora-dark.svg"
-            alt="Eliora"
+            alt="YESOLA"
             style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }}
           />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#3c2731" }}>Eliora<small style={{ display: "block", color: "#8e5557", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Eventos & Celebrações</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#3c2731" }}>YESOLA<small style={{ display: "block", color: "#8e5557", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Eventos & Celebrações</small></span>
         </a>
         <nav className={`${menuOpen ? "absolute left-0 right-0 top-full flex bg-white px-6 pb-7 shadow-sm" : "hidden"} flex-col gap-5 text-xs uppercase tracking-[0.18em] md:static md:flex md:flex-row md:items-center md:gap-9 md:bg-transparent md:p-0 md:shadow-none`}>
           <button onClick={() => scrollTo("servicos")} className="text-left transition-colors hover:text-[#8e5557]">Serviços</button>
@@ -368,7 +368,7 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
               </form>
               {sent && <p className="mt-3 flex items-center gap-2 text-sm text-[#8e5557]"><Check size={14} /> Pedido recebido. Falamos consigo em breve.</p>}
               <a
-                href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Eventos%20%26%20Celebra%C3%A7%C3%B5es%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
+                href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-7 flex items-center gap-4 border-b border-[#8e5557] pb-3 text-xs uppercase tracking-[.2em] text-[#3c2731] hover:text-[#8e5557] transition-colors"
@@ -381,10 +381,10 @@ export function EventosHome({ onBackToSelector }: { onBackToSelector?: () => voi
 
         <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12">
           <div className="flex items-center gap-3">
-            <img src="/logo-eliora-dark.svg" alt="Eliora" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", letterSpacing: "-.02em", color: "#3c2731" }}>Eliora</span>
+            <img src="/logo-eliora-dark.svg" alt="YESOLA" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", letterSpacing: "-.02em", color: "#3c2731" }}>YESOLA</span>
           </div>
-          <p className="text-xs text-[#747b84]">© Eliora Eventos & Celebrações · Luanda, Angola</p>
+          <p className="text-xs text-[#747b84]">© YESOLA · Luanda, Angola</p>
           <p className="text-xs text-[#747b84]">Celebrar com intenção</p>
         </footer>
       </div>

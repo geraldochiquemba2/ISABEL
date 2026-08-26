@@ -110,8 +110,8 @@ export default function LoginLove() {
 
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <img src="/logo-eliora-dark.svg" alt="Eliora Love Services" className="w-10 h-10" style={{ filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }} />
-            <span className="font-serif text-xl tracking-[0.08em] text-[#173a42]">Eliora <i className="font-normal">Love Services</i></span>
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA Love Services" className="w-10 h-10" />
+            <span className="font-serif text-xl tracking-[0.08em] text-[#173a42]">YESOLA <i className="font-normal">Love Services</i></span>
           </div>
 
           <div className="flex gap-6 mb-8 border-b border-[#ded2c3]">
@@ -167,7 +167,7 @@ export default function LoginLove() {
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na Eliora Love Services.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#173a42] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Love Services.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#173a42] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>

@@ -138,7 +138,7 @@ export default function ExploreLove() {
           <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>Eliora<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Love Services</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>YESOLA<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Serviços de Amor</small></span>
           <a href="/explorar-love" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#68AAA0] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
@@ -291,7 +291,7 @@ export default function ExploreLove() {
           <div className="mt-10 md:mt-0 md:w-80">
             <p className="text-sm leading-6 text-[#cbd0d5]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
-              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Eliora%20Love%20Services." target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Servi%C3%A7os%20de%20Amor." target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#d96f5c] text-white text-sm font-medium rounded-full hover:bg-[#c5614f] transition-colors">
                 Falar connosco
               </a>

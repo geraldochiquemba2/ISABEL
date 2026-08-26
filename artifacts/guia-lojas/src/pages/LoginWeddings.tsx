@@ -114,8 +114,8 @@ export default function LoginWeddings() {
 
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <img src="/logo-eliora-dark.svg" alt="Eliora Weddings" className="w-10 h-10" />
-            <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">Eliora <i className="font-normal">Weddings</i></span>
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA Weddings" className="w-10 h-10" />
+            <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Weddings</i></span>
           </div>
 
           <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
@@ -171,7 +171,7 @@ export default function LoginWeddings() {
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na Eliora Weddings.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#30343a] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Weddings.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#30343a] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>

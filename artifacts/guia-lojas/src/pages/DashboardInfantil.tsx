@@ -183,7 +183,7 @@ export default function DashboardInfantil() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#8e44ad] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>Eliora<small style={{ display: "block", color: "#e74c8c", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Infantil</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#e74c8c", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Infantil</small></span>
           </div>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -196,8 +196,8 @@ export default function DashboardInfantil() {
         <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#8e44ad] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
             <div>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>Eliora</span>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#e74c8c", marginTop: "1px" }}>Infantil & Maternidade</p>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>YESOLA</span>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#e74c8c", marginTop: "1px" }}>Infantil</p>
               <p className="text-[10px] text-white/50 mt-1">Painel da loja</p>
             </div>
           </div>

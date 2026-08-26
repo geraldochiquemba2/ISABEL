@@ -35,7 +35,7 @@ export function FormacoesAdminPanel() {
             <ShieldAlert size={24} /> Administração Formações
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Formações
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 

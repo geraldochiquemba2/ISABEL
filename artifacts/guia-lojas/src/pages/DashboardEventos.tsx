@@ -186,7 +186,7 @@ export default function DashboardEventos() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#8e5557] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>Eliora<small style={{ display: "block", color: "#c7868a", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Eventos & Celebrações</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#c7868a", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Eventos</small></span>
           </div>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -198,10 +198,10 @@ export default function DashboardEventos() {
         {/* Sidebar */}
         <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#8e5557] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
-            <img src="/logo-eliora-dark.svg" alt="Eliora Eventos" className="w-8 h-8" style={{ filter: "brightness(0) saturate(100%) invert(35%) sepia(40%) saturate(400%) hue-rotate(320deg) brightness(85%) contrast(85%)" }} />
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
             <div>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>Eliora</span>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#c7868a", marginTop: "1px" }}>Eventos & Celebrações</p>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>YESOLA</span>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#c7868a", marginTop: "1px" }}>Eventos</p>
               <p className="text-[10px] text-white/50 mt-1">Painel da loja</p>
             </div>
           </div>

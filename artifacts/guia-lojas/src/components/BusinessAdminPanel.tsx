@@ -35,7 +35,7 @@ export function BusinessAdminPanel() {
             <ShieldAlert size={24} /> Administração Business
           </h1>
           <p className="text-sm text-[#87909a] mt-1">
-            Gerencie contas e categorias da Eliora Business & Finances
+            Gerencie contas e categorias da YESOLA
           </p>
         </div>
 
