@@ -211,9 +211,7 @@ function Monogram() {
   return (
     <div className="flex items-center gap-3">
       <img 
-        src="/logo-yesola-icon-dark.png" 
-        alt="YESOLA Casamentos" 
-        className="w-10 h-10"
+        src="/logo-yesola-icon-dark.png" className="w-14 h-14"
       />
       <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Casamentos</i></span>
     </div>

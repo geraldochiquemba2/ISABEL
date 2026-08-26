@@ -171,9 +171,7 @@ function Monogram() {
   return (
     <div className="flex items-center gap-3">
       <img
-        src="/logo-yesola-icon-dark.png"
-        alt="YESOLA Negócios & Finanças"
-        className="w-10 h-10"
+        src="/logo-yesola-icon-dark.png" className="w-14 h-14"
         style={{ filter: "brightness(0) saturate(100%) invert(58%) sepia(50%) saturate(600%) hue-rotate(2deg) brightness(95%) contrast(85%)" }}
       />
       <span className="font-['Playfair_Display'] text-xl tracking-[0.08em] text-[#112844]">YESOLA <i className="font-normal">Negócios & Finanças</i></span>

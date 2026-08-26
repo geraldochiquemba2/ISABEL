@@ -84,7 +84,7 @@ function Monogram() {
       <img
         src="/logo-yesola-icon-dark.png"
         alt="Eliora"
-        style={{ width: "39px", height: "39px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
+        style={{ width: "48px", height: "48px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
       />
       <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>Eliora<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
     </a>
