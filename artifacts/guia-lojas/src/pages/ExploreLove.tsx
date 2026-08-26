@@ -63,7 +63,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 export default function ExploreLove() {
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
-    const cat = params.get("categoria");
+    const cat = params.get("categoria") || params.get("servico");
     if (cat) {
       const group = LOVE_SERVICE_GROUPS.find((g) => g.title.toLowerCase().includes(cat.toLowerCase()) || g.category?.toLowerCase() === cat.toLowerCase());
       return group ? group.category : null;
