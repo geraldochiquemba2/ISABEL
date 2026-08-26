@@ -100,7 +100,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       >
         <div className="flex items-center justify-center gap-3 mb-4">
           <img 
-            src="/logo-yesola-icon-dark.png" className="w-48 h-48"
+            src="/logo-yesola-icon-dark.png" className="w-36 h-36"
           />
         </div>
         <h1 className="text-3xl sm:text-4xl font-light text-gray-900 tracking-tight">

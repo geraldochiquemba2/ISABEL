@@ -211,7 +211,7 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
   const openRequest = (title = "") => { setSelected(title); setRequest(true); setNome(""); setContacto(""); setMensagem(""); };
 
   const sendToWhatsApp = () => {
-    const text = `Olá! Vim pela Eliora Love Services e gostaria de pedir um serviço.\n\nServiço: ${selected || "Geral"}\nNome: ${nome}\nContacto: ${contacto}\nMensagem: ${mensagem}`;
+    const text = `Olá! Vim pela YESOLA e gostaria de pedir um serviço.\n\nServiço: ${selected || "Geral"}\nNome: ${nome}\nContacto: ${contacto}\nMensagem: ${mensagem}`;
     window.open(`https://wa.me/244922001778?text=${encodeURIComponent(text)}`, "_blank");
     setRequest(false);
   };
@@ -254,10 +254,10 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
         <div className="mimo-logo" style={{ textDecoration: "none", color: "inherit" }}>
           <img
             src="/logo-yesola-icon-dark.png"
-            alt="Eliora"
+            alt="YESOLA"
             style={{ width: "64px", height: "64px", filter: "brightness(0) saturate(100%) invert(42%) sepia(32%) saturate(1200%) hue-rotate(325deg) brightness(90%) contrast(90%)" }}
           />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>Eliora<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Love Services</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>YESOLA<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Love Services</small></span>
         </div>
         <div className={`mimo-nav-links ${menu ? "open" : ""}`}>
           <a href="#servicos">Serviços</a>
@@ -302,8 +302,8 @@ export function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }
             })}</div> : <div style={{padding:"45px 0",color:"#698080"}}>Não encontrámos esse serviço. Tente outra palavra ou fale connosco.</div>}
           </div>
         </section>
-         <section className="mimo-trust" id="confianca"><div className="mimo-trust-inner"><div><div className="mimo-kicker" style={{color:"#e5a546"}}><span style={{background:"#e5a546"}} /> cuidado com responsabilidade</div><h2>Confiança não se promete.<br />Constrói-se.</h2><p>Cada pessoa e cada negócio na Eliora Love Services passa por um processo de verificação. Porque quando cuidamos de quem ama, todos os detalhes contam.</p></div><div className="mimo-points"><div className="mimo-point"><ShieldCheck size={21}/><strong>Profissionais verificados</strong><span>Identidade, referências e experiência confirmadas.</span></div><div className="mimo-point"><Star size={21}/><strong>Avaliações reais</strong><span>Escolha com a tranquilidade de quem já experimentou.</span></div><div className="mimo-point"><MapPin size={21}/><strong>Feito em Angola</strong><span>Conhecemos os bairros, os ritmos e o que importa.</span></div><div className="mimo-point"><MessageCircle size={21}/><strong>Apoio próximo</strong><span>Estamos aqui antes, durante e depois do seu pedido.</span></div></div></div></section>
-         <section className="mimo-bottom" id="como-funciona"><h2>Tem uma ideia em mente?</h2><p>Conte-nos o que precisa. Nós tratamos do resto.</p><button className="mimo-primary" onClick={() => openRequest()}>Fazer um pedido <ArrowRight size={17}/></button><footer className="mimo-footer"><span>© 2024 Eliora Love Services · Cuidar é estar perto.</span><span><a href="#servicos">Serviços</a><a href="#confianca">Segurança</a><a href="#como-funciona">Ajuda</a></span></footer></section>
+         <section className="mimo-trust" id="confianca"><div className="mimo-trust-inner"><div><div className="mimo-kicker" style={{color:"#e5a546"}}><span style={{background:"#e5a546"}} /> cuidado com responsabilidade</div><h2>Confiança não se promete.<br />Constrói-se.</h2><p>Cada pessoa e cada negócio na YESOLA passa por um processo de verificação. Porque quando cuidamos de quem ama, todos os detalhes contam.</p></div><div className="mimo-points"><div className="mimo-point"><ShieldCheck size={21}/><strong>Profissionais verificados</strong><span>Identidade, referências e experiência confirmadas.</span></div><div className="mimo-point"><Star size={21}/><strong>Avaliações reais</strong><span>Escolha com a tranquilidade de quem já experimentou.</span></div><div className="mimo-point"><MapPin size={21}/><strong>Feito em Angola</strong><span>Conhecemos os bairros, os ritmos e o que importa.</span></div><div className="mimo-point"><MessageCircle size={21}/><strong>Apoio próximo</strong><span>Estamos aqui antes, durante e depois do seu pedido.</span></div></div></div></section>
+         <section className="mimo-bottom" id="como-funciona"><h2>Tem uma ideia em mente?</h2><p>Conte-nos o que precisa. Nós tratamos do resto.</p><button className="mimo-primary" onClick={() => openRequest()}>Fazer um pedido <ArrowRight size={17}/></button><footer className="mimo-footer"><span>© 2024 YESOLA · Cuidar é estar perto.</span><span><a href="#servicos">Serviços</a><a href="#confianca">Segurança</a><a href="#como-funciona">Ajuda</a></span></footer></section>
       </main>
       {request && <div className="mimo-modal-wrap" onClick={(e) => e.target === e.currentTarget && setRequest(false)}><div className="mimo-modal"><button className="mimo-close" onClick={() => setRequest(false)} aria-label="Fechar"><X /></button><h3>Vamos criar um gesto especial.</h3><p>{selected || "Conte-nos o que gostaria de tornar possível."}</p><input placeholder="O seu nome" value={nome} onChange={(e) => setNome(e.target.value)} /><input placeholder="Como podemos contactá-lo?" value={contacto} onChange={(e) => setContacto(e.target.value)} /><textarea placeholder="Descreva o que precisa, para quem é e quando..." value={mensagem} onChange={(e) => setMensagem(e.target.value)} /><button className="mimo-primary" onClick={sendToWhatsApp}>Enviar via WhatsApp <ArrowRight size={16}/></button></div></div>}
     </div>

@@ -80,13 +80,13 @@ const FALLBACK_IMAGES: Record<string, string> = {
 
 function Monogram() {
   return (
-    <a className="flex items-center gap-3 no-underline" href="#top" aria-label="Eliora Collection">
+    <a className="flex items-center gap-3 no-underline" href="#top" aria-label="YESOLA">
       <img
         src="/logo-yesola-icon-dark.png"
-        alt="Eliora"
+        alt="YESOLA"
         style={{ width: "64px", height: "64px", filter: "brightness(0) saturate(100%) invert(40%) sepia(40%) saturate(500%) hue-rotate(10deg) brightness(90%) contrast(85%)" }}
       />
-      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>Eliora<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
+      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
     </a>
   );
 }
@@ -295,7 +295,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             </div>
             <div className="mt-10 md:mt-0 md:w-80">
               <p className="text-sm leading-6 text-[#cbd0d5]">Conte-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p>
-              <button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button>
+              <button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ArrowRight size={15} /></button>
             </div>
           </div>
         </section>
@@ -304,8 +304,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
           <Monogram />
           <p className="text-xs text-[#747b84]">Estilo e elegância, em Angola e além.</p>
           <div className="flex items-center gap-5 text-[#747b84]">
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
-            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20Eliora%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+            <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
             <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
             <span className="font-mono text-[10px] tracking-[.2em]">© 2024 ELIORA</span>
           </div>
