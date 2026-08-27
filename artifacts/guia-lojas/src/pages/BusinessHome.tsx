@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
@@ -9,11 +11,11 @@ import {
 
 const CATEGORIES = [
   { id: "empreendedorismo", name: "Empreendedorismo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
-  { id: "gestao", name: "Gestão e\nEstratégia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="4" width="24" height="24" rx="3" /><path d="M4 12h24M12 12v16" /></svg> },
-  { id: "financas", name: "Finanças\nPessoais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
-  { id: "marketing", name: "Marketing e\nVendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
-  { id: "advogados", name: "Advogados\nQualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8H4l12-8z" /><rect x="6" y="12" width="4" height="12" /><rect x="14" y="12" width="4" height="12" /><rect x="22" y="12" width="4" height="12" /><path d="M4 28h24" /></svg> },
-  { id: "contabilistas", name: "Contabilistas\nQualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="4" width="22" height="24" rx="2" /><path d="M10 10h12M10 14h12M10 18h8" /><path d="M20 22l2 2 4-4" /></svg> },
+  { id: "gestao", name: "Gestão e Estratégia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="4" width="24" height="24" rx="3" /><path d="M4 12h24M12 12v16" /></svg> },
+  { id: "financas", name: "Finanças Pessoais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
+  { id: "marketing", name: "Marketing e Vendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
+  { id: "advogados", name: "Advogados Qualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8H4l12-8z" /><rect x="6" y="12" width="4" height="12" /><rect x="14" y="12" width="4" height="12" /><rect x="22" y="12" width="4" height="12" /><path d="M4 28h24" /></svg> },
+  { id: "contabilistas", name: "Contabilistas Qualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="4" width="22" height="24" rx="2" /><path d="M10 10h12M10 14h12M10 18h8" /><path d="M20 22l2 2 4-4" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -23,9 +25,9 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store }: { store: Store }) {
   const fallbackImage = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages?.length > 0 ? store.coverImages : [store.coverImage || store.image || fallbackImage];
+  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -35,22 +37,37 @@ function StoreCard({ store }: { store: any }) {
   }, [images.length]);
 
   return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=negocios`}>
+    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=business`}>
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category || "Negócios"}</p>
+        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || "Luanda"}</span>
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8 ({Math.floor(Math.random() * 100 + 30)})</span>
+          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
+  if (stores.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3 px-1">
+        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
+        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
       </div>
     </div>
   );
@@ -61,13 +78,20 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data: stores = [] } = useQuery({
-    queryKey: ["stores", "negocios"],
-    queryFn: async () => { const r = await fetch("/api/stores?store_type=negocios"); return r.ok ? r.json() : []; },
+  const { data: stores = [], isLoading } = useQuery({
+    queryKey: ["stores", "business"],
+    queryFn: () => fetchStores({ storeType: "business" }),
     staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: any) => s.isOpen !== false).slice(0, 4);
+  const getStoresForCategory = (categoryName: string) => {
+    return stores.filter((s: Store) => {
+      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      return matchesCategory && s.isOpen !== false;
+    });
+  };
+
+  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -109,7 +133,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight whitespace-pre-line">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -145,23 +169,31 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
         </div>
       </section>
 
-      {/* Featured Stores */}
-      <section className="px-5 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Profissionais em destaque</h2>
-          <button onClick={() => navigate("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={14} /></button>
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {featured.length > 0 ? featured.map((store: any) => <StoreCard key={store.id} store={store} />) : (
-            <>
-              <StoreCard store={{ id: "demo-1", name: "Advocacia Moderna", category: "Advogados", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-2", name: "Contabilidade Express", category: "Contabilistas", municipality: "Benguela", coverImage: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-3", name: "Estratégia & Sucesso", category: "Gestão e Estratégia", municipality: "Huila", coverImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-4", name: "Marketing Digital Pro", category: "Marketing e Vendas", municipality: "Lubango", coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop" }} />
-            </>
+      ) : (
+        <div className="px-5 py-4 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
+          ))}
+          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
+            <div>
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Profissionais em destaque</h3>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
+              </div>
+            </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Counter */}
       <section className="px-5 py-3">

@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "pessoal", name: "Desenvolvimento\nPessoal", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 8l3-3m0 0v3m0-3h-3" /></svg> },
-  { id: "negocios-f", name: "Negócios &\nEmpreendedorismo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
-  { id: "tecnologia", name: "Tecnologia &\nInformática", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="6" width="24" height="16" rx="2" /><path d="M10 28h12" /><path d="M16 22v6" /><path d="M12 28h8" /></svg> },
-  { id: "marketing-f", name: "Marketing &\nVendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
-  { id: "financas-f", name: "Finanças &\nInvestimentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
-  { id: "saude", name: "Saúde &\nBem-estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "pessoal", name: "Desenvolvimento Pessoal", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 8l3-3m0 0v3m0-3h-3" /></svg> },
+  { id: "negocios", name: "Negócios & Empreendedorismo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
+  { id: "tecnologia", name: "Tecnologia & Informática", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="6" width="24" height="16" rx="2" /><path d="M10 28h12" /><path d="M16 22v6" /><path d="M12 28h8" /></svg> },
+  { id: "marketing", name: "Marketing & Vendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
+  { id: "financas", name: "Finanças & Investimentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
+  { id: "saude", name: "Saúde & Bem-estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -23,9 +25,9 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store }: { store: Store }) {
   const fallbackImage = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages?.length > 0 ? store.coverImages : [store.coverImage || store.image || fallbackImage];
+  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -42,15 +44,30 @@ function StoreCard({ store }: { store: any }) {
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category || "Formações"}</p>
+        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || "Luanda"}</span>
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8 ({Math.floor(Math.random() * 80 + 20)})</span>
+          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
+  if (stores.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3 px-1">
+        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
+        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
       </div>
     </div>
   );
@@ -61,13 +78,20 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data: stores = [] } = useQuery({
+  const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "formacoes"],
-    queryFn: async () => { const r = await fetch("/api/stores?store_type=formacoes"); return r.ok ? r.json() : []; },
+    queryFn: () => fetchStores({ storeType: "formacoes" }),
     staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: any) => s.isOpen !== false).slice(0, 4);
+  const getStoresForCategory = (categoryName: string) => {
+    return stores.filter((s: Store) => {
+      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      return matchesCategory && s.isOpen !== false;
+    });
+  };
+
+  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -75,7 +99,7 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
         .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-item { flex-shrink: 0; display: flex; flex-col; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #EDE8DE; min-width: 72px; cursor: pointer; transition: all 0.2s; }
+        .cat-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #EDE8DE; min-width: 72px; cursor: pointer; transition: all 0.2s; }
         .cat-item:hover { border-color: #D4A843; background: #FBF7ED; }
         .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .trust-scroll::-webkit-scrollbar { display: none; }
@@ -109,7 +133,7 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight whitespace-pre-line">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -145,23 +169,31 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
         </div>
       </section>
 
-      {/* Featured Stores */}
-      <section className="px-5 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Formações em destaque</h2>
-          <button onClick={() => navigate("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {featured.length > 0 ? featured.map((store: any) => <StoreCard key={store.id} store={store} />) : (
-            <>
-              <StoreCard store={{ id: "demo-1", name: "Code Academy Angola", category: "Tecnologia & Informática", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-2", name: "Business School Luanda", category: "Negócios & Empreendedorismo", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-3", name: "Marketing Pro", category: "Marketing & Vendas", municipality: "Benguela", coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-4", name: "Saúde & Bem Estar", category: "Saúde & Bem-estar", municipality: "Huila", coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop" }} />
-            </>
+      ) : (
+        <div className="px-5 py-4 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
+          ))}
+          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
+            <div>
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Formações em destaque</h3>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
+              </div>
+            </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Counter */}
       <section className="px-5 py-3">

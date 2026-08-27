@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "namoro", name: "Agências de\nNamoro Cristão", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
-  { id: "conselhoria", name: "Conselhoria &\nRelacionamentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 10l4-4m0 0v4m0-4h-4" /></svg> },
-  { id: "presentes", name: "Presentes &\nSurpresas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="14" width="22" height="14" rx="2" /><path d="M16 14v14" /><rect x="5" y="10" width="22" height="4" rx="1" /><path d="M16 10c-2-4-6-4-6 0h6c0-4 4-4 6 0h-6z" /></svg> },
-  { id: "noivados", name: "Noivados &\nPedidos Especiais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M12 16l3 3 5-6" /></svg> },
-  { id: "registros", name: "Registros de\nAmor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
-  { id: "cartas", name: "Cartas &\nMensagens", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /></svg> },
-  { id: "mentoria", name: "Mentoria para\nCasais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="12" cy="12" r="5" /><circle cx="22" cy="12" r="5" /><path d="M4 28c0-4.4 3.6-8 8-8h1" /><path d="M28 28c0-4.4-3.6-8-8-8h-1" /></svg> },
-  { id: "apoio", name: "Apoio Emocional &\nEspiritual", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4v8m0 8v8M8 12l6-4v8l-6-4zm16 0l-6-4v8l6-4z" /><circle cx="16" cy="16" r="3" /></svg> },
+  { id: "namoro", name: "Agências de Namoro Cristão", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "conselhoria", name: "Conselhoria & Relacionamentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 10l4-4m0 0v4m0-4h-4" /></svg> },
+  { id: "presentes", name: "Presentes & Surpresas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="14" width="22" height="14" rx="2" /><path d="M16 14v14" /><rect x="5" y="10" width="22" height="4" rx="1" /><path d="M16 10c-2-4-6-4-6 0h6c0-4 4-4 6 0h-6z" /></svg> },
+  { id: "noivados", name: "Noivados & Pedidos Especiais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M12 16l3 3 5-6" /></svg> },
+  { id: "registros", name: "Registros de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
+  { id: "cartas", name: "Cartas & Mensagens", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /></svg> },
+  { id: "mentoria", name: "Mentoria para Casais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="12" cy="12" r="5" /><circle cx="22" cy="12" r="5" /><path d="M4 28c0-4.4 3.6-8 8-8h1" /><path d="M28 28c0-4.4-3.6-8-8-8h-1" /></svg> },
+  { id: "apoio", name: "Apoio Emocional & Espiritual", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4v8m0 8v8M8 12l6-4v8l-6-4zm16 0l-6-4v8l6-4z" /><circle cx="16" cy="16" r="3" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -25,9 +27,9 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store }: { store: Store }) {
   const fallbackImage = "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages?.length > 0 ? store.coverImages : [store.coverImage || store.image || fallbackImage];
+  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -37,22 +39,37 @@ function StoreCard({ store }: { store: any }) {
   }, [images.length]);
 
   return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=amor`}>
+    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=love-services`}>
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category || "Serviços de Amor"}</p>
+        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || "Luanda"}</span>
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8 ({Math.floor(Math.random() * 80 + 20)})</span>
+          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
+  if (stores.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3 px-1">
+        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
+        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
       </div>
     </div>
   );
@@ -63,13 +80,20 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data: stores = [] } = useQuery({
-    queryKey: ["stores", "amor"],
-    queryFn: async () => { const r = await fetch("/api/stores?store_type=amor"); return r.ok ? r.json() : []; },
+  const { data: stores = [], isLoading } = useQuery({
+    queryKey: ["stores", "love-services"],
+    queryFn: () => fetchStores({ storeType: "love-services" }),
     staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: any) => s.isOpen !== false).slice(0, 4);
+  const getStoresForCategory = (categoryName: string) => {
+    return stores.filter((s: Store) => {
+      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      return matchesCategory && s.isOpen !== false;
+    });
+  };
+
+  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -111,7 +135,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight whitespace-pre-line">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -147,23 +171,31 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
         </div>
       </section>
 
-      {/* Featured Stores */}
-      <section className="px-5 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Serviços em destaque</h2>
-          <button onClick={() => navigate("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={14} /></button>
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {featured.length > 0 ? featured.map((store: any) => <StoreCard key={store.id} store={store} />) : (
-            <>
-              <StoreCard store={{ id: "demo-1", name: "Coração Missionário", category: "Agências de Namoro", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-2", name: "Amor & Fé", category: "Conselhoria", municipality: "Benguela", coverImage: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-3", name: "Presentes com Amor", category: "Presentes & Surpresas", municipality: "Huila", coverImage: "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-4", name: "Mentoria Casal Feliz", category: "Mentoria para Casais", municipality: "Lubango", coverImage: "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop" }} />
-            </>
+      ) : (
+        <div className="px-5 py-4 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
+          ))}
+          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
+            <div>
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Serviços em destaque</h3>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
+              </div>
+            </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Counter */}
       <section className="px-5 py-3">

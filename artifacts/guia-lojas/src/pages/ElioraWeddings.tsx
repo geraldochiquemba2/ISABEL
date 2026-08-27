@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "locais", name: "Locais &\nSalões", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="12" width="24" height="16" rx="2" /><path d="M4 12l12-8 12 8" /><rect x="12" y="20" width="8" height="8" /></svg> },
-  { id: "buffet", name: "Buffet &\nCatering", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
-  { id: "decoracao", name: "Decoração &\nFlores", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
-  { id: "fotografia", name: "Fotografia &\nVídeo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
-  { id: "musica", name: "Música &\nEntretenimento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="10" cy="24" r="4" /><circle cx="24" cy="20" r="4" /><path d="M14 24V8l14-4v16" /></svg> },
-  { id: "vestidos", name: "Vestidos &\nTrajes", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M10 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" /><path d="M8 12l-2 16h20l-2-16" /></svg> },
-  { id: "convites", name: "Convites &\nPapelaria", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /><path d="M20 20l6-5" /><path d="M12 20l-6-5" /></svg> },
-  { id: "outros", name: "Outros\nServiços", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="8" cy="16" r="3" /><circle cx="16" cy="16" r="3" /><circle cx="24" cy="16" r="3" /><circle cx="8" cy="24" r="3" /><circle cx="16" cy="24" r="3" /><circle cx="24" cy="24" r="3" /></svg> },
+  { id: "locais", name: "Locais & Salões", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="12" width="24" height="16" rx="2" /><path d="M4 12l12-8 12 8" /><rect x="12" y="20" width="8" height="8" /></svg> },
+  { id: "buffet", name: "Buffet & Catering", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
+  { id: "decoracao", name: "Decoração & Flores", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
+  { id: "fotografia", name: "Fotografia & Vídeo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
+  { id: "musica", name: "Música & Entretenimento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="10" cy="24" r="4" /><circle cx="24" cy="20" r="4" /><path d="M14 24V8l14-4v16" /></svg> },
+  { id: "vestidos", name: "Vestidos & Trajes", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M10 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" /><path d="M8 12l-2 16h20l-2-16" /></svg> },
+  { id: "convites", name: "Convites & Papelaria", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /><path d="M20 20l6-5" /><path d="M12 20l-6-5" /></svg> },
+  { id: "outros", name: "Outros Serviços", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="8" cy="16" r="3" /><circle cx="16" cy="16" r="3" /><circle cx="24" cy="16" r="3" /><circle cx="8" cy="24" r="3" /><circle cx="16" cy="24" r="3" /><circle cx="24" cy="24" r="3" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -25,9 +27,9 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store }: { store: Store }) {
   const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages?.length > 0 ? store.coverImages : [store.coverImage || store.image || fallbackImage];
+  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -41,19 +43,33 @@ function StoreCard({ store }: { store: any }) {
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
-        <span className="absolute top-2 left-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 bg-[#D4A843] text-white">Destaque</span>
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category || "Casamentos"}</p>
+        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || "Luanda"}</span>
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8 ({Math.floor(Math.random() * 100 + 30)})</span>
+          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
+  if (stores.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3 px-1">
+        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
+        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
       </div>
     </div>
   );
@@ -64,13 +80,20 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data: stores = [] } = useQuery({
+  const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "weddings"],
-    queryFn: async () => { const r = await fetch("/api/stores?store_type=weddings"); return r.ok ? r.json() : []; },
+    queryFn: () => fetchStores({ storeType: "weddings" }),
     staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: any) => s.isOpen !== false).slice(0, 4);
+  const getStoresForCategory = (categoryName: string) => {
+    return stores.filter((s: Store) => {
+      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      return matchesCategory && s.isOpen !== false;
+    });
+  };
+
+  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -112,7 +135,7 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight whitespace-pre-line">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -148,23 +171,31 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
         </div>
       </section>
 
-      {/* Featured Stores */}
-      <section className="px-5 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Fornecedores em destaque</h2>
-          <button onClick={() => navigate("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {featured.length > 0 ? featured.map((store: any) => <StoreCard key={store.id} store={store} />) : (
-            <>
-              <StoreCard store={{ id: "demo-1", name: "Espaço Real Eventos", category: "Locais & Salões", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-2", name: "Encantos Decorações", category: "Decoração & Flores", municipality: "Benguela", coverImage: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-3", name: "Sabor & Arte Catering", category: "Buffet & Catering", municipality: "Huila", coverImage: "https://images.unsplash.com/photo-1555244162-803834f70033?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-4", name: "Memórias Fotografia", category: "Fotografia & Vídeo", municipality: "Lubango", coverImage: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&h=300&fit=crop" }} />
-            </>
+      ) : (
+        <div className="px-5 py-4 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
+          ))}
+          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
+            <div>
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Fornecedores em destaque</h3>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
+              </div>
+            </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Counter */}
       <section className="px-5 py-3">
@@ -186,7 +217,6 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
         </div>
       </section>
 
-      {/* Footer */}
       <div className="text-center py-6 px-5">
         <p className="text-[11px] text-[#9CA3AF]">YESOLA CASAMENTOS · O SEU DIA PERFEITO, DO SEU JEITO.</p>
       </div>

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
@@ -9,11 +9,11 @@ import {
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Bell, Menu, X, Search,
 } from "lucide-react";
 
-function StoreCard({ store }: { store: Store }) {
+function StoreCard({ store, from }: { store: Store; from: string }) {
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   const images = store.coverImages && store.coverImages.length > 0
     ? store.coverImages
-    : [store.coverImage || store.image || fallbackImage];
+    : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function StoreCard({ store }: { store: Store }) {
   }, [images.length]);
 
   return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}`}>
+    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
@@ -58,12 +58,14 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { data: stores = [], isLoading } = useQuery({
-    queryKey: ["stores"],
-    queryFn: () => fetchStores(),
+    queryKey: ["stores", "collection"],
+    queryFn: () => fetchStores({ storeType: "collection" }),
+    staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: Store) => s.isFeatured).slice(0, 4);
-  const allStores = featured.length > 0 ? featured : stores.slice(0, 4);
+  const featured = useMemo(() => {
+    return stores.filter((s: Store) => s.isOpen !== false).slice(0, 6);
+  }, [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -145,8 +147,10 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         </div>
         {isLoading ? (
           <div className="flex gap-3 overflow-x-auto">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+        ) : featured.length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{featured.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
         ) : (
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{allStores.map((store: Store) => <StoreCard key={store.id} store={store} />)}</div>
+          <p className="text-sm text-[#9CA3AF] text-center py-6">Nenhuma loja disponível de momento.</p>
         )}
       </section>
 

@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "comprar", name: "Comprar\nImóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
-  { id: "arrendar", name: "Arrendar\nImóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M10 8V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2" /><path d="M16 18v-4M14 16h4" /></svg> },
-  { id: "lancamentos", name: "Lançamentos\nImobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8v16H4V12l12-8z" /><rect x="12" y="18" width="8" height="10" /><path d="M4 12l12 8 12-8" /></svg> },
-  { id: "hoteis", name: "Hotéis, Resorts\n& Pousadas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
-  { id: "investimentos", name: "Investimentos\nImobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 28h24" /><path d="M6 24l6-8 4 4 6-10 6 6" /><circle cx="28" cy="12" r="2" fill="#D4A843" /></svg> },
+  { id: "comprar", name: "Comprar Imóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
+  { id: "arrendar", name: "Arrendar Imóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M10 8V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2" /><path d="M16 18v-4M14 16h4" /></svg> },
+  { id: "lancamentos", name: "Lançamentos Imobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8v16H4V12l12-8z" /><rect x="12" y="18" width="8" height="10" /><path d="M4 12l12 8 12-8" /></svg> },
+  { id: "hoteis", name: "Hotéis, Resorts & Pousadas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
+  { id: "investimentos", name: "Investimentos Imobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 28h24" /><path d="M6 24l6-8 4 4 6-10 6 6" /><circle cx="28" cy="12" r="2" fill="#D4A843" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -22,9 +24,9 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: any }) {
+function StoreCard({ store }: { store: Store }) {
   const fallbackImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages?.length > 0 ? store.coverImages : [store.coverImage || store.image || fallbackImage];
+  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -41,15 +43,30 @@ function StoreCard({ store }: { store: any }) {
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category || "Imóveis"}</p>
+        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || "Luanda"}</span>
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
         <div className="flex items-center gap-1 mt-1">
           <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8 ({Math.floor(Math.random() * 80 + 20)})</span>
+          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
+  if (stores.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-3 px-1">
+        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
+        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
       </div>
     </div>
   );
@@ -60,13 +77,20 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data: stores = [] } = useQuery({
+  const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "imoveis"],
-    queryFn: async () => { const r = await fetch("/api/stores?store_type=imoveis"); return r.ok ? r.json() : []; },
+    queryFn: () => fetchStores({ storeType: "imoveis" }),
     staleTime: 60_000,
   });
 
-  const featured = stores.filter((s: any) => s.isOpen !== false).slice(0, 4);
+  const getStoresForCategory = (categoryName: string) => {
+    return stores.filter((s: Store) => {
+      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      return matchesCategory && s.isOpen !== false;
+    });
+  };
+
+  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -74,7 +98,7 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
         .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-item { flex-shrink: 0; display: flex; flex-col; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #EDE8DE; min-width: 72px; cursor: pointer; transition: all 0.2s; }
+        .cat-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #EDE8DE; min-width: 72px; cursor: pointer; transition: all 0.2s; }
         .cat-item:hover { border-color: #D4A843; background: #FBF7ED; }
         .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .trust-scroll::-webkit-scrollbar { display: none; }
@@ -108,7 +132,7 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight whitespace-pre-line">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -144,23 +168,31 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
         </div>
       </section>
 
-      {/* Featured Stores */}
-      <section className="px-5 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Imóveis em destaque</h2>
-          <button onClick={() => navigate("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={14} /></button>
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {featured.length > 0 ? featured.map((store: any) => <StoreCard key={store.id} store={store} />) : (
-            <>
-              <StoreCard store={{ id: "demo-1", name: "Luanda Imóveis", category: "Comprar Imóveis", municipality: "Luanda", coverImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-2", name: "Casa & Lar", category: "Arrendar Imóveis", municipality: "Benguela", coverImage: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-3", name: "Investir Imóveis", category: "Investimentos", municipality: "Huila", coverImage: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&h=300&fit=crop" }} />
-              <StoreCard store={{ id: "demo-4", name: "Hotel & Resort", category: "Hotéis & Resorts", municipality: "Lubango", coverImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop" }} />
-            </>
+      ) : (
+        <div className="px-5 py-4 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
+          ))}
+          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
+            <div>
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Imóveis em destaque</h3>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
+              </div>
+            </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Counter */}
       <section className="px-5 py-3">
