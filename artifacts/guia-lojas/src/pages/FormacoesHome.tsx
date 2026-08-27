@@ -12,7 +12,6 @@ import {
   Compass,
   Dumbbell,
   GraduationCap,
-  Instagram,
   Languages,
   Mail,
   Menu,
@@ -429,56 +428,6 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           </div>
         </section>
 
-        <section id="essencia" className="border-y border-[#d9dde1] bg-[#eef0f2]">
-          <div className="mx-auto grid max-w-[1380px] gap-10 px-6 py-10 md:grid-cols-[.75fr_1.25fr] md:px-12 md:py-14">
-            <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98]">A nossa essência</p>
-            <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
-              <div>
-                <p className="max-w-3xl font-serif text-3xl leading-[1.2] text-[#34383d] md:text-5xl" style={{ fontFamily: "'Playfair Display', serif" }}>Há uma diferença entre aprender algo novo e <i>descobrir o que pode tornar-se.</i></p>
-                <p className="mt-8 max-w-xl text-sm leading-7 text-[#6c7279]">Na YESOLA, conectamos quem quer crescer com quem sabe ensinar. Cuidamos do percurso, do ritmo e da confiança — para que o aprendizado seja tão meaningful quanto o resultado.</p>
-              </div>
-              <figure className="relative aspect-[.78] overflow-hidden border border-[#cbd0d5] bg-[#e6e8ea]">
-                <img
-                  src="/formacoes/hero-formacoes.jpg"
-                  alt="Aula de formação presencial"
-                  className="h-full w-full object-cover object-center"
-                  style={{ filter: "grayscale(0.64) contrast(0.9) brightness(1.06)" }}
-                />
-                <figcaption className="absolute bottom-3 left-3 font-mono text-[9px] uppercase tracking-[.2em] text-white drop-shadow">02 — Aprender & crescer</figcaption>
-              </figure>
-            </div>
-          </div>
-          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
-            <span className="text-[10px] text-[#89919a] font-medium">Deslize para ver mais</span>
-            <ArrowRight size={12} className="text-[#89919a] animate-pulse" />
-          </div>
-        </section>
-
-        <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
-          <div className="grid gap-4 md:grid-cols-[1.35fr_.65fr]">
-            <figure className="group relative min-h-[280px] overflow-hidden bg-[#e4e7e9] md:min-h-[360px]">
-              <img
-                src="/formacoes/tecnologia.jpg"
-                alt="Formação em tecnologia e programação"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                style={{ filter: "grayscale(0.5) contrast(0.92) brightness(1.06)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/55 via-transparent to-transparent" />
-              <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">03 — Tecnologia & inovação</figcaption>
-            </figure>
-            <figure className="group relative min-h-[280px] overflow-hidden bg-[#e4e7e9] md:min-h-[360px]">
-              <img
-                src="/formacoes/artes.jpg"
-                alt="Aulas práticas de artes e hobbies"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                style={{ filter: "grayscale(0.34) contrast(0.9) brightness(1.1)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/45 via-transparent to-transparent" />
-              <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">04 — Prática & criatividade</figcaption>
-            </figure>
-          </div>
-        </div>
-
         <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-14 text-[#fafafa] md:px-12 md:py-20">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
           <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
@@ -504,7 +453,6 @@ export function FormacoesHome({ onBackToSelector }: { onBackToSelector?: () => v
           <div className="flex items-center gap-5 text-[#747b84]">
             <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
             <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
-            <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
             <span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span>
           </div>
         </footer>

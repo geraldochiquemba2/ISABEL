@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
-  Crown, Building2, Baby, Menu, X, Search, ChevronRight,
+  Crown, Building2, Baby, ChevronRight,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
@@ -189,7 +189,6 @@ interface StoreSelectorProps {
 }
 
 export default function StoreSelector({ onSelect }: StoreSelectorProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [slideIdx, setSlideIdx] = useState(0);
 
   useEffect(() => {
@@ -214,10 +213,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#EDE8DE]/60">
-        <div className="flex items-center justify-between px-5 py-4">
-          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1" aria-label="Menu">
-            {menuOpen ? <X size={22} color="#2D2C2B" /> : <Menu size={22} color="#2D2C2B" />}
-          </button>
+        <div className="flex items-center justify-center px-5 py-4">
           <div className="flex flex-col items-center">
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#2d2c2b", letterSpacing: "-.02em" }}>
               YESOLA
@@ -226,13 +222,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
               <path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#D4A843" strokeWidth="1.5" fill="none" />
             </svg>
           </div>
-          <div className="w-[44px]" />
         </div>
-        {menuOpen && (
-          <div className="bg-[#FAF8F5] border-t border-[#EDE8DE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#2D2C2B]">
-            <a href="/login" className="py-2">Entrar</a>
-          </div>
-        )}
       </header>
 
       {/* Hero Section */}
@@ -255,14 +245,6 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             className="w-full h-full object-cover object-top"
             style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }}
           />
-        </div>
-      </section>
-
-      {/* Search Bar */}
-      <section className="px-5 py-3">
-        <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3.5 border border-[#EDE8DE] shadow-sm">
-          <Search size={20} color="#D4A843" />
-          <span className="text-[14px] text-[#9CA3AF]">O que procura hoje?</span>
         </div>
       </section>
 

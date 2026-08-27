@@ -318,7 +318,6 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
     <main className="min-h-[100dvh] overflow-x-hidden bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
-        .eliora-grain:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
         @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}} .rise{animation:rise .8s ease both}.delay-1{animation-delay:.14s}.delay-2{animation-delay:.26s}
       `}</style>
       
@@ -354,7 +353,7 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
         <button aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">{menuOpen ? <X size={20} /> : <Menu size={21} />}</button>
       </header>
 
-      <div className="eliora-grain">
+      <div>
         <div className="mx-auto max-w-[1380px] px-4 pt-[6.3rem] pb-1 md:px-12 md:pt-24 md:pb-2">
           <div ref={scrollRef} onScroll={handleScroll} className="flex flex-row flex-nowrap overflow-x-auto gap-2 scrollbar-hide pb-1">
             {groups.map((group) => (
@@ -388,62 +387,12 @@ export function ElioraWeddings({ onBackToSelector }: ElioraWeddingsProps) {
           })}</div>
         </section>
 
-        <section id="essencia" className="border-y border-[#d9dde1] bg-[#eef0f2]">
-          <div className="mx-auto grid max-w-[1380px] gap-10 px-6 py-10 md:grid-cols-[.75fr_1.25fr] md:px-12 md:py-14">
-            <p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#858e98]">A nossa essência</p>
-            <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
-              <div>
-                <p className="max-w-3xl font-serif text-3xl leading-[1.2] text-[#34383d] md:text-5xl">Há uma diferença entre organizar um evento e <i>orquestrar uma experiência.</i></p>
-                <p className="mt-8 max-w-xl text-sm leading-7 text-[#6c7279]">Na YESOLA, cuidamos do que se vê e do que se sente. Reunimos pessoas, talentos e detalhes com discrição, para que possam viver o que realmente importa: estar juntos.</p>
-              </div>
-              <figure className="relative aspect-[.78] overflow-hidden border border-[#cbd0d5] bg-[#e6e8ea]">
-                <img
-                  src="/weddings/eliora-bridal-portrait.jpg"
-                  alt="Retrato editorial de uma noiva"
-                  className="h-full w-full object-cover object-center"
-                  style={{ filter: "grayscale(0.64) contrast(0.9) brightness(1.06)" }}
-                />
-                <figcaption className="absolute bottom-3 left-3 font-mono text-[9px] uppercase tracking-[.2em] text-white drop-shadow">02 — Beleza & presença</figcaption>
-              </figure>
-          </div>
-          <div className="flex justify-center items-center gap-2 mt-1 md:hidden">
-            <span className="text-[10px] text-[#c9a84c] font-medium">Deslize para ver mais</span>
-            <ArrowRight size={12} className="text-[#c9a84c] animate-pulse" />
-          </div>
-        </div>
-        </section>
-
-        <div className="mx-auto max-w-[1380px] px-6 py-10 md:px-12">
-          <div className="grid gap-4 md:grid-cols-[1.35fr_.65fr]">
-            <figure className="group relative min-h-[280px] overflow-hidden bg-[#e4e7e9] md:min-h-[360px]">
-              <img
-                src="/weddings/eliora-reception.jpg"
-                alt="Mesa de receção de casamento em branco e prata"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                style={{ filter: "grayscale(0.5) contrast(0.92) brightness(1.06)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/55 via-transparent to-transparent" />
-              <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">03 — Espaço & celebração</figcaption>
-            </figure>
-            <figure className="group relative min-h-[280px] overflow-hidden bg-[#e4e7e9] md:min-h-[360px]">
-              <img
-                src="/weddings/eliora-florals.jpg"
-                alt="Flores brancas numa mesa de casamento"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                style={{ filter: "grayscale(0.34) contrast(0.9) brightness(1.1)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#252a2f]/45 via-transparent to-transparent" />
-              <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[.2em] text-white">04 — Detalhe & intenção</figcaption>
-            </figure>
-          </div>
-        </div>
-
         <section id="contacto" className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-14 text-[#fafafa] md:px-12 md:py-20">
           <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" /><div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
           <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[.25em] text-[#b9c1ca]">O primeiro passo</p><h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Vamos criar espaço<br /><i>para a vossa história?</i></h2></div><div className="mt-10 md:mt-0 md:w-80"><p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que estão a imaginar. A nossa equipa responde com tempo, atenção e uma primeira ideia.</p><button onClick={() => { window.open("https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Casamentos%20e%20gostaria%20de%20marcar%20uma%20consulta.", "_blank"); setSent(true); }} className="mt-7 flex items-center gap-4 border-b border-[#b9c1ca] pb-3 text-xs uppercase tracking-[.2em] text-[#e3e7eb]">{sent ? "Mensagem recebida" : "Falar com a equipa"} <ChevronRight size={15} /></button></div></div>
         </section>
 
-        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p><div className="flex items-center gap-5 text-[#747b84]"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Casamentos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Casamentos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a><a href="#" aria-label="Instagram"><Instagram size={16} /></a><span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span></div></footer>
+        <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12"><Monogram /><p className="text-xs text-[#747b84]">Celebrações com intenção, em Angola e além.</p><div className="flex items-center gap-5 text-[#747b84]"><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Casamentos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a><a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Casamentos%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a><span className="font-mono text-[10px] tracking-[.2em]">© YESOLA</span></div></footer>
       </div>
     </main>
   );
