@@ -64,7 +64,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   });
 
   const featured = useMemo(() => {
-    return stores.filter((s: Store) => s.isOpen !== false).slice(0, 6);
+    return stores.slice(0, 6);
   }, [stores]);
 
   return (

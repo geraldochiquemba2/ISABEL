@@ -67,13 +67,12 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
   const getStoresForCategory = (categoryName: string) => {
     return stores.filter((s: Store) => {
       const cat = (s.category || "").toLowerCase();
-      const matchesCategory = cat.includes(categoryName.toLowerCase());
-      return matchesCategory && s.isOpen !== false;
+      return cat.includes(categoryName.toLowerCase());
     });
   };
 
   const hasAnyStores = categories.some((cat) => getStoresForCategory(cat.name).length > 0);
-  const featured = stores.filter((s: Store) => s.isOpen !== false).slice(0, 6);
+  const featured = stores.slice(0, 6);
 
   return (
     <div className="px-5 py-4 space-y-6">
