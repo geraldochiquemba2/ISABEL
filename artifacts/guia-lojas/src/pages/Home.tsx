@@ -143,7 +143,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Lojas em destaque</h2>
-          <button onClick={() => setLocation("/busca")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+          <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
         </div>
         {isLoading ? (
           <div className="flex gap-3 overflow-x-auto">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
