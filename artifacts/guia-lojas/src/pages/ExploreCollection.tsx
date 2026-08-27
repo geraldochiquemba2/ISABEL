@@ -426,7 +426,7 @@ export default function ExploreCollection() {
         <div className="flex items-center gap-5 text-[#747b84]">
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
-          <a href="#" aria-label="Instagram"><Instagram size={16} /></a>
+
           <span className="font-mono text-[10px] tracking-[0.2em]">© 2024 YESOLA</span>
         </div>
       </footer>

@@ -123,7 +123,7 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
         </div>
         {menuOpen && (
           <div className="bg-[#FAF8F5] border-t border-[#EDE8DE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <a href="/login" className="py-2">Entrar</a>
+            <a href="/login-eventos" className="py-2">Entrar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}
@@ -133,7 +133,7 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
       <section className="px-5 pt-4 pb-2">
         <div className="cat-scroll">
           {CATEGORIES.map((cat) => (
-            <button key={cat.id} onClick={() => navigate(`/explorar?categoria=${cat.id}`)} className="cat-item">
+            <button key={cat.id} onClick={() => navigate(`/explorar-eventos?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
               <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
             </button>
@@ -152,7 +152,7 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
               Tudo para o seu<br /><span className="text-[#D4A843]">evento</span> perfeito.
             </h1>
             <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">Aniversários, casamentos, eventos corporativos e muito mais — encontre tudo num só lugar.</p>
-            <button onClick={() => navigate("/explorar")} className="mt-4 flex items-center gap-2 bg-[#D4A843] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#C49A38] transition-colors">
+            <button onClick={() => navigate("/explorar-eventos")} className="mt-4 flex items-center gap-2 bg-[#D4A843] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#C49A38] transition-colors">
               Explorar eventos <ChevronRight size={14} />
             </button>
           </div>
