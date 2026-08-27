@@ -6,7 +6,7 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import StoreCategorySection from "@/components/StoreCategorySection";
 import {
-  Heart, ShoppingBag, Search, ChevronRight, Menu, X,
+  Heart, ShoppingBag, Search, ChevronRight, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
