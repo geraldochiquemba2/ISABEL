@@ -10,14 +10,11 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "locais", name: "Locais & Salões", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="12" width="24" height="16" rx="2" /><path d="M4 12l12-8 12 8" /><rect x="12" y="20" width="8" height="8" /></svg> },
-  { id: "buffet", name: "Buffet & Catering", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
-  { id: "decoracao", name: "Decoração & Flores", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
-  { id: "fotografia", name: "Fotografia & Vídeo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
-  { id: "musica", name: "Música & Entretenimento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="10" cy="24" r="4" /><circle cx="24" cy="20" r="4" /><path d="M14 24V8l14-4v16" /></svg> },
-  { id: "vestidos", name: "Vestidos & Trajes", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M10 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" /><path d="M8 12l-2 16h20l-2-16" /></svg> },
-  { id: "convites", name: "Convites & Papelaria", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /><path d="M20 20l6-5" /><path d="M12 20l-6-5" /></svg> },
-  { id: "outros", name: "Outros Serviços", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="8" cy="16" r="3" /><circle cx="16" cy="16" r="3" /><circle cx="24" cy="16" r="3" /><circle cx="8" cy="24" r="3" /><circle cx="16" cy="24" r="3" /><circle cx="24" cy="24" r="3" /></svg> },
+  { id: "planeamento", name: "Planeamento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="4" width="24" height="24" rx="3" /><path d="M4 10h24M10 4v24" /></svg> },
+  { id: "noivados", name: "Noivados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
+  { id: "beleza", name: "Beleza", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /></svg> },
+  { id: "decoracao", name: "Decoração", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -66,7 +63,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

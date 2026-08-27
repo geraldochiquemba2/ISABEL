@@ -10,12 +10,12 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "pessoal", name: "Desenvolvimento Pessoal", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 8l3-3m0 0v3m0-3h-3" /></svg> },
-  { id: "negocios", name: "Negócios & Empreendedorismo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
-  { id: "tecnologia", name: "Tecnologia & Informática", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="6" width="24" height="16" rx="2" /><path d="M10 28h12" /><path d="M16 22v6" /><path d="M12 28h8" /></svg> },
-  { id: "marketing", name: "Marketing & Vendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
-  { id: "financas", name: "Finanças & Investimentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
-  { id: "saude", name: "Saúde & Bem-estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "idiomas", name: "Idiomas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M4 16h24" /><path d="M16 6c-4 4-4 16 0 20" /><path d="M16 6c4 4 4 16 0 20" /></svg> },
+  { id: "tecnologia", name: "Tecnologia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="6" width="24" height="16" rx="2" /><path d="M10 28h12" /><path d="M16 22v6" /><path d="M12 28h8" /></svg> },
+  { id: "carreira", name: "Carreira", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="18" rx="2" /><path d="M12 8V6c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" /><path d="M16 16v4M14 18h4" /></svg> },
+  { id: "academico", name: "Académico", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8-12 8-12-8 12-8z" /><path d="M6 12v8c0 2 4.5 6 10 6s10-4 10-6v-8" /><path d="M28 12v10" /></svg> },
+  { id: "artes", name: "Artes & Hobbies", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="10" cy="10" r="3" /><circle cx="20" cy="8" r="2" /><circle cx="24" cy="14" r="2.5" /><circle cx="8" cy="18" r="2.5" /><path d="M14 28c0-6 3-12 8-14" /></svg> },
+  { id: "saude", name: "Saúde & Fitness", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -64,7 +64,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-formacoes")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

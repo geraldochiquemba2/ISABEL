@@ -10,11 +10,9 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "comprar", name: "Comprar Imóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
-  { id: "arrendar", name: "Arrendar Imóveis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M10 8V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2" /><path d="M16 18v-4M14 16h4" /></svg> },
-  { id: "lancamentos", name: "Lançamentos Imobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8v16H4V12l12-8z" /><rect x="12" y="18" width="8" height="10" /><path d="M4 12l12 8 12-8" /></svg> },
-  { id: "hoteis", name: "Hotéis, Resorts & Pousadas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
-  { id: "investimentos", name: "Investimentos Imobiliários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 28h24" /><path d="M6 24l6-8 4 4 6-10 6 6" /><circle cx="28" cy="12" r="2" fill="#D4A843" /></svg> },
+  { id: "hoteis", name: "Hotéis & Resorts", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
+  { id: "alojamento", name: "Alojamento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
+  { id: "imobiliaria", name: "Imobiliária", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M10 8V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2" /><path d="M16 18v-4M14 16h4" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -63,7 +61,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-imoveis")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

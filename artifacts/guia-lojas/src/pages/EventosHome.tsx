@@ -10,14 +10,12 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "aniversarios", name: "Aniversários", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="6" y="16" width="20" height="12" rx="2" /><path d="M6 20h20" /><path d="M10 16v-4c0-2 2-4 6-4s6 2 6 4v4" /><circle cx="12" cy="24" r="1" fill="#D4A843" /><circle cx="16" cy="24" r="1" fill="#D4A843" /><circle cx="20" cy="24" r="1" fill="#D4A843" /></svg> },
-  { id: "festas", name: "Festas Temáticas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6l3-6z" /></svg> },
-  { id: "batizados", name: "Batizados & Religiosos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4v8M12 8c-2 0-4 2-4 4s2 4 4 4h8c2 0 4-2 4-4s-2-4-4-4" /><path d="M8 16c0 6 3.6 12 8 12s8-6 8-12" /></svg> },
-  { id: "corporativos", name: "Eventos Corporativos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="18" rx="2" /><path d="M12 8V6c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" /><path d="M16 16v4M14 18h4" /></svg> },
-  { id: "formaturas", name: "Formaturas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8-12 8-12-8 12-8z" /><path d="M6 12v8c0 2 4.5 6 10 6s10-4 10-6v-8" /><path d="M28 12v10" /></svg> },
-  { id: "ar-livre", name: "Eventos ao Ar Livre", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="5" /><path d="M16 17v8" /><path d="M10 28h12" /><path d="M8 22c-2-2-2-5 0-6" /><path d="M24 22c2-2 2-5 0-6" /></svg> },
-  { id: "catering", name: "Sabores Catering & Bolos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
-  { id: "decoracao", name: "Decoração & Lembranças", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
+  { id: "decoracao", name: "Decoração & Design", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
+  { id: "equipamentos", name: "Equipamentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
+  { id: "gastronomia", name: "Gastronomia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
+  { id: "animacao", name: "Animação", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="10" cy="24" r="4" /><circle cx="24" cy="20" r="4" /><path d="M14 24V8l14-4v16" /></svg> },
+  { id: "staff", name: "Staff & Segurança", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /></svg> },
+  { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -66,7 +64,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-eventos")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

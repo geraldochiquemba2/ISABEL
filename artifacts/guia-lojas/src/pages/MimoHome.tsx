@@ -10,14 +10,11 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "namoro", name: "Agências de Namoro Cristão", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
-  { id: "conselhoria", name: "Conselhoria & Relacionamentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M20 10l4-4m0 0v4m0-4h-4" /></svg> },
-  { id: "presentes", name: "Presentes & Surpresas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="14" width="22" height="14" rx="2" /><path d="M16 14v14" /><rect x="5" y="10" width="22" height="4" rx="1" /><path d="M16 10c-2-4-6-4-6 0h6c0-4 4-4 6 0h-6z" /></svg> },
-  { id: "noivados", name: "Noivados & Pedidos Especiais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M12 16l3 3 5-6" /></svg> },
-  { id: "registros", name: "Registros de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
-  { id: "cartas", name: "Cartas & Mensagens", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="8" width="24" height="16" rx="2" /><path d="M4 8l12 9 12-9" /></svg> },
-  { id: "mentoria", name: "Mentoria para Casais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="12" cy="12" r="5" /><circle cx="22" cy="12" r="5" /><path d="M4 28c0-4.4 3.6-8 8-8h1" /><path d="M28 28c0-4.4-3.6-8-8-8h-1" /></svg> },
-  { id: "apoio", name: "Apoio Emocional & Espiritual", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4v8m0 8v8M8 12l6-4v8l-6-4zm16 0l-6-4v8l6-4z" /><circle cx="16" cy="16" r="3" /></svg> },
+  { id: "actos-de-amor", name: "Actos de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
+  { id: "saude", name: "Saúde & Bem-Estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M13 12h6" /><path d="M16 9v6" /></svg> },
+  { id: "lar", name: "Gestão do Lar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
+  { id: "burocracias", name: "Burocracias", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -66,7 +63,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-love")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

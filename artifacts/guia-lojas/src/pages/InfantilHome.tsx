@@ -10,14 +10,9 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "creches", name: "Creches & Escolas Infantis", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 28h24M8 28V14l8-6 8 6v14" /><rect x="13" y="20" width="6" height="8" /><rect x="10" y="14" width="4" height="4" /><rect x="18" y="14" width="4" height="4" /></svg> },
-  { id: "enxoval", name: "Enxoval do Bebê", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="6" y="12" width="20" height="14" rx="3" /><path d="M10 12V8c0-2 2-4 6-4s6 2 6 4v4" /><circle cx="16" cy="19" r="3" /></svg> },
-  { id: "passeio", name: "Passeio & Segurança", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M16 10v6l4 2" /><path d="M12 4h8" /><path d="M16 4v2" /></svg> },
-  { id: "brinquedos", name: "Brinquedos & Educação", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="8" y="8" width="16" height="16" rx="2" /><path d="M12 12h8M12 16h8M12 20h4" /><circle cx="24" cy="8" r="4" /><path d="M24 4v8" /><path d="M20 8h8" /></svg> },
-  { id: "alimentacao", name: "Alimentação Infantil", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="12" cy="24" r="2" /><circle cx="20" cy="24" r="2" /><path d="M16 14v-4" /><path d="M14 12h4" /></svg> },
-  { id: "maternidade", name: "Maternidade", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
-  { id: "cuidados", name: "Cuidados com o Bebê", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M13 12h6" /><path d="M16 9v6" /></svg> },
-  { id: "presentes", name: "Presentes Especiais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="14" width="22" height="14" rx="2" /><path d="M16 14v14" /><rect x="5" y="10" width="22" height="4" rx="1" /><path d="M16 10c-2-4-6-4-6 0h6c0-4 4-4 6 0h-6z" /></svg> },
+  { id: "moda", name: "Moda & Enxoval", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="6" y="12" width="20" height="14" rx="3" /><path d="M10 12V8c0-2 2-4 6-4s6 2 6 4v4" /><circle cx="16" cy="19" r="3" /></svg> },
+  { id: "brinquedos", name: "Brinquedos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="8" y="8" width="16" height="16" rx="2" /><path d="M12 12h8M12 16h8M12 20h4" /><circle cx="24" cy="8" r="4" /><path d="M24 4v8" /><path d="M20 8h8" /></svg> },
+  { id: "cuidados", name: "Cuidados & Saúde", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -66,7 +61,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-infantil")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}

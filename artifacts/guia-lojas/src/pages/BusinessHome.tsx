@@ -10,12 +10,12 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { id: "empreendedorismo", name: "Empreendedorismo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
-  { id: "gestao", name: "Gestão e Estratégia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="4" width="24" height="24" rx="3" /><path d="M4 12h24M12 12v16" /></svg> },
-  { id: "financas", name: "Finanças Pessoais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
-  { id: "marketing", name: "Marketing e Vendas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
-  { id: "advogados", name: "Advogados Qualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8H4l12-8z" /><rect x="6" y="12" width="4" height="12" /><rect x="14" y="12" width="4" height="12" /><rect x="22" y="12" width="4" height="12" /><path d="M4 28h24" /></svg> },
-  { id: "contabilistas", name: "Contabilistas Qualificados", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="5" y="4" width="22" height="24" rx="2" /><path d="M10 10h12M10 14h12M10 18h8" /><path d="M20 22l2 2 4-4" /></svg> },
+  { id: "consultoria", name: "Consultoria", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
+  { id: "financas", name: "Finanças", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
+  { id: "marketing", name: "Marketing", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
+  { id: "juridico", name: "Jurídico", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 4l12 8H4l12-8z" /><rect x="6" y="12" width="4" height="12" /><rect x="14" y="12" width="4" height="12" /><rect x="22" y="12" width="4" height="12" /><path d="M4 28h24" /></svg> },
+  { id: "rh", name: "Recursos Humanos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="12" cy="12" r="5" /><circle cx="22" cy="12" r="5" /><path d="M4 28c0-4.4 3.6-8 8-8h1" /><path d="M28 28c0-4.4-3.6-8-8-8h-1" /></svg> },
+  { id: "investimento", name: "Investimento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 28h24" /><path d="M6 24l6-8 4 4 6-10 6 6" /><circle cx="28" cy="12" r="2" fill="#D4A843" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -64,7 +64,7 @@ function CategorySection({ categoryName, stores }: { categoryName: string; store
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3 px-1">
         <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
+        <button onClick={() => navigate("/explorar-business")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
         {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
