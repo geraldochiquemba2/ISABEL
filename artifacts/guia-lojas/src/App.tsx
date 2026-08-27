@@ -236,7 +236,6 @@ function Router() {
         <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>
         <Route component={NotFound} />
       </Switch>
-      {floatingButton}
     </StoreContext.Provider>
   );
 }
