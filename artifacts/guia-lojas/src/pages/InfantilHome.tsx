@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +8,7 @@ import {
   Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
+import StoreCategorySection from "@/components/StoreCategorySection";
 
 const CATEGORIES = [
   { id: "moda", name: "Moda & Enxoval", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="6" y="12" width="20" height="14" rx="3" /><path d="M10 12V8c0-2 2-4 6-4s6 2 6 4v4" /><circle cx="16" cy="19" r="3" /></svg> },
@@ -22,54 +23,6 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function StoreCard({ store }: { store: Store }) {
-  const fallbackImage = "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage];
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const t = setInterval(() => setCurrentIdx((p) => (p + 1) % images.length), 3000);
-    return () => clearInterval(t);
-  }, [images.length]);
-
-  return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=infantil`}>
-      <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
-        {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
-      </div>
-      <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
-        <p className="text-[10px] text-[#D4A843] mt-0.5">{store.category}</p>
-        <div className="flex items-center gap-1 mt-1">
-          <MapPin size={10} className="text-[#9CA3AF]" />
-          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
-        </div>
-        <div className="flex items-center gap-1 mt-1">
-          <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
-  if (stores.length === 0) return null;
-  return (
-    <div className="mb-6">
-      <div className="flex justify-between items-center mb-3 px-1">
-        <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{categoryName}</h3>
-        <button onClick={() => navigate("/explorar-infantil")} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">Ver todos <ChevronRight size={12} /></button>
-      </div>
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-        {stores.map((store: Store) => <StoreCard key={store.id} store={store} />)}
-      </div>
-    </div>
-  );
-}
-
 export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#FAF8F5");
   const [, navigate] = useLocation();
@@ -80,15 +33,6 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
     queryFn: () => fetchStores({ storeType: "infantil" }),
     staleTime: 60_000,
   });
-
-  const getStoresForCategory = (categoryName: string) => {
-    return stores.filter((s: Store) => {
-      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
-      return matchesCategory && s.isOpen !== false;
-    });
-  };
-
-  const featured = useMemo(() => stores.filter((s: Store) => s.isOpen !== false).slice(0, 4), [stores]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -177,19 +121,7 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
           ))}
         </div>
       ) : (
-        <div className="px-5 py-4 space-y-2">
-          {CATEGORIES.map((cat) => (
-            <CategorySection key={cat.id} categoryName={cat.name} stores={getStoresForCategory(cat.name)} />
-          ))}
-          {featured.length > 0 && !CATEGORIES.some((cat) => getStoresForCategory(cat.name).length > 0) && (
-            <div>
-              <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3 px-1">Produtos em destaque</h3>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-                {featured.map((store: Store) => <StoreCard key={store.id} store={store} />)}
-              </div>
-            </div>
-          )}
-        </div>
+        <StoreCategorySection categories={CATEGORIES} stores={stores} storeType="infantil" exploreRoute="/explorar-infantil" />
       )}
 
       {/* Counter */}
