@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import StoreCategorySection from "@/components/StoreCategorySection";
 import {
-  Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
+  Heart, ShoppingBag, Search, ChevronRight, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
@@ -24,10 +24,6 @@ const TRUST_BADGES = [
   { icon: <CreditCard size={18} />, label: "Pagamentos seguros" },
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
-
-function CategorySection({ categoryName, stores }: { categoryName: string; stores: Store[] }) {
-  return null;
-}
 
 export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#FAF8F5");

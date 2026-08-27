@@ -66,7 +66,8 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
 
   const getStoresForCategory = (categoryName: string) => {
     return stores.filter((s: Store) => {
-      const matchesCategory = s.category?.toLowerCase().includes(categoryName.toLowerCase());
+      const cat = (s.category || "").toLowerCase();
+      const matchesCategory = cat.includes(categoryName.toLowerCase());
       return matchesCategory && s.isOpen !== false;
     });
   };
