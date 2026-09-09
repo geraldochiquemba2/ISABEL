@@ -198,7 +198,7 @@ export default function StoreProfile() {
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">
             <a
-              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
+              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} (${store.category}) e gostaria de mais informações.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-whatsapp"
@@ -217,7 +217,7 @@ export default function StoreProfile() {
             </a>
 
             <a
-              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
+              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} (${store.category}) e gostaria de mais informações.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-message"
