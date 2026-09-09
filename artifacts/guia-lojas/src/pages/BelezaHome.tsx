@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import {
-  Heart, ChevronRight, Star, MapPin, Menu, X,
+  Heart, ChevronRight, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
@@ -18,12 +18,7 @@ const CATEGORIES = [
   { id: "depilacao", name: "Depilação", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#B8860B" strokeWidth="1.5"><path d="M8 28l4-12 4 4-4 12z" /><path d="M20 28l4-12-4-4-4 4z" /><circle cx="16" cy="8" r="3" /></svg> },
 ];
 
-const SERVICES_HIGHLIGHT = [
-  { name: "Tranças Naturais", store: "Salão Beleza Pura", rating: 4.9, reviews: 128, price: "8.000", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Manicure & Pedicure", store: "Studio das Unhas", rating: 4.8, reviews: 96, price: "5.000", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Limpeza de Pele Profunda", store: "Clínica da Pele", rating: 4.9, reviews: 74, price: "12.000", image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Maquiagem Social", store: "Make by Grace", rating: 4.9, reviews: 112, price: "10.000", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=300&fit=crop&auto=format&q=80" },
-];
+
 
 const TRUST_BADGES = [
   { icon: <ShieldCheck size={18} />, label: "Profissionais verificados" },
@@ -113,35 +108,44 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         </div>
       </section>
 
-      {/* Services Highlight */}
-      <section className="px-5 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Serviços em destaque</h2>
-          <button onClick={() => navigate("/explorar-beleza")} className="text-[12px] font-medium text-[#B8860B] flex items-center gap-1">
-            Ver todos <ChevronRight size={14} />
-          </button>
-        </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-          {SERVICES_HIGHLIGHT.map((service, i) => (
-            <div key={i} className="service-card">
-              <div className="h-28 overflow-hidden">
-                <img src={service.image} alt={service.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-3">
-                <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{service.name}</h4>
-                <p className="text-[10px] text-[#9CA3AF] mt-0.5">{service.store}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <Star size={10} className="text-[#B8860B] fill-[#B8860B]" />
-                  <span className="text-[10px] font-medium text-[#2D2C2B]">{service.rating}</span>
-                  <span className="text-[10px] text-[#9CA3AF]">({service.reviews})</span>
+      {/* Featured Stores */}
+      {stores.length > 0 && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-beleza")} className="text-[12px] font-medium text-[#B8860B] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {stores.filter((s: any) => s.phone !== "999999999").slice(0, 6).map((store: any) => (
+              <div
+                key={store.id}
+                className="service-card"
+                onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}
+              >
+                <div className="h-28 overflow-hidden">
+                  <img
+                    src={store.coverImage || store.image || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"}
+                    alt={store.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-[10px] text-[#9CA3AF] mt-1">A partir de</p>
-                <p className="text-[13px] font-semibold text-[#B8860B]">{service.price} Kz</p>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#9CA3AF] mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#9CA3AF]" />
+                      <span className="text-[10px] text-[#9CA3AF]">{store.province}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Promo Banner */}
       <section className="px-5 py-3">
