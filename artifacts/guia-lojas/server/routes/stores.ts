@@ -294,6 +294,21 @@ storesRouter.post("/:id/carrinho-access", async (req, res) => {
   }
 });
 
+// PATCH /api/stores/:id/whatsapp-click — registar clique no WhatsApp
+storesRouter.patch("/:id/whatsapp-click", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query(
+      `UPDATE stores SET whatsapp_clicks = COALESCE(whatsapp_clicks, 0) + 1 WHERE id=$1`,
+      [id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao registar clique" });
+  }
+});
+
 // PUT /api/stores/:id/carrinho-access — admin aprova/recusa acesso ao carrinho
 storesRouter.put("/:id/carrinho-access", async (req, res) => {
   try {

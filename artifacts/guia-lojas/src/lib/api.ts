@@ -354,3 +354,8 @@ export async function rejectPasswordReset(requestId: number): Promise<void> {
   const res = await fetch(`/api/admin/password-reset-requests/${requestId}`, { method: "DELETE" });
   if (!res.ok) throw new Error("Erro ao rejeitar pedido");
 }
+
+// ── WhatsApp Click Tracking ────────────────────────────────
+export async function trackWhatsAppClick(storeId: string): Promise<void> {
+  await fetch(`/api/stores/${storeId}/whatsapp-click`, { method: "PATCH" });
+}

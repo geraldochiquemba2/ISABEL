@@ -9,7 +9,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchStoreById } from "@/lib/api";
+import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
 
 export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
@@ -202,6 +202,7 @@ export default function StoreProfile() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-whatsapp"
+              onClick={() => trackWhatsAppClick(store.id)}
             >
               <button className="flex items-center gap-1.5 sm:gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap">
                 <SiWhatsapp size={14} />
@@ -221,6 +222,7 @@ export default function StoreProfile() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-message"
+              onClick={() => trackWhatsAppClick(store.id)}
             >
               <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
                 <MessageSquare size={13} />
@@ -252,12 +254,12 @@ export default function StoreProfile() {
           </TabsList>
 
           <TabsContent value="produtos">
-            <ProductsTab products={store.products.filter((p: any) => !p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} highlightProduct={servicoParam} />
+            <ProductsTab products={store.products.filter((p: any) => !p.isCarrinho)} storeId={store.id} storeName={store.name} storeWhatsapp={store.whatsapp} highlightProduct={servicoParam} />
           </TabsContent>
 
           {store.carrinhoAccess === "APROVADO" && (
             <TabsContent value="carrinhos">
-              <CarrinhoTab products={store.products.filter((p: any) => p.isCarrinho)} storeName={store.name} storeWhatsapp={store.whatsapp} />
+              <CarrinhoTab products={store.products.filter((p: any) => p.isCarrinho)} storeId={store.id} storeName={store.name} storeWhatsapp={store.whatsapp} />
             </TabsContent>
           )}
 
@@ -304,7 +306,7 @@ function formatPrice(price: number): string {
   return `${formatted},${dec}`;
 }
 
-function ProductsTab({ products, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
+function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -472,6 +474,7 @@ function ProductsTab({ products, storeName, storeWhatsapp, highlightProduct }: {
             key={product.id}
             product={product}
             index={i}
+            storeId={storeId}
             storeName={storeName}
             storeWhatsapp={storeWhatsapp}
             onPhotoClick={() => { setLightboxIndex(i); setLightboxPhotoIndex(0); }}
@@ -601,6 +604,7 @@ function ProductsTab({ products, storeName, storeWhatsapp, highlightProduct }: {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick(storeId)}
                 className="mt-4 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-colors border border-white/10 shadow-lg"
               >
                 <SiWhatsapp size={14} />
@@ -614,7 +618,7 @@ function ProductsTab({ products, storeName, storeWhatsapp, highlightProduct }: {
   );
 }
 
-function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }; index: number; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
+function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }; index: number; storeId: string; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
   const [imgError, setImgError] = useState(false);
 
   const whatsappMessage = encodeURIComponent(
@@ -685,6 +689,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick(storeId)}
           className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold py-2 rounded-xl transition-colors border border-black/10"
         >
           <SiWhatsapp size={13} />
@@ -695,7 +700,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
   );
 }
 
-function CarrinhoTab({ products, storeName, storeWhatsapp }: { products: any[]; storeName: string; storeWhatsapp: string }) {
+function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products: any[]; storeId: string; storeName: string; storeWhatsapp: string }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState<number>(0);
@@ -714,6 +719,7 @@ function CarrinhoTab({ products, storeName, storeWhatsapp }: { products: any[]; 
       msg += `${i + 1}. ${p.name}\n   Preço: ${p.price?.toLocaleString("pt-AO")} ${p.currency}\n\n`;
     });
     msg += `*Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\nAguardo confirmação!`;
+    trackWhatsAppClick(storeId);
     window.open(`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
