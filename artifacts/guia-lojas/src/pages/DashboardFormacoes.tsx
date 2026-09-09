@@ -6,9 +6,9 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
-import { FormacoesAdminPanel } from "@/components/FormacoesAdminPanel";
+import AdminPanel from "@/components/AdminPanel";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "admin" | "password-reset";
 
 const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#123c4a] placeholder:text-[#87909a] outline-none focus:border-[#0c9894] focus:ring-2 focus:ring-[#0c9894]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
@@ -109,7 +109,7 @@ export default function DashboardFormacoes() {
     );
   }
 
-  const [section, setSection] = useState<Section>("overview");
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -161,15 +161,17 @@ export default function DashboardFormacoes() {
 
   if (!localUser) return null;
 
-  const sidebarItems = [
-    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-    ...(isAdmin ? [
-      { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : []),
-    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
-    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
-  ];
+  const sidebarItems = isAdmin
+    ? [
+        { id: "password-reset" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
+        { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
+      ]
+    : [
+        { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
+        { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+        { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+        { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#fafafa]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
 
@@ -282,13 +284,15 @@ export default function DashboardFormacoes() {
           )}
 
           {/* Admin panel */}
-          {section === "admin" && isAdmin && (
-            <FormacoesAdminPanel />
-          )}
+          {section === "admin" && <AdminPanel storeType="formacoes" accentColor="#0c9894" />}
 
           {/* Store owner sections */}
-          {section === "overview" && store && (
+          {section === "overview" && !isAdmin && store && (
             <StoreOverview store={store} />
+          )}
+
+          {section === "password-reset" && isAdmin && (
+            <AdminPasswordReset />
           )}
 
           {section === "loja" && store && (

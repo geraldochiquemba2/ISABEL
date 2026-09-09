@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
-import { WeddingAdminPanel } from "@/components/WeddingAdminPanel";
+import AdminPanel from "@/components/AdminPanel";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
@@ -156,7 +156,7 @@ export default function DashboardWeddings() {
     );
   }
 
-  const [section, setSection] = useState<Section>("overview");
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -208,11 +208,10 @@ export default function DashboardWeddings() {
 
   if (!localUser) return null;
 
-  const sidebarItems = [
+  const sidebarItems = isAdmin ? [
+    { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
+  ] : [
     { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-    ...(isAdmin ? [
-      { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : []),
     { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
     { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
     { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
@@ -302,8 +301,8 @@ export default function DashboardWeddings() {
 
         {/* Main */}
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
-          {section === "overview" && store && <OverviewSection store={store} />}
-          {section === "admin" && <WeddingAdminPanel />}
+          {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
+          {section === "admin" && <AdminPanel storeType="weddings" accentColor="#E8A0BF" />}
           {section === "pagina-inicial" && <PageContentEditor />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
@@ -343,96 +342,6 @@ export default function DashboardWeddings() {
         )}
       </AnimatePresence>
     </PageTransition>
-  );
-}
-
-/* ── Admin Overview — Pedidos de definir novas senhas ──────── */
-function AdminOverviewSection() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [resetId, setResetId] = useState<number | null>(null);
-
-  useEffect(() => { loadUsers(); }, []);
-
-  async function loadUsers() {
-    setLoading(true);
-    try {
-      const all = await fetchAdminUsersFiltered("weddings");
-      setUsers(all.filter((u: any) => u.phone !== "999999999" && (u.status === "APROVADO" || u.status === "PENDENTE")));
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  }
-
-  async function handleReset(id: number) {
-    try {
-      await resetUserPassword(id);
-      setResetId(null);
-      alert("Senha redefinida para 123456789.");
-      loadUsers();
-    } catch { alert("Erro ao redefinir senha."); }
-  }
-
-  const pendingCount = users.filter(u => u.status === "PENDENTE").length;
-
-  if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
-
-  return (
-    <div className="space-y-6 max-w-4xl">
-      <div>
-        <h2 className="text-xl font-semibold text-[#30343a] flex items-center gap-2">
-          <KeyRound size={20} /> Pedidos de definir novas senhas
-        </h2>
-        <p className="text-sm text-[#87909a] mt-1">
-          Utilizadores activos que podem precisar de redefinir senha.
-          {pendingCount > 0 && <span className="ml-2 text-amber-600 font-medium">({pendingCount} pendente(s) de aprovação)</span>}
-        </p>
-      </div>
-
-      <div className="space-y-3">
-        {users.map((u) => (
-          <div key={u.id} className="border border-[#d1d4d8] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-            <div className="flex items-start gap-3 flex-1">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-[#f0f0f0] flex-shrink-0 flex items-center justify-center">
-                <Phone size={18} className="text-[#87909a]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-sm font-semibold">{u.name}</h3>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                    u.status === "APROVADO" ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-blue-50 text-blue-600 border border-blue-200"
-                  }`}>{u.status}</span>
-                </div>
-                <p className="text-xs text-[#87909a]">{u.phone}</p>
-                <p className="text-xs text-[#87909a]">Loja: {u.storeName || "—"}</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setResetId(u.id)}
-              className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors"
-              title="Redefinir senha para 123456789"
-            >
-              <KeyRound size={12} /> Reset Senha
-            </button>
-          </div>
-        ))}
-        {users.length === 0 && (
-          <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhum utilizador encontrado.</p>
-        )}
-      </div>
-
-      {resetId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl border border-[#d1d4d8] shadow-xl p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-1.5"><KeyRound size={16} className="text-blue-500" /> Redefinir Senha</h3>
-            <p className="text-xs text-[#87909a]">A senha será redefinida para <strong>123456789</strong>.</p>
-            <div className="flex justify-end gap-2 text-xs">
-              <button onClick={() => setResetId(null)} className="px-4 py-2 border border-[#d1d4d8] rounded-full hover:bg-[#f0f0f0] transition-colors">Cancelar</button>
-              <button onClick={() => handleReset(resetId)} className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Confirmar Reset</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
   );
 }
 

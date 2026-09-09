@@ -3,14 +3,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound,
+  Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
   Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw,
 } from "lucide-react";
 import {
   fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct,
   changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword,
 } from "@/lib/api";
-import { LoveAdminPanel } from "@/components/LoveAdminPanel";
+import AdminPanel from "@/components/AdminPanel";
 
 interface DaySchedule {
   label: string;
@@ -477,7 +477,7 @@ function ProdutosSection({ store }: { store: any }) {
 export default function DashboardLove() {
   const [, setLoc] = useLocation();
   const queryClient = useQueryClient();
-  const [section, setSection] = useState<Section>("overview");
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => Promise<void>) | null>(null);
@@ -517,15 +517,17 @@ export default function DashboardLove() {
     setLoc("/love-services");
   };
 
-  const sidebarItems = [
-    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-    ...(isAdmin ? [
+  const sidebarItems = isAdmin
+    ? [
+      { id: "admin" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : []),
-    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
-    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
-  ];
+    ]
+    : [
+      { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
+      { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+      { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+      { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+    ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#f8f1e7]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
 
@@ -586,7 +588,7 @@ export default function DashboardLove() {
       {/* Main Content */}
       <main className="flex-1 min-h-screen overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 py-10 md:px-12">
-          {section === "overview" && store && (
+          {section === "overview" && !isAdmin && store && (
             <div className="space-y-6">
               <h2 className="font-serif text-3xl text-[#30343a]">Visão Geral</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -621,7 +623,7 @@ export default function DashboardLove() {
             </div>
           )}
 
-          {section === "admin" && isAdmin && <LoveAdminPanel />}
+          {section === "admin" && <AdminPanel storeType="love-services" accentColor="#68AAA0" />}
         </div>
       </main>
     </div>

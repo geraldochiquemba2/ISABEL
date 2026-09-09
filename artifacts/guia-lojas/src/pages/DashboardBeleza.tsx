@@ -6,6 +6,7 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
+import AdminPanel from "@/components/AdminPanel";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
 
@@ -112,7 +113,7 @@ export default function DashboardBeleza() {
     );
   }
 
-  const [section, setSection] = useState<Section>("overview");
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -165,13 +166,15 @@ export default function DashboardBeleza() {
   if (!localUser) return null;
 
   const sidebarItems = [
-    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
     ...(isAdmin ? [
+      { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : []),
-    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
-    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+    ] : [
+      { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
+      { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+      { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+      { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+    ]),
   ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#FFF8F0]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
@@ -223,8 +226,8 @@ export default function DashboardBeleza() {
 
         {/* Main */}
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
-          {section === "overview" && store && <OverviewSection store={store} />}
-          {section === "admin" && <BelezaAdminPanel />}
+          {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
+          {section === "admin" && <AdminPanel storeType="beleza" accentColor="#B8860B" />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
@@ -258,78 +261,6 @@ export default function DashboardBeleza() {
       </AnimatePresence>
     </PageTransition>
   );
-}
-
-function BelezaAdminPanel() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [resetId, setResetId] = useState<number | null>(null);
-
-  useEffect(() => { loadUsers(); }, []);
-
-  async function loadUsers() {
-    setLoading(true);
-    try {
-      const all = await fetchAdminUsersFiltered("beleza");
-      setUsers(all.filter((u: any) => u.phone !== "999999999" && (u.status === "APROVADO" || u.status === "PENDENTE")));
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  }
-
-  async function handleReset(id: number) {
-    try {
-      await resetUserPassword(id);
-      setResetId(null);
-      alert("Senha redefinida para 123456789.");
-      loadUsers();
-    } catch { alert("Erro ao redefinir senha."); }
-  }
-
-  if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
-
-  return (
-    <div className="space-y-6 max-w-4xl">
-      <div>
-        <h2 className="text-xl font-semibold text-[#2D2C2B] flex items-center gap-2"><KeyRound size={20} /> Pedidos de definir novas senhas</h2>
-        <p className="text-sm text-[#87909a] mt-1">Utilizadores activos que podem precisar de redefinir senha.</p>
-      </div>
-      <div className="space-y-3">
-        {users.map((u) => (
-          <div key={u.id} className="border border-[#EDE8DE] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-            <div className="flex items-start gap-3 flex-1">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-[#f0f0f0] flex-shrink-0 flex items-center justify-center"><Phone size={18} className="text-[#87909a]" /></div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-sm font-semibold">{u.name}</h3>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${u.status === "APROVADO" ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-blue-50 text-blue-600 border border-blue-200"}`}>{u.status}</span>
-                </div>
-                <p className="text-xs text-[#87909a]">{u.phone}</p>
-                <p className="text-xs text-[#87909a]">Loja: {u.storeName || "—"}</p>
-              </div>
-            </div>
-            <button onClick={() => setResetId(u.id)} className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors"><KeyRound size={12} /> Reset Senha</button>
-          </div>
-        ))}
-        {users.length === 0 && <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhum utilizador encontrado.</p>}
-      </div>
-      {resetId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl border border-[#EDE8DE] shadow-xl p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-1.5"><KeyRound size={16} className="text-blue-500" /> Redefinir Senha</h3>
-            <p className="text-xs text-[#87909a]">A senha será redefinida para <strong>123456789</strong>.</p>
-            <div className="flex justify-end gap-2 text-xs">
-              <button onClick={() => setResetId(null)} className="px-4 py-2 border border-[#EDE8DE] rounded-full hover:bg-[#f0f0f0] transition-colors">Cancelar</button>
-              <button onClick={() => handleReset(resetId)} className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Confirmar Reset</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AdminOverviewSection() {
-  return <BelezaAdminPanel />;
 }
 
 function OverviewSection({ store }: { store: any }) {

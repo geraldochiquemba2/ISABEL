@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, cancelApplication, changePassword } from "@/lib/api";
-import { AdminPanel } from "@/components/AdminPanel";
+import AdminPanel from "@/components/AdminPanel";
 import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera, KeyRound, EyeOff, ShoppingCart } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   const isAdmin = localUser.phone === "999999999";
 
-  const [section, setSection] = useState<Section>("overview");
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -294,13 +294,16 @@ export default function Dashboard() {
   }
 
 
-  const navItems: { id: Section; label: string; icon: React.ReactNode }[] = [
-    { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
-    ...(isAdmin ? [{ id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> }] : []),
-    { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
-    { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
-    { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
-  ];
+  const navItems: { id: Section; label: string; icon: React.ReactNode }[] = isAdmin
+    ? [
+        { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
+      ]
+    : [
+        { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
+        { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
+        { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
+        { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
+      ];
 
   return (
     <PageTransition>
@@ -445,11 +448,11 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.18 }}
             >
-              {section === "overview" && <OverviewSection store={store} />}
+              {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
               {section === "loja" && <LojaSection myStore={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
               {section === "produtos" && <ProdutosSection myStore={store} />}
               {section === "carrinhos" && <CarrinhosSection myStore={store} />}
-              {section === "admin" && <AdminPanel />}
+              {section === "admin" && <AdminPanel storeType="collection" accentColor="#D4A843" />}
             </motion.div>
           )}
         </main>
