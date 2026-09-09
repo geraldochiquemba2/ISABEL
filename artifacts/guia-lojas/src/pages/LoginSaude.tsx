@@ -23,13 +23,13 @@ const SAUDE_CATEGORIES = [
 ];
 
 const loginSchema = z.object({
-  phone: z.string().min(9, "Número de telefone inválido"),
+  phone: z.string().regex(/^\d{9}$/, "Número deve ter exatamente 9 dígitos"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
 });
 
 const registerSchema = z.object({
-  storeName: z.string().min(2, "Nome muito curto"),
-  phone: z.string().min(9, "Número de telefone inválido"),
+  storeName: z.string().min(2, "Nome muito curto").regex(/[a-zA-ZáàâãéèêíïóôõúüçÁÀÂÃÉÈÊÍÏÓÔÕÚÜÇ]/, "O nome deve conter pelo menos uma letra"),
+  phone: z.string().regex(/^\d{9}$/, "Número deve ter exatamente 9 dígitos"),
   category: z.string().min(1, "Selecione a categoria"),
   province: z.string().min(1, "Selecione a província"),
   municipality: z.string().min(1, "Selecione o município"),
