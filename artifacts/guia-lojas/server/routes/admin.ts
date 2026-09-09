@@ -128,3 +128,60 @@ adminRouter.put("/users/:id/reset-password", async (req, res) => {
   }
 });
 
+// GET /api/admin/password-reset-requests — Listar pedidos de redefinição de senha
+adminRouter.get("/password-reset-requests", async (req, res) => {
+  try {
+    const { store_type } = req.query;
+    let query = `
+      SELECT prr.id, prr.user_id as "userId", prr.phone, prr.store_type as "storeType",
+             prr.status, prr.created_at as "createdAt",
+             u.name as "userName", u.store_id as "storeId",
+             s.name as "storeName"
+      FROM password_reset_requests prr
+      LEFT JOIN users u ON u.id = prr.user_id
+      LEFT JOIN stores s ON s.id = u.store_id
+    `;
+    const params: any[] = [];
+    if (store_type) {
+      query += ` WHERE prr.store_type = $1`;
+      params.push(store_type);
+    }
+    query += ` ORDER BY prr.created_at DESC`;
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar pedidos" });
+  }
+});
+
+// PUT /api/admin/password-reset-requests/:id/approve — Aprovar pedido (redefine senha)
+adminRouter.put("/password-reset-requests/:id/approve", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = await pool.query("SELECT user_id FROM password_reset_requests WHERE id = $1", [id]);
+    if (!request.rows.length) {
+      return res.status(404).json({ error: "Pedido não encontrado" });
+    }
+    const userId = request.rows[0].user_id;
+    await pool.query("UPDATE users SET password = '123456789' WHERE id = $1", [userId]);
+    await pool.query("UPDATE password_reset_requests SET status = 'APROVADO' WHERE id = $1", [id]);
+    res.json({ success: true, message: "Senha redefinida para 123456789" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao aprovar pedido" });
+  }
+});
+
+// DELETE /api/admin/password-reset-requests/:id — Rejeitar/remover pedido
+adminRouter.delete("/password-reset-requests/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("UPDATE password_reset_requests SET status = 'RECUSADO' WHERE id = $1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao rejeitar pedido" });
+  }
+});
+

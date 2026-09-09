@@ -477,14 +477,15 @@ function ProdutosSection({ store }: { store: any }) {
 export default function DashboardLove() {
   const [, setLoc] = useLocation();
   const queryClient = useQueryClient();
-  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
-  const saveFnRef = useRef<(() => Promise<void>) | null>(null);
 
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const user = localUserStr ? JSON.parse(localUserStr) : null;
   const isAdmin = user?.phone === "999999999";
+
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const saveFnRef = useRef<(() => Promise<void>) | null>(null);
 
   useEffect(() => {
     if (!user) setLoc("/login-love");
@@ -519,7 +520,6 @@ export default function DashboardLove() {
 
   const sidebarItems = isAdmin
     ? [
-      { id: "admin" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
     ]
     : [

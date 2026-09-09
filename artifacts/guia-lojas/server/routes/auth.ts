@@ -275,3 +275,41 @@ authRouter.put("/rename-store", async (req, res) => {
   }
 });
 
+// POST /api/auth/request-password-reset — Solicitar redefinição de senha
+authRouter.post("/request-password-reset", async (req, res) => {
+  try {
+    const { phone, storeType } = req.body;
+    if (!phone) {
+      return res.status(400).json({ error: "Telefone é obrigatório." });
+    }
+    const store_type = storeType || "collection";
+
+    // Verificar se o utilizador existe
+    const userResult = await pool.query(
+      "SELECT id FROM users WHERE phone = $1 AND store_type = $2",
+      [phone, store_type]
+    );
+    if (!userResult.rows.length) {
+      return res.status(404).json({ error: "Utilizador não encontrado nesta plataforma." });
+    }
+
+    // Verificar se já existe pedido pendente
+    const existing = await pool.query(
+      "SELECT id FROM password_reset_requests WHERE phone = $1 AND store_type = $2 AND status = 'PENDENTE'",
+      [phone, store_type]
+    );
+    if (existing.rows.length) {
+      return res.status(400).json({ error: "Já existe um pedido pendente. Aguarde o administrador." });
+    }
+
+    await pool.query(
+      "INSERT INTO password_reset_requests (user_id, phone, store_type) VALUES ($1, $2, $3)",
+      [userResult.rows[0].id, phone, store_type]
+    );
+    res.json({ success: true, message: "Pedido enviado. Aguarde aprovação do administrador." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao solicitar redefinição de senha." });
+  }
+});
+

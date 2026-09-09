@@ -26,6 +26,8 @@ export interface Store {
   products: Product[];
   province?: string;
   municipality?: string;
+  isFeatured?: boolean;
+  isTrending?: boolean;
 }
 
 export interface Category {

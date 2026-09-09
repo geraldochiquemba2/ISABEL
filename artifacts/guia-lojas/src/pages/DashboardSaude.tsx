@@ -171,7 +171,6 @@ export default function DashboardSaude() {
 
   const sidebarItems = [
     ...(isAdmin ? [
-      { id: "admin" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
     ] : [
       { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },

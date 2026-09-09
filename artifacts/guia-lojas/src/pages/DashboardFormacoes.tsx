@@ -163,7 +163,6 @@ export default function DashboardFormacoes() {
 
   const sidebarItems = isAdmin
     ? [
-        { id: "password-reset" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
         { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
       ]
     : [

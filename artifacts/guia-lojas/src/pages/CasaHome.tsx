@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import {
-  Heart, ChevronRight, MapPin, Menu, X,
+  Heart, ChevronRight, MapPin, Menu, X, TrendingUp,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
@@ -39,6 +39,11 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
     queryFn: () => fetchStores({ storeType: "casa" }),
     staleTime: 60_000,
   });
+
+  const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
+  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const trending = nonAdmin.filter((s: any) => s.isTrending).slice(0, 6);
+  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   return (
     <div className="min-h-[100dvh] bg-[#FFF8F0] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -114,8 +119,31 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
         </div>
       </section>
 
+      {/* Em Alta */}
+      {trending.length > 0 && (
+        <section className="px-5 py-4">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp size={16} className="text-[#8B4513]" />
+            <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Em alta</h2>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {trending.map((store: any) => (
+              <div key={store.id} className="provider-card" onClick={() => window.location.href = `/loja/${store.id}?from=casa`}>
+                <div className="h-28 overflow-hidden">
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#9CA3AF] mt-0.5">{store.category}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Featured Stores */}
-      {stores.length > 0 && (
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
         <section className="px-5 py-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Lojas em destaque</h2>
@@ -124,18 +152,10 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
             </button>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-            {stores.filter((s: any) => s.phone !== "999999999").slice(0, 6).map((store: any) => (
-              <div
-                key={store.id}
-                className="provider-card"
-                onClick={() => window.location.href = `/loja/${store.id}?from=casa`}
-              >
+            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+              <div key={store.id} className="provider-card" onClick={() => window.location.href = `/loja/${store.id}?from=casa`}>
                 <div className="h-28 overflow-hidden">
-                  <img
-                    src={store.coverImage || store.image || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"}
-                    alt={store.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{store.name}</h4>

@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 
 const SAUDE_CATEGORIES = [
   "Clínicas & Hospitais",
@@ -57,6 +58,7 @@ export default function LoginSaude() {
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showForgotPwd, setShowForgotPwd] = useState(false);
   const [, setLoc] = useWouterLocation();
 
   const {
@@ -167,6 +169,10 @@ export default function LoginSaude() {
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+                Esqueci a senha?
+              </button>
+
               <button type="submit" className="w-full bg-[#2E7D32] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1B5E20] transition-colors">
                 Entrar
               </button>
@@ -268,6 +274,7 @@ export default function LoginSaude() {
           )}
         </div>
       </div>
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="saude" accentColor="#2E7D32" />
     </main>
   );
 }

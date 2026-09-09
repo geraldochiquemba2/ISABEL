@@ -26,7 +26,7 @@ const AUTOMOVEIS_CATEGORIES = [
   { number: "06", title: "Serviços de Transporte", intro: "Transporte de mercadorias e pessoas com segurança e pontualidade.", category: "servicos-transporte", icon: Truck, items: ["Transporte de Mercadorias", "Mudanças", "Transporte de Veículos"] },
   { number: "07", title: "Assistência em Viagem", intro: "Assistência 24h para emergências rodoviárias em toda Angola.", category: "assistencia-viagem", icon: Shield, items: ["Reboque 24h", "Assistência em Avaria", "Troca de Pneus"] },
   { number: "08", title: "Seguros Automóvel", intro: "Seguros completos para proteger o seu veículo e a sua família.", category: "seguros-auto", icon: Shield, items: ["Seguro contra Terceiros", "Seguro Completo", "Seguro de Vidros"] },
-  { number: "09", title: "Inspecção & Documentação", title: "Inspecção & Documentação", intro: "Inspecções periódicas e renovação de documentos do veículo.", category: "insepcao-doc", icon: FileCheck, items: ["Inspecção Periódica", "Renovação de Documentos", "Legalização de Veículos"] },
+  { number: "09", title: "Inspecção & Documentação", intro: "Inspecções periódicas e renovação de documentos do veículo.", category: "insepcao-doc", icon: FileCheck, items: ["Inspecção Periódica", "Renovação de Documentos", "Legalização de Veículos"] },
   { number: "10", title: "Estacionamentos & Garagens", intro: "Estacionamentos seguros e garagens para guardar o seu veículo.", category: "estacionamentos", icon: ParkingSquare, items: ["Estacionamento Diário", "Garagem Mensal", "Estacionamento Aeroporto"] },
 ];
 

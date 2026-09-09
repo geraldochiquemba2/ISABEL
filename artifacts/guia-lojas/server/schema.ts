@@ -88,6 +88,15 @@ export async function initDB() {
         image       TEXT,
         created_at  TIMESTAMPTZ DEFAULT NOW()
       );
+
+      CREATE TABLE IF NOT EXISTS password_reset_requests (
+        id          SERIAL PRIMARY KEY,
+        user_id     INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        phone       TEXT NOT NULL,
+        store_type  TEXT NOT NULL,
+        status      TEXT DEFAULT 'PENDENTE',
+        created_at  TIMESTAMPTZ DEFAULT NOW()
+      );
     `);
 
     // Adicionar colunas em falta (caso as tabelas já existam sem essas colunas)

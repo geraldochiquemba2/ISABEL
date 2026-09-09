@@ -167,7 +167,6 @@ export default function DashboardBeleza() {
 
   const sidebarItems = [
     ...(isAdmin ? [
-      { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
     ] : [
       { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },

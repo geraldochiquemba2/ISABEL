@@ -4,17 +4,19 @@ import {
   fetchAdminUsersFiltered, approveLojista, rejectLojista, suspendLojista,
   reactivateLojista, cancelApplication, resetUserPassword,
   fetchStores, updateStoreFeatured, getCategories, createCategory, updateCategory, deleteCategory,
+  fetchPasswordResetRequests, approvePasswordReset, rejectPasswordReset,
 } from "@/lib/api";
 import {
   KeyRound, ShieldAlert, Phone, Store, Package, Check, X, Ban, RefreshCw,
   Eye, Star, TrendingUp, FolderPlus, Edit2, Trash2, ChevronDown, ChevronUp,
+  RotateCcw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const inputCls = "w-full border border-[#EDE8DE] bg-white py-3 px-4 text-sm text-[#2D2C2B] placeholder:text-[#87909a] outline-none focus:border-[#D4A843] focus:ring-2 focus:ring-[#D4A843]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
 
-type AdminTab = "utilizadores" | "categorias" | "lojas";
+type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets";
 
 interface AdminPanelProps {
   storeType: string;
@@ -27,6 +29,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
 
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "utilizadores", label: "Utilizadores", icon: <ShieldAlert size={15} /> },
+    { id: "password-resets", label: "Pedidos de Reset", icon: <RotateCcw size={15} /> },
     { id: "categorias", label: "Categorias", icon: <FolderPlus size={15} /> },
     { id: "lojas", label: "Destacar Lojas", icon: <Star size={15} /> },
   ];
@@ -59,6 +62,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
       </div>
 
       {tab === "utilizadores" && <UtilizadoresTab storeType={storeType} accentColor={accentColor} />}
+      {tab === "password-resets" && <PasswordResetsTab storeType={storeType} accentColor={accentColor} />}
       {tab === "categorias" && <CategoriasTab accentColor={accentColor} />}
       {tab === "lojas" && <LojasTab storeType={storeType} accentColor={accentColor} />}
     </div>
@@ -248,6 +252,102 @@ function UtilizadoresTab({ storeType, accentColor }: { storeType: string; accent
           </Modal>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+// ── TAB: CATEGORIAS ──────────────────────────────────────
+function PasswordResetsTab({ storeType, accentColor }: { storeType: string; accentColor: string }) {
+  const [requests, setRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { loadRequests(); }, []);
+
+  async function loadRequests() {
+    setLoading(true);
+    try {
+      const all = await fetchPasswordResetRequests(storeType);
+      setRequests(all);
+    } catch (e) { console.error(e); }
+    finally { setLoading(false); }
+  }
+
+  async function handleApprove(id: number) {
+    try { await approvePasswordReset(id); loadRequests(); } catch { alert("Erro ao aprovar."); }
+  }
+
+  async function handleReject(id: number) {
+    if (!confirm("Rejeitar este pedido?")) return;
+    try { await rejectPasswordReset(id); loadRequests(); } catch { alert("Erro ao rejeitar."); }
+  }
+
+  const pending = requests.filter((r) => r.status === "PENDENTE");
+  const resolved = requests.filter((r) => r.status !== "PENDENTE");
+
+  if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-[#87909a]">{pending.length} pedido(s) pendente(s)</p>
+
+      {pending.length === 0 && (
+        <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhum pedido pendente.</p>
+      )}
+
+      <div className="space-y-3">
+        {pending.map((r) => (
+          <div key={r.id} className="border border-[#EDE8DE] rounded-2xl p-4 bg-white shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+              <div className="flex items-start gap-3 flex-1">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-amber-50 flex-shrink-0 flex items-center justify-center">
+                  <RotateCcw size={18} className="text-amber-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-sm font-semibold">{r.userName || "Utilizador"}</h3>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase bg-amber-50 text-amber-600 border border-amber-200">PENDENTE</span>
+                  </div>
+                  <p className="text-xs text-[#87909a]">{r.phone}</p>
+                  <p className="text-xs text-[#87909a]">Loja: {r.storeName || "—"}</p>
+                  <p className="text-[10px] text-[#87909a] mt-1">Pediu em: {new Date(r.createdAt).toLocaleString("pt-AO")}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <button onClick={() => handleApprove(r.id)} className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-semibold px-3 py-1.5 rounded-full transition-colors">
+                  <Check size={11} /> Aprovar
+                </button>
+                <button onClick={() => handleReject(r.id)} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-[10px] font-semibold px-3 py-1.5 rounded-full transition-colors">
+                  <X size={11} /> Rejeitar
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {resolved.length > 0 && (
+        <>
+          <p className="text-sm text-[#87909a] pt-4 border-t border-[#EDE8DE]">Histórico</p>
+          <div className="space-y-2">
+            {resolved.map((r) => (
+              <div key={r.id} className="flex items-center justify-between bg-white border border-[#EDE8DE] rounded-xl px-4 py-3 opacity-60">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                    <RotateCcw size={14} className="text-gray-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium">{r.userName || r.phone}</p>
+                    <p className="text-[10px] text-[#87909a]">{r.phone}</p>
+                  </div>
+                </div>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                  r.status === "APROVADO" ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-red-50 text-red-600 border border-red-200"
+                }`}>{r.status}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

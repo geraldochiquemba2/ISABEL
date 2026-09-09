@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 
 const LOVE_CATEGORIES = [
   "Actos de Amor, Homenagens e Experiências",
@@ -52,6 +53,7 @@ export default function LoginLove() {
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showForgotPwd, setShowForgotPwd] = useState(false);
   const [, setLoc] = useWouterLocation();
 
   const {
@@ -162,6 +164,10 @@ export default function LoginLove() {
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+                Esqueci a senha?
+              </button>
+
               <button type="submit" className="w-full bg-[#d96f5c] text-white py-3 text-sm font-medium rounded-full hover:bg-[#c5614f] transition-colors">
                 Entrar
               </button>
@@ -263,6 +269,7 @@ export default function LoginLove() {
           )}
         </div>
       </div>
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="love-services" accentColor="#68AAA0" />
     </main>
   );
 }

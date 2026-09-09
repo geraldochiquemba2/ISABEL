@@ -164,7 +164,6 @@ export default function DashboardImoveis() {
 
   const sidebarItems = isAdmin
     ? [
-        { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
         { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
       ]
     : [

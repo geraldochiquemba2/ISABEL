@@ -63,9 +63,10 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
     staleTime: 60_000,
   });
 
-  const featured = useMemo(() => {
-    return stores.slice(0, 6);
-  }, [stores]);
+  const nonAdmin = useMemo(() => stores.filter((s: Store) => s.phone !== "999999999"), [stores]);
+  const featured = useMemo(() => nonAdmin.filter((s: Store) => s.isFeatured).slice(0, 6), [nonAdmin]);
+  const trending = useMemo(() => nonAdmin.filter((s: Store) => s.isTrending).slice(0, 6), [nonAdmin]);
+  const fallbackFeatured = useMemo(() => !featured.length ? nonAdmin.slice(0, 6) : [], [featured, nonAdmin]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -139,6 +140,16 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         </div>
       </section>
 
+      {/* Em Alta */}
+      {trending.length > 0 && (
+        <section className="px-5 py-4">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Em alta</h2>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{trending.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+        </section>
+      )}
+
       {/* Featured Stores */}
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
@@ -147,8 +158,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         </div>
         {isLoading ? (
           <div className="flex gap-3 overflow-x-auto">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
-        ) : featured.length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{featured.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+        ) : (featured.length > 0 ? featured : fallbackFeatured).length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
         ) : (
           <p className="text-sm text-[#9CA3AF] text-center py-6">Nenhuma loja disponível de momento.</p>
         )}

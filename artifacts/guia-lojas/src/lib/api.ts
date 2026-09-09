@@ -325,3 +325,32 @@ export async function fetchAdminUsersFiltered(storeType?: string): Promise<any[]
   if (!res.ok) throw new Error("Erro ao carregar utilizadores");
   return res.json();
 }
+
+// ── Password Reset Requests ─────────────────────────────────
+export async function requestPasswordReset(phone: string, storeType: string): Promise<any> {
+  const res = await fetch("/api/auth/request-password-reset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, storeType }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao solicitar redefinição");
+  return json;
+}
+
+export async function fetchPasswordResetRequests(storeType?: string): Promise<any[]> {
+  const url = storeType ? `/api/admin/password-reset-requests?store_type=${storeType}` : "/api/admin/password-reset-requests";
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Erro ao carregar pedidos");
+  return res.json();
+}
+
+export async function approvePasswordReset(requestId: number): Promise<void> {
+  const res = await fetch(`/api/admin/password-reset-requests/${requestId}/approve`, { method: "PUT" });
+  if (!res.ok) throw new Error("Erro ao aprovar pedido");
+}
+
+export async function rejectPasswordReset(requestId: number): Promise<void> {
+  const res = await fetch(`/api/admin/password-reset-requests/${requestId}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Erro ao rejeitar pedido");
+}

@@ -10,6 +10,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { registerLojista, loginLojista } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 
 /* ── schemas ─────────────────────────────────────────────── */
 const loginSchema = z.object({
@@ -56,6 +57,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showForgotPwd, setShowForgotPwd] = useState(false);
   const [, setLoc] = useWouterLocation();
 
   const { data: CATEGORIES = [] } = useQuery({
@@ -233,6 +235,10 @@ export default function Login() {
                   <FieldError msg={loginErr.password?.message} />
                 </div>
 
+                <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+                  Esqueci a senha?
+                </button>
+
                 <button
                   type="submit"
                   className="w-full bg-foreground text-background py-3 text-sm font-medium rounded-full hover:opacity-80 transition-opacity mt-2 border border-black"
@@ -391,6 +397,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="collection" accentColor="#D4A843" />
     </PageTransition>
   );
 }
