@@ -198,7 +198,7 @@ export default function StoreProfile() {
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">
             <a
-              href={`https://wa.me/244922001778?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
+              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-whatsapp"
@@ -209,7 +209,7 @@ export default function StoreProfile() {
               </button>
             </a>
 
-            <a href={`https://wa.me/244922001778?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`} target="_blank" rel="noopener noreferrer" data-testid="button-call">
+            <a href={`https://tel:244${store.phone}`} target="_blank" rel="noopener noreferrer" data-testid="button-call">
               <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
                 <Phone size={13} />
                 Ligar
@@ -217,7 +217,7 @@ export default function StoreProfile() {
             </a>
 
             <a
-              href={`https://wa.me/244922001778?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
+              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} e gostaria de mais informações.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="button-message"
@@ -623,7 +623,7 @@ function ProductCard({ product, index, storeName, storeWhatsapp, onPhotoClick }:
     `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(product.price)}`
   );
 
-  const whatsappUrl = `https://wa.me/244922001778?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/244${storeWhatsapp}?text=${whatsappMessage}`;
 
   return (
     <motion.div
