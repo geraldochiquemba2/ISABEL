@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import {
-  Heart, ShoppingBag, Search, ChevronRight, Star, MapPin, Menu, X,
+  Heart, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
@@ -55,10 +55,7 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#2d2c2b" }}>YESOLA</span>
             <span className="text-[9px] tracking-[0.25em] text-[#D4A843] font-semibold uppercase mt-0.5">Imóveis</span>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="p-1"><Search size={22} /></button>
-            <button className="p-1"><ShoppingBag size={22} /></button>
-          </div>
+
         </div>
         {menuOpen && (
           <div className="bg-[#FAF8F5] border-t border-[#EDE8DE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
-  Crown, Building2, Baby, ChevronRight,
-  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
+  Crown, Building2, Baby, Car, ChevronRight, Stethoscope, Sparkles,
+  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Home,
 } from "lucide-react";
 
 const stores = [
@@ -87,6 +87,46 @@ const stores = [
     icon: <Baby size={24} className="text-white" />,
     accent: "#8e44ad",
   },
+  {
+    id: "automoveis",
+    name: "Automóveis & Mobilidade",
+    subtitle: "O caminho certo",
+    description: "Encontre carros, serviços e profissionais que garantem segurança, qualidade e tranquilidade para si e para a sua família.",
+    image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#0f1d32]/80 to-[#c9913a]/80",
+    icon: <Car size={24} className="text-white" />,
+    accent: "#0f1d32",
+  },
+  {
+    id: "saude",
+    name: "Saúde & Bem-Estar",
+    subtitle: "Cuidamos de si",
+    description: "Encontre profissionais, clínicas e serviços que cuidam de si e da sua família com excelência, atenção e amor.",
+    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#2E7D32]/80 to-[#1B5E20]/80",
+    icon: <Stethoscope size={24} className="text-white" />,
+    accent: "#2E7D32",
+  },
+  {
+    id: "beleza",
+    name: "Beleza & Bem-Estar",
+    subtitle: "Cuide de si",
+    description: "Cabelo, unhas, maquiagem, skincare e muito mais. Encontre os melhores profissionais de beleza em Angola.",
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#B8860B]/80 to-[#9A7209]/80",
+    icon: <Sparkles size={24} className="text-white" />,
+    accent: "#B8860B",
+  },
+  {
+    id: "casa",
+    name: "Casa & Serviços",
+    subtitle: "O cuidado que a sua casa merece",
+    description: "Profissionais qualificados para limpeza, canalização, pintura, jardinagem e muito mais. Encontre o profissional ideal para o seu lar.",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#8B4513]/80 to-[#6B3410]/80",
+    icon: <Home size={24} className="text-white" />,
+    accent: "#8B4513",
+  },
 ];
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -152,6 +192,38 @@ const categoryIcons: Record<string, React.ReactNode> = {
       <circle cx="15" cy="13" r="1" fill="#D4A843" />
       <circle cx="21" cy="13" r="1" fill="#D4A843" />
       <path d="M16 16c1 1 3 1 4 0" strokeLinecap="round" />
+    </svg>
+  ),
+  automoveis: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#D4A843" strokeWidth="1.5">
+      <path d="M6 22h24l-3-10H9L6 22z" />
+      <circle cx="12" cy="24" r="2.5" />
+      <circle cx="24" cy="24" r="2.5" />
+      <path d="M9 12l2-5h14l2 5" />
+      <path d="M14 17h8" strokeLinecap="round" />
+    </svg>
+  ),
+  saude: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#D4A843" strokeWidth="1.5">
+      <rect x="6" y="8" width="24" height="20" rx="2" />
+      <path d="M16 14v8M12 18h8" />
+      <rect x="10" y="4" width="12" height="6" rx="1" />
+    </svg>
+  ),
+  beleza: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#D4A843" strokeWidth="1.5">
+      <path d="M18 4l-2 8h4l-2-8z" />
+      <path d="M12 12c-2 0-4 2-4 4 0 4 4 8 10 8s10-4 10-8c0-2-2-4-4-4" />
+      <path d="M18 24v6" />
+      <path d="M14 30h8" />
+    </svg>
+  ),
+  casa: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#D4A843" strokeWidth="1.5">
+      <path d="M6 16l12-10 12 10" />
+      <path d="M8 14v14h20V14" />
+      <rect x="14" y="22" width="8" height="6" rx="1" />
+      <rect x="11" y="17" width="5" height="4" rx="1" />
     </svg>
   ),
 };

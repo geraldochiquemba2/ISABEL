@@ -40,12 +40,28 @@ import InfantilHome from "@/pages/InfantilHome";
 import ExploreInfantil from "@/pages/ExploreInfantil";
 import LoginInfantil from "@/pages/LoginInfantil";
 import DashboardInfantil from "@/pages/DashboardInfantil";
+import AutomoveisHome from "@/pages/AutomoveisHome";
+import ExploreAutomoveis from "@/pages/ExploreAutomoveis";
+import LoginAutomoveis from "@/pages/LoginAutomoveis";
+import DashboardAutomoveis from "@/pages/DashboardAutomoveis";
+import SaúdeHome from "@/pages/SaudeHome";
+import ExploreSaude from "@/pages/ExploreSaude";
+import LoginSaude from "@/pages/LoginSaude";
+import DashboardSaude from "@/pages/DashboardSaude";
+import BelezaHome from "@/pages/BelezaHome";
+import ExploreBeleza from "@/pages/ExploreBeleza";
+import LoginBeleza from "@/pages/LoginBeleza";
+import DashboardBeleza from "@/pages/DashboardBeleza";
+import CasaHome from "@/pages/CasaHome";
+import ExploreCasa from "@/pages/ExploreCasa";
+import LoginCasa from "@/pages/LoginCasa";
+import DashboardCasa from "@/pages/DashboardCasa";
 import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | "infantil" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -215,6 +231,78 @@ function Router() {
           <Route path="/dashboard-infantil" component={DashboardInfantil} />
           <Route>
             <InfantilHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "automoveis") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-automoveis" component={ExploreAutomoveis} />
+          <Route path="/login-automoveis" component={LoginAutomoveis} />
+          <Route path="/dashboard-automoveis" component={DashboardAutomoveis} />
+          <Route>
+            <AutomoveisHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "saude") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-saude" component={ExploreSaude} />
+          <Route path="/login-saude" component={LoginSaude} />
+          <Route path="/dashboard-saude" component={DashboardSaude} />
+          <Route>
+            <SaúdeHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "beleza") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-beleza" component={ExploreBeleza} />
+          <Route path="/login-beleza" component={LoginBeleza} />
+          <Route path="/dashboard-beleza" component={DashboardBeleza} />
+          <Route>
+            <BelezaHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "casa") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-casa" component={ExploreCasa} />
+          <Route path="/login-casa" component={LoginCasa} />
+          <Route path="/dashboard-casa" component={DashboardCasa} />
+          <Route>
+            <CasaHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
 
