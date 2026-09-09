@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import {
-  Heart, ChevronRight, Star, MapPin, Menu, X,
+  Heart, ChevronRight, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
@@ -20,13 +20,6 @@ const CATEGORIES = [
   { id: "mudancas", name: "Mudanças & Transporte", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#8B4513" strokeWidth="1.5"><rect x="4" y="10" width="18" height="14" rx="2" /><path d="M22 14h4l4 6v4h-8" /><circle cx="10" cy="24" r="3" /><circle cx="26" cy="24" r="3" /></svg> },
   { id: "reparacoes", name: "Reparações & Manutenção", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#8B4513" strokeWidth="1.5"><path d="M14 4l-4 4 8 8-4 4 8 8 4-4" /><path d="M18 8l8 8" /><path d="M10 24l-4 4" /></svg> },
   { id: "seguranca", name: "Segurança Residencial", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#8B4513" strokeWidth="1.5"><path d="M16 4L6 10v6c0 6 4.5 11.6 10 13 5.5-1.4 10-7 10-13v-6L16 4z" /><path d="M12 16l3 3 5-6" /></svg> },
-];
-
-const PROVIDERS_HIGHLIGHT = [
-  { name: "Lar Limpo", category: "Limpeza Residencial", rating: 4.9, reviews: 128, location: "Luanda", image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Água Certa", category: "Canalização", rating: 4.8, reviews: 96, location: "Benguela", image: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Luz Total", category: "Serviços Elétricos", rating: 4.9, reviews: 74, location: "Huíla", image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop&auto=format&q=80" },
-  { name: "Cores & Cia", category: "Pintura Residencial", rating: 4.8, reviews: 112, location: "Lubango", image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop&auto=format&q=80" },
 ];
 
 const TRUST_BADGES = [
@@ -121,37 +114,44 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
         </div>
       </section>
 
-      {/* Providers Highlight */}
-      <section className="px-5 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Fornecedores em destaque</h2>
-          <button onClick={() => navigate("/explorar-casa")} className="text-[12px] font-medium text-[#8B4513] flex items-center gap-1">
-            Ver todos <ChevronRight size={14} />
-          </button>
-        </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-          {PROVIDERS_HIGHLIGHT.map((provider, i) => (
-            <div key={i} className="provider-card">
-              <div className="h-28 overflow-hidden">
-                <img src={provider.image} alt={provider.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-3">
-                <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{provider.name}</h4>
-                <p className="text-[10px] text-[#9CA3AF] mt-0.5">{provider.category}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <Star size={10} className="text-[#8B4513] fill-[#8B4513]" />
-                  <span className="text-[10px] font-medium text-[#2D2C2B]">{provider.rating}</span>
-                  <span className="text-[10px] text-[#9CA3AF]">({provider.reviews})</span>
+      {/* Featured Stores */}
+      {stores.length > 0 && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-casa")} className="text-[12px] font-medium text-[#8B4513] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {stores.filter((s: any) => s.phone !== "999999999").slice(0, 6).map((store: any) => (
+              <div
+                key={store.id}
+                className="provider-card"
+                onClick={() => window.location.href = `/loja/${store.id}?from=casa`}
+              >
+                <div className="h-28 overflow-hidden">
+                  <img
+                    src={store.coverImage || store.image || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"}
+                    alt={store.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="flex items-center gap-1 mt-1">
-                  <MapPin size={10} className="text-[#9CA3AF]" />
-                  <span className="text-[10px] text-[#9CA3AF]">{provider.location}</span>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#9CA3AF] mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#9CA3AF]" />
+                      <span className="text-[10px] text-[#9CA3AF]">{store.province}</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Stores by Category */}
       {isLoading ? (
