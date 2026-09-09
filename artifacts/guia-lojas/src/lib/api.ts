@@ -359,3 +359,31 @@ export async function rejectPasswordReset(requestId: number): Promise<void> {
 export async function trackWhatsAppClick(storeId: string): Promise<void> {
   await fetch(`/api/stores/${storeId}/whatsapp-click`, { method: "PATCH" });
 }
+
+// ── Carrinho Access (Admin) ────────────────────────────────
+export async function fetchPendingCarrinhoRequests(storeType?: string): Promise<any[]> {
+  const url = storeType
+    ? `/api/stores/carrinho-access/pending?store_type=${storeType}`
+    : `/api/stores/carrinho-access/pending`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Erro ao buscar pedidos");
+  return res.json();
+}
+
+export async function approveCarrinhoAccess(storeId: string): Promise<void> {
+  const res = await fetch(`/api/stores/${storeId}/carrinho-access`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "APROVADO" }),
+  });
+  if (!res.ok) throw new Error("Erro ao aprovar acesso");
+}
+
+export async function rejectCarrinhoAccess(storeId: string): Promise<void> {
+  const res = await fetch(`/api/stores/${storeId}/carrinho-access`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "RECUSADO" }),
+  });
+  if (!res.ok) throw new Error("Erro ao rejeitar acesso");
+}

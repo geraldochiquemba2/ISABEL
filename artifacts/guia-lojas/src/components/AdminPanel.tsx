@@ -5,18 +5,19 @@ import {
   reactivateLojista, cancelApplication, resetUserPassword,
   fetchStores, updateStoreFeatured, getCategories, createCategory, updateCategory, deleteCategory,
   fetchPasswordResetRequests, approvePasswordReset, rejectPasswordReset,
+  fetchPendingCarrinhoRequests, approveCarrinhoAccess, rejectCarrinhoAccess,
 } from "@/lib/api";
 import {
   KeyRound, ShieldAlert, Phone, Store, Package, Check, X, Ban, RefreshCw,
   Eye, Star, TrendingUp, FolderPlus, Edit2, Trash2, ChevronDown, ChevronUp,
-  RotateCcw,
+  RotateCcw, ShoppingCart,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const inputCls = "w-full border border-[#EDE8DE] bg-white py-3 px-4 text-sm text-[#2D2C2B] placeholder:text-[#87909a] outline-none focus:border-[#D4A843] focus:ring-2 focus:ring-[#D4A843]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
 
-type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets";
+type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets" | "carrinhos";
 
 interface AdminPanelProps {
   storeType: string;
@@ -30,6 +31,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
   const tabs: { id: AdminTab; label: string; icon: React.ReactNode }[] = [
     { id: "utilizadores", label: "Utilizadores", icon: <ShieldAlert size={15} /> },
     { id: "password-resets", label: "Pedidos de Reset", icon: <RotateCcw size={15} /> },
+    { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
     { id: "categorias", label: "Categorias", icon: <FolderPlus size={15} /> },
     { id: "lojas", label: "Destacar Lojas", icon: <Star size={15} /> },
   ];
@@ -44,25 +46,27 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-[#EDE8DE]">
+      <div className="flex gap-1 sm:gap-2 border-b border-[#EDE8DE] overflow-x-auto scrollbar-hide">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
               tab === t.id
                 ? "border-current text-[#2D2C2B]"
                 : "border-transparent text-[#87909a] hover:text-[#2D2C2B]"
             }`}
             style={tab === t.id ? { color: accentColor, borderColor: accentColor } : {}}
           >
-            {t.icon} {t.label}
+            {t.icon} <span className="hidden sm:inline">{t.label}</span>
+            <span className="sm:hidden">{t.label.split(" ")[0]}</span>
           </button>
         ))}
       </div>
 
       {tab === "utilizadores" && <UtilizadoresTab storeType={storeType} accentColor={accentColor} />}
       {tab === "password-resets" && <PasswordResetsTab storeType={storeType} accentColor={accentColor} />}
+      {tab === "carrinhos" && <CarrinhosTab storeType={storeType} accentColor={accentColor} />}
       {tab === "categorias" && <CategoriasTab accentColor={accentColor} />}
       {tab === "lojas" && <LojasTab storeType={storeType} accentColor={accentColor} />}
     </div>
@@ -509,6 +513,61 @@ function LojasTab({ storeType, accentColor }: { storeType: string; accentColor: 
         ))}
         {stores.length === 0 && <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhuma loja encontrada.</p>}
       </div>
+    </div>
+  );
+}
+
+// ── CARRINHOS TAB ──────────────────────────────────────────
+function CarrinhosTab({ storeType, accentColor }: { storeType: string; accentColor: string }) {
+  const queryClient = useQueryClient();
+  const { data: requests = [], isLoading } = useQuery({
+    queryKey: ["pending-carrinho", storeType],
+    queryFn: () => fetchPendingCarrinhoRequests(storeType),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => approveCarrinhoAccess(id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["pending-carrinho"] }); },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (id: string) => rejectCarrinhoAccess(id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["pending-carrinho"] }); },
+  });
+
+  if (isLoading) return <p className="text-sm text-[#87909a] py-8 text-center">A carregar...</p>;
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-[#87909a]">Pedidos de acesso ao carrinho pendentes.</p>
+      {requests.length === 0 ? (
+        <p className="text-sm text-[#87909a] py-8 text-center">Nenhum pedido pendente.</p>
+      ) : (
+        <div className="space-y-3">
+          {requests.map((req: any) => (
+            <div key={req.id} className="bg-white border border-[#EDE8DE] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-[#2D2C2B]">{req.name}</p>
+                <p className="text-xs text-[#87909a]">{req.ownerName} · {req.ownerPhone}</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => approveMutation.mutate(req.id)}
+                  className="flex items-center gap-1 bg-[#2E7D32] hover:bg-[#1B5E20] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <Check size={13} /> Aprovar
+                </button>
+                <button
+                  onClick={() => rejectMutation.mutate(req.id)}
+                  className="flex items-center gap-1 bg-[#D32F2F] hover:bg-[#B71C1C] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <X size={13} /> Recusar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
