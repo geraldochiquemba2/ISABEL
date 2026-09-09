@@ -110,7 +110,7 @@ export default function DashboardImoveis() {
     );
   }
 
-  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
+  const [section, setSection] = useState<Section>("overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -152,7 +152,7 @@ export default function DashboardImoveis() {
   const { data: store, isLoading } = useQuery({
     queryKey: ["myStore", localUser?.storeId],
     queryFn: () => fetchStoreById(localUser.storeId),
-    enabled: !!localUser?.storeId && !isAdmin,
+    enabled: !!localUser?.storeId,
   });
 
   const handleLogout = () => {
@@ -163,15 +163,13 @@ export default function DashboardImoveis() {
   if (!localUser) return null;
 
   const sidebarItems = [
+    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
     ...(isAdmin ? [
-      { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : [
-      { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-      { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-      { id: "produtos" as Section, label: "Imóveis", icon: <Package size={15} /> },
-      { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
-    ]),
+    ] : []),
+    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
   ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#f4f1eb]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
@@ -223,8 +221,7 @@ export default function DashboardImoveis() {
 
         {/* Main */}
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
-          {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
-          {section === "overview" && isAdmin && <AdminOverviewSection />}
+          {section === "overview" && store && <OverviewSection store={store} />}
           {section === "admin" && <ImoveisAdminPanel />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}

@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   const isAdmin = localUser.phone === "999999999";
 
-  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
+  const [section, setSection] = useState<Section>("overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -83,7 +83,7 @@ export default function Dashboard() {
   const { data: store, isLoading, error } = useQuery({
     queryKey: ["myStore", localUser.storeId],
     queryFn: () => fetchStoreById(localUser.storeId),
-    enabled: !!localUser.storeId && !isAdmin,
+    enabled: !!localUser.storeId,
   });
 
   const [saved, setSaved] = useState(false);
@@ -294,14 +294,13 @@ export default function Dashboard() {
   }
 
 
-  const navItems: { id: Section; label: string; icon: React.ReactNode }[] = isAdmin
-    ? [{ id: "admin", label: "Administração", icon: <ShieldAlert size={15} /> }]
-    : [
-        { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
-        { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
-        { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
-        { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
-      ];
+  const navItems: { id: Section; label: string; icon: React.ReactNode }[] = [
+    { id: "overview", label: "Visão Geral", icon: <LayoutDashboard size={15} /> },
+    ...(isAdmin ? [{ id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> }] : []),
+    { id: "loja", label: "Minha Loja", icon: <Store size={15} /> },
+    { id: "produtos", label: "Produtos", icon: <Package size={15} /> },
+    { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
+  ];
 
   return (
     <PageTransition>

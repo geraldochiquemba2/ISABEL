@@ -109,7 +109,7 @@ export default function DashboardFormacoes() {
     );
   }
 
-  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
+  const [section, setSection] = useState<Section>("overview");
   const [isDirty, setIsDirty] = useState(false);
   const saveFnRef = useRef<(() => void) | null>(null);
 
@@ -151,7 +151,7 @@ export default function DashboardFormacoes() {
   const { data: store, isLoading } = useQuery({
     queryKey: ["myStore", localUser?.storeId],
     queryFn: () => fetchStoreById(localUser.storeId),
-    enabled: !!localUser?.storeId && !isAdmin,
+    enabled: !!localUser?.storeId,
   });
 
   const handleLogout = () => {
@@ -162,15 +162,13 @@ export default function DashboardFormacoes() {
   if (!localUser) return null;
 
   const sidebarItems = [
+    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
     ...(isAdmin ? [
-      { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : [
-      { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-      { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-      { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
-      { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
-    ]),
+    ] : []),
+    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
   ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#fafafa]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
@@ -283,30 +281,25 @@ export default function DashboardFormacoes() {
             </div>
           )}
 
-          {/* Overview / Password Reset for admin */}
-          {section === "overview" && isAdmin && (
-            <AdminPasswordReset />
-          )}
-
           {/* Admin panel */}
           {section === "admin" && isAdmin && (
             <FormacoesAdminPanel />
           )}
 
           {/* Store owner sections */}
-          {!isAdmin && section === "overview" && store && (
+          {section === "overview" && store && (
             <StoreOverview store={store} />
           )}
 
-          {!isAdmin && section === "loja" && store && (
+          {section === "loja" && store && (
             <StoreEditor store={store} isDirty={isDirty} setIsDirty={setIsDirty} saveFnRef={saveFnRef} />
           )}
 
-          {!isAdmin && section === "produtos" && store && (
+          {section === "produtos" && store && (
             <ProductsManager store={store} />
           )}
 
-          {!isAdmin && section === "contactos" && store && (
+          {section === "contactos" && store && (
             <ContactEditor store={store} isDirty={isDirty} setIsDirty={setIsDirty} saveFnRef={saveFnRef} />
           )}
         </main>

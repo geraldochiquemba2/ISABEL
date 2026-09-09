@@ -518,15 +518,13 @@ export default function DashboardLove() {
   };
 
   const sidebarItems = [
+    { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
     ...(isAdmin ? [
-      { id: "overview" as Section, label: "Redefinir Senhas", icon: <KeyRound size={15} /> },
       { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
-    ] : [
-      { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
-      { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-      { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
-      { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
-    ]),
+    ] : []),
+    { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+    { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+    { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
   ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#f8f1e7]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
