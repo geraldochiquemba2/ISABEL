@@ -268,6 +268,7 @@ export default function DashboardAutomoveis() {
 
 function OverviewSection({ store }: { store: any }) {
   const stats = [{ label: "Serviços", value: store.products?.length || 0, icon: <Package size={18} /> }];
+  const whatsappClicks = store?.whatsapp_clicks || 0;
   return (
     <div>
       <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a] mb-8">Visão Geral</h2>
@@ -278,6 +279,10 @@ function OverviewSection({ store }: { store: any }) {
             <p className="text-3xl font-semibold text-[#30343a]">{s.value}</p>
           </div>
         ))}
+        <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
+          <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+          <p className="text-2xl font-bold text-[#30343a]">{whatsappClicks}</p>
+        </div>
       </div>
     </div>
   );

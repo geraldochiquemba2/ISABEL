@@ -600,6 +600,10 @@ export default function DashboardLove() {
                   <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Estado</p>
                   <p className={`text-sm font-semibold ${store.isOpen ? "text-green-600" : "text-red-500"}`}>{store.isOpen ? "Aberto" : "Fechado"}</p>
                 </div>
+                <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
+                  <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+                  <p className="text-2xl font-bold text-[#30343a]">{store?.whatsapp_clicks || 0}</p>
+                </div>
               </div>
             </div>
           )}

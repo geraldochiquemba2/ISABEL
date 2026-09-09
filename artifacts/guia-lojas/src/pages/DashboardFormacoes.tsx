@@ -409,6 +409,10 @@ function StoreOverview({ store }: { store: any }) {
           <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Contacto</p>
           <p className="text-sm font-semibold text-[#123c4a]">{store.phone || "-"}</p>
         </div>
+        <div className="bg-white rounded-2xl border border-[#e8eced] p-5">
+          <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+          <p className="text-2xl font-bold text-[#123c4a]">{store?.whatsapp_clicks || 0}</p>
+        </div>
       </div>
     </div>
   );
