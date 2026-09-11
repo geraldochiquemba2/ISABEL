@@ -83,7 +83,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#EEF3F4] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=formacoes`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -117,9 +117,9 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#17191A] truncate">{store.name}</h4>
         {store.description && (
-          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          <p className="text-[10px] text-[#68757C] mt-1 line-clamp-2">{store.description}</p>
         )}
       </div>
     </div>
@@ -206,25 +206,25 @@ export default function ExploreFormacoes() {
     : groups;
 
   return (
-    <main className="min-h-[100dvh] bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#FAFAF8] text-[#17191A]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
       `}</style>
 
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fafafa]/95 backdrop-blur-md border-b border-[#0c9894]/10">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAFAF8]/95 backdrop-blur-md border-b border-[#1E737B]/10">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68757C] hover:text-[#17191A] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA <i className="font-normal">Formações</i></span>
-          <a href="/explorar-formacoes" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#0c9894] transition-colors hidden md:block">Explorar</a>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#17191A" }}>YESOLA <i className="font-normal">Formações</i></span>
+          <a href="/explorar-formacoes" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68757C] hover:text-[#1E737B] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#87909a]">Explorar serviços</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#68757C]">Explorar serviços</p>
           <h1 className="mt-4 font-serif text-5xl tracking-[-0.03em] md:text-7xl" style={{ fontFamily: "'Playfair Display', serif" }}>O nosso<br /><i>universo.</i></h1>
         </div>
 
@@ -233,8 +233,8 @@ export default function ExploreFormacoes() {
             onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
               activeFilter === null
-                ? "bg-[#2c3035] text-white"
-                : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                ? "bg-[#17191A] text-white"
+                : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
             }`}
           >
             Todos
@@ -245,8 +245,8 @@ export default function ExploreFormacoes() {
               onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeFilter === group.category
-                  ? "bg-[#2c3035] text-white"
-                  : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  ? "bg-[#17191A] text-white"
+                  : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
               }`}
             >
               {group.number} {group.title.split(",")[0].split(" e ")[0]}
@@ -255,11 +255,11 @@ export default function ExploreFormacoes() {
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#68757C] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#EEF3F4] bg-white text-[#17191A] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -269,8 +269,8 @@ export default function ExploreFormacoes() {
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeProvince === null
-                  ? "bg-[#68727c] text-white"
-                  : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  ? "bg-[#68757C] text-white"
+                  : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
               }`}
             >
               Todas
@@ -281,8 +281,8 @@ export default function ExploreFormacoes() {
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeProvince === province
-                    ? "bg-[#68727c] text-white"
-                    : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                    ? "bg-[#68757C] text-white"
+                    : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
                 }`}
               >
                 {province}
@@ -293,11 +293,11 @@ export default function ExploreFormacoes() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#68757C] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#EEF3F4] bg-white text-[#17191A] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -307,8 +307,8 @@ export default function ExploreFormacoes() {
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeMunicipality === null
-                    ? "bg-[#87909a] text-white"
-                    : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                    ? "bg-[#68757C] text-white"
+                    : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
                 }`}
               >
                 Todos
@@ -319,8 +319,8 @@ export default function ExploreFormacoes() {
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                     activeMunicipality === m
-                      ? "bg-[#87909a] text-white"
-                      : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                      ? "bg-[#68757C] text-white"
+                      : "bg-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4]"
                   }`}
                 >
                   {m}
@@ -332,22 +332,22 @@ export default function ExploreFormacoes() {
 
         <div>
           {filteredGroups.map((group, i) => (
-            <article key={group.number} className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+            <article key={group.number} className={`group border-t border-[#EEF3F4] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
               <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+                <span className="font-mono text-xs tracking-[0.2em] text-[#68757C]">{group.number}</span>
                 <div>
-                  <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]" style={{ fontFamily: "'Playfair Display', serif" }}>{group.title}</h3>
-                  <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
-                   <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
+                  <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#17191A] md:text-[2.8rem]" style={{ fontFamily: "'Playfair Display', serif" }}>{group.title}</h3>
+                  <p className="mt-4 max-w-md text-sm leading-7 text-[#68757C]">{group.intro}</p>
+                   <ul className="mt-6 space-y-3 border-l border-[#EEF3F4] pl-5 text-sm leading-5 text-[#68757C]">
                      {group.items.map((item) => (
                        <li key={item}>
                          <a
                            href={`/explorar-formacoes?categoria=${group.category}&subcategoria=${encodeURIComponent(item)}`}
                            className={`flex gap-3 transition-transform duration-300 group-hover:translate-x-1 cursor-pointer ${
-                             activeSubcategory === item ? "text-[#30343a] font-medium" : "hover:text-[#30343a]"
+                             activeSubcategory === item ? "text-[#17191A] font-medium" : "hover:text-[#17191A]"
                            }`}
                          >
-                           <span className={`mt-2 h-1 w-1 shrink-0 rounded-full ${activeSubcategory === item ? "bg-[#30343a]" : "bg-[#aeb6bf]"}`} />{item}
+                           <span className={`mt-2 h-1 w-1 shrink-0 rounded-full ${activeSubcategory === item ? "bg-[#17191A]" : "bg-[#EEF3F4]"}`} />{item}
                          </a>
                        </li>
                      ))}
@@ -355,14 +355,14 @@ export default function ExploreFormacoes() {
                   {getStoresForGroup(group.category).length > 0 && (
                     <button
                       onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                      className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors"
+                      className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68757C] hover:text-[#17191A] transition-colors"
                     >
                       Ver mais <ArrowUpRight size={14} />
                     </button>
                   )}
                 </div>
                 <div className="mt-4 md:mt-0">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#68757C] mb-3">Lojas recentes</p>
                   {getStoresForGroup(group.category).length > 0 ? (
                     <div className="flex flex-col gap-3">
                       {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }) => (
@@ -370,8 +370,8 @@ export default function ExploreFormacoes() {
                       ))}
                     </div>
                   ) : (
-                    <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
-                      <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                    <div className="rounded-2xl border border-dashed border-[#EEF3F4] p-6 text-center">
+                      <p className="text-xs text-[#68757C]">Em breve novas lojas</p>
                     </div>
                   )}
                 </div>
@@ -381,24 +381,24 @@ export default function ExploreFormacoes() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
-        <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" />
-        <div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
+      <section className="relative overflow-hidden border-t border-[#EEF3F4] bg-[#17191A] px-6 py-24 text-[#FAFAF8] md:px-12 md:py-32">
+        <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#EEF3F4]/20" />
+        <div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#EEF3F4]/15" />
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#b9c1ca]">O primeiro passo</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#EEF3F4]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl" style={{ fontFamily: "'Playfair Display', serif" }}>A próxima competência pode começar<br /><i>numa conversa.</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#cbd0d5]">Explore com calma. Quando encontrar o caminho certo, a YESOLA ajuda a aproximá-lo de quem pode ensinar.</p>
+            <p className="text-sm leading-6 text-[#EEF3F4]">Explore com calma. Quando encontrar o caminho certo, a YESOLA ajuda a aproximá-lo de quem pode ensinar.</p>
             <div className="mt-7 flex items-center gap-4">
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#EEF3F4] hover:text-white transition-colors">
                 <Phone size={14} /> Ligar
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#EEF3F4] hover:text-white transition-colors">
                 <Mail size={14} /> Email
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#EEF3F4] hover:text-white transition-colors">
                 WhatsApp
               </a>
             </div>
@@ -406,13 +406,13 @@ export default function ExploreFormacoes() {
         </div>
       </section>
 
-      <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#fafafa]">
+      <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#FAFAF8]">
         <div className="flex items-center gap-3">
           <img src="/logo-yesola-icon-dark.png" alt="YESOLA Formações" className="w-8 h-8" />
-          <span className="font-serif text-lg tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Formações</i></span>
+          <span className="font-serif text-lg tracking-[0.08em] text-[#17191A]">YESOLA <i className="font-normal">Formações</i></span>
         </div>
-        <p className="text-xs text-[#747b84]">Aprender. Praticar. Avançar.</p>
-        <div className="flex items-center gap-5 text-[#747b84]">
+        <p className="text-xs text-[#68757C]">Aprender. Praticar. Avançar.</p>
+        <div className="flex items-center gap-5 text-[#68757C]">
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Forma%C3%A7%C3%B5es%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
 

@@ -30,7 +30,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#F7E9EB] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=love-services`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -53,8 +53,8 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
-        {store.description && <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>}
+        <h4 className="text-sm font-semibold text-[#171416] truncate">{store.name}</h4>
+        {store.description && <p className="text-[10px] text-[#6F696B] mt-1 line-clamp-2">{store.description}</p>}
       </div>
     </div>
   );
@@ -132,44 +132,44 @@ export default function ExploreLove() {
     : LOVE_SERVICE_GROUPS;
 
   return (
-    <main className="min-h-[100dvh] bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fafafa]/95 backdrop-blur-md border-b border-[#d9dde1]/60">
+    <main className="min-h-[100dvh] bg-[#FCFAF8] text-[#171416]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FCFAF8]/95 backdrop-blur-md border-b border-[#F7E9EB]/60">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#6F696B] hover:text-[#171416] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#173a42" }}>YESOLA<small style={{ display: "block", color: "#68AAA0", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Serviços de Amor</small></span>
-          <a href="/explorar-love" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#68AAA0] transition-colors hidden md:block">Explorar</a>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#791226" }}>YESOLA<small style={{ display: "block", color: "#A71936", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Serviços de Amor</small></span>
+          <a href="/explorar-love" className="text-xs font-bold uppercase tracking-[0.14em] text-[#6F696B] hover:text-[#A71936] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#87909a]">Explorar serviços</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6F696B]">Explorar serviços</p>
           <h1 className="mt-4 font-serif text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#2c3035] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+              activeFilter === null ? "bg-[#171416] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
             }`}>Todos</button>
           {LOVE_SERVICE_GROUPS.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#2c3035] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                activeFilter === group.category ? "bg-[#171416] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         {/* Filtro por província */}
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#F7E9EB] bg-white text-[#171416] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -177,12 +177,12 @@ export default function ExploreLove() {
           <div className="hidden md:flex flex-wrap gap-3 mt-2">
             <button onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeProvince === null ? "bg-[#68727c] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                activeProvince === null ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
               }`}>Todas</button>
             {provinces.map((province) => (
               <button key={province} onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeProvince === province ? "bg-[#68727c] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  activeProvince === province ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
                 }`}>{province}</button>
             ))}
           </div>
@@ -191,21 +191,21 @@ export default function ExploreLove() {
         {/* Filtro por município */}
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Município:</span>
             <select value={activeMunicipality || ""} onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none">
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#F7E9EB] bg-white text-[#171416] outline-none">
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
             <div className="hidden md:flex flex-wrap gap-3 mt-2">
               <button onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeMunicipality === null ? "bg-[#87909a] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  activeMunicipality === null ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
                 }`}>Todos</button>
               {municipalities.map((m) => (
                 <button key={m} onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                    activeMunicipality === m ? "bg-[#87909a] text-white" : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                    activeMunicipality === m ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
                   }`}>{m}</button>
               ))}
             </div>
@@ -222,28 +222,28 @@ export default function ExploreLove() {
               });
             });
             return (
-              <article key={group.number} className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#F7E9EB] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#6F696B]">{group.number}</span>
                   <div>
-                    <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
+                    <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#171416] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#6F696B]">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#F7E9EB] pl-5 text-sm leading-5 text-[#6F696B]">
                       {group.items.map((item) => {
                         const itemProducts = allProducts.filter((p) => (p.subcategory || "").toLowerCase().includes(item.toLowerCase()));
                         return (
                           <li key={item}>
                             <div className="flex gap-3">
-                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#aeb6bf]" />
+                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#F7E9EB]" />
                               <div className="flex-1">
                                 <span>{item}</span>
                                 {itemProducts.length > 0 && (
                                   <div className="mt-1.5 ml-0 space-y-1">
                                     {itemProducts.map((p) => (
                                       <a key={p.id} href={`/loja/${p.storeId}?from=love-services`}
-                                        className="flex items-center gap-2 text-[11px] text-[#87909a] hover:text-[#30343a] transition-colors">
-                                        <span className="h-0.5 w-0.5 rounded-full bg-[#d96f5c] flex-shrink-0" />
-                                        {p.name} {p.price ? <span className="text-[#aeb6bf]">· {p.currency === "USD" ? "$" : "Kz"} {p.price.toLocaleString("pt-AO")}</span> : null}
+                                        className="flex items-center gap-2 text-[11px] text-[#6F696B] hover:text-[#171416] transition-colors">
+                                        <span className="h-0.5 w-0.5 rounded-full bg-[#A71936] flex-shrink-0" />
+                                        {p.name} {p.price ? <span className="text-[#F7E9EB]">· {p.currency === "USD" ? "$" : "Kz"} {p.price.toLocaleString("pt-AO")}</span> : null}
                                       </a>
                                     ))}
                                   </div>
@@ -256,13 +256,13 @@ export default function ExploreLove() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#6F696B] hover:text-[#171416] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6F696B] mb-3">Lojas recentes</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map(({ store, productImages }: any) => (
@@ -270,8 +270,8 @@ export default function ExploreLove() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
-                        <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#F7E9EB] p-6 text-center">
+                        <p className="text-xs text-[#6F696B]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -282,17 +282,17 @@ export default function ExploreLove() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#F7E9EB] bg-[#171416] px-6 py-24 text-[#FCFAF8] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#b9c1ca]">O primeiro passo</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#F7E9EB]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#cbd0d5]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#F7E9EB]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
               <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Servi%C3%A7os%20de%20Amor." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#d96f5c] text-white text-sm font-medium rounded-full hover:bg-[#c5614f] transition-colors">
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#A71936] text-white text-sm font-medium rounded-full hover:bg-[#A71936] transition-colors">
                 Falar connosco
               </a>
             </div>

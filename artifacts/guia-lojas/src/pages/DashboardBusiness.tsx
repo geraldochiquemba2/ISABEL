@@ -10,8 +10,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
 
-const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#112844] focus:ring-2 focus:ring-[#112844]/10 transition-all rounded-xl";
-const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
+const inputCls = "w-full border border-[#E8F2EE] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#6F7780] outline-none focus:border-[#075342] focus:ring-2 focus:ring-[#075342]/10 transition-all rounded-xl";
+const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-1.5";
 
 const TIME_OPTIONS = Array.from({ length: 32 }, (_, i) => {
   const h = Math.floor(i / 2) + 6;
@@ -92,20 +92,20 @@ export default function DashboardBusiness() {
   if (!isAdmin && localUser.status === "PENDENTE") {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-[#f4f1eb] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <div className="min-h-screen bg-[#E8F2EE] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           <div className="max-w-md w-full text-center space-y-6">
             <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-500"><ShieldAlert size={28} /></div>
             <div className="space-y-2">
-              <h1 className="text-xl font-bold tracking-tight text-[#30343a]">Pedido de Conta Pendente</h1>
-              <p className="text-sm text-[#87909a]">A sua conta está em análise pela equipa de administração.</p>
+              <h1 className="text-xl font-bold tracking-tight text-[#171717]">Pedido de Conta Pendente</h1>
+              <p className="text-sm text-[#6F7780]">A sua conta está em análise pela equipa de administração.</p>
             </div>
             <div className="bg-amber-50/50 rounded-2xl border border-amber-100 p-4 text-xs text-amber-800 text-left space-y-2.5">
               <p className="font-semibold flex items-center gap-1.5">O que acontece agora?</p>
               <p>Assim que o administrador aprovar a sua solicitação, poderá aceder ao painel e gerenciar os seus serviços.</p>
             </div>
             <div className="flex flex-col gap-2 pt-2">
-              <button onClick={handleRefreshStatus} className="w-full bg-[#112844] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#0d1f35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <a href="/login-business" className="w-full border border-[#d1d4d8] text-[#87909a] hover:bg-[#f0f0f0] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#075342] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#054235] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <a href="/login-business" className="w-full border border-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</a>
             </div>
           </div>
         </div>
@@ -176,16 +176,16 @@ export default function DashboardBusiness() {
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
       ];
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#f4f1eb]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#E8F2EE]"><p className="text-sm text-[#6F7780]">Carregando...</p></div>;
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#f4f1eb] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="min-h-screen bg-[#E8F2EE] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
         {/* Mobile Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#112844] text-white px-4 py-3 flex items-center justify-between">
+        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#075342] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Negócios</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#C69A3A", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Negócios</small></span>
           </div>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -195,11 +195,11 @@ export default function DashboardBusiness() {
         {mobileMenuOpen && <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)} />}
 
         {/* Sidebar */}
-        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#112844] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#075342] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
             <div>
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>YESOLA</span>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#b88a3b", marginTop: "1px" }}>Negócios</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#C69A3A", marginTop: "1px" }}>Negócios</p>
               <p className="text-[10px] text-white/50 mt-1">Painel da loja</p>
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function DashboardBusiness() {
         {/* Main */}
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
           {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
-          {section === "admin" && <AdminPanel storeType="business" accentColor="#b88a3b" />}
+          {section === "admin" && <AdminPanel storeType="business" accentColor="#C69A3A" />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
@@ -238,21 +238,21 @@ export default function DashboardBusiness() {
         {showChangePwd && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl p-8 max-w-sm w-full">
-              <h3 className="font-['Playfair_Display'] text-xl text-[#30343a] mb-4">Alterar senha</h3>
+              <h3 className="font-['Playfair_Display'] text-xl text-[#171717] mb-4">Alterar senha</h3>
               {pwdError && <p className="text-xs text-red-500 mb-3">{pwdError}</p>}
               <div className="space-y-3">
                 <div className="relative">
                   <input type={showNewPwd ? "text" : "password"} placeholder="Nova senha" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} className={`${inputCls} pr-8`} />
-                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-3 text-[#87909a]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-3 text-[#6F7780]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
                 <div className="relative">
                   <input type={showConfirmPwd ? "text" : "password"} placeholder="Confirmar senha" value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} className={`${inputCls} pr-8`} />
-                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-3 text-[#87909a]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-3 text-[#6F7780]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">
-                <button onClick={handleForceChangePwd} disabled={pwdLoading} className="flex-1 bg-[#112844] text-white py-3 rounded-xl text-sm font-medium hover:bg-[#0d1f35] transition-colors">{pwdLoading ? "A guardar..." : "Guardar"}</button>
-                {!localUser?.mustChangePassword && <button onClick={() => setShowChangePwd(false)} className="flex-1 border border-[#d1d4d8] py-3 rounded-xl text-sm text-[#87909a] hover:bg-gray-50 transition-colors">Cancelar</button>}
+                <button onClick={handleForceChangePwd} disabled={pwdLoading} className="flex-1 bg-[#075342] text-white py-3 rounded-xl text-sm font-medium hover:bg-[#054235] transition-colors">{pwdLoading ? "A guardar..." : "Guardar"}</button>
+                {!localUser?.mustChangePassword && <button onClick={() => setShowChangePwd(false)} className="flex-1 border border-[#E8F2EE] py-3 rounded-xl text-sm text-[#6F7780] hover:bg-gray-50 transition-colors">Cancelar</button>}
               </div>
             </motion.div>
           </motion.div>
@@ -267,17 +267,17 @@ function OverviewSection({ store }: { store: any }) {
   const whatsappClicks = store?.whatsapp_clicks || 0;
   return (
     <div>
-      <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a] mb-8">Visão Geral</h2>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#171717] mb-8">Visão Geral</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-[#e8eaed] p-6">
-            <div className="flex items-center gap-3 mb-3 text-[#87909a]">{s.icon}<span className="text-xs uppercase tracking-wider">{s.label}</span></div>
-            <p className="text-3xl font-semibold text-[#30343a]">{s.value}</p>
+          <div key={s.label} className="bg-white rounded-2xl border border-[#E8F2EE] p-6">
+            <div className="flex items-center gap-3 mb-3 text-[#6F7780]">{s.icon}<span className="text-xs uppercase tracking-wider">{s.label}</span></div>
+            <p className="text-3xl font-semibold text-[#171717]">{s.value}</p>
           </div>
         ))}
-        <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
-          <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
-          <p className="text-2xl font-bold text-[#30343a]">{whatsappClicks}</p>
+        <div className="bg-white rounded-2xl border border-[#E8F2EE] p-5">
+          <p className="text-[10px] text-[#6F7780] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+          <p className="text-2xl font-bold text-[#171717]">{whatsappClicks}</p>
         </div>
       </div>
     </div>
@@ -332,18 +332,18 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a]">Minha Loja</h2>
-        {isDirty && <button onClick={handleSave} disabled={mutation.isPending} className="bg-[#112844] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#0d1f35] transition-colors">{mutation.isPending ? "A guardar..." : "Guardar alterações"}</button>}
+        <h2 className="font-['Playfair_Display'] text-3xl text-[#171717]">Minha Loja</h2>
+        {isDirty && <button onClick={handleSave} disabled={mutation.isPending} className="bg-[#075342] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors">{mutation.isPending ? "A guardar..." : "Guardar alterações"}</button>}
         {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 space-y-6 max-w-2xl mb-6">
-        <h3 className="font-['Playfair_Display'] text-lg text-[#30343a]">Imagens</h3>
+      <div className="bg-white rounded-2xl border border-[#E8F2EE] p-8 space-y-6 max-w-2xl mb-6">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">Imagens</h3>
         <div>
           <label className={labelCls}>Logo da loja</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#e8eaed]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#112844] hover:text-[#30343a] cursor-pointer transition-colors">
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#E8F2EE]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#E8F2EE] rounded-xl text-xs text-[#6F7780] hover:border-[#075342] hover:text-[#171717] cursor-pointer transition-colors">
               <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
             </label>
@@ -352,8 +352,8 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div>
           <label className={labelCls}>Imagem de capa</label>
           <div className="flex items-center gap-4">
-            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#e8eaed]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#112844] hover:text-[#30343a] cursor-pointer transition-colors">
+            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#E8F2EE]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#E8F2EE] rounded-xl text-xs text-[#6F7780] hover:border-[#075342] hover:text-[#171717] cursor-pointer transition-colors">
               <Image size={14} />{uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
             </label>
@@ -364,11 +364,11 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div className="flex flex-wrap gap-3 mb-3">
             {(store.coverImages || []).map((img: string, i: number) => (
               <div key={i} className="relative group">
-                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#e8eaed]" />
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#E8F2EE]" />
                 <button onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
               </div>
             ))}
-            <label className="w-24 h-24 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#112844] hover:text-[#30343a] cursor-pointer transition-colors">
+            <label className="w-24 h-24 border border-dashed border-[#E8F2EE] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F7780] hover:border-[#075342] hover:text-[#171717] cursor-pointer transition-colors">
               <Camera size={16} className="mb-1" />{uploading === "coverImages" ? "..." : "Adicionar"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />
             </label>
@@ -376,8 +376,8 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 space-y-6 max-w-2xl">
-        <h3 className="font-['Playfair_Display'] text-lg text-[#30343a]">Dados da loja</h3>
+      <div className="bg-white rounded-2xl border border-[#E8F2EE] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">Dados da loja</h3>
         <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
         <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
         <div className="grid grid-cols-2 gap-4">
@@ -389,14 +389,14 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
             <label className={labelCls}>Província</label>
             <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={`${inputCls} cursor-pointer`}>
               <option value="">Selecione a Província</option>
-              {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>)}
+              {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>)}
             </select>
           </div>
           <div>
             <label className={labelCls}>Município</label>
             <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={`${inputCls} cursor-pointer disabled:opacity-50`} disabled={!form.province}>
               <option value="">{form.province ? "Selecione o Município" : "Selecione a província primeiro"}</option>
-              {(ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []).map((m) => <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>)}
+              {(ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []).map((m) => <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>)}
             </select>
           </div>
         </div>
@@ -404,10 +404,10 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <label className={labelCls}>Horários de funcionamento</label>
           <div className="space-y-3">
             {schedule.map((day, i) => (
-              <div key={day.label} className="border border-[#e8eaed] rounded-2xl p-4 bg-[#fafafa]">
+              <div key={day.label} className="border border-[#E8F2EE] rounded-2xl p-4 bg-[#FAF8F3]">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-[#30343a]">{day.label}</p>
+                    <p className="text-sm font-medium text-[#171717]">{day.label}</p>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${day.closed ? "bg-red-50 text-red-600 border border-red-200" : "bg-emerald-50 text-emerald-600 border border-emerald-200"}`}>{day.closed ? "Fechado" : "Aberto"}</span>
                   </div>
                   <button type="button" onClick={() => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, closed: !d.closed } : d)); setDirty(true); }}
@@ -416,8 +416,8 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
                   </button>
                 </div>
                 <div className={`grid grid-cols-2 gap-3 transition-all duration-200 ${day.closed ? "opacity-50 pointer-events-none" : ""}`}>
-                  <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
-                  <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
+                  <div><p className="text-[10px] text-[#6F7780] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
+                  <div><p className="text-[10px] text-[#6F7780] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
                 </div>
               </div>
             ))}
@@ -485,35 +485,35 @@ function ProdutosSection({ store }: { store: any }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a]">Serviços</h2>
-        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#112844] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#0d1f35] transition-colors"><Plus size={15} /> Novo serviço</button>
+        <h2 className="font-['Playfair_Display'] text-3xl text-[#171717]">Serviços</h2>
+        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#075342] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors"><Plus size={15} /> Novo serviço</button>
       </div>
 
       <AnimatePresence>
         {showForm && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-8">
-            <div className="bg-white rounded-2xl border border-[#e8eaed] p-6 space-y-4 max-w-2xl">
+            <div className="bg-white rounded-2xl border border-[#E8F2EE] p-6 space-y-4 max-w-2xl">
               <div className="flex items-center justify-between">
-                <h3 className="font-['Playfair_Display'] text-lg text-[#30343a]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
-                <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="text-[#87909a] hover:text-[#30343a]"><X size={18} /></button>
+                <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
+                <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="text-[#6F7780] hover:text-[#171717]"><X size={18} /></button>
               </div>
               <div>
                 <label className={labelCls}>Imagens do serviço (até 5)</label>
                 <div className="flex flex-wrap gap-3 mb-3">
                   {productImages.map((img, i) => (
                     <div key={i} className="relative group">
-                      <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#e8eaed]" />
+                      <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#E8F2EE]" />
                       <button onClick={() => removeProductImage(i)} className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"><X size={12} /></button>
                     </div>
                   ))}
                   {productImages.length < 5 && (
-                    <label className="w-20 h-20 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#112844] hover:text-[#30343a] cursor-pointer transition-colors">
+                    <label className="w-20 h-20 border border-dashed border-[#E8F2EE] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F7780] hover:border-[#075342] hover:text-[#171717] cursor-pointer transition-colors">
                       <Camera size={16} className="mb-1" />{uploadingImg ? "..." : "Adicionar"}
                       <input type="file" accept="image/*" multiple className="hidden" onChange={handleProductImageUpload} disabled={uploadingImg} />
                     </label>
                   )}
                 </div>
-                <p className="text-[10px] text-[#87909a]">{productImages.length}/5 imagens</p>
+                <p className="text-[10px] text-[#6F7780]">{productImages.length}/5 imagens</p>
               </div>
               <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Consultoria Estratégica" /></div>
               <div className="grid grid-cols-3 gap-4">
@@ -543,7 +543,7 @@ function ProdutosSection({ store }: { store: any }) {
                 </select>
               </div>
               <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
-              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#112844] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#0d1f35] transition-colors disabled:opacity-50">
+              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#075342] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors disabled:opacity-50">
                 {createMut.isPending ? "A guardar..." : editProduct ? "Atualizar" : "Guardar"}
               </button>
             </div>
@@ -556,39 +556,39 @@ function ProdutosSection({ store }: { store: any }) {
           const groupProducts = getProductsForGroup(group.category);
           const isExpanded = selectedGroup === group.category;
           return (
-            <div key={group.category} className="bg-white rounded-2xl border border-[#e8eaed] overflow-hidden">
+            <div key={group.category} className="bg-white rounded-2xl border border-[#E8F2EE] overflow-hidden">
               <button onClick={() => setSelectedGroup(isExpanded ? null : group.category)} className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#6F7780]">{group.number}</span>
                   <div>
-                    <h4 className="text-sm font-semibold text-[#30343a]">{group.title}</h4>
-                    <p className="text-xs text-[#87909a] mt-0.5">{groupProducts.length} serviço(s)</p>
+                    <h4 className="text-sm font-semibold text-[#171717]">{group.title}</h4>
+                    <p className="text-xs text-[#6F7780] mt-0.5">{groupProducts.length} serviço(s)</p>
                   </div>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#87909a] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#6F7780] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
               </button>
               {isExpanded && (
-                <div className="border-t border-[#e8eaed] p-5">
+                <div className="border-t border-[#E8F2EE] p-5">
                   <p className="text-xs text-[#686e76] mb-4">{group.intro}</p>
                   <div className="mb-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-2">Subcategorias</p>
-                    <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="px-3 py-1.5 bg-[#f5f6f7] text-xs text-[#565d66] rounded-full">{item}</span>)}</div>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-2">Subcategorias</p>
+                    <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="px-3 py-1.5 bg-[#FAF8F3] text-xs text-[#565d66] rounded-full">{item}</span>)}</div>
                   </div>
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-2">Serviços desta categoria</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-2">Serviços desta categoria</p>
                     {groupProducts.length === 0 ? (
-                      <p className="text-xs text-[#87909a] text-center py-6 bg-[#fafafa] rounded-xl">Nenhum serviço nesta categoria.</p>
+                      <p className="text-xs text-[#6F7780] text-center py-6 bg-[#FAF8F3] rounded-xl">Nenhum serviço nesta categoria.</p>
                     ) : (
                       <div className="space-y-2">
                         {groupProducts.map((p: any) => (
-                          <div key={p.id} className="flex items-center gap-3 p-3 bg-[#fafafa] rounded-xl">
+                          <div key={p.id} className="flex items-center gap-3 p-3 bg-[#FAF8F3] rounded-xl">
                             {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
                             <div className="flex-1">
-                              <h5 className="text-xs font-medium text-[#30343a]">{p.name}</h5>
-                              <p className="text-[10px] text-[#87909a]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                              <h5 className="text-xs font-medium text-[#171717]">{p.name}</h5>
+                              <p className="text-[10px] text-[#6F7780]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
                             </div>
-                            <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#87909a] hover:text-[#112844] transition-colors p-1"><Edit2 size={13} /></button>
-                            <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#87909a] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                            <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#6F7780] hover:text-[#075342] transition-colors p-1"><Edit2 size={13} /></button>
+                            <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#6F7780] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
                           </div>
                         ))}
                       </div>
@@ -607,11 +607,11 @@ function ProdutosSection({ store }: { store: any }) {
 function ContactosSection({ store }: { store: any }) {
   return (
     <div>
-      <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a] mb-8">Contactos</h2>
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 max-w-2xl space-y-6">
-        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#112844] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
-        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#30343a]">{store.phone}</p></div>
-        <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#30343a]">{store.address || "Não definido"}</p></div>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#171717] mb-8">Contactos</h2>
+      <div className="bg-white rounded-2xl border border-[#E8F2EE] p-8 max-w-2xl space-y-6">
+        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#075342] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
+        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#171717]">{store.phone}</p></div>
+        <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#171717]">{store.address || "Não definido"}</p></div>
         <div>
           <label className={labelCls}>WhatsApp Direct</label>
           <a href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre a loja ${store.name}.`)}`} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#25D366] text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-[#1da851] transition-colors">Enviar mensagem</a>

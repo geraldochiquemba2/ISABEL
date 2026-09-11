@@ -11,11 +11,11 @@ import {
 import StoreCategorySection from "@/components/StoreCategorySection";
 
 const CATEGORIES = [
-  { id: "actos-de-amor", name: "Actos de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
-  { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
-  { id: "saude", name: "Saúde & Bem-Estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M13 12h6" /><path d="M16 9v6" /></svg> },
-  { id: "lar", name: "Gestão do Lar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
-  { id: "burocracias", name: "Burocracias", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#D4A843" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
+  { id: "actos-de-amor", name: "Actos de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
+  { id: "saude", name: "Saúde & Bem-Estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M13 12h6" /><path d="M16 9v6" /></svg> },
+  { id: "lar", name: "Gestão do Lar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
+  { id: "burocracias", name: "Burocracias", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -26,7 +26,7 @@ const TRUST_BADGES = [
 ];
 
 export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#FAF8F5");
+  useThemeColor("#FCFAF8");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -37,30 +37,30 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
   });
 
   return (
-    <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-[100dvh] bg-[#FCFAF8] text-[#171416] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
         .cat-scroll::-webkit-scrollbar { display: none; }
-        .cat-item { flex-shrink: 0; display: flex; flex-col; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #EDE8DE; min-width: 72px; cursor: pointer; transition: all 0.2s; }
-        .cat-item:hover { border-color: #D4A843; background: #FBF7ED; }
+        .cat-item { flex-shrink: 0; display: flex; flex-col; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #F7E9EB; min-width: 72px; cursor: pointer; transition: all 0.2s; }
+        .cat-item:hover { border-color: #A71936; background: #F7E9EB; }
         .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .trust-scroll::-webkit-scrollbar { display: none; }
-        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #EDE8DE; }
+        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #F7E9EB; }
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#EDE8DE]/60">
+      <header className="sticky top-0 z-50 bg-[#FCFAF8]/95 backdrop-blur-md border-b border-[#F7E9EB]/60">
         <div className="flex items-center justify-between px-5 py-4">
           <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
           <div className="flex flex-col items-center">
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#2d2c2b" }}>YESOLA</span>
-            <span className="text-[9px] tracking-[0.25em] text-[#D4A843] font-semibold uppercase mt-0.5">Serviços de Amor</span>
+            <span className="text-[9px] tracking-[0.25em] text-[#A71936] font-semibold uppercase mt-0.5">Serviços de Amor</span>
           </div>
 
         </div>
         {menuOpen && (
-          <div className="bg-[#FAF8F5] border-t border-[#EDE8DE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+          <div className="bg-[#FCFAF8] border-t border-[#F7E9EB]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-love" className="py-2">Entrar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
@@ -73,7 +73,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar-love?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#171416] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -85,12 +85,12 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
           <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=800&h=500&fit=crop&auto=format&q=80" alt="Amor" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
           <div className="relative z-10 p-6 max-w-[60%]">
-            <p className="text-[10px] tracking-[0.2em] text-[#D4A843] font-semibold uppercase">O amor em cada detalhe.</p>
+            <p className="text-[10px] tracking-[0.2em] text-[#A71936] font-semibold uppercase">O amor em cada detalhe.</p>
             <h1 className="text-[28px] leading-[1.1] font-semibold mt-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Celebre o amor<br />de <span className="text-[#D4A843]">forma especial.</span>
+              Celebre o amor<br />de <span className="text-[#A71936]">forma especial.</span>
             </h1>
-            <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">Surpresas, presentes, mentoria e serviços para fortalecer e celebrar os laços afetivos.</p>
-            <button onClick={() => navigate("/explorar-love")} className="mt-4 flex items-center gap-2 bg-[#D4A843] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#C49A38] transition-colors">
+            <p className="text-[12px] text-[#6F696B] mt-3 leading-relaxed">Surpresas, presentes, mentoria e serviços para fortalecer e celebrar os laços afetivos.</p>
+            <button onClick={() => navigate("/explorar-love")} className="mt-4 flex items-center gap-2 bg-[#A71936] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#791226] transition-colors">
               Explorar serviços <ChevronRight size={14} />
             </button>
           </div>
@@ -99,13 +99,13 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
 
       {/* Province */}
       <section className="px-5 py-3">
-        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#EDE8DE]">
-          <div className="w-10 h-10 rounded-full bg-[#FBF7ED] flex items-center justify-center"><MapPin size={18} className="text-[#D4A843]" /></div>
+        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#F7E9EB]">
+          <div className="w-10 h-10 rounded-full bg-[#F7E9EB] flex items-center justify-center"><MapPin size={18} className="text-[#A71936]" /></div>
           <div className="flex-1">
-            <p className="text-[14px] font-semibold text-[#D4A843]">Escolha a sua província</p>
-            <p className="text-[11px] text-[#6B7280]">Encontre serviços de amor perto de si.</p>
+            <p className="text-[14px] font-semibold text-[#A71936]">Escolha a sua província</p>
+            <p className="text-[11px] text-[#6F696B]">Encontre serviços de amor perto de si.</p>
           </div>
-          <ChevronRight size={18} className="text-[#D4A843]" />
+          <ChevronRight size={18} className="text-[#A71936]" />
         </div>
       </section>
 
@@ -125,9 +125,9 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
 
       {/* Counter */}
       <section className="px-5 py-3">
-        <div className="flex items-center justify-center gap-2 bg-[#FBF7ED] rounded-2xl px-4 py-3 border border-[#EDE8DE]">
-          <Heart size={16} className="text-[#D4A843]" />
-          <span className="text-[13px] font-medium text-[#2D2C2B]">Mais de <span className="text-[#D4A843] font-bold">+3.000</span> casais felizes celebrando o amor todos os dias.</span>
+        <div className="flex items-center justify-center gap-2 bg-[#F7E9EB] rounded-2xl px-4 py-3 border border-[#F7E9EB]">
+          <Heart size={16} className="text-[#A71936]" />
+          <span className="text-[13px] font-medium text-[#171416]">Mais de <span className="text-[#A71936] font-bold">+3.000</span> casais felizes celebrando o amor todos os dias.</span>
         </div>
       </section>
 
@@ -136,15 +136,15 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
         <div className="trust-scroll">
           {TRUST_BADGES.map((badge, i) => (
             <div key={i} className="trust-item">
-              <span className="text-[#D4A843]">{badge.icon}</span>
-              <span className="text-[11px] font-medium text-[#2D2C2B]">{badge.label}</span>
+              <span className="text-[#A71936]">{badge.icon}</span>
+              <span className="text-[11px] font-medium text-[#171416]">{badge.label}</span>
             </div>
           ))}
         </div>
       </section>
 
       <div className="text-center py-6 px-5">
-        <p className="text-[11px] text-[#9CA3AF]">YESOLA SERVIÇOS DE AMOR · PORQUE O AMOR MERECE SER CELEBRADO.</p>
+        <p className="text-[11px] text-[#6F696B]">YESOLA SERVIÇOS DE AMOR · PORQUE O AMOR MERECE SER CELEBRADO.</p>
       </div>
     </div>
   );

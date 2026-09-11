@@ -41,7 +41,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E8DDD0] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=eventos`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -75,8 +75,8 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#3c2731] truncate">{store.name}</h4>
-        {store.description && <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>}
+        <h4 className="text-sm font-semibold text-[#191817] truncate">{store.name}</h4>
+        {store.description && <p className="text-[10px] text-[#6E7077] mt-1 line-clamp-2">{store.description}</p>}
       </div>
     </div>
   );
@@ -159,43 +159,43 @@ export default function ExploreEventos() {
     : EVENTOS_CATEGORIES;
 
   return (
-    <main className="min-h-[100dvh] bg-[#fffcf9] text-[#3c2731]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fffcf9]/95 backdrop-blur-md border-b border-[#8e5557]/10">
+    <main className="min-h-[100dvh] bg-[#FBF8F4] text-[#191817]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FBF8F4]/95 backdrop-blur-md border-b border-[#C45125]/10">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#3c2731] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#6E7077] hover:text-[#191817] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#3c2731]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#8e5557] mt-0.5">Eventos & Celebrações</small></span>
-          <a href="/explorar-eventos" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#8e5557] transition-colors hidden md:block">Explorar</a>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#191817]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#C45125] mt-0.5">Eventos & Celebrações</small></span>
+          <a href="/explorar-eventos" className="text-xs font-bold uppercase tracking-[0.14em] text-[#6E7077] hover:text-[#C45125] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#8e5557]">Explorar serviços</p>
+          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#C45125]">Explorar serviços</p>
           <h1 className="mt-4 font-['Playfair_Display'] text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#3c2731] text-white" : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+              activeFilter === null ? "bg-[#191817] text-white" : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
             }`}>Todos</button>
           {EVENTOS_CATEGORIES.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#3c2731] text-white" : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                activeFilter === group.category ? "bg-[#191817] text-white" : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#6E7077] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#3c2731] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8DDD0] bg-white text-[#191817] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -205,8 +205,8 @@ export default function ExploreEventos() {
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeProvince === null
-                  ? "bg-[#68727c] text-white"
-                  : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                  ? "bg-[#6E7077] text-white"
+                  : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
               }`}
             >
               Todas
@@ -217,8 +217,8 @@ export default function ExploreEventos() {
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeProvince === province
-                    ? "bg-[#68727c] text-white"
-                    : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                    ? "bg-[#6E7077] text-white"
+                    : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
                 }`}
               >
                 {province}
@@ -229,11 +229,11 @@ export default function ExploreEventos() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#6E7077] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#3c2731] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8DDD0] bg-white text-[#191817] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -243,8 +243,8 @@ export default function ExploreEventos() {
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeMunicipality === null
-                    ? "bg-[#87909a] text-white"
-                    : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                    ? "bg-[#6E7077] text-white"
+                    : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
                 }`}
               >
                 Todos
@@ -255,8 +255,8 @@ export default function ExploreEventos() {
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                     activeMunicipality === m
-                      ? "bg-[#87909a] text-white"
-                      : "bg-[#f0e6df] text-[#68727c] hover:bg-[#e0d4cc]"
+                      ? "bg-[#6E7077] text-white"
+                      : "bg-[#F3E4DD] text-[#6E7077] hover:bg-[#F3E4DD]"
                   }`}
                 >
                   {m}
@@ -270,17 +270,17 @@ export default function ExploreEventos() {
           {filteredGroups.map((group, i) => {
             const groupStores = getStoresForGroup(group.category);
             return (
-              <article key={group.number} className={`group border-t border-[#8e5557]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#C45125]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#8e5557]">{group.number}</span>
+                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#C45125]">{group.number}</span>
                   <div>
-                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#3c2731] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#3c2731]/60">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#8e5557]/30 pl-5 text-sm leading-5 text-[#3c2731]/70">
+                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#191817] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#191817]/60">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#C45125]/30 pl-5 text-sm leading-5 text-[#191817]/70">
                       {group.items.map((item) => (
                         <li key={item}>
                           <div className="flex gap-3">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8e5557]" />
+                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#C45125]" />
                             <span>{item}</span>
                           </div>
                         </li>
@@ -288,13 +288,13 @@ export default function ExploreEventos() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#3c2731] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#6E7077] hover:text-[#191817] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#6E7077] mb-3">Lojas recentes</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map((store: any) => (
@@ -302,8 +302,8 @@ export default function ExploreEventos() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#8e5557]/25 p-6 text-center">
-                        <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#C45125]/25 p-6 text-center">
+                        <p className="text-xs text-[#6E7077]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -314,17 +314,17 @@ export default function ExploreEventos() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#8e5557]/20 bg-[#3c2731] px-6 py-24 text-[#fffcf9] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#C45125]/20 bg-[#191817] px-6 py-24 text-[#FBF8F4] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#8e5557]">O primeiro passo</p>
+            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#C45125]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#c4b0b1]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#F3E4DD]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
               <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Eventos%20%26%20Celebrações." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#8e5557] text-white text-sm font-medium rounded-full hover:bg-[#7a4a4c] transition-colors">
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C45125] text-white text-sm font-medium rounded-full hover:bg-[#191817] transition-colors">
                 Falar connosco
               </a>
             </div>

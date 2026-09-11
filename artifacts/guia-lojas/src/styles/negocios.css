@@ -1,0 +1,16 @@
+/* YESOLA — Negócios & Finanças */
+/* #075342 #E8F2EE #C69A3A #FAF8F3 #171717 #6F7780 #FFFFFF */
+
+.palette-negocios {
+  --palette-primary: 162 84% 18%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 155 35% 93%;
+  --palette-secondary-fg: 162 50% 15%;
+  --palette-background: 40 38% 97%;
+  --palette-foreground: 0 0% 9%;
+  --palette-muted: 214 6% 47%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 155 20% 90%;
+  --palette-accent: 43 55% 50%;
+  --palette-ring: 162 84% 18%;
+}

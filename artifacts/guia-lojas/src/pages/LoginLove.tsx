@@ -40,8 +40,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#2c3035] focus:ring-2 focus:ring-[#2c3035]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#F7E9EB] bg-white py-3 px-4 text-sm text-[#171416] placeholder:text-[#6F696B] outline-none focus:border-[#171416] focus:ring-2 focus:ring-[#171416]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#6F696B] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -100,11 +100,11 @@ export default function LoginLove() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#f8f1e7] text-[#203b43]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#F7E9EB] text-[#791226]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/love-services"}
-          className="flex items-center gap-2 text-sm text-[#527078] hover:text-[#173a42] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#527078] hover:text-[#791226] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -113,7 +113,7 @@ export default function LoginLove() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA Love Services" className="w-10 h-10" />
-            <span className="font-serif text-xl tracking-[0.08em] text-[#173a42]">YESOLA <i className="font-normal">Love Services</i></span>
+            <span className="font-serif text-xl tracking-[0.08em] text-[#791226]">YESOLA <i className="font-normal">Love Services</i></span>
           </div>
 
           <div className="flex gap-6 mb-8 border-b border-[#ded2c3]">
@@ -123,8 +123,8 @@ export default function LoginLove() {
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#d96f5c] text-[#173a42]"
-                    : "border-transparent text-[#87909a] hover:text-[#173a42]"
+                    ? "border-[#A71936] text-[#791226]"
+                    : "border-transparent text-[#6F696B] hover:text-[#791226]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -140,10 +140,10 @@ export default function LoginLove() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#173a42] mb-1">
+              <p className="text-sm font-medium text-[#791226] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#6F696B] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -157,23 +157,23 @@ export default function LoginLove() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F696B]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#6F696B] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#d96f5c] text-white py-3 text-sm font-medium rounded-full hover:bg-[#c5614f] transition-colors">
+              <button type="submit" className="w-full bg-[#A71936] text-white py-3 text-sm font-medium rounded-full hover:bg-[#A71936] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Love Services.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#173a42] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Love Services.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#6F696B] hover:text-[#791226] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -197,7 +197,7 @@ export default function LoginLove() {
                 <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
                   <option value="">Selecione a categoria</option>
                   {LOVE_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#30343a]">
+                    <option key={cat} value={cat} className="bg-white text-[#171416]">
                       {cat}
                     </option>
                   ))}
@@ -213,7 +213,7 @@ export default function LoginLove() {
                 >
                   <option value="">Selecione a Província</option>
                   {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-white text-[#171416]">{p.name}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.province?.message} />
@@ -228,7 +228,7 @@ export default function LoginLove() {
                 >
                   <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
                   {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>
+                    <option key={m} value={m} className="bg-white text-[#171416]">{m}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.municipality?.message} />
@@ -244,7 +244,7 @@ export default function LoginLove() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F696B]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -255,21 +255,21 @@ export default function LoginLove() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#6F696B]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#d96f5c] text-white py-3 text-sm font-medium rounded-full hover:bg-[#c5614f] transition-colors">
+              <button type="submit" className="w-full bg-[#A71936] text-white py-3 text-sm font-medium rounded-full hover:bg-[#A71936] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="love-services" accentColor="#68AAA0" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="love-services" accentColor="#A71936" />
     </main>
   );
 }

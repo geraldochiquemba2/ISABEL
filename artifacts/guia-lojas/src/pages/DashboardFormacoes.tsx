@@ -10,8 +10,8 @@ import AdminPanel from "@/components/AdminPanel";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin" | "password-reset";
 
-const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#123c4a] placeholder:text-[#87909a] outline-none focus:border-[#0c9894] focus:ring-2 focus:ring-[#0c9894]/10 transition-all rounded-xl";
-const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
+const inputCls = "w-full border border-[#EEF3F4] bg-white py-3 px-4 text-sm text-[#175A61] placeholder:text-[#68757C] outline-none focus:border-[#1E737B] focus:ring-2 focus:ring-[#1E737B]/10 transition-all rounded-xl";
+const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#68757C] mb-1.5";
 
 const TIME_OPTIONS = Array.from({ length: 32 }, (_, i) => {
   const h = Math.floor(i / 2) + 6;
@@ -92,16 +92,16 @@ export default function DashboardFormacoes() {
   if (!isAdmin && localUser.status === "PENDENTE") {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           <div className="max-w-md w-full text-center space-y-6">
             <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-500"><ShieldAlert size={28} /></div>
             <div className="space-y-2">
-              <h1 className="text-xl font-bold tracking-tight text-[#123c4a]">Pedido de Conta Pendente</h1>
-              <p className="text-sm text-[#87909a]">A sua conta está em análise pela equipa de administração.</p>
+              <h1 className="text-xl font-bold tracking-tight text-[#175A61]">Pedido de Conta Pendente</h1>
+              <p className="text-sm text-[#68757C]">A sua conta está em análise pela equipa de administração.</p>
             </div>
             <div className="flex flex-col gap-2 pt-2">
-              <button onClick={handleRefreshStatus} className="w-full bg-[#0c9894] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#087c7c] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <a href="/login-formacoes" className="w-full border border-[#d1d4d8] text-[#87909a] hover:bg-[#f0f0f0] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#1E737B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#175A61] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <a href="/login-formacoes" className="w-full border border-[#EEF3F4] text-[#68757C] hover:bg-[#EEF3F4] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</a>
             </div>
           </div>
         </div>
@@ -172,17 +172,17 @@ export default function DashboardFormacoes() {
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
       ];
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#fafafa]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8]"><p className="text-sm text-[#68757C]">Carregando...</p></div>;
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#fafafa] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="min-h-screen bg-[#FAFAF8] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
         `}</style>
 
         {/* Mobile Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#0c9894] text-white px-4 py-3 flex items-center justify-between">
+        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#1E737B] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" />
             <span className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Formações</i></span>
@@ -198,7 +198,7 @@ export default function DashboardFormacoes() {
         )}
 
         {/* Sidebar */}
-        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#0c9894] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#1E737B] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
             <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
             <div>
@@ -259,23 +259,23 @@ export default function DashboardFormacoes() {
           {showChangePwd && (
             <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
               <div className="bg-white rounded-2xl p-6 max-w-md w-full space-y-4">
-                <h3 className="text-lg font-bold text-[#123c4a]">Alterar Palavra-passe</h3>
+                <h3 className="text-lg font-bold text-[#175A61]">Alterar Palavra-passe</h3>
                 <div>
                   <label className={labelCls}>Nova Senha</label>
                   <div className="relative">
                     <input type={showNewPwd ? "text" : "password"} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} placeholder="••••••••" className={`${inputCls} pr-8`} />
-                    <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-0 top-2.5 text-[#87909a]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                    <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-0 top-2.5 text-[#68757C]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                   </div>
                 </div>
                 <div>
                   <label className={labelCls}>Confirmar Senha</label>
                   <div className="relative">
                     <input type={showConfirmPwd ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} placeholder="••••••••" className={`${inputCls} pr-8`} />
-                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-0 top-2.5 text-[#87909a]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-0 top-2.5 text-[#68757C]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                   </div>
                 </div>
                 {pwdError && <p className="text-xs text-red-500">{pwdError}</p>}
-                <button onClick={handleForceChangePwd} disabled={pwdLoading} className="w-full bg-[#0c9894] text-white py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors disabled:opacity-50">
+                <button onClick={handleForceChangePwd} disabled={pwdLoading} className="w-full bg-[#1E737B] text-white py-2.5 rounded-full text-sm font-medium hover:bg-[#175A61] transition-colors disabled:opacity-50">
                   {pwdLoading ? "A alterar..." : "Alterar Senha"}
                 </button>
               </div>
@@ -283,7 +283,7 @@ export default function DashboardFormacoes() {
           )}
 
           {/* Admin panel */}
-          {section === "admin" && <AdminPanel storeType="formacoes" accentColor="#0c9894" />}
+          {section === "admin" && <AdminPanel storeType="formacoes" accentColor="#1E737B" />}
 
           {/* Store owner sections */}
           {section === "overview" && !isAdmin && store && (
@@ -332,25 +332,25 @@ function AdminPasswordReset() {
     } catch { alert("Erro ao redefinir senha."); }
   }
 
-  if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
+  if (loading) return <div className="text-center py-12 text-sm text-[#68757C]">A carregar...</div>;
 
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h2 className="text-xl font-semibold text-[#123c4a] flex items-center gap-2">
+        <h2 className="text-xl font-semibold text-[#175A61] flex items-center gap-2">
           <KeyRound size={20} /> Pedidos de definir novas senhas
         </h2>
-        <p className="text-sm text-[#87909a] mt-1">
+        <p className="text-sm text-[#68757C] mt-1">
           Utilizadores activos que podem precisar de redefinir senha.
         </p>
       </div>
 
       <div className="space-y-3">
         {users.filter((u: any) => u.phone !== "999999999" && (u.status === "APROVADO" || u.status === "PENDENTE")).map((u) => (
-          <div key={u.id} className="border border-[#d1d4d8] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+          <div key={u.id} className="border border-[#EEF3F4] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div className="flex items-start gap-3 flex-1">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-[#f0f0f0] flex-shrink-0 flex items-center justify-center">
-                <Phone size={18} className="text-[#87909a]" />
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-[#EEF3F4] flex-shrink-0 flex items-center justify-center">
+                <Phone size={18} className="text-[#68757C]" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -359,8 +359,8 @@ function AdminPasswordReset() {
                     u.status === "APROVADO" ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-blue-50 text-blue-600 border border-blue-200"
                   }`}>{u.status}</span>
                 </div>
-                <p className="text-xs text-[#87909a]">{u.phone}</p>
-                <p className="text-xs text-[#87909a]">Loja: {u.storeName || "—"}</p>
+                <p className="text-xs text-[#68757C]">{u.phone}</p>
+                <p className="text-xs text-[#68757C]">Loja: {u.storeName || "—"}</p>
               </div>
             </div>
             <button
@@ -372,17 +372,17 @@ function AdminPasswordReset() {
           </div>
         ))}
         {users.filter((u: any) => u.phone !== "999999999" && (u.status === "APROVADO" || u.status === "PENDENTE")).length === 0 && (
-          <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhum utilizador encontrado.</p>
+          <p className="text-center text-sm text-[#68757C] py-8 border border-dashed rounded-2xl">Nenhum utilizador encontrado.</p>
         )}
       </div>
 
       {resetId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl border border-[#d1d4d8] shadow-xl p-6 w-full max-w-sm space-y-4">
+          <div className="bg-white rounded-2xl border border-[#EEF3F4] shadow-xl p-6 w-full max-w-sm space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-1.5"><KeyRound size={16} className="text-blue-500" /> Redefinir Senha</h3>
-            <p className="text-xs text-[#87909a]">A senha será redefinida para <strong>123456789</strong>.</p>
+            <p className="text-xs text-[#68757C]">A senha será redefinida para <strong>123456789</strong>.</p>
             <div className="flex justify-end gap-2 text-xs">
-              <button onClick={() => setResetId(null)} className="px-4 py-2 border border-[#d1d4d8] rounded-full hover:bg-[#f0f0f0] transition-colors">Cancelar</button>
+              <button onClick={() => setResetId(null)} className="px-4 py-2 border border-[#EEF3F4] rounded-full hover:bg-[#EEF3F4] transition-colors">Cancelar</button>
               <button onClick={() => handleReset(resetId)} className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Confirmar Reset</button>
             </div>
           </div>
@@ -395,23 +395,23 @@ function AdminPasswordReset() {
 function StoreOverview({ store }: { store: any }) {
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-bold text-[#123c4a]">Visão Geral</h2>
+      <h2 className="text-lg font-bold text-[#175A61]">Visão Geral</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border border-[#e8eced] p-5">
-          <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Estado</p>
+        <div className="bg-white rounded-2xl border border-[#EEF3F4] p-5">
+          <p className="text-xs text-[#68757C] uppercase tracking-wider mb-1">Estado</p>
           <p className={`text-sm font-semibold ${store.status === "APROVADO" ? "text-green-600" : "text-amber-600"}`}>{store.status || "PENDENTE"}</p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#e8eced] p-5">
-          <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Categoria</p>
-          <p className="text-sm font-semibold text-[#123c4a]">{store.category || "-"}</p>
+        <div className="bg-white rounded-2xl border border-[#EEF3F4] p-5">
+          <p className="text-xs text-[#68757C] uppercase tracking-wider mb-1">Categoria</p>
+          <p className="text-sm font-semibold text-[#175A61]">{store.category || "-"}</p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#e8eced] p-5">
-          <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Contacto</p>
-          <p className="text-sm font-semibold text-[#123c4a]">{store.phone || "-"}</p>
+        <div className="bg-white rounded-2xl border border-[#EEF3F4] p-5">
+          <p className="text-xs text-[#68757C] uppercase tracking-wider mb-1">Contacto</p>
+          <p className="text-sm font-semibold text-[#175A61]">{store.phone || "-"}</p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#e8eced] p-5">
-          <p className="text-xs text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
-          <p className="text-2xl font-bold text-[#123c4a]">{store?.whatsapp_clicks || 0}</p>
+        <div className="bg-white rounded-2xl border border-[#EEF3F4] p-5">
+          <p className="text-xs text-[#68757C] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+          <p className="text-2xl font-bold text-[#175A61]">{store?.whatsapp_clicks || 0}</p>
         </div>
       </div>
     </div>
@@ -470,17 +470,17 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-[#123c4a]">Minha Loja</h2>
+        <h2 className="text-lg font-bold text-[#175A61]">Minha Loja</h2>
         {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
-        <h3 className="text-sm font-bold text-[#123c4a]">Imagens</h3>
+      <div className="bg-white rounded-2xl border border-[#EEF3F4] p-6 space-y-5">
+        <h3 className="text-sm font-bold text-[#175A61]">Imagens</h3>
         <div>
           <label className={labelCls}>Logo da loja</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#e8eced]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#EEF3F4]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#EEF3F4] rounded-xl text-xs text-[#68757C] hover:border-[#1E737B] hover:text-[#175A61] cursor-pointer transition-colors">
               <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
             </label>
@@ -489,8 +489,8 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
         <div>
           <label className={labelCls}>Imagem de capa</label>
           <div className="flex items-center gap-4">
-            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#e8eced]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#EEF3F4]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#EEF3F4] rounded-xl text-xs text-[#68757C] hover:border-[#1E737B] hover:text-[#175A61] cursor-pointer transition-colors">
               <Image size={14} />{uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
             </label>
@@ -501,11 +501,11 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
           <div className="flex flex-wrap gap-3 mb-3">
             {(store.coverImages || []).map((img: string, i: number) => (
               <div key={i} className="relative group">
-                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#e8eced]" />
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#EEF3F4]" />
                 <button onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
               </div>
             ))}
-            <label className="w-24 h-24 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#0c9894] hover:text-[#123c4a] cursor-pointer transition-colors">
+            <label className="w-24 h-24 border border-dashed border-[#EEF3F4] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#68757C] hover:border-[#1E737B] hover:text-[#175A61] cursor-pointer transition-colors">
               <Camera size={16} className="mb-1" />{uploading === "coverImages" ? "..." : "Adicionar"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />
             </label>
@@ -513,8 +513,8 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
-        <h3 className="text-sm font-bold text-[#123c4a]">Dados da loja</h3>
+      <div className="bg-white rounded-2xl border border-[#EEF3F4] p-6 space-y-5">
+        <h3 className="text-sm font-bold text-[#175A61]">Dados da loja</h3>
         <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
         <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
         <div className="grid grid-cols-2 gap-4">
@@ -539,14 +539,14 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
-        <h3 className="text-sm font-bold text-[#123c4a]">Horários de funcionamento</h3>
+      <div className="bg-white rounded-2xl border border-[#EEF3F4] p-6 space-y-5">
+        <h3 className="text-sm font-bold text-[#175A61]">Horários de funcionamento</h3>
         <div className="space-y-3">
           {schedule.map((day, i) => (
-            <div key={day.label} className="border border-[#e8eced] rounded-2xl p-4 bg-[#fafafa]">
+            <div key={day.label} className="border border-[#EEF3F4] rounded-2xl p-4 bg-[#FAFAF8]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-[#123c4a]">{day.label}</p>
+                  <p className="text-sm font-medium text-[#175A61]">{day.label}</p>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${day.closed ? "bg-red-50 text-red-600 border border-red-200" : "bg-emerald-50 text-emerald-600 border border-emerald-200"}`}>{day.closed ? "Fechado" : "Aberto"}</span>
                 </div>
                 <button type="button" onClick={() => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, closed: !d.closed } : d)); setIsDirty(true); }}
@@ -555,15 +555,15 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
                 </button>
               </div>
               <div className={`grid grid-cols-2 gap-3 transition-all duration-200 ${day.closed ? "opacity-50 pointer-events-none" : ""}`}>
-                <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
-                <div><p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
+                <div><p className="text-[10px] text-[#68757C] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
+                <div><p className="text-[10px] text-[#68757C] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setIsDirty(true); }} disabled={day.closed} /></div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#0c9894] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors disabled:opacity-50">
+      <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#1E737B] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#175A61] transition-colors disabled:opacity-50">
         {mutation.isPending ? "A guardar..." : "Guardar alterações"}
       </button>
     </div>
@@ -635,16 +635,16 @@ function ProductsManager({ store }: { store: any }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-[#123c4a]">Serviços</h2>
-        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#0c9894] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors">
+        <h2 className="text-lg font-bold text-[#175A61]">Serviços</h2>
+        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#1E737B] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#175A61] transition-colors">
           <Plus size={15} /> Novo serviço
         </button>
       </div>
 
       <AnimatePresence>
         {showForm && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-4">
-            <h3 className="font-bold text-[#123c4a]">{editProduct ? "Editar Serviço" : "Novo Serviço"}</h3>
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-white rounded-2xl border border-[#EEF3F4] p-6 space-y-4">
+            <h3 className="font-bold text-[#175A61]">{editProduct ? "Editar Serviço" : "Novo Serviço"}</h3>
             <div>
               <label className={labelCls}>Nome</label>
               <input type="text" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className={inputCls} />
@@ -677,20 +677,20 @@ function ProductsManager({ store }: { store: any }) {
               <label className={labelCls}>Imagens do serviço (até 5)</label>
               <div className="flex flex-wrap gap-2 mb-2">
                 {productImages.map((url, i) => (
-                  <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#e8eced]">
+                  <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#EEF3F4]">
                     <img src={url} alt="" className="w-full h-full object-cover" />
                     <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} className="absolute top-0 right-0 bg-red-500 text-white p-0.5 rounded-bl-lg"><X size={10} /></button>
                   </div>
                 ))}
               </div>
-              <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#0c9894] hover:text-[#0c9894] cursor-pointer transition-colors">
+              <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#EEF3F4] rounded-xl text-xs text-[#68757C] hover:border-[#1E737B] hover:text-[#1E737B] cursor-pointer transition-colors">
                 <Camera size={14} /> {uploadingImg ? "A enviar..." : `Adicionar imagem (até 5)`}
                 <input type="file" accept="image/*" multiple className="hidden" onChange={handleImgUpload} disabled={uploadingImg} />
               </label>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setShowForm(false)} className="flex-1 border border-[#d1d4d8] py-2.5 rounded-full text-sm">Cancelar</button>
-              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="flex-1 bg-[#0c9894] text-white py-2.5 rounded-full text-sm font-medium disabled:opacity-50">
+              <button onClick={() => setShowForm(false)} className="flex-1 border border-[#EEF3F4] py-2.5 rounded-full text-sm">Cancelar</button>
+              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="flex-1 bg-[#1E737B] text-white py-2.5 rounded-full text-sm font-medium disabled:opacity-50">
                 {createMut.isPending ? "A guardar..." : "Guardar"}
               </button>
             </div>
@@ -700,17 +700,17 @@ function ProductsManager({ store }: { store: any }) {
 
       <div className="space-y-2">
         {products.map((p: any) => (
-          <div key={p.id} className="bg-white rounded-xl border border-[#e8eced] p-4 flex items-center justify-between">
+          <div key={p.id} className="bg-white rounded-xl border border-[#EEF3F4] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               {p.imageUrls?.[0] && <img src={p.imageUrls[0]} alt="" className="w-12 h-12 rounded-lg object-cover" />}
               <div>
-                <p className="text-sm font-medium text-[#123c4a]">{p.name}</p>
-                <p className="text-xs text-[#87909a]">{p.price} {p.currency}</p>
+                <p className="text-sm font-medium text-[#175A61]">{p.name}</p>
+                <p className="text-xs text-[#68757C]">{p.price} {p.currency}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls || []); setShowForm(true); }} className="p-2 text-[#87909a] hover:text-[#0c9894] transition-colors"><Edit2 size={14} /></button>
-              <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="p-2 text-[#87909a] hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+              <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls || []); setShowForm(true); }} className="p-2 text-[#68757C] hover:text-[#1E737B] transition-colors"><Edit2 size={14} /></button>
+              <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="p-2 text-[#68757C] hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
             </div>
           </div>
         ))}
@@ -734,10 +734,10 @@ function ContactEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-[#123c4a]">Contactos</h2>
+        <h2 className="text-lg font-bold text-[#175A61]">Contactos</h2>
         {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
       </div>
-      <div className="bg-white rounded-2xl border border-[#e8eced] p-6 space-y-5">
+      <div className="bg-white rounded-2xl border border-[#EEF3F4] p-6 space-y-5">
         <div>
           <label className={labelCls}>Telefone</label>
           <input type="tel" value={form.phone} onChange={(e) => { setForm((f) => ({ ...f, phone: e.target.value })); setIsDirty(true); }} className={inputCls} />
@@ -746,7 +746,7 @@ function ContactEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; 
           <label className={labelCls}>WhatsApp</label>
           <input type="tel" value={form.whatsapp} onChange={(e) => { setForm((f) => ({ ...f, whatsapp: e.target.value })); setIsDirty(true); }} className={inputCls} />
         </div>
-        <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#0c9894] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#087c7c] transition-colors disabled:opacity-50">
+        <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#1E737B] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#175A61] transition-colors disabled:opacity-50">
           {mutation.isPending ? "A guardar..." : "Guardar alterações"}
         </button>
       </div>

@@ -1,0 +1,16 @@
+/* YESOLA — Casa & Serviços */
+/* #68635D #D9D4CD #B9AEA0 #F8F5F0 #272727 #8A8F96 #FFFFFF */
+
+.palette-casa {
+  --palette-primary: 35 7% 39%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 33 8% 84%;
+  --palette-secondary-fg: 35 10% 20%;
+  --palette-background: 36 25% 96%;
+  --palette-foreground: 0 0% 15%;
+  --palette-muted: 214 5% 55%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 33 10% 87%;
+  --palette-accent: 33 12% 68%;
+  --palette-ring: 35 7% 39%;
+}

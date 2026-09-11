@@ -38,8 +38,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#1a5276] focus:ring-2 focus:ring-[#1a5276]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#A7B3C5] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#A7B3C5] outline-none focus:border-[#0B2D56] focus:ring-2 focus:ring-[#0B2D56]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#A7B3C5] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -98,11 +98,11 @@ export default function LoginImoveis() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#f8f6f3] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#F4EBD7] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/imoveis"}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#1a5276] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#0B2D56] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -111,18 +111,18 @@ export default function LoginImoveis() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#1a5276" }}>YESOLA<small style={{ display: "block", color: "#c9913a", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Imóveis</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#0B2D56" }}>YESOLA<small style={{ display: "block", color: "#D4AF37", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Imóveis</small></span>
           </div>
 
-          <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
+          <div className="flex gap-6 mb-8 border-b border-[#A7B3C5]">
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#1a5276] text-[#1a5276]"
-                    : "border-transparent text-[#87909a] hover:text-[#1a5276]"
+                    ? "border-[#0B2D56] text-[#0B2D56]"
+                    : "border-transparent text-[#A7B3C5] hover:text-[#0B2D56]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -138,10 +138,10 @@ export default function LoginImoveis() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#1a5276] mb-1">
+              <p className="text-sm font-medium text-[#0B2D56] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#A7B3C5] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -155,23 +155,23 @@ export default function LoginImoveis() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#A7B3C5]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#A7B3C5] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#1a5276] text-white py-3 text-sm font-medium rounded-full hover:bg-[#154360] transition-colors">
+              <button type="submit" className="w-full bg-[#0B2D56] text-white py-3 text-sm font-medium rounded-full hover:bg-[#0B2D56] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Imóveis & Alojamento.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#1a5276] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Imóveis & Alojamento.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#A7B3C5] hover:text-[#0B2D56] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -195,7 +195,7 @@ export default function LoginImoveis() {
                 <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
                   <option value="">Selecione a categoria</option>
                   {IMOVEIS_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#30343a]">
+                    <option key={cat} value={cat} className="bg-white text-[#171717]">
                       {cat}
                     </option>
                   ))}
@@ -211,7 +211,7 @@ export default function LoginImoveis() {
                 >
                   <option value="">Selecione a Província</option>
                   {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.province?.message} />
@@ -226,7 +226,7 @@ export default function LoginImoveis() {
                 >
                   <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
                   {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>
+                    <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.municipality?.message} />
@@ -242,7 +242,7 @@ export default function LoginImoveis() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#A7B3C5]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -253,21 +253,21 @@ export default function LoginImoveis() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#A7B3C5]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#1a5276] text-white py-3 text-sm font-medium rounded-full hover:bg-[#154360] transition-colors">
+              <button type="submit" className="w-full bg-[#0B2D56] text-white py-3 text-sm font-medium rounded-full hover:bg-[#0B2D56] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="imoveis" accentColor="#1a5276" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="imoveis" accentColor="#0B2D56" />
     </main>
   );
 }

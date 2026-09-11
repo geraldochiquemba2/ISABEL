@@ -1,0 +1,16 @@
+/* YESOLA — Formações & Cursos */
+/* #1E737B #175A61 #EEF3F4 #FAFAF8 #17191A #68757C #FFFFFF */
+
+.palette-formacoes {
+  --palette-primary: 187 60% 30%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 188 55% 24%;
+  --palette-secondary-fg: 0 0% 100%;
+  --palette-background: 180 12% 97%;
+  --palette-foreground: 195 20% 10%;
+  --palette-muted: 207 8% 45%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 188 15% 91%;
+  --palette-accent: 188 40% 93%;
+  --palette-ring: 187 60% 30%;
+}

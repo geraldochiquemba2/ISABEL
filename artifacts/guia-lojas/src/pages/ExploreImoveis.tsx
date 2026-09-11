@@ -38,7 +38,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#A7B3C5] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=imoveis`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -72,9 +72,9 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && (
-          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          <p className="text-[10px] text-[#A7B3C5] mt-1 line-clamp-2">{store.description}</p>
         )}
       </div>
     </div>
@@ -158,43 +158,43 @@ export default function ExploreImoveis() {
     : IMOVEIS_CATEGORIES;
 
   return (
-    <main className="min-h-[100dvh] bg-[#f8f6f3] text-[#1a5276]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#f8f6f3]/95 backdrop-blur-md border-b border-[#1a5276]/10">
+    <main className="min-h-[100dvh] bg-[#f8f6f3] text-[#0B2D56]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#f8f6f3]/95 backdrop-blur-md border-b border-[#0B2D56]/10">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#1a5276] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#A7B3C5] hover:text-[#0B2D56] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#1a5276]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#c9913a] mt-0.5">Imóveis & Alojamento</small></span>
-          <a href="/explorar-imoveis" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#c9913a] transition-colors hidden md:block">Explorar</a>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#0B2D56]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#D4AF37] mt-0.5">Imóveis & Alojamento</small></span>
+          <a href="/explorar-imoveis" className="text-xs font-bold uppercase tracking-[0.14em] text-[#A7B3C5] hover:text-[#D4AF37] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#c9913a]">Explorar serviços</p>
+          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#D4AF37]">Explorar serviços</p>
           <h1 className="mt-4 font-['Playfair_Display'] text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#1a5276] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+              activeFilter === null ? "bg-[#0B2D56] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
             }`}>Todos</button>
           {IMOVEIS_CATEGORIES.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#1a5276] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+                activeFilter === group.category ? "bg-[#0B2D56] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#A7B3C5] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#A7B3C5] bg-white text-[#171717] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -203,14 +203,14 @@ export default function ExploreImoveis() {
             <button
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeProvince === null ? "bg-[#68727c] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+                activeProvince === null ? "bg-[#A7B3C5] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
               }`}>Todas</button>
             {provinces.map((province) => (
               <button
                 key={province}
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeProvince === province ? "bg-[#68727c] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+                  activeProvince === province ? "bg-[#A7B3C5] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
                 }`}>{province}</button>
             ))}
           </div>
@@ -218,11 +218,11 @@ export default function ExploreImoveis() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#A7B3C5] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#A7B3C5] bg-white text-[#171717] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -231,14 +231,14 @@ export default function ExploreImoveis() {
               <button
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeMunicipality === null ? "bg-[#87909a] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+                  activeMunicipality === null ? "bg-[#A7B3C5] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
                 }`}>Todos</button>
               {municipalities.map((m) => (
                 <button
                   key={m}
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                    activeMunicipality === m ? "bg-[#87909a] text-white" : "bg-[#e8f0f5] text-[#68727c] hover:bg-[#d0e0eb]"
+                    activeMunicipality === m ? "bg-[#A7B3C5] text-white" : "bg-[#F4EBD7] text-[#A7B3C5] hover:bg-[#F4EBD7]"
                   }`}>{m}</button>
               ))}
             </div>
@@ -249,17 +249,17 @@ export default function ExploreImoveis() {
           {filteredGroups.map((group, i) => {
             const groupStores = getStoresForGroup(group.category);
             return (
-              <article key={group.number} className={`group border-t border-[#1a5276]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#0B2D56]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#c9913a]">{group.number}</span>
+                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#D4AF37]">{group.number}</span>
                   <div>
-                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#1a5276] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#1a5276]/60">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#c9913a]/30 pl-5 text-sm leading-5 text-[#1a5276]/70">
+                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#0B2D56] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#0B2D56]/60">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#D4AF37]/30 pl-5 text-sm leading-5 text-[#0B2D56]/70">
                       {group.items.map((item) => (
                         <li key={item}>
                           <div className="flex gap-3">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#c9913a]" />
+                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#D4AF37]" />
                             <span>{item}</span>
                           </div>
                         </li>
@@ -267,13 +267,13 @@ export default function ExploreImoveis() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#1a5276] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#A7B3C5] hover:text-[#0B2D56] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#A7B3C5] mb-3">Lojas recentes</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map((store: any) => (
@@ -281,8 +281,8 @@ export default function ExploreImoveis() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#1a5276]/25 p-6 text-center">
-                        <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#0B2D56]/25 p-6 text-center">
+                        <p className="text-xs text-[#A7B3C5]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -293,17 +293,17 @@ export default function ExploreImoveis() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#c9913a]/20 bg-[#1a5276] px-6 py-24 text-[#f8f6f3] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#D4AF37]/20 bg-[#0B2D56] px-6 py-24 text-[#f8f6f3] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#c9913a]">O primeiro passo</p>
+            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#D4AF37]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#b9c1ca]">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#A7B3C5]">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
               <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Imóveis%20%26%20Alojamento." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#c9913a] text-white text-sm font-medium rounded-full hover:bg-[#b8822e] transition-colors">
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-white text-sm font-medium rounded-full hover:bg-[#D4AF37] transition-colors">
                 Falar connosco
               </a>
             </div>

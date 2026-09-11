@@ -1,0 +1,16 @@
+/* YESOLA — Imóveis & Alojamento */
+/* #0B2D56 #D4AF37 #F4EBD7 #A7B3C5 #FFFFFF */
+
+.palette-imoveis {
+  --palette-primary: 214 80% 20%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 43 67% 53%;
+  --palette-secondary-fg: 214 60% 15%;
+  --palette-background: 40 50% 95%;
+  --palette-foreground: 214 30% 12%;
+  --palette-muted: 214 15% 72%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 40 30% 88%;
+  --palette-accent: 40 45% 93%;
+  --palette-ring: 214 80% 20%;
+}

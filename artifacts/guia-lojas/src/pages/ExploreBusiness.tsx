@@ -41,7 +41,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E8F2EE] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=business`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -75,9 +75,9 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && (
-          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          <p className="text-[10px] text-[#6F7780] mt-1 line-clamp-2">{store.description}</p>
         )}
       </div>
     </div>
@@ -161,43 +161,43 @@ export default function ExploreBusiness() {
     : BUSINESS_CATEGORIES;
 
   return (
-    <main className="min-h-[100dvh] bg-[#f4f1eb] text-[#112844]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#f4f1eb]/95 backdrop-blur-md border-b border-[#b88a3b]/10">
+    <main className="min-h-[100dvh] bg-[#E8F2EE] text-[#075342]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#E8F2EE]/95 backdrop-blur-md border-b border-[#C69A3A]/10">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#112844] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#6F7780] hover:text-[#075342] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#112844]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#b88a3b] mt-0.5">Negócios & Finanças</small></span>
-          <a href="/explorar-business" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#b88a3b] transition-colors hidden md:block">Explorar</a>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#075342]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#C69A3A] mt-0.5">Negócios & Finanças</small></span>
+          <a href="/explorar-business" className="text-xs font-bold uppercase tracking-[0.14em] text-[#6F7780] hover:text-[#C69A3A] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#b88a3b]">Explorar serviços</p>
+          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#C69A3A]">Explorar serviços</p>
           <h1 className="mt-4 font-['Playfair_Display'] text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#112844] text-white" : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+              activeFilter === null ? "bg-[#075342] text-white" : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
             }`}>Todos</button>
           {BUSINESS_CATEGORIES.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#112844] text-white" : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+                activeFilter === group.category ? "bg-[#075342] text-white" : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#6F7780] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8F2EE] bg-white text-[#171717] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -207,8 +207,8 @@ export default function ExploreBusiness() {
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeProvince === null
-                  ? "bg-[#68727c] text-white"
-                  : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+                  ? "bg-[#6F7780] text-white"
+                  : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
               }`}
             >
               Todas
@@ -219,8 +219,8 @@ export default function ExploreBusiness() {
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeProvince === province
-                    ? "bg-[#68727c] text-white"
-                    : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+                    ? "bg-[#6F7780] text-white"
+                    : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
                 }`}
               >
                 {province}
@@ -231,11 +231,11 @@ export default function ExploreBusiness() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#6F7780] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8F2EE] bg-white text-[#171717] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -245,8 +245,8 @@ export default function ExploreBusiness() {
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeMunicipality === null
-                    ? "bg-[#87909a] text-white"
-                    : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+                    ? "bg-[#6F7780] text-white"
+                    : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
                 }`}
               >
                 Todos
@@ -257,8 +257,8 @@ export default function ExploreBusiness() {
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                     activeMunicipality === m
-                      ? "bg-[#87909a] text-white"
-                      : "bg-[#e9e2d6] text-[#68727c] hover:bg-[#d9d0c1]"
+                      ? "bg-[#6F7780] text-white"
+                      : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
                   }`}
                 >
                   {m}
@@ -272,17 +272,17 @@ export default function ExploreBusiness() {
           {filteredGroups.map((group, i) => {
             const groupStores = getStoresForGroup(group.category);
             return (
-              <article key={group.number} className={`group border-t border-[#b88a3b]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#C69A3A]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#b88a3b]">{group.number}</span>
+                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#C69A3A]">{group.number}</span>
                   <div>
-                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#112844] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#112844]/60">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#b88a3b]/30 pl-5 text-sm leading-5 text-[#112844]/70">
+                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#075342] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#075342]/60">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#C69A3A]/30 pl-5 text-sm leading-5 text-[#075342]/70">
                       {group.items.map((item) => (
                         <li key={item}>
                           <div className="flex gap-3">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#b88a3b]" />
+                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#C69A3A]" />
                             <span>{item}</span>
                           </div>
                         </li>
@@ -290,13 +290,13 @@ export default function ExploreBusiness() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#112844] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#6F7780] hover:text-[#075342] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#6F7780] mb-3">Lojas recentes</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map((store: any) => (
@@ -304,8 +304,8 @@ export default function ExploreBusiness() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#b88a3b]/25 p-6 text-center">
-                        <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#C69A3A]/25 p-6 text-center">
+                        <p className="text-xs text-[#6F7780]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -316,17 +316,17 @@ export default function ExploreBusiness() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#b88a3b]/20 bg-[#112844] px-6 py-24 text-[#f4f1eb] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#C69A3A]/20 bg-[#075342] px-6 py-24 text-[#E8F2EE] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#b88a3b]">O primeiro passo</p>
+            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#C69A3A]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#b9c1ca]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#A7B3C5]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
               <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Neg%C3%B3cios%20%26%20Finan%C3%A7as." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#b88a3b] text-white text-sm font-medium rounded-full hover:bg-[#a07a33] transition-colors">
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#C69A3A] text-white text-sm font-medium rounded-full hover:bg-[#C69A3A] transition-colors">
                 Falar connosco
               </a>
             </div>

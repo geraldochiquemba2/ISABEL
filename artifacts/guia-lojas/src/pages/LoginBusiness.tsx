@@ -41,8 +41,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#112844] focus:ring-2 focus:ring-[#112844]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#E8F2EE] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#6F7780] outline-none focus:border-[#075342] focus:ring-2 focus:ring-[#075342]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#6F7780] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -101,11 +101,11 @@ export default function LoginBusiness() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#f4f1eb] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#E8F2EE] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/business"}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#112844] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#6F7780] hover:text-[#075342] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -114,18 +114,18 @@ export default function LoginBusiness() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#112844" }}>YESOLA<small style={{ display: "block", color: "#b88a3b", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Negócios</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#075342" }}>YESOLA<small style={{ display: "block", color: "#C69A3A", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Negócios</small></span>
           </div>
 
-          <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
+          <div className="flex gap-6 mb-8 border-b border-[#E8F2EE]">
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#112844] text-[#112844]"
-                    : "border-transparent text-[#87909a] hover:text-[#112844]"
+                    ? "border-[#075342] text-[#075342]"
+                    : "border-transparent text-[#6F7780] hover:text-[#075342]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -141,10 +141,10 @@ export default function LoginBusiness() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#112844] mb-1">
+              <p className="text-sm font-medium text-[#075342] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#6F7780] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -158,23 +158,23 @@ export default function LoginBusiness() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F7780]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#6F7780] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#112844] text-white py-3 text-sm font-medium rounded-full hover:bg-[#0d1f35] transition-colors">
+              <button type="submit" className="w-full bg-[#075342] text-white py-3 text-sm font-medium rounded-full hover:bg-[#054235] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Negócios.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#112844] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Negócios.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#6F7780] hover:text-[#075342] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -198,7 +198,7 @@ export default function LoginBusiness() {
                 <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
                   <option value="">Selecione a categoria</option>
                   {BUSINESS_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#30343a]">
+                    <option key={cat} value={cat} className="bg-white text-[#171717]">
                       {cat}
                     </option>
                   ))}
@@ -214,7 +214,7 @@ export default function LoginBusiness() {
                 >
                   <option value="">Selecione a Província</option>
                   {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.province?.message} />
@@ -229,7 +229,7 @@ export default function LoginBusiness() {
                 >
                   <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
                   {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>
+                    <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.municipality?.message} />
@@ -245,7 +245,7 @@ export default function LoginBusiness() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F7780]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -256,21 +256,21 @@ export default function LoginBusiness() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#6F7780]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#112844] text-white py-3 text-sm font-medium rounded-full hover:bg-[#0d1f35] transition-colors">
+              <button type="submit" className="w-full bg-[#075342] text-white py-3 text-sm font-medium rounded-full hover:bg-[#054235] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="business" accentColor="#b88a3b" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="business" accentColor="#C69A3A" />
     </main>
   );
 }

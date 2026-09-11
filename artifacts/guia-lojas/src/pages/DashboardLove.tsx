@@ -81,7 +81,7 @@ const LOVE_SERVICE_GROUPS = [
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
 
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5";
-const inputCls = "w-full border border-[#d1d4d8] bg-white py-2.5 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#d96f5c] focus:ring-2 focus:ring-[#d96f5c]/10 transition-all rounded-xl";
+const inputCls = "w-full border border-[#F7E9EB] bg-white py-2.5 px-4 text-sm text-[#171416] placeholder:text-[#6F696B] outline-none focus:border-[#A71936] focus:ring-2 focus:ring-[#A71936]/10 transition-all rounded-xl";
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => Promise<void>) | null> }) {
   const queryClient = useQueryClient();
@@ -93,7 +93,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
     whatsapp: store.whatsapp || "",
     province: store.province || "",
     municipality: store.municipality || "",
-    coverColor: store.coverColor || "#f8f1e7",
+    coverColor: store.coverColor || "#F7E9EB",
     coverImage: store.coverImage || "",
     logoUrl: store.logoUrl || "",
   });
@@ -154,23 +154,23 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-3xl text-[#30343a]">Minha Loja</h2>
+        <h2 className="font-serif text-3xl text-[#171416]">Minha Loja</h2>
         {isDirty && (
-          <button onClick={save} className="flex items-center gap-2 bg-[#d96f5c] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#c5614f] transition-colors">
+          <button onClick={save} className="flex items-center gap-2 bg-[#A71936] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#A71936] transition-colors">
             <Upload size={14} /> Guardar alterações
           </button>
         )}
       </div>
 
       {/* Imagens */}
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-6 space-y-5 max-w-2xl">
-        <h3 className="font-serif text-lg text-[#30343a]">Imagens</h3>
+      <div className="bg-white rounded-2xl border border-[#F7E9EB] p-6 space-y-5 max-w-2xl">
+        <h3 className="font-serif text-lg text-[#171416]">Imagens</h3>
 
         <div>
           <label className={labelCls}>Foto de perfil (Logo)</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#e8eaed]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#d96f5c] hover:text-[#d96f5c] cursor-pointer transition-colors">
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#F7E9EB]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#F7E9EB] rounded-xl text-xs text-[#6F696B] hover:border-[#A71936] hover:text-[#A71936] cursor-pointer transition-colors">
               <Camera size={14} />
               {uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
@@ -181,8 +181,8 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div>
           <label className={labelCls}>Imagem de capa</label>
           <div className="flex items-center gap-4">
-            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#e8eaed]" />}
-            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d1d4d8] rounded-xl text-xs text-[#87909a] hover:border-[#d96f5c] hover:text-[#d96f5c] cursor-pointer transition-colors">
+            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#F7E9EB]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#F7E9EB] rounded-xl text-xs text-[#6F696B] hover:border-[#A71936] hover:text-[#A71936] cursor-pointer transition-colors">
               <Camera size={14} />
               {uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
@@ -195,7 +195,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div className="flex flex-wrap gap-3 mb-3">
             {(store.coverImages || []).map((img: string, i: number) => (
               <div key={i} className="relative group">
-                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#e8eaed]" />
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#F7E9EB]" />
                 <button
                   onClick={() => handleRemoveCoverImage(i)}
                   className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -204,7 +204,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
                 </button>
               </div>
             ))}
-            <label className="w-24 h-24 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#d96f5c] hover:text-[#d96f5c] cursor-pointer transition-colors">
+            <label className="w-24 h-24 border border-dashed border-[#F7E9EB] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F696B] hover:border-[#A71936] hover:text-[#A71936] cursor-pointer transition-colors">
               <Camera size={16} className="mb-1" />
               {uploading === "coverImages" ? "..." : "Adicionar"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />
@@ -214,8 +214,8 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
       </div>
 
       {/* Dados */}
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-6 space-y-5 max-w-2xl">
-        <h3 className="font-serif text-lg text-[#30343a]">Dados da loja</h3>
+      <div className="bg-white rounded-2xl border border-[#F7E9EB] p-6 space-y-5 max-w-2xl">
+        <h3 className="font-serif text-lg text-[#171416]">Dados da loja</h3>
         <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
         <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
         <div className="grid grid-cols-2 gap-4">
@@ -232,10 +232,10 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <label className={labelCls}>Horários de funcionamento</label>
           <div className="space-y-3">
             {schedule.map((day, i) => (
-              <div key={day.label} className="border border-[#e8eaed] rounded-2xl p-4 bg-[#fafafa]">
+              <div key={day.label} className="border border-[#F7E9EB] rounded-2xl p-4 bg-[#FCFAF8]">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-[#30343a]">{day.label}</p>
+                    <p className="text-sm font-medium text-[#171416]">{day.label}</p>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
                       day.closed ? "bg-red-50 text-red-600 border border-red-200" : "bg-emerald-50 text-emerald-600 border border-emerald-200"
                     }`}>
@@ -254,11 +254,11 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
                 </div>
                 <div className={`grid grid-cols-2 gap-3 transition-all duration-200 ${day.closed ? "opacity-50 pointer-events-none" : ""}`}>
                   <div>
-                    <p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Abertura</p>
+                    <p className="text-[10px] text-[#6F696B] mb-1.5 font-medium uppercase tracking-wide">Abertura</p>
                     <TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setDirty(true); }} disabled={day.closed} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-[#87909a] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p>
+                    <p className="text-[10px] text-[#6F696B] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p>
                     <TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setDirty(true); }} disabled={day.closed} />
                   </div>
                 </div>
@@ -352,18 +352,18 @@ function ProdutosSection({ store }: { store: any }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="font-serif text-3xl text-[#30343a]">Serviços</h2>
-        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#d96f5c] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#c5614f] transition-colors">
+        <h2 className="font-serif text-3xl text-[#171416]">Serviços</h2>
+        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#A71936] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#A71936] transition-colors">
           <Plus size={15} /> Novo serviço
         </button>
       </div>
 
       <AnimatePresence>
         {showForm && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white rounded-2xl border border-[#e8eaed] p-6 mb-8 max-w-2xl">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-white rounded-2xl border border-[#F7E9EB] p-6 mb-8 max-w-2xl">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-sm font-semibold text-[#30343a]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
-              <button onClick={() => { setShowForm(false); setEditProduct(null); }} className="text-[#87909a] hover:text-[#30343a]"><X size={18} /></button>
+              <h3 className="text-sm font-semibold text-[#171416]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
+              <button onClick={() => { setShowForm(false); setEditProduct(null); }} className="text-[#6F696B] hover:text-[#171416]"><X size={18} /></button>
             </div>
 
             <div className="space-y-4">
@@ -371,20 +371,20 @@ function ProdutosSection({ store }: { store: any }) {
                 <label className={labelCls}>Imagens do serviço (até 5)</label>
                 <div className="flex flex-wrap gap-2">
                   {productImages.map((img, i) => (
-                    <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#d1d4d8]">
+                    <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#F7E9EB]">
                       <img src={img} alt="" className="w-full h-full object-cover" />
                       <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5"><X size={10} /></button>
                     </div>
                   ))}
                   {productImages.length < 5 && (
-                    <label className="w-20 h-20 border border-dashed border-[#d1d4d8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#87909a] hover:border-[#d96f5c] hover:text-[#d96f5c] cursor-pointer transition-colors">
+                    <label className="w-20 h-20 border border-dashed border-[#F7E9EB] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F696B] hover:border-[#A71936] hover:text-[#A71936] cursor-pointer transition-colors">
                       <Camera size={16} className="mb-1" />
                       {uploadingImg ? "..." : "Adicionar"}
                       <input type="file" accept="image/*" multiple className="hidden" onChange={handleProductImageUpload} disabled={uploadingImg} />
                     </label>
                   )}
                 </div>
-                <p className="text-[10px] text-[#87909a]">{productImages.length}/5 imagens</p>
+                <p className="text-[10px] text-[#6F696B]">{productImages.length}/5 imagens</p>
               </div>
 
               <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Fotógrafo" /></div>
@@ -418,7 +418,7 @@ function ProdutosSection({ store }: { store: any }) {
                 </select>
               </div>
               <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
-              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#d96f5c] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#c5614f] transition-colors disabled:opacity-50">
+              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#A71936] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#A71936] transition-colors disabled:opacity-50">
                 {createMut.isPending ? "A guardar..." : editProduct ? "Atualizar" : "Guardar"}
               </button>
             </div>
@@ -434,33 +434,33 @@ function ProdutosSection({ store }: { store: any }) {
           const groupProducts = getProductsForGroup(group.category);
           const isExpanded = selectedGroup === group.category;
           return (
-            <div key={group.category} className="bg-white rounded-2xl border border-[#e8eaed] overflow-hidden">
+            <div key={group.category} className="bg-white rounded-2xl border border-[#F7E9EB] overflow-hidden">
               <button
                 onClick={() => setSelectedGroup(isExpanded ? null : group.category)}
                 className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#6F696B]">{group.number}</span>
                   <div>
-                    <h4 className="text-sm font-semibold text-[#30343a]">{group.title}</h4>
-                    <p className="text-xs text-[#87909a] mt-0.5">{groupProducts.length} serviço(s)</p>
+                    <h4 className="text-sm font-semibold text-[#171416]">{group.title}</h4>
+                    <p className="text-xs text-[#6F696B] mt-0.5">{groupProducts.length} serviço(s)</p>
                   </div>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#87909a] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#6F696B] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
               </button>
 
               {isExpanded && (
-                <div className="border-t border-[#e8eaed] p-5">
+                <div className="border-t border-[#F7E9EB] p-5">
                   <div className="space-y-2">
                     {groupProducts.map((p: any) => (
-                      <div key={p.id} className="flex items-center gap-3 p-3 bg-[#fafafa] rounded-xl">
+                      <div key={p.id} className="flex items-center gap-3 p-3 bg-[#FCFAF8] rounded-xl">
                         {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
                         <div className="flex-1">
-                          <h5 className="text-xs font-medium text-[#30343a]">{p.name}</h5>
-                          <p className="text-[10px] text-[#87909a]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                          <h5 className="text-xs font-medium text-[#171416]">{p.name}</h5>
+                          <p className="text-[10px] text-[#6F696B]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
                         </div>
-                        <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#87909a] hover:text-[#d96f5c] transition-colors p-1"><Edit2 size={13} /></button>
-                        <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#87909a] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                        <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#6F696B] hover:text-[#A71936] transition-colors p-1"><Edit2 size={13} /></button>
+                        <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#6F696B] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
                       </div>
                     ))}
                   </div>
@@ -529,12 +529,12 @@ export default function DashboardLove() {
       { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
     ];
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#f8f1e7]"><p className="text-sm text-[#87909a]">Carregando...</p></div>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#F7E9EB]"><p className="text-sm text-[#6F696B]">Carregando...</p></div>;
 
   return (
-    <div className="min-h-screen bg-[#f8f1e7] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-[#F7E9EB] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#173a42] text-white px-4 py-3 flex items-center justify-between">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#791226] text-white px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" />
           <span className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Serviços de Amor</i></span>
@@ -549,7 +549,7 @@ export default function DashboardLove() {
       )}
 
       {/* Sidebar */}
-      <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#173a42] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+      <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#791226] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
         <div className="flex items-center gap-3 mb-5">
           <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
           <div>
@@ -590,19 +590,19 @@ export default function DashboardLove() {
         <div className="max-w-4xl mx-auto px-6 py-10 md:px-12">
           {section === "overview" && !isAdmin && store && (
             <div className="space-y-6">
-              <h2 className="font-serif text-3xl text-[#30343a]">Visão Geral</h2>
+              <h2 className="font-serif text-3xl text-[#171416]">Visão Geral</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
-                  <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Serviços</p>
-                  <p className="text-2xl font-bold text-[#30343a]">{store.products?.length || 0}</p>
+                <div className="bg-white rounded-2xl border border-[#F7E9EB] p-5">
+                  <p className="text-[10px] text-[#6F696B] uppercase tracking-wider mb-1">Serviços</p>
+                  <p className="text-2xl font-bold text-[#171416]">{store.products?.length || 0}</p>
                 </div>
-                <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
-                  <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Estado</p>
+                <div className="bg-white rounded-2xl border border-[#F7E9EB] p-5">
+                  <p className="text-[10px] text-[#6F696B] uppercase tracking-wider mb-1">Estado</p>
                   <p className={`text-sm font-semibold ${store.isOpen ? "text-green-600" : "text-red-500"}`}>{store.isOpen ? "Aberto" : "Fechado"}</p>
                 </div>
-                <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
-                  <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
-                  <p className="text-2xl font-bold text-[#30343a]">{store?.whatsapp_clicks || 0}</p>
+                <div className="bg-white rounded-2xl border border-[#F7E9EB] p-5">
+                  <p className="text-[10px] text-[#6F696B] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+                  <p className="text-2xl font-bold text-[#171416]">{store?.whatsapp_clicks || 0}</p>
                 </div>
               </div>
             </div>
@@ -618,16 +618,16 @@ export default function DashboardLove() {
 
           {section === "contactos" && store && (
             <div>
-              <h2 className="font-serif text-3xl text-[#30343a] mb-8">Contactos</h2>
-              <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 max-w-2xl space-y-6">
-                <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#173a42] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
-                <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#30343a]">{store.phone}</p></div>
-                <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#30343a]">{store.address || "Não definido"}</p></div>
+              <h2 className="font-serif text-3xl text-[#171416] mb-8">Contactos</h2>
+              <div className="bg-white rounded-2xl border border-[#F7E9EB] p-8 max-w-2xl space-y-6">
+                <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#791226] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
+                <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#171416]">{store.phone}</p></div>
+                <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#171416]">{store.address || "Não definido"}</p></div>
               </div>
             </div>
           )}
 
-          {section === "admin" && <AdminPanel storeType="love-services" accentColor="#68AAA0" />}
+          {section === "admin" && <AdminPanel storeType="love-services" accentColor="#A71936" />}
         </div>
       </main>
     </div>

@@ -41,8 +41,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#3c2731] placeholder:text-[#87909a] outline-none focus:border-[#8e5557] focus:ring-2 focus:ring-[#8e5557]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#E8DDD0] bg-white py-3 px-4 text-sm text-[#191817] placeholder:text-[#6E7077] outline-none focus:border-[#C45125] focus:ring-2 focus:ring-[#C45125]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#6E7077] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -101,11 +101,11 @@ export default function LoginEventos() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#fffcf9] text-[#3c2731]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#FBF8F4] text-[#191817]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/eventos"}
-          className="flex items-center gap-2 text-sm text-[#8e5557] hover:text-[#6b3f41] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#C45125] hover:text-[#191817] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -114,18 +114,18 @@ export default function LoginEventos() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#3c2731" }}>YESOLA<small style={{ display: "block", color: "#8e5557", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Eventos</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#191817" }}>YESOLA<small style={{ display: "block", color: "#C45125", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Eventos</small></span>
           </div>
 
-          <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
+          <div className="flex gap-6 mb-8 border-b border-[#E8DDD0]">
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#8e5557] text-[#8e5557]"
-                    : "border-transparent text-[#87909a] hover:text-[#8e5557]"
+                    ? "border-[#C45125] text-[#C45125]"
+                    : "border-transparent text-[#6E7077] hover:text-[#C45125]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -141,10 +141,10 @@ export default function LoginEventos() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#8e5557] mb-1">
+              <p className="text-sm font-medium text-[#C45125] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#6E7077] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -158,23 +158,23 @@ export default function LoginEventos() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6E7077]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#6E7077] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#8e5557] text-white py-3 text-sm font-medium rounded-full hover:bg-[#7a4a4c] transition-colors">
+              <button type="submit" className="w-full bg-[#C45125] text-white py-3 text-sm font-medium rounded-full hover:bg-[#191817] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Eventos & Celebrações.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#8e5557] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Eventos & Celebrações.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#6E7077] hover:text-[#C45125] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -198,7 +198,7 @@ export default function LoginEventos() {
                 <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
                   <option value="">Selecione a categoria</option>
                   {EVENTOS_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#3c2731]">
+                    <option key={cat} value={cat} className="bg-white text-[#191817]">
                       {cat}
                     </option>
                   ))}
@@ -214,7 +214,7 @@ export default function LoginEventos() {
                 >
                   <option value="">Selecione a Província</option>
                   {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#3c2731]">{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-white text-[#191817]">{p.name}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.province?.message} />
@@ -229,7 +229,7 @@ export default function LoginEventos() {
                 >
                   <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
                   {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#3c2731]">{m}</option>
+                    <option key={m} value={m} className="bg-white text-[#191817]">{m}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.municipality?.message} />
@@ -245,7 +245,7 @@ export default function LoginEventos() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6E7077]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -256,21 +256,21 @@ export default function LoginEventos() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#6E7077]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#8e5557] text-white py-3 text-sm font-medium rounded-full hover:bg-[#7a4a4c] transition-colors">
+              <button type="submit" className="w-full bg-[#C45125] text-white py-3 text-sm font-medium rounded-full hover:bg-[#191817] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="eventos" accentColor="#ad696b" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="eventos" accentColor="#C45125" />
     </main>
   );
 }

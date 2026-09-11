@@ -74,45 +74,45 @@
   --elevate-1: rgba(0,0,0,.02);
   --elevate-2: rgba(0,0,0,.05);
 
-  --background: 45 30% 97%;
-  --foreground: 35 25% 12%;
-  --border: 40 25% 88%;
-  --input: 40 20% 85%;
-  --ring: 43 70% 50%;
+  --background: 37 46% 97%;
+  --foreground: 30 4% 9%;
+  --border: 17 53% 88%;
+  --input: 17 40% 85%;
+  --ring: 16 66% 46%;
 
   --card: 0 0% 100%;
-  --card-foreground: 35 25% 12%;
-  --card-border: 40 25% 90%;
+  --card-foreground: 30 4% 9%;
+  --card-border: 17 53% 90%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 35 25% 12%;
-  --popover-border: 40 25% 88%;
+  --popover-foreground: 30 4% 9%;
+  --popover-border: 17 53% 88%;
 
-  --primary: 43 70% 50%;
+  --primary: 16 66% 46%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 43 35% 92%;
-  --secondary-foreground: 35 25% 25%;
-  --muted: 40 25% 95%;
-  --muted-foreground: 35 15% 45%;
-  --accent: 43 35% 90%;
-  --accent-foreground: 35 25% 15%;
+  --secondary: 17 53% 93%;
+  --secondary-foreground: 30 4% 20%;
+  --muted: 17 40% 95%;
+  --muted-foreground: 228 5% 45%;
+  --accent: 17 53% 91%;
+  --accent-foreground: 30 4% 12%;
   --destructive: 0 84% 55%;
   --destructive-foreground: 0 0% 100%;
 
-  --chart-1: 43 70% 50%;
-  --chart-2: 40 80% 40%;
-  --chart-3: 43 50% 60%;
-  --chart-4: 40 35% 75%;
-  --chart-5: 40 25% 88%;
+  --chart-1: 16 66% 46%;
+  --chart-2: 17 53% 93%;
+  --chart-3: 16 50% 56%;
+  --chart-4: 17 40% 85%;
+  --chart-5: 17 30% 90%;
 
-  --sidebar: 40 20% 97%;
-  --sidebar-foreground: 35 20% 15%;
-  --sidebar-border: 40 25% 90%;
-  --sidebar-primary: 43 70% 50%;
+  --sidebar: 37 46% 97%;
+  --sidebar-foreground: 30 4% 12%;
+  --sidebar-border: 17 53% 90%;
+  --sidebar-primary: 16 66% 46%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 40 25% 92%;
-  --sidebar-accent-foreground: 35 20% 15%;
-  --sidebar-ring: 43 70% 50%;
+  --sidebar-accent: 17 53% 93%;
+  --sidebar-accent-foreground: 30 4% 15%;
+  --sidebar-ring: 16 66% 46%;
 
   --app-font-sans: 'DM Sans', 'Inter', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
@@ -146,39 +146,39 @@
   --elevate-1: rgba(255,255,255,.03);
   --elevate-2: rgba(255,255,255,.07);
 
-  --background: 35 20% 10%;
-  --foreground: 40 25% 90%;
-  --border: 35 20% 18%;
-  --input: 35 18% 22%;
-  --ring: 43 70% 50%;
+  --background: 30 4% 10%;
+  --foreground: 17 53% 90%;
+  --border: 30 4% 18%;
+  --input: 30 4% 22%;
+  --ring: 16 66% 46%;
 
-  --card: 35 20% 12%;
-  --card-foreground: 40 25% 90%;
-  --card-border: 35 18% 16%;
+  --card: 30 4% 12%;
+  --card-foreground: 17 53% 90%;
+  --card-border: 30 4% 16%;
 
-  --popover: 35 20% 12%;
-  --popover-foreground: 40 25% 90%;
-  --popover-border: 35 18% 18%;
+  --popover: 30 4% 12%;
+  --popover-foreground: 17 53% 90%;
+  --popover-border: 30 4% 18%;
 
-  --primary: 43 75% 55%;
-  --primary-foreground: 35 25% 10%;
-  --secondary: 35 18% 16%;
-  --secondary-foreground: 40 25% 85%;
-  --muted: 35 15% 14%;
-  --muted-foreground: 35 15% 55%;
-  --accent: 35 18% 16%;
-  --accent-foreground: 40 25% 88%;
+  --primary: 16 66% 52%;
+  --primary-foreground: 30 4% 10%;
+  --secondary: 30 4% 16%;
+  --secondary-foreground: 17 53% 85%;
+  --muted: 30 4% 14%;
+  --muted-foreground: 30 10% 55%;
+  --accent: 30 4% 16%;
+  --accent-foreground: 17 53% 88%;
   --destructive: 0 80% 58%;
   --destructive-foreground: 0 0% 100%;
 
-  --sidebar: 35 20% 10%;
-  --sidebar-foreground: 40 25% 88%;
-  --sidebar-border: 35 18% 16%;
-  --sidebar-primary: 43 75% 55%;
-  --sidebar-primary-foreground: 35 20% 10%;
-  --sidebar-accent: 35 15% 14%;
-  --sidebar-accent-foreground: 40 25% 85%;
-  --sidebar-ring: 43 70% 50%;
+  --sidebar: 30 4% 10%;
+  --sidebar-foreground: 17 53% 88%;
+  --sidebar-border: 30 4% 16%;
+  --sidebar-primary: 16 66% 52%;
+  --sidebar-primary-foreground: 30 4% 10%;
+  --sidebar-accent: 30 4% 14%;
+  --sidebar-accent-foreground: 17 53% 85%;
+  --sidebar-ring: 16 66% 46%;
 
   --shadow-2xs: 0 1px 2px rgba(0,0,0,.3);
   --shadow-xs: 0 1px 3px rgba(0,0,0,.35);

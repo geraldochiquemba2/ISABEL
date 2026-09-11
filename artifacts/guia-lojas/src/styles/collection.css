@@ -1,0 +1,16 @@
+/* YESOLA Collection */
+/* #B89A78 #E8DDD0 #FAF8F4 #171717 #716D69 #FFFFFF */
+
+.palette-collection {
+  --palette-primary: 31 31% 60%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 29 37% 90%;
+  --palette-secondary-fg: 31 20% 20%;
+  --palette-background: 40 38% 97%;
+  --palette-foreground: 0 0% 9%;
+  --palette-muted: 32 4% 44%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 29 25% 88%;
+  --palette-accent: 29 37% 88%;
+  --palette-ring: 31 31% 60%;
+}

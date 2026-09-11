@@ -1,0 +1,16 @@
+/* YESOLA — Eventos & Celebrações */
+/* #C45125 #F3E4DD #FBF8F4 #FFFFFF #191817 #6E7077 */
+
+.palette-eventos {
+  --palette-primary: 16 66% 46%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 17 53% 93%;
+  --palette-secondary-fg: 16 40% 18%;
+  --palette-background: 37 46% 97%;
+  --palette-foreground: 30 4% 9%;
+  --palette-muted: 228 5% 45%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 17 40% 88%;
+  --palette-accent: 17 53% 91%;
+  --palette-ring: 16 66% 46%;
+}

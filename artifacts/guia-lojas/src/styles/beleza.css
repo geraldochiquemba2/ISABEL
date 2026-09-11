@@ -1,0 +1,16 @@
+/* YESOLA — Beleza & Bem-Estar */
+/* #7A4549 #EAD9D5 #FBF7F2 #FFFFFF #292727 #697482 */
+
+.palette-beleza {
+  --palette-primary: 357 26% 38%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 14 40% 90%;
+  --palette-secondary-fg: 357 18% 18%;
+  --palette-background: 34 45% 97%;
+  --palette-foreground: 0 3% 15%;
+  --palette-muted: 214 12% 46%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 14 30% 90%;
+  --palette-accent: 14 40% 88%;
+  --palette-ring: 357 26% 38%;
+}

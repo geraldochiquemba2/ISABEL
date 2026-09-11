@@ -1,0 +1,16 @@
+/* YESOLA — Serviços de Amor */
+/* #A71936 #791226 #F7E9EB #FCFAF8 #171416 #6F696B #FFFFFF */
+
+.palette-amor {
+  --palette-primary: 351 84% 38%;
+  --palette-primary-fg: 0 0% 100%;
+  --palette-secondary: 347 73% 27%;
+  --palette-secondary-fg: 0 0% 100%;
+  --palette-background: 30 33% 98%;
+  --palette-foreground: 320 8% 9%;
+  --palette-muted: 342 4% 43%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 347 30% 91%;
+  --palette-accent: 347 45% 94%;
+  --palette-ring: 351 84% 38%;
+}

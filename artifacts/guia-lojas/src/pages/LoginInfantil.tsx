@@ -38,8 +38,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#8e44ad] focus:ring-2 focus:ring-[#8e44ad]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#E6DED3] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#E6DED3] outline-none focus:border-[#F7C948] focus:ring-2 focus:ring-[#F7C948]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#E6DED3] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -98,11 +98,11 @@ export default function LoginInfantil() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#f8f6f3] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#FFF7E6] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/infantil"}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#8e44ad] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#F7C948] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -111,18 +111,18 @@ export default function LoginInfantil() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#8e44ad" }}>YESOLA<small style={{ display: "block", color: "#e74c8c", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Infantil</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#F7C948" }}>YESOLA<small style={{ display: "block", color: "#AFC4D9", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Infantil</small></span>
           </div>
 
-          <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
+          <div className="flex gap-6 mb-8 border-b border-[#E6DED3]">
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#8e44ad] text-[#8e44ad]"
-                    : "border-transparent text-[#87909a] hover:text-[#8e44ad]"
+                    ? "border-[#F7C948] text-[#F7C948]"
+                    : "border-transparent text-[#E6DED3] hover:text-[#F7C948]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -138,10 +138,10 @@ export default function LoginInfantil() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#8e44ad] mb-1">
+              <p className="text-sm font-medium text-[#F7C948] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#E6DED3] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -155,23 +155,23 @@ export default function LoginInfantil() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#E6DED3]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#E6DED3] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#8e44ad] text-white py-3 text-sm font-medium rounded-full hover:bg-[#7d3c98] transition-colors">
+              <button type="submit" className="w-full bg-[#F7C948] text-white py-3 text-sm font-medium rounded-full hover:bg-[#C89B62] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Infantil & Maternidade.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#8e44ad] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Infantil & Maternidade.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#E6DED3] hover:text-[#F7C948] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -195,7 +195,7 @@ export default function LoginInfantil() {
                 <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
                   <option value="">Selecione a categoria</option>
                   {INFANTIL_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#30343a]">
+                    <option key={cat} value={cat} className="bg-white text-[#171717]">
                       {cat}
                     </option>
                   ))}
@@ -211,7 +211,7 @@ export default function LoginInfantil() {
                 >
                   <option value="">Selecione a Província</option>
                   {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.province?.message} />
@@ -226,7 +226,7 @@ export default function LoginInfantil() {
                 >
                   <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
                   {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>
+                    <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>
                   ))}
                 </select>
                 <FieldError msg={regErr.municipality?.message} />
@@ -242,7 +242,7 @@ export default function LoginInfantil() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#E6DED3]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -253,21 +253,21 @@ export default function LoginInfantil() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#E6DED3]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#8e44ad] text-white py-3 text-sm font-medium rounded-full hover:bg-[#7d3c98] transition-colors">
+              <button type="submit" className="w-full bg-[#F7C948] text-white py-3 text-sm font-medium rounded-full hover:bg-[#C89B62] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="infantil" accentColor="#8e44ad" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="infantil" accentColor="#F7C948" />
     </main>
   );
 }

@@ -38,7 +38,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E6DED3] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=infantil`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -72,9 +72,9 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && (
-          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          <p className="text-[10px] text-[#E6DED3] mt-1 line-clamp-2">{store.description}</p>
         )}
       </div>
     </div>
@@ -158,43 +158,43 @@ export default function ExploreInfantil() {
     : INFANTIL_CATEGORIES;
 
   return (
-    <main className="min-h-[100dvh] bg-[#fdf8f5] text-[#8e44ad]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fdf8f5]/95 backdrop-blur-md border-b border-[#8e44ad]/10">
+    <main className="min-h-[100dvh] bg-[#FFF7E6] text-[#F7C948]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FFF7E6]/95 backdrop-blur-md border-b border-[#F7C948]/10">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#8e44ad] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#E6DED3] hover:text-[#F7C948] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#8e44ad]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#e74c8c] mt-0.5">Infantil & Maternidade</small></span>
-          <a href="/explorar-infantil" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#e74c8c] transition-colors hidden md:block">Explorar</a>
+          <span className="font-['Playfair_Display'] text-[19px] tracking-[-.02em] text-[#F7C948]">YESOLA<small className="block font-['DM_Sans'] text-[8px] uppercase tracking-[.23em] text-[#AFC4D9] mt-0.5">Infantil & Maternidade</small></span>
+          <a href="/explorar-infantil" className="text-xs font-bold uppercase tracking-[0.14em] text-[#E6DED3] hover:text-[#AFC4D9] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#e74c8c]">Explorar serviços</p>
+          <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#AFC4D9]">Explorar serviços</p>
           <h1 className="mt-4 font-['Playfair_Display'] text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#8e44ad] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+              activeFilter === null ? "bg-[#F7C948] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
             }`}>Todos</button>
           {INFANTIL_CATEGORIES.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#8e44ad] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+                activeFilter === group.category ? "bg-[#F7C948] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#E6DED3] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E6DED3] bg-white text-[#171717] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -203,14 +203,14 @@ export default function ExploreInfantil() {
             <button
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeProvince === null ? "bg-[#6c3483] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+                activeProvince === null ? "bg-[#C89B62] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
               }`}>Todas</button>
             {provinces.map((province) => (
               <button
                 key={province}
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeProvince === province ? "bg-[#6c3483] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+                  activeProvince === province ? "bg-[#C89B62] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
                 }`}>{province}</button>
             ))}
           </div>
@@ -218,11 +218,11 @@ export default function ExploreInfantil() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#E6DED3] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E6DED3] bg-white text-[#171717] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -231,14 +231,14 @@ export default function ExploreInfantil() {
               <button
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeMunicipality === null ? "bg-[#87909a] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+                  activeMunicipality === null ? "bg-[#E6DED3] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
                 }`}>Todos</button>
               {municipalities.map((m) => (
                 <button
                   key={m}
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                    activeMunicipality === m ? "bg-[#87909a] text-white" : "bg-[#f3e8f8] text-[#68727c] hover:bg-[#e8d5f0]"
+                    activeMunicipality === m ? "bg-[#E6DED3] text-white" : "bg-[#FFF7E6] text-[#E6DED3] hover:bg-[#FFF7E6]"
                   }`}>{m}</button>
               ))}
             </div>
@@ -249,17 +249,17 @@ export default function ExploreInfantil() {
           {filteredGroups.map((group, i) => {
             const groupStores = getStoresForGroup(group.category);
             return (
-              <article key={group.number} className={`group border-t border-[#8e44ad]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#F7C948]/20 py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#e74c8c]">{group.number}</span>
+                  <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#AFC4D9]">{group.number}</span>
                   <div>
-                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#8e44ad] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#8e44ad]/60">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#e74c8c]/30 pl-5 text-sm leading-5 text-[#8e44ad]/70">
+                    <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#F7C948] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#F7C948]/60">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#AFC4D9]/30 pl-5 text-sm leading-5 text-[#F7C948]/70">
                       {group.items.map((item) => (
                         <li key={item}>
                           <div className="flex gap-3">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#e74c8c]" />
+                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#AFC4D9]" />
                             <span>{item}</span>
                           </div>
                         </li>
@@ -267,13 +267,13 @@ export default function ExploreInfantil() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#8e44ad] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#E6DED3] hover:text-[#F7C948] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                    <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#E6DED3] mb-3">Lojas recentes</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map((store: any) => (
@@ -281,8 +281,8 @@ export default function ExploreInfantil() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#8e44ad]/25 p-6 text-center">
-                        <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#F7C948]/25 p-6 text-center">
+                        <p className="text-xs text-[#E6DED3]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -293,17 +293,17 @@ export default function ExploreInfantil() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#e74c8c]/20 bg-[#8e44ad] px-6 py-24 text-[#fdf8f5] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#AFC4D9]/20 bg-[#F7C948] px-6 py-24 text-[#FFF7E6] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#e74c8c]">O primeiro passo</p>
+            <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.25em] text-[#AFC4D9]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-['Playfair_Display'] text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#fdf8f5]/60">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#FFF7E6]/60">Conte-nos o que procura. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
               <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Infantil%20%26%20Maternidade." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#e74c8c] text-white text-sm font-medium rounded-full hover:bg-[#d43d7a] transition-colors">
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#AFC4D9] text-white text-sm font-medium rounded-full hover:bg-[#AFC4D9] transition-colors">
                 Falar connosco
               </a>
             </div>

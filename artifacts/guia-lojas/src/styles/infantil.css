@@ -1,0 +1,16 @@
+/* YESOLA — Infantil & Maternidade */
+/* #F7C948 #FFF7E6 #C89B62 #AFC4D9 #E6DED3 #FFFFFF */
+
+.palette-infantil {
+  --palette-primary: 46 91% 63%;
+  --palette-primary-fg: 30 40% 12%;
+  --palette-secondary: 42 100% 95%;
+  --palette-secondary-fg: 46 50% 25%;
+  --palette-background: 40 40% 98%;
+  --palette-foreground: 30 10% 12%;
+  --palette-muted: 35 15% 70%;
+  --palette-card: 0 0% 100%;
+  --palette-border: 40 25% 90%;
+  --palette-accent: 36 45% 59%;
+  --palette-ring: 46 91% 63%;
+}
