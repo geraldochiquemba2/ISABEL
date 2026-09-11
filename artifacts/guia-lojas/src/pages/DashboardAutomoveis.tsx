@@ -191,9 +191,12 @@ export default function DashboardAutomoveis() {
           <div className="flex items-center gap-3">
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#c9913a", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Automóveis</small></span>
           </div>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="p-2 hover:bg-white/10 rounded-lg transition-all" title="Trocar loja"><Store size={18} /></button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {mobileMenuOpen && <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)} />}

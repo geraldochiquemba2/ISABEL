@@ -232,9 +232,12 @@ export default function DashboardWeddings() {
             <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" />
             <span className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Casamentos</i></span>
           </div>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="p-2 hover:bg-white/10 rounded-lg transition-all" title="Trocar loja"><Store size={18} /></button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Sidebar Overlay */}

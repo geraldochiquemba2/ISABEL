@@ -46,18 +46,36 @@ authRouter.post("/register", async (req, res) => {
     const isBusiness = storeType === "business";
     const isFormacoes = storeType === "formacoes";
     const isEventos = storeType === "eventos";
+    const isImoveis = storeType === "imoveis";
+    const isInfantil = storeType === "infantil";
+    const isAutomoveis = storeType === "automoveis";
+    const isSaude = storeType === "saude";
+    const isBeleza = storeType === "beleza";
+    const isCasa = storeType === "casa";
     const description = isLove
-      ? "A minha loja na Eliora Love Services."
+      ? "A minha loja na YESOLA Serviços de Amor."
       : isWeddings
-      ? 'A minha nova loja na Eliora Weddings.'
+      ? 'A minha loja na YESOLA Casamentos.'
       : isBusiness
-      ? 'A minha loja na Eliora Business & Finances.'
+      ? 'A minha loja na YESOLA Negócios & Finanças.'
       : isFormacoes
-      ? 'A minha loja na Eliora Formações.'
+      ? 'A minha loja na YESOLA Formações & Cursos.'
       : isEventos
-      ? 'A minha loja na Eliora Eventos & Celebrações.'
-      : 'A minha loja na Eliora Collection.';
-    const coverColor = isLove ? '#d96f5c' : isBusiness ? '#112844' : isFormacoes ? '#087a76' : isEventos ? '#ad696b' : '#e8cfd9';
+      ? 'A minha loja na YESOLA Eventos & Celebrações.'
+      : isImoveis
+      ? 'A minha loja na YESOLA Imóveis & Alojamento.'
+      : isInfantil
+      ? 'A minha loja na YESOLA Infantil & Maternidade.'
+      : isAutomoveis
+      ? 'A minha loja na YESOLA Automóveis.'
+      : isSaude
+      ? 'A minha loja na YESOLA Saúde & Bem-Estar.'
+      : isBeleza
+      ? 'A minha loja na YESOLA Beleza & Bem-Estar.'
+      : isCasa
+      ? 'A minha loja na YESOLA Casa & Serviços.'
+      : 'A minha loja na YESOLA Collection.';
+    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : '#B89A78';
     const coverImage = isLove
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
@@ -68,6 +86,18 @@ authRouter.post("/register", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1524178232363-6fb168ff49fe?w=800&h=500&fit=crop&auto=format&q=80'
       : isEventos
       ? 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=500&fit=crop&auto=format&q=80'
+      : isImoveis
+      ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
+      : isInfantil
+      ? 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&h=500&fit=crop&auto=format&q=80'
+      : isAutomoveis
+      ? 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=500&fit=crop&auto=format&q=80'
+      : isSaude
+      ? 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=500&fit=crop&auto=format&q=80'
+      : isBeleza
+      ? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=500&fit=crop&auto=format&q=80'
+      : isCasa
+      ? 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
 
     await pool.query(
@@ -200,7 +230,7 @@ authRouter.post("/link-store", async (req, res) => {
     // Se userId não fornecido, procurar por phone + store_type
     let userIdToUse = userId;
     if (!userIdToUse && phone) {
-      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : "collection";
+      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
       const userResult = await pool.query("SELECT id FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
       if (!userResult.rows.length) {
         return res.status(404).json({ error: "Utilizador não encontrado." });
@@ -216,19 +246,54 @@ authRouter.post("/link-store", async (req, res) => {
     const storeId = `loja-${Date.now()}`;
     
     // Criar nova loja vinculada ao utilizador
-    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : "collection";
+    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
+    const isW = storeType === "weddings";
+    const isL = storeType === "love-services";
+    const isB = storeType === "business";
+    const isF = storeType === "formacoes";
+    const isE = storeType === "eventos";
+    const isI = storeType === "imoveis";
+    const isInf = storeType === "infantil";
+    const isA = storeType === "automoveis";
+    const isS = storeType === "saude";
+    const isBe = storeType === "beleza";
+    const isC = storeType === "casa";
+    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : '#B89A78';
+    const linkCoverImage = isL
+      ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
+      : isW
+      ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
+      : isB
+      ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=500&fit=crop&auto=format&q=80'
+      : isF
+      ? 'https://images.unsplash.com/photo-1524178232363-6fb168ff49fe?w=800&h=500&fit=crop&auto=format&q=80'
+      : isE
+      ? 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=500&fit=crop&auto=format&q=80'
+      : isI
+      ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
+      : isInf
+      ? 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&h=500&fit=crop&auto=format&q=80'
+      : isA
+      ? 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=500&fit=crop&auto=format&q=80'
+      : isS
+      ? 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=500&fit=crop&auto=format&q=80'
+      : isBe
+      ? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=500&fit=crop&auto=format&q=80'
+      : isC
+      ? 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=500&fit=crop&auto=format&q=80'
+      : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
     await pool.query(
       `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type)
        VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11)`,
       [
         storeId,
-        storeName || 'Eliora Weddings',
+        storeName || 'Minha Loja',
         normalizedCategory,
         address || '',
         phone || '',
-        isWeddings ? 'A minha nova loja na Eliora Weddings.' : 'A minha loja na Eliora Collection.',
-        '#e8cfd9',
-        'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80',
+        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : 'A minha loja na YESOLA Collection.',
+        linkCoverColor,
+        linkCoverImage,
         province || '',
         municipality || '',
         storeType,
