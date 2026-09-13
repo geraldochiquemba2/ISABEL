@@ -321,6 +321,9 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             <h3 className="text-[16px] font-semibold text-[#D4A843]">{PURPOSE_SLIDES[0].title} ♥</h3>
             <p className="text-[13px] text-[#D4A843]/80 italic mt-0.5">{PURPOSE_SLIDES[0].subtitle}</p>
             <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">{PURPOSE_SLIDES[0].description}</p>
+            <button onClick={() => window.location.href = "/proposito"} className="mt-4 flex items-center gap-2 bg-[#D4A843] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#C49A38] transition-colors">
+              Ver
+            </button>
           </div>
         </div>
       </section>

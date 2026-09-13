@@ -58,6 +58,7 @@ import LoginCasa from "@/pages/LoginCasa";
 import DashboardCasa from "@/pages/DashboardCasa";
 import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
+import Proposito from "@/pages/Proposito";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +110,9 @@ function Router() {
   };
 
   if (!selectedStore) {
+    if (location === "/proposito") {
+      return <Proposito />;
+    }
     return <StoreSelector onSelect={handleStoreSelect} />;
   }
 
@@ -321,6 +325,7 @@ function Router() {
         <Route path="/login" component={Login} />
         <Route path="/descobrir-estilo" component={DescobrirEstilo} />
         <Route path="/carrinhos" component={VerCarrinhos} />
+        <Route path="/proposito" component={Proposito} />
         <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>
         <Route component={NotFound} />
       </Switch>
