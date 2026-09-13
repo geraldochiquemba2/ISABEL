@@ -128,7 +128,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             </button>
           </div>
           <div className="absolute right-0 top-0 w-[45%] h-full">
-            <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=500&h=400&fit=crop&auto=format&q=80" alt="Moda" className="w-full h-full object-cover object-top rounded-r-2xl" style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }} />
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&h=400&fit=crop&auto=format&q=80" alt="Moda feminina" className="w-full h-full object-cover object-top rounded-r-2xl" style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }} />
           </div>
         </div>
       </section>
