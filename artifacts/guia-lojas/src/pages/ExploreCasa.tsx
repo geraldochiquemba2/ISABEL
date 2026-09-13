@@ -98,8 +98,14 @@ export default function ExploreCasa() {
     }
     return null;
   });
-  const [activeProvince, setActiveProvince] = useState<string | null>(null);
-  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(null);
+  const [activeProvince, setActiveProvince] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("provincia") || null;
+  });
+  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("municipio") || null;
+  });
 
   const angolaProvinces: Record<string, string[]> = {
     "Luanda": ["Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Maianga", "Rangel", "Samba", "Talatona", "Viana"],

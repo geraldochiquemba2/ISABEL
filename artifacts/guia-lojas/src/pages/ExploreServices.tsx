@@ -128,8 +128,14 @@ export default function ExploreServices() {
     const params = new URLSearchParams(window.location.search);
     return params.get("subcategoria");
   });
-  const [activeProvince, setActiveProvince] = useState<string | null>(null);
-  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(null);
+  const [activeProvince, setActiveProvince] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("provincia") || null;
+  });
+  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("municipio") || null;
+  });
 
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const localUser = localUserStr ? JSON.parse(localUserStr) : null;

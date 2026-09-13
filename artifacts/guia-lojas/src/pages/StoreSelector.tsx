@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
@@ -261,15 +260,6 @@ interface StoreSelectorProps {
 }
 
 export default function StoreSelector({ onSelect }: StoreSelectorProps) {
-  const [slideIdx, setSlideIdx] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setSlideIdx((p) => (p + 1) % PURPOSE_SLIDES.length), 4000);
-    return () => clearInterval(t);
-  }, []);
-
-  const slide = PURPOSE_SLIDES[slideIdx];
-
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
@@ -324,19 +314,14 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       <section className="px-5 py-3">
         <div className="relative rounded-2xl overflow-hidden bg-white border border-[#EDE8DE]" style={{ minHeight: "200px" }}>
           <div className="absolute right-0 top-0 w-[50%] h-full">
-            <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+            <img src={PURPOSE_SLIDES[0].image} alt={PURPOSE_SLIDES[0].title} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/30 to-transparent" />
           </div>
           <div className="relative z-10 p-5 max-w-[60%]">
-            <h3 className="text-[16px] font-semibold text-[#D4A843]">{slide.title} ♥</h3>
-            <p className="text-[13px] text-[#D4A843]/80 italic mt-0.5">{slide.subtitle}</p>
-            <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">{slide.description}</p>
+            <h3 className="text-[16px] font-semibold text-[#D4A843]">{PURPOSE_SLIDES[0].title} ♥</h3>
+            <p className="text-[13px] text-[#D4A843]/80 italic mt-0.5">{PURPOSE_SLIDES[0].subtitle}</p>
+            <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">{PURPOSE_SLIDES[0].description}</p>
           </div>
-        </div>
-        <div className="flex justify-center gap-2 mt-3">
-          {PURPOSE_SLIDES.map((_, i) => (
-            <button key={i} onClick={() => setSlideIdx(i)} className={i === slideIdx ? "slide-dot" : "slide-dot-inactive"} />
-          ))}
         </div>
       </section>
 

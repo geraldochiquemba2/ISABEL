@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import {
   Heart, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
@@ -30,12 +31,31 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
   useThemeColor("#FAF8F3");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showProvinceModal, setShowProvinceModal] = useState(false);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "business"],
     queryFn: () => fetchStores({ storeType: "business" }),
     staleTime: 60_000,
   });
+
+  const municipalities = selectedProvince
+    ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
+    : [];
+
+  const handleProvinceSelect = () => {
+    if (selectedProvince) {
+      const params = new URLSearchParams();
+      params.set("provincia", selectedProvince);
+      if (selectedMunicipality) {
+        params.set("municipio", selectedMunicipality);
+      }
+      navigate(`/explorar-business?${params.toString()}`);
+      setShowProvinceModal(false);
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F3] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -100,15 +120,88 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
 
       {/* Province */}
       <section className="px-5 py-3">
-        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8F2EE]">
+        <button
+          onClick={() => setShowProvinceModal(true)}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8F2EE] hover:border-[#C69A3A] transition-colors"
+        >
           <div className="w-10 h-10 rounded-full bg-[#E8F2EE] flex items-center justify-center"><MapPin size={18} className="text-[#C69A3A]" /></div>
-          <div className="flex-1">
+          <div className="flex-1 text-left">
             <p className="text-[14px] font-semibold text-[#C69A3A]">Escolha a sua província</p>
             <p className="text-[11px] text-[#6F7780]">Encontre serviços de negócios perto de si.</p>
           </div>
           <ChevronRight size={18} className="text-[#C69A3A]" />
-        </div>
+        </button>
       </section>
+
+      {/* Province Selection Modal */}
+      {showProvinceModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
+          <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-[#2D2C2B]">Escolha a sua localização</h3>
+              <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex gap-4">
+              {/* Províncias */}
+              <div className="flex-1">
+                <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Província</h4>
+                <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                  {ANGOLA_PROVINCES.map((province) => (
+                    <button
+                      key={province.id}
+                      onClick={() => {
+                        setSelectedProvince(province.name);
+                        setSelectedMunicipality(null);
+                      }}
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                        selectedProvince === province.name
+                          ? "bg-[#C69A3A] text-white font-medium"
+                          : "hover:bg-[#E8F2EE] text-[#2D2C2B]"
+                      }`}
+                    >
+                      {province.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Municípios */}
+              {selectedProvince && municipalities.length > 0 && (
+                <div className="flex-1">
+                  <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Município</h4>
+                  <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                    {municipalities.map((municipality) => (
+                      <button
+                        key={municipality}
+                        onClick={() => setSelectedMunicipality(municipality)}
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                          selectedMunicipality === municipality
+                            ? "bg-[#C69A3A] text-white font-medium"
+                            : "hover:bg-[#E8F2EE] text-[#2D2C2B]"
+                        }`}
+                      >
+                        {municipality}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {selectedProvince && (
+              <button
+                onClick={handleProvinceSelect}
+                className="w-full mt-6 bg-[#C69A3A] text-white py-3 rounded-xl font-medium hover:bg-[#A88230] transition-colors"
+              >
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Stores by Category */}
       {isLoading ? (

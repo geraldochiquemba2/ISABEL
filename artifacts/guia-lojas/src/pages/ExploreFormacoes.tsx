@@ -135,8 +135,14 @@ export default function ExploreFormacoes() {
     const params = new URLSearchParams(window.location.search);
     return params.get("subcategoria");
   });
-  const [activeProvince, setActiveProvince] = useState<string | null>(null);
-  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(null);
+  const [activeProvince, setActiveProvince] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("provincia") || null;
+  });
+  const [activeMunicipality, setActiveMunicipality] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("municipio") || null;
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
