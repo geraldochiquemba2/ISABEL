@@ -1,12 +1,12 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import {
-  Heart, ShoppingBag, ArrowRight, ChevronRight, Star, MapPin,
-  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Bell, Menu, X, Search,
+  Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
+  Shirt, Watch, Footprints,
 } from "lucide-react";
 
 function StoreCard({ store, from }: { store: Store; from: string }) {
@@ -35,7 +35,7 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
       </div>
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
-        {store.description && <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>}
+        {store.description && <p className="text-[10px] text-[#716D69] mt-1 line-clamp-2">{store.description}</p>}
         <div className="flex items-center gap-1 mt-1.5">
           <Star size={11} className="text-[#B89A78] fill-[#B89A78]" />
           <span className="text-[10px] font-medium text-[#171717]">4.8</span>
@@ -45,11 +45,11 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
   );
 }
 
-const TRUST_BADGES = [
-  { icon: <ShieldCheck size={18} />, label: "Compra segura" },
-  { icon: <BadgeCheck size={18} />, label: "Lojas verificadas" },
-  { icon: <CreditCard size={18} />, label: "Entregas rápidas" },
-  { icon: <HeadphonesIcon size={18} />, label: "Apoio ao cliente" },
+const CATEGORIES = [
+  { id: "feminina", name: "Moda Feminina", icon: <Shirt size={24} className="text-[#B89A78]" /> },
+  { id: "masculina", name: "Moda Masculina", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B89A78" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /></svg> },
+  { id: "acessorios", name: "Acessórios", icon: <Watch size={24} className="text-[#B89A78]" /> },
+  { id: "calcado", name: "Calçado", icon: <Footprints size={24} className="text-[#B89A78]" /> },
 ];
 
 export default function Home({ onBackToSelector }: { onBackToSelector?: () => void }) {
@@ -65,16 +65,18 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
 
   const nonAdmin = useMemo(() => stores.filter((s: Store) => s.phone !== "999999999"), [stores]);
   const featured = useMemo(() => nonAdmin.filter((s: Store) => s.isFeatured).slice(0, 6), [nonAdmin]);
-  const trending = useMemo(() => nonAdmin.filter((s: Store) => s.isTrending).slice(0, 6), [nonAdmin]);
   const fallbackFeatured = useMemo(() => !featured.length ? nonAdmin.slice(0, 6) : [], [featured, nonAdmin]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FAF8F4] text-[#171717] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-        .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-        .trust-scroll::-webkit-scrollbar { display: none; }
-        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #E8DDD0; }
+        .cat-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 0 20px; }
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 12px; background: white; border-radius: 16px; border: 1px solid #E8DDD0; min-width: 80px; cursor: pointer; transition: all 0.2s; }
+        .cat-item:hover { border-color: #B89A78; background: #FBF7ED; }
+        .store-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }
+        .store-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* Header */}
@@ -84,13 +86,10 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             {menuOpen ? <X size={22} color="#171717" /> : <Menu size={22} color="#171717" />}
           </button>
           <div className="flex flex-col items-center">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
-            <svg width="30" height="8" viewBox="0 0 30 8" fill="none" className="mt-0.5"><path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#B89A78" strokeWidth="1.5" fill="none" /></svg>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
+            <span className="text-[9px] tracking-[0.25em] text-[#B89A78] font-medium uppercase mt-0.5">COLLECTION</span>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="relative p-1"><Bell size={22} color="#171717" /><span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#B89A78] rounded-full" /></button>
-            <button className="p-1"><ShoppingBag size={22} color="#171717" /></button>
-          </div>
+          <button className="p-1"><ShoppingBag size={22} color="#171717" /></button>
         </div>
         {menuOpen && (
           <div className="bg-[#FAF8F4] border-t border-[#E8DDD0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
@@ -100,55 +99,63 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         )}
       </header>
 
-      {/* Hero */}
-      <section className="relative px-5 pt-6 pb-4 overflow-hidden" style={{ minHeight: "220px" }}>
-        <div className="relative z-10 max-w-[280px]">
-          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#171717]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Tudo o que<br />procuras,<br /><span className="text-[#B89A78]">encontras aqui.</span>
-          </h1>
-          <p className="text-[13px] text-[#716D69] mt-4 leading-relaxed">
-            Soluções completas para o seu dia a dia, negócios, formações, casa e muito mais, <span className="text-[#B89A78] font-medium">na sua província.</span>
-          </p>
+      {/* Categories */}
+      <section className="py-4">
+        <div className="cat-scroll">
+          {CATEGORIES.map((cat) => (
+            <button key={cat.id} onClick={() => setLocation(`/explorar?categoria=${cat.id}`)} className="cat-item">
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#E8DDD0]">
+                {cat.icon}
+              </div>
+              <span className="text-[11px] font-medium text-[#171717] text-center leading-tight">{cat.name}</span>
+            </button>
+          ))}
         </div>
-        <div className="absolute right-0 top-0 w-[55%] h-full">
-          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&h=400&fit=crop&auto=format&q=80" alt="Mulher feliz" className="w-full h-full object-cover object-top" style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }} />
+      </section>
+
+      {/* Hero */}
+      <section className="relative px-5 py-4 overflow-hidden">
+        <div className="relative rounded-2xl overflow-hidden bg-[#FFFFFF] border border-[#E8DDD0] p-5" style={{ minHeight: "180px" }}>
+          <div className="relative z-10 max-w-[55%]">
+            <h1 className="text-[26px] leading-[1.1] font-semibold text-[#171717]" style={{ fontFamily: "'Playfair Display', serif" }}>
+              ESTILO QUE FAZ<br />PARTE <span className="text-[#B89A78]">DE SI.</span>
+            </h1>
+            <p className="text-[12px] text-[#716D69] mt-3 leading-relaxed">
+              Descubra as melhores lojas de moda, calçado e acessórios da sua província.
+            </p>
+            <button onClick={() => setLocation("/explorar")} className="mt-4 flex items-center gap-2 bg-[#B89A78] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#9A7D60] transition-colors">
+              Explorar coleção <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="absolute right-0 top-0 w-[45%] h-full">
+            <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=500&h=400&fit=crop&auto=format&q=80" alt="Moda" className="w-full h-full object-cover object-top rounded-r-2xl" style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }} />
+          </div>
         </div>
       </section>
 
       {/* Quick Actions */}
       <section className="px-5 py-3 space-y-3">
         <button onClick={() => setLocation("/descobrir-estilo")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#FFFFFF] flex items-center justify-center"><Search size={20} className="text-[#B89A78]" /></div>
-          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#B89A78]">Quero conhecer o meu estilo</p><p className="text-[11px] text-[#716D69]">Descobre o teu estilo com especialistas de confiança.</p></div>
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#E8DDD0]">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B89A78" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><circle cx="9" cy="9" r="1" fill="#B89A78" /><circle cx="15" cy="9" r="1" fill="#B89A78" /></svg>
+          </div>
+          <div className="text-left flex-1">
+            <p className="text-[14px] font-semibold text-[#171717]">Quero conhecer o meu estilo</p>
+            <p className="text-[11px] text-[#716D69]">Descubra o seu estilo com especialistas.</p>
+          </div>
           <ChevronRight size={18} className="text-[#B89A78]" />
         </button>
         <button onClick={() => setLocation("/carrinhos")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#FFFFFF] flex items-center justify-center"><ShoppingBag size={20} className="text-[#B89A78]" /></div>
-          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#B89A78]">Ver carrinhos</p><p className="text-[11px] text-[#716D69]">SHEIN, ZARA, FASHION NOVA e outros</p></div>
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#E8DDD0]">
+            <ShoppingBag size={20} className="text-[#B89A78]" />
+          </div>
+          <div className="text-left flex-1">
+            <p className="text-[14px] font-semibold text-[#171717]">Ver carrinhos Shein, Zara e outros</p>
+            <p className="text-[11px] text-[#716D69]">Inspire-se e encontre os melhores looks.</p>
+          </div>
           <ChevronRight size={18} className="text-[#B89A78]" />
         </button>
       </section>
-
-      {/* Collection Banner */}
-      <section className="px-5 py-3">
-        <div className="relative rounded-2xl overflow-hidden bg-[#FFFFFF] border border-[#E8DDD0] p-5">
-          <h3 className="text-[18px] font-semibold text-[#B89A78]" style={{ fontFamily: "'Playfair Display', serif" }}>Coleção de Vestuário<br />e Acessórios</h3>
-          <p className="text-[12px] text-[#716D69] mt-2">Tudo o que reflete quem você é.</p>
-          <button onClick={() => setLocation("/explorar")} className="mt-3 flex items-center gap-2 bg-[#B89A78] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#9A7D60] transition-colors">
-            Explorar coleção <ChevronRight size={14} />
-          </button>
-        </div>
-      </section>
-
-      {/* Em Alta */}
-      {trending.length > 0 && (
-        <section className="px-5 py-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-[17px] font-semibold text-[#171717]">Em alta</h2>
-          </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{trending.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
-        </section>
-      )}
 
       {/* Featured Stores */}
       <section className="px-5 py-5">
@@ -157,24 +164,12 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
           <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#B89A78] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
         </div>
         {isLoading ? (
-          <div className="flex gap-3 overflow-x-auto">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+          <div className="store-scroll">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
         ) : (featured.length > 0 ? featured : fallbackFeatured).length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+          <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
         ) : (
           <p className="text-sm text-[#9CA3AF] text-center py-6">Nenhuma loja disponível de momento.</p>
         )}
-      </section>
-
-      {/* Trust Badges */}
-      <section className="px-5 py-3">
-        <div className="trust-scroll">
-          {TRUST_BADGES.map((badge, i) => (
-            <div key={i} className="trust-item">
-              <span className="text-[#B89A78]">{badge.icon}</span>
-              <span className="text-[11px] font-medium text-[#171717]">{badge.label}</span>
-            </div>
-          ))}
-        </div>
       </section>
     </div>
   );

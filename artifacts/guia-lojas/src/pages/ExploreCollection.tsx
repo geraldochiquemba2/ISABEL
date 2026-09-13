@@ -120,7 +120,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
 
   return (
     <div 
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e8eaed] cursor-pointer hover:-translate-y-1"
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E8DDD0] cursor-pointer hover:-translate-y-1"
       onClick={() => window.location.href = `/loja/${store.id}?from=collection`}
     >
       <div className="relative h-28 overflow-hidden">
@@ -154,9 +154,9 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#30343a] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && (
-          <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
+          <p className="text-[10px] text-[#716D69] mt-1 line-clamp-2">{store.description}</p>
         )}
       </div>
     </div>
@@ -223,25 +223,25 @@ export default function ExploreCollection() {
     : [...groups].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
-    <main className="min-h-[100dvh] bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#FAF8F4] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
       `}</style>
 
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#fafafa]/95 backdrop-blur-md border-b border-[#d9dde1]/60">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FAF8F4]/95 backdrop-blur-md border-b border-[#E8DDD0]/60">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#716D69] hover:text-[#171717] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#2d2c2b" }}>YESOLA<small style={{ display: "block", color: "#D4A843", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
-          <a href="/explorar" className="text-xs font-bold uppercase tracking-[0.14em] text-[#68727c] hover:text-[#c9a84c] transition-colors hidden md:block">Explorar</a>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#171717" }}>YESOLA<small style={{ display: "block", color: "#B89A78", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
+          <a href="/explorar" className="text-xs font-bold uppercase tracking-[0.14em] text-[#716D69] hover:text-[#B89A78] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#87909a]">Explorar lojas</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#716D69]">Explorar lojas</p>
           <h1 className="mt-4 font-serif text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
@@ -250,8 +250,8 @@ export default function ExploreCollection() {
             onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
               activeFilter === null
-                ? "bg-[#2c3035] text-white"
-                : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                ? "bg-[#171717] text-white"
+                : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
             }`}
           >
             Todos
@@ -262,8 +262,8 @@ export default function ExploreCollection() {
               onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeFilter === group.category
-                  ? "bg-[#2c3035] text-white"
-                  : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  ? "bg-[#171717] text-white"
+                  : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
               }`}
             >
               {group.number} {group.title.split(",")[0].split(" e ")[0]}
@@ -272,11 +272,11 @@ export default function ExploreCollection() {
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#716D69] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8DDD0] bg-white text-[#171717] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -286,8 +286,8 @@ export default function ExploreCollection() {
               onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                 activeProvince === null
-                  ? "bg-[#68727c] text-white"
-                  : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                  ? "bg-[#716D69] text-white"
+                  : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
               }`}
             >
               Todas
@@ -298,8 +298,8 @@ export default function ExploreCollection() {
                 onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeProvince === province
-                    ? "bg-[#68727c] text-white"
-                    : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                    ? "bg-[#716D69] text-white"
+                    : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
                 }`}
               >
                 {province}
@@ -310,11 +310,11 @@ export default function ExploreCollection() {
 
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#716D69] mr-2">Município:</span>
             <select
               value={activeMunicipality || ""}
               onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#d1d4d8] bg-white text-[#30343a] outline-none"
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E8DDD0] bg-white text-[#171717] outline-none"
             >
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -324,8 +324,8 @@ export default function ExploreCollection() {
                 onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                   activeMunicipality === null
-                    ? "bg-[#87909a] text-white"
-                    : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                    ? "bg-[#716D69] text-white"
+                    : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
                 }`}
               >
                 Todos
@@ -336,8 +336,8 @@ export default function ExploreCollection() {
                   onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
                     activeMunicipality === m
-                      ? "bg-[#87909a] text-white"
-                      : "bg-[#e8eaed] text-[#68727c] hover:bg-[#d1d4d8]"
+                      ? "bg-[#716D69] text-white"
+                      : "bg-[#E8DDD0] text-[#716D69] hover:bg-[#E8DDD0]"
                   }`}
                 >
                   {m}
@@ -349,22 +349,22 @@ export default function ExploreCollection() {
 
         <div>
           {filteredGroups.map((group, i) => (
-            <article key={group.number} className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+            <article key={group.number} className={`group border-t border-[#E8DDD0] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
               <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
+                <span className="font-mono text-xs tracking-[0.2em] text-[#716D69]">{group.number}</span>
                 <div>
-                  <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
-                  <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
-                   <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
+                  <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#171717] md:text-[2.8rem]">{group.title}</h3>
+                  <p className="mt-4 max-w-md text-sm leading-7 text-[#716D69]">{group.intro}</p>
+                   <ul className="mt-6 space-y-3 border-l border-[#E8DDD0] pl-5 text-sm leading-5 text-[#716D69]">
                      {group.items.map((item) => (
                        <li key={item}>
                          <a
                            href={`/explorar?categoria=${group.category}`}
                            className={`flex gap-3 transition-transform duration-300 group-hover:translate-x-1 cursor-pointer ${
-                             activeFilter === group.category ? "text-[#30343a] font-medium" : "hover:text-[#30343a]"
+                             activeFilter === group.category ? "text-[#171717] font-medium" : "hover:text-[#171717]"
                            }`}
                          >
-                           <span className={`mt-2 h-1 w-1 shrink-0 rounded-full ${activeFilter === group.category ? "bg-[#30343a]" : "bg-[#aeb6bf]"}`} />{item}
+                           <span className={`mt-2 h-1 w-1 shrink-0 rounded-full ${activeFilter === group.category ? "bg-[#171717]" : "bg-[#716D69]"}`} />{item}
                          </a>
                        </li>
                      ))}
@@ -372,14 +372,14 @@ export default function ExploreCollection() {
                   {getStoresForGroup(group.category).length > 0 && (
                     <button
                       onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                      className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#68727c] hover:text-[#30343a] transition-colors"
+                      className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#716D69] hover:text-[#171717] transition-colors"
                     >
                       Ver mais <ArrowUpRight size={14} />
                     </button>
                   )}
                 </div>
                 <div className="mt-4 md:mt-0">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#716D69] mb-3">Lojas recentes</p>
                   {getStoresForGroup(group.category).length > 0 ? (
                     <div className="flex flex-col gap-3">
                       {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }) => (
@@ -387,8 +387,8 @@ export default function ExploreCollection() {
                       ))}
                     </div>
                   ) : (
-                    <div className="rounded-2xl border border-dashed border-[#d1d4d8] p-6 text-center">
-                      <p className="text-xs text-[#87909a]">Em breve novas lojas</p>
+                    <div className="rounded-2xl border border-dashed border-[#E8DDD0] p-6 text-center">
+                      <p className="text-xs text-[#716D69]">Em breve novas lojas</p>
                     </div>
                   )}
                 </div>
@@ -398,16 +398,16 @@ export default function ExploreCollection() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#cbd0d5] bg-[#2c3035] px-6 py-24 text-[#fafafa] md:px-12 md:py-32">
-        <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#e4e7ea]/20" />
-        <div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#e4e7ea]/15" />
+      <section className="relative overflow-hidden border-t border-[#E8DDD0] bg-[#171717] px-6 py-24 text-[#FAF8F4] md:px-12 md:py-32">
+        <div className="absolute -right-16 -top-24 h-96 w-96 rounded-full border border-[#E8DDD0]/20" />
+        <div className="absolute -right-4 -top-12 h-72 w-72 rounded-full border border-[#E8DDD0]/15" />
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#b9c1ca]">O primeiro passo</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#E8DDD0]">O primeiro passo</p>
             <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Encontre o que<br /><i>procurais.</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#cbd0d5]">Contem-nos o que procuram. A nossa equipa responde com tempo, atenção e as melhores opções.</p>
+            <p className="text-sm leading-6 text-[#E8DDD0]">Contem-nos o que procuram. A nossa equipa responde com tempo, atenção e as melhores opções.</p>
             <div className="mt-7 flex items-center gap-4">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Phone size={14} /> Ligar
@@ -423,13 +423,13 @@ export default function ExploreCollection() {
         </div>
       </section>
 
-      <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#fafafa]">
+      <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#FAF8F4]">
         <div className="flex items-center gap-3">
           <img src="/logo-yesola-icon-dark.png" alt="YESOLA Collection" className="w-8 h-8" />
-          <span className="font-serif text-lg tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Collection</i></span>
+          <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal" style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".15em", fontSize: "9px" }}>COLLECTION</i></span>
         </div>
-        <p className="text-xs text-[#747b84]">Tudo o que procurais, encontrais aqui.</p>
-        <div className="flex items-center gap-5 text-[#747b84]">
+        <p className="text-xs text-[#716D69]">Tudo o que procurais, encontrais aqui.</p>
+        <div className="flex items-center gap-5 text-[#716D69]">
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
           <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
 
