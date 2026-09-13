@@ -23,7 +23,7 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
   }, [images.length]);
 
   return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
+    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#E8DDD0] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
@@ -34,11 +34,11 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{store.name}</h4>
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>}
         <div className="flex items-center gap-1 mt-1.5">
-          <Star size={11} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
+          <Star size={11} className="text-[#B89A78] fill-[#B89A78]" />
+          <span className="text-[10px] font-medium text-[#171717]">4.8</span>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@ const TRUST_BADGES = [
 ];
 
 export default function Home({ onBackToSelector }: { onBackToSelector?: () => void }) {
-  useThemeColor("#FAF8F5");
+  useThemeColor("#FAF8F4");
   const [, setLocation] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -69,31 +69,31 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   const fallbackFeatured = useMemo(() => !featured.length ? nonAdmin.slice(0, 6) : [], [featured, nonAdmin]);
 
   return (
-    <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-[100dvh] bg-[#FAF8F4] text-[#171717] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .trust-scroll::-webkit-scrollbar { display: none; }
-        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #EDE8DE; }
+        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #E8DDD0; }
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#EDE8DE]/60">
+      <header className="sticky top-0 z-50 bg-[#FAF8F4]/95 backdrop-blur-md border-b border-[#E8DDD0]/60">
         <div className="flex items-center justify-between px-5 py-4">
           <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">
-            {menuOpen ? <X size={22} color="#2D2C2B" /> : <Menu size={22} color="#2D2C2B" />}
+            {menuOpen ? <X size={22} color="#171717" /> : <Menu size={22} color="#171717" />}
           </button>
           <div className="flex flex-col items-center">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#2d2c2b", letterSpacing: "-.02em" }}>YESOLA</span>
-            <svg width="30" height="8" viewBox="0 0 30 8" fill="none" className="mt-0.5"><path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#D4A843" strokeWidth="1.5" fill="none" /></svg>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
+            <svg width="30" height="8" viewBox="0 0 30 8" fill="none" className="mt-0.5"><path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#B89A78" strokeWidth="1.5" fill="none" /></svg>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-1"><Bell size={22} color="#2D2C2B" /><span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#D4A843] rounded-full" /></button>
-            <button className="p-1"><ShoppingBag size={22} color="#2D2C2B" /></button>
+            <button className="relative p-1"><Bell size={22} color="#171717" /><span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#B89A78] rounded-full" /></button>
+            <button className="p-1"><ShoppingBag size={22} color="#171717" /></button>
           </div>
         </div>
         {menuOpen && (
-          <div className="bg-[#FAF8F5] border-t border-[#EDE8DE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#2D2C2B]">
+          <div className="bg-[#FAF8F4] border-t border-[#E8DDD0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
             <a href="/login" className="py-2">Entrar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
@@ -103,11 +103,11 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       {/* Hero */}
       <section className="relative px-5 pt-6 pb-4 overflow-hidden" style={{ minHeight: "220px" }}>
         <div className="relative z-10 max-w-[280px]">
-          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#2D2C2B]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Tudo o que<br />procuras,<br /><span className="text-[#D4A843]">encontras aqui.</span>
+          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#171717]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Tudo o que<br />procuras,<br /><span className="text-[#B89A78]">encontras aqui.</span>
           </h1>
-          <p className="text-[13px] text-[#6B7280] mt-4 leading-relaxed">
-            Soluções completas para o seu dia a dia, negócios, formações, casa e muito mais, <span className="text-[#D4A843] font-medium">na sua província.</span>
+          <p className="text-[13px] text-[#716D69] mt-4 leading-relaxed">
+            Soluções completas para o seu dia a dia, negócios, formações, casa e muito mais, <span className="text-[#B89A78] font-medium">na sua província.</span>
           </p>
         </div>
         <div className="absolute right-0 top-0 w-[55%] h-full">
@@ -117,24 +117,24 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
 
       {/* Quick Actions */}
       <section className="px-5 py-3 space-y-3">
-        <button onClick={() => setLocation("/descobrir-estilo")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#EDE8DE] hover:border-[#D4A843]/30 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#FBF7ED] flex items-center justify-center"><Search size={20} className="text-[#D4A843]" /></div>
-          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#D4A843]">Quero conhecer o meu estilo</p><p className="text-[11px] text-[#6B7280]">Descobre o teu estilo com especialistas de confiança.</p></div>
-          <ChevronRight size={18} className="text-[#D4A843]" />
+        <button onClick={() => setLocation("/descobrir-estilo")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
+          <div className="w-12 h-12 rounded-full bg-[#FFFFFF] flex items-center justify-center"><Search size={20} className="text-[#B89A78]" /></div>
+          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#B89A78]">Quero conhecer o meu estilo</p><p className="text-[11px] text-[#716D69]">Descobre o teu estilo com especialistas de confiança.</p></div>
+          <ChevronRight size={18} className="text-[#B89A78]" />
         </button>
-        <button onClick={() => setLocation("/carrinhos")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#EDE8DE] hover:border-[#D4A843]/30 transition-all">
-          <div className="w-12 h-12 rounded-full bg-[#FBF7ED] flex items-center justify-center"><ShoppingBag size={20} className="text-[#D4A843]" /></div>
-          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#D4A843]">Ver carrinhos</p><p className="text-[11px] text-[#6B7280]">SHEIN, ZARA, FASHION NOVA e outros</p></div>
-          <ChevronRight size={18} className="text-[#D4A843]" />
+        <button onClick={() => setLocation("/carrinhos")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
+          <div className="w-12 h-12 rounded-full bg-[#FFFFFF] flex items-center justify-center"><ShoppingBag size={20} className="text-[#B89A78]" /></div>
+          <div className="text-left flex-1"><p className="text-[14px] font-semibold text-[#B89A78]">Ver carrinhos</p><p className="text-[11px] text-[#716D69]">SHEIN, ZARA, FASHION NOVA e outros</p></div>
+          <ChevronRight size={18} className="text-[#B89A78]" />
         </button>
       </section>
 
       {/* Collection Banner */}
       <section className="px-5 py-3">
-        <div className="relative rounded-2xl overflow-hidden bg-[#FBF7ED] border border-[#EDE8DE] p-5">
-          <h3 className="text-[18px] font-semibold text-[#D4A843]" style={{ fontFamily: "'Playfair Display', serif" }}>Coleção de Vestuário<br />e Acessórios</h3>
-          <p className="text-[12px] text-[#6B7280] mt-2">Tudo o que reflete quem você é.</p>
-          <button onClick={() => setLocation("/explorar")} className="mt-3 flex items-center gap-2 bg-[#D4A843] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#C49A38] transition-colors">
+        <div className="relative rounded-2xl overflow-hidden bg-[#FFFFFF] border border-[#E8DDD0] p-5">
+          <h3 className="text-[18px] font-semibold text-[#B89A78]" style={{ fontFamily: "'Playfair Display', serif" }}>Coleção de Vestuário<br />e Acessórios</h3>
+          <p className="text-[12px] text-[#716D69] mt-2">Tudo o que reflete quem você é.</p>
+          <button onClick={() => setLocation("/explorar")} className="mt-3 flex items-center gap-2 bg-[#B89A78] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#9A7D60] transition-colors">
             Explorar coleção <ChevronRight size={14} />
           </button>
         </div>
@@ -144,7 +144,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       {trending.length > 0 && (
         <section className="px-5 py-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Em alta</h2>
+            <h2 className="text-[17px] font-semibold text-[#171717]">Em alta</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">{trending.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
         </section>
@@ -153,8 +153,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       {/* Featured Stores */}
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#2D2C2B]">Lojas em destaque</h2>
-          <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#D4A843] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+          <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
+          <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#B89A78] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
         </div>
         {isLoading ? (
           <div className="flex gap-3 overflow-x-auto">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
@@ -170,8 +170,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         <div className="trust-scroll">
           {TRUST_BADGES.map((badge, i) => (
             <div key={i} className="trust-item">
-              <span className="text-[#D4A843]">{badge.icon}</span>
-              <span className="text-[11px] font-medium text-[#2D2C2B]">{badge.label}</span>
+              <span className="text-[#B89A78]">{badge.icon}</span>
+              <span className="text-[11px] font-medium text-[#171717]">{badge.label}</span>
             </div>
           ))}
         </div>

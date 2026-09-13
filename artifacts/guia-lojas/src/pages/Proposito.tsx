@@ -125,35 +125,35 @@ export default function Proposito() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#FAF8F5] text-[#2D2C2B]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-[100dvh] bg-[#FAF8F4] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#EDE8DE]/60">
+      <header className="sticky top-0 z-50 bg-[#FAF8F4]/95 backdrop-blur-md border-b border-[#E8DDD0]/60">
         <div className="flex items-center justify-between px-5 py-4">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#2D2C2B] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#716D69] hover:text-[#171717] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, color: "#2d2c2b" }}>YESOLA</span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", fontWeight: 600, color: "#171717" }}>YESOLA</span>
           {isAdmin ? (
-            <button onClick={() => setIsAdmin(false)} className="p-2 text-[#6B7280] hover:text-[#2D2C2B]">
+            <button onClick={() => setIsAdmin(false)} className="p-2 text-[#716D69] hover:text-[#171717]">
               <LogOut size={18} />
             </button>
           ) : (
-            <button onClick={() => setShowLogin(true)} className="text-[11px] text-[#D4A843] font-medium">Admin</button>
+            <button onClick={() => setShowLogin(true)} className="text-[11px] text-[#B89A78] font-medium">Admin</button>
           )}
         </div>
       </header>
 
       {/* Hero */}
       <section className="px-5 py-8 text-center">
-        <h1 className="text-[28px] font-semibold text-[#D4A843]" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h1 className="text-[28px] font-semibold text-[#B89A78]" style={{ fontFamily: "'Playfair Display', serif" }}>
           YESOLA com propósito ♥
         </h1>
-        <p className="text-[14px] text-[#D4A843]/80 italic mt-2">porque Jesus é amor.</p>
-        <p className="text-[13px] text-[#6B7280] mt-4 leading-relaxed max-w-md mx-auto">
+        <p className="text-[14px] text-[#B89A78]/80 italic mt-2">porque Jesus é amor.</p>
+        <p className="text-[13px] text-[#716D69] mt-4 leading-relaxed max-w-md mx-auto">
           Ao escolher a YESOLA, ajudas a transformar vidas e fazer alguém feliz.
         </p>
       </section>
@@ -161,7 +161,7 @@ export default function Proposito() {
       {/* Admin Add Button */}
       {isAdmin && (
         <section className="px-5 py-2">
-          <button onClick={() => setShowAddPost(true)} className="w-full flex items-center justify-center gap-2 bg-[#D4A843] text-white text-[13px] font-medium px-4 py-3 rounded-xl hover:bg-[#C49A38] transition-colors">
+          <button onClick={() => setShowAddPost(true)} className="w-full flex items-center justify-center gap-2 bg-[#B89A78] text-white text-[13px] font-medium px-4 py-3 rounded-xl hover:bg-[#9A7D60] transition-colors">
             <Plus size={16} /> Adicionar acção solidária
           </button>
         </section>
@@ -171,7 +171,7 @@ export default function Proposito() {
       <section className="px-5 py-4">
         <div className="grid grid-cols-2 gap-3">
           {photos.map((photo) => (
-            <div key={photo.id} className="rounded-2xl overflow-hidden bg-white border border-[#EDE8DE] relative">
+            <div key={photo.id} className="rounded-2xl overflow-hidden bg-white border border-[#E8DDD0] relative">
               <div className="aspect-[4/3] overflow-hidden">
                 <img src={photo.image} alt={photo.caption} className="w-full h-full object-cover" />
               </div>
@@ -182,20 +182,20 @@ export default function Proposito() {
                       type="text"
                       value={editCaption}
                       onChange={(e) => setEditCaption(e.target.value)}
-                      className="flex-1 px-2 py-1 rounded-lg border border-[#EDE8DE] text-[11px] focus:outline-none focus:border-[#D4A843]"
+                      className="flex-1 px-2 py-1 rounded-lg border border-[#E8DDD0] text-[11px] focus:outline-none focus:border-[#B89A78]"
                     />
                     <button onClick={() => handleSaveEdit(photo.id)} className="p-1 bg-green-500 text-white rounded-lg hover:bg-green-600">
                       <Check size={12} />
                     </button>
                   </div>
                 ) : (
-                  <p className="text-[11px] text-[#6B7280] leading-relaxed">{photo.caption}</p>
+                  <p className="text-[11px] text-[#716D69] leading-relaxed">{photo.caption}</p>
                 )}
               </div>
               {isAdmin && (
                 <div className="absolute top-2 right-2 flex gap-1">
                   {editingId !== photo.id && (
-                    <button onClick={() => handleStartEdit(photo.id, photo.caption)} className="bg-[#D4A843] text-white p-1.5 rounded-full hover:bg-[#C49A38] transition-colors">
+                    <button onClick={() => handleStartEdit(photo.id, photo.caption)} className="bg-[#B89A78] text-white p-1.5 rounded-full hover:bg-[#9A7D60] transition-colors">
                       <Pencil size={12} />
                     </button>
                   )}
@@ -218,12 +218,12 @@ export default function Proposito() {
 
       {/* Message */}
       <section className="px-5 py-4 text-center">
-        <div className="bg-[#FBF7ED] rounded-2xl p-6 border border-[#EDE8DE]">
-          <Heart size={24} className="text-[#D4A843] mx-auto mb-3" />
-          <p className="text-[14px] text-[#2D2C2B] font-medium leading-relaxed">
+        <div className="bg-[#FFFFFF] rounded-2xl p-6 border border-[#E8DDD0]">
+          <Heart size={24} className="text-[#B89A78] mx-auto mb-3" />
+          <p className="text-[14px] text-[#171717] font-medium leading-relaxed">
             Cada compra é um acto de amor.
           </p>
-          <p className="text-[12px] text-[#6B7280] mt-2">
+          <p className="text-[12px] text-[#716D69] mt-2">
             Obrigado por fazer parte desta história.
           </p>
         </div>
@@ -238,22 +238,22 @@ export default function Proposito() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => setShowLogin(false)}>
           <div className="bg-white rounded-2xl w-full max-w-sm p-6 mx-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-[#2D2C2B]">Login Admin</h3>
+              <h3 className="text-lg font-semibold text-[#171717]">Login Admin</h3>
               <button onClick={() => setShowLogin(false)} className="p-2 hover:bg-gray-100 rounded-full">
                 <X size={20} />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-[12px] text-[#6B7280] font-medium">Telefone</label>
-                <input type="text" value={loginPhone} onChange={(e) => setLoginPhone(e.target.value)} placeholder="999999999" className="w-full px-4 py-3 rounded-xl border border-[#EDE8DE] text-sm focus:outline-none focus:border-[#D4A843]" />
+                <label className="text-[12px] text-[#716D69] font-medium">Telefone</label>
+                <input type="text" value={loginPhone} onChange={(e) => setLoginPhone(e.target.value)} placeholder="999999999" className="w-full px-4 py-3 rounded-xl border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#B89A78]" />
               </div>
               <div>
-                <label className="text-[12px] text-[#6B7280] font-medium">Senha</label>
-                <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} placeholder="••••••••••" className="w-full px-4 py-3 rounded-xl border border-[#EDE8DE] text-sm focus:outline-none focus:border-[#D4A843]" />
+                <label className="text-[12px] text-[#716D69] font-medium">Senha</label>
+                <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} placeholder="••••••••••" className="w-full px-4 py-3 rounded-xl border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#B89A78]" />
               </div>
               {loginError && <p className="text-[12px] text-red-500">{loginError}</p>}
-              <button onClick={handleLogin} className="w-full bg-[#D4A843] text-white py-3 rounded-xl font-medium hover:bg-[#C49A38] transition-colors">
+              <button onClick={handleLogin} className="w-full bg-[#B89A78] text-white py-3 rounded-xl font-medium hover:bg-[#9A7D60] transition-colors">
                 Entrar
               </button>
             </div>
@@ -266,25 +266,25 @@ export default function Proposito() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowAddPost(false)}>
           <div className="bg-white rounded-t-3xl w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-[#2D2C2B]">Nova acção solidária</h3>
+              <h3 className="text-lg font-semibold text-[#171717]">Nova acção solidária</h3>
               <button onClick={() => setShowAddPost(false)} className="p-2 hover:bg-gray-100 rounded-full">
                 <X size={20} />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-[12px] text-[#6B7280] font-medium">Enviar foto</label>
+                <label className="text-[12px] text-[#716D69] font-medium">Enviar foto</label>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                <button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed border-[#D4A843] text-[#D4A843] text-[13px] font-medium hover:bg-[#FBF7ED] transition-colors disabled:opacity-50">
+                <button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed border-[#B89A78] text-[#B89A78] text-[13px] font-medium hover:bg-[#FFFFFF] transition-colors disabled:opacity-50">
                   <Upload size={16} /> {uploading ? "A enviar para Telegram..." : "Escolher foto"}
                 </button>
                 {newImage && <p className="text-[11px] text-green-600 mt-2">✓ Foto enviada com sucesso</p>}
               </div>
               <div>
-                <label className="text-[12px] text-[#6B7280] font-medium">Legenda</label>
-                <textarea value={newCaption} onChange={(e) => setNewCaption(e.target.value)} placeholder="Descreva a acção solidária..." rows={3} className="w-full px-4 py-3 rounded-xl border border-[#EDE8DE] text-sm focus:outline-none focus:border-[#D4A843] resize-none" />
+                <label className="text-[12px] text-[#716D69] font-medium">Legenda</label>
+                <textarea value={newCaption} onChange={(e) => setNewCaption(e.target.value)} placeholder="Descreva a acção solidária..." rows={3} className="w-full px-4 py-3 rounded-xl border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#B89A78] resize-none" />
               </div>
-              <button onClick={handleAddPost} disabled={!newImage || !newCaption} className="w-full bg-[#D4A843] text-white py-3 rounded-xl font-medium hover:bg-[#C49A38] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <button onClick={handleAddPost} disabled={!newImage || !newCaption} className="w-full bg-[#B89A78] text-white py-3 rounded-xl font-medium hover:bg-[#9A7D60] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                 Publicar
               </button>
             </div>
