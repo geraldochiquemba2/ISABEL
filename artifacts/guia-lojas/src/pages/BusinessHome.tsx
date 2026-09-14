@@ -58,7 +58,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#FAF8F3] text-[#2D2C2B] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-[100dvh] bg-[#FAF8F3] text-[#171717] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
@@ -94,7 +94,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
           {CATEGORIES.map((cat) => (
             <button key={cat.id} onClick={() => navigate(`/explorar-business?categoria=${cat.id}`)} className="cat-item">
               <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
-              <span className="text-[10px] font-medium text-[#2D2C2B] text-center leading-tight">{cat.name}</span>
+              <span className="text-[10px] font-medium text-[#171717] text-center leading-tight">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -138,7 +138,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
           <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-[#2D2C2B]">Escolha a sua localização</h3>
+              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localização</h3>
               <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
                 <X size={20} />
               </button>
@@ -159,7 +159,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
                       className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
                         selectedProvince === province.name
                           ? "bg-[#C69A3A] text-white font-medium"
-                          : "hover:bg-[#E8F2EE] text-[#2D2C2B]"
+                          : "hover:bg-[#E8F2EE] text-[#171717]"
                       }`}
                     >
                       {province.name}
@@ -180,7 +180,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
                         className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
                           selectedMunicipality === municipality
                             ? "bg-[#C69A3A] text-white font-medium"
-                            : "hover:bg-[#E8F2EE] text-[#2D2C2B]"
+                            : "hover:bg-[#E8F2EE] text-[#171717]"
                         }`}
                       >
                         {municipality}
@@ -221,7 +221,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
       <section className="px-5 py-3">
         <div className="flex items-center justify-center gap-2 bg-[#E8F2EE] rounded-2xl px-4 py-3 border border-[#E8F2EE]">
           <Heart size={16} className="text-[#C69A3A]" />
-          <span className="text-[13px] font-medium text-[#2D2C2B]">Mais de <span className="text-[#C69A3A] font-bold">+2.000</span> profissionais prontos para ajudar o seu negócio a crescer.</span>
+          <span className="text-[13px] font-medium text-[#171717]">Mais de <span className="text-[#C69A3A] font-bold">+2.000</span> profissionais prontos para ajudar o seu negócio a crescer.</span>
         </div>
       </section>
 
@@ -231,7 +231,7 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
           {TRUST_BADGES.map((badge, i) => (
             <div key={i} className="trust-item">
               <span className="text-[#C69A3A]">{badge.icon}</span>
-              <span className="text-[11px] font-medium text-[#2D2C2B]">{badge.label}</span>
+              <span className="text-[11px] font-medium text-[#171717]">{badge.label}</span>
             </div>
           ))}
         </div>
