@@ -139,6 +139,12 @@ export async function initDB() {
       `UPDATE stores SET store_type = 'weddings' WHERE name ILIKE '%weddings%' OR category ILIKE '%weddings%'`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS schedule JSONB DEFAULT NULL`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_activated_at TIMESTAMPTZ`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_expires_at TIMESTAMPTZ`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'INATIVO'`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS renewal_history JSONB DEFAULT '[]'::jsonb`,
+      `CREATE INDEX IF NOT EXISTS idx_users_subscription_status ON users(subscription_status)`,
+      `CREATE INDEX IF NOT EXISTS idx_users_subscription_expires ON users(subscription_expires_at)`,
       `CREATE TABLE IF NOT EXISTS weddings_page_content (
         id TEXT PRIMARY KEY DEFAULT 'main',
         content JSONB NOT NULL DEFAULT '{}',

@@ -163,6 +163,21 @@ authRouter.post("/login", async (req, res) => {
     if (user.status === "SUSPENSO") {
       return res.status(403).json({ error: "A sua conta foi suspensa. Contacte o administrador." });
     }
+
+    // Verificar se assinatura expirou (check em tempo real)
+    if (user.status === "APROVADO" && user.subscription_expires_at) {
+      const now = new Date();
+      const expiresAt = new Date(user.subscription_expires_at);
+      if (now > expiresAt) {
+        // Auto-suspender
+        await pool.query(
+          `UPDATE users SET status = 'SUSPENSO', status_reason = 'Assinatura vencida',
+           subscription_status = 'VENCIDO' WHERE id = $1`,
+          [user.id]
+        );
+        return res.status(403).json({ error: "A sua assinatura expirou. Renove para continuar." });
+      }
+    }
     if (user.status === "RECUSADO") {
       return res.status(403).json({ error: "A sua conta foi recusada. Contacte o administrador." });
     }
@@ -180,6 +195,14 @@ authRouter.post("/login", async (req, res) => {
         status: user.status,
         statusReason: user.status_reason,
         mustChangePassword: user.password === "123456789",
+        subscription: {
+          status: user.subscription_status,
+          activatedAt: user.subscription_activated_at,
+          expiresAt: user.subscription_expires_at,
+          daysLeft: user.subscription_expires_at
+            ? Math.ceil((new Date(user.subscription_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+            : null,
+        },
       }
     });
   } catch (err) {

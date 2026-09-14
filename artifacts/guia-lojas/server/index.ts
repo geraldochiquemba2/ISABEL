@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { pool } from "./db";
 import { initDB } from "./schema";
 import { storesRouter } from "./routes/stores";
 import { productsRouter } from "./routes/products";
@@ -93,6 +94,35 @@ function startKeepAlive() {
   }
 }
 
+// Verificar assinaturas vencidas a cada 1 hora e suspender automaticamente
+function startSubscriptionCheck() {
+  async function checkExpired() {
+    try {
+      const now = new Date();
+      const result = await pool.query(
+        `UPDATE users SET status = 'SUSPENSO', status_reason = 'Assinatura vencida — renovação pendente',
+         subscription_status = 'VENCIDO'
+         WHERE status = 'APROVADO'
+         AND subscription_expires_at IS NOT NULL
+         AND subscription_expires_at < $1
+         AND phone != '999999999'
+         RETURNING id, name, phone`,
+        [now]
+      );
+      if (result.rowCount && result.rowCount > 0) {
+        console.log(`⚠️  ${result.rowCount} conta(s) suspensa(s) por assinatura vencida.`);
+      }
+    } catch (err: any) {
+      console.error("Erro ao verificar assinaturas vencidas:", err?.message);
+    }
+  }
+
+  // Verificar imediatamente ao iniciar
+  checkExpired();
+  // Depois a cada 1 hora
+  setInterval(checkExpired, 60 * 60 * 1000);
+}
+
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -118,6 +148,7 @@ async function start() {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
     startKeepAlive();
+    startSubscriptionCheck();
   });
 
   // Inicializa a BD em segundo plano com retries
