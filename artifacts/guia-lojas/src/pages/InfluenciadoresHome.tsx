@@ -1,8 +1,9 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import {
   Heart, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
@@ -33,6 +34,9 @@ export default function InfluenciadoresHome({ onBackToSelector }: { onBackToSele
   useThemeColor("#fce4ec");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showProvinceModal, setShowProvinceModal] = useState(false);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "influenciadores-criadores"],
@@ -43,6 +47,20 @@ export default function InfluenciadoresHome({ onBackToSelector }: { onBackToSele
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
   const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
   const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
+
+  const municipalities = selectedProvince
+    ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
+    : [];
+
+  const handleProvinceSelect = () => {
+    if (selectedProvince) {
+      const params = new URLSearchParams();
+      params.set("provincia", selectedProvince);
+      if (selectedMunicipality) params.set("municipio", selectedMunicipality);
+      navigate($route?+ params.toString());
+      setShowProvinceModal(false);
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] bg-[#fce4ec] text-[#3a1a2a] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -107,15 +125,76 @@ export default function InfluenciadoresHome({ onBackToSelector }: { onBackToSele
 
       {/* Province */}
       <section className="px-5 py-3">
-        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#f8bbd0]">
+        <button
+          onClick={() => setShowProvinceModal(true)}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#f48fb1] hover:border-[#C2185B] transition-colors"
+        >
           <div className="w-10 h-10 rounded-full bg-[#fce4ec] flex items-center justify-center"><MapPin size={18} className="text-[#C2185B]" /></div>
-          <div className="flex-1">
-            <p className="text-[14px] font-semibold text-[#C2185B]">Em todas as províncias de Angola</p>
-            <p className="text-[11px] text-[#6B7280]">Criadores de conteúdo perto de si, onde estiver.</p>
+          <div className="flex-1 text-left">
+            <p className="text-[14px] font-semibold text-[#C2185B]">
+              {selectedProvince ? selectedProvince + (selectedMunicipality ? " Â· " + selectedMunicipality : "") : "Em todas as provÃ­ncias de Angola"}
+            </p>
+            <p className="text-[11px] text-[#6B7280]">Encontre influenciadores e criadores de conteÃºdo perto de si.</p>
           </div>
           <ChevronRight size={18} className="text-[#C2185B]" />
-        </div>
+        </button>
       </section>
+      {/* Province Selection Modal */}
+      {showProvinceModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
+          <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localizaÃ§Ã£o</h3>
+              <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">ProvÃ­ncia</h4>
+                <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                  {ANGOLA_PROVINCES.map((province) => (
+                    <button
+                      key={province.id}
+                      onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
+                      className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        selectedProvince === province.name ? "bg-[#C2185B] text-white font-medium" : "hover:bg-[#fce4ec] text-[#171717]"
+                      }}
+                    >
+                      {province.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {selectedProvince && municipalities.length > 0 && (
+                <div className="flex-1">
+                  <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">MunicÃ­pio</h4>
+                  <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                    {municipalities.map((municipality) => (
+                      <button
+                        key={municipality}
+                        onClick={() => setSelectedMunicipality(municipality)}
+                        className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                          selectedMunicipality === municipality ? "bg-[#C2185B] text-white font-medium" : "hover:bg-[#fce4ec] text-[#171717]"
+                        }}
+                      >
+                        {municipality}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {selectedProvince && (
+              <button
+                onClick={handleProvinceSelect}
+                className="w-full mt-6 bg-[#C2185B] text-white py-3 rounded-xl font-medium transition-colors"
+              >
+                {selectedMunicipality ? Explorar em {selectedMunicipality} : Explorar em {selectedProvince}}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
 
       {/* Featured Stores */}
       {(featured.length > 0 || fallbackFeatured.length > 0) && (
@@ -188,3 +267,5 @@ export default function InfluenciadoresHome({ onBackToSelector }: { onBackToSele
     </div>
   );
 }
+
+

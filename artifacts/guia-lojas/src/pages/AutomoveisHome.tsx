@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import {
   Heart, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
@@ -33,6 +34,9 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
   useThemeColor("#0f1d32");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showProvinceModal, setShowProvinceModal] = useState(false);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "automoveis"],
@@ -43,6 +47,20 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
   const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
   const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
+
+  const municipalities = selectedProvince
+    ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
+    : [];
+
+  const handleProvinceSelect = () => {
+    if (selectedProvince) {
+      const params = new URLSearchParams();
+      params.set("provincia", selectedProvince);
+      if (selectedMunicipality) params.set("municipio", selectedMunicipality);
+      navigate($route?+ params.toString());
+      setShowProvinceModal(false);
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] bg-[#f4f6f9] text-[#1a2744] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -109,18 +127,76 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
 
       {/* Province Banner */}
       <section className="px-5 py-3">
-        <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "120px" }}>
-          <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=300&fit=crop&auto=format&q=80" alt="Angola" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f1d32]/90 via-[#0f1d32]/60 to-transparent" />
-          <div className="relative z-10 p-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#c9913a]/20 flex items-center justify-center"><MapPin size={20} className="text-[#c9913a]" /></div>
-            <div>
-              <p className="text-[14px] font-semibold text-[#c9913a]">Em todas as províncias de Angola</p>
-              <p className="text-[11px] text-white/70">Soluções de mobilidade perto de si, onde estiver.</p>
+        <button
+          onClick={() => setShowProvinceModal(true)}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#ffe082] hover:border-[#c9913a] transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#fff8e1] flex items-center justify-center"><MapPin size={18} className="text-[#c9913a]" /></div>
+          <div className="flex-1 text-left">
+            <p className="text-[14px] font-semibold text-[#c9913a]">
+              {selectedProvince ? selectedProvince + (selectedMunicipality ? " \u00b7 " + selectedMunicipality : "") : "Em todas as prov\u00edncias de Angola"}
+            </p>
+            <p className="text-[11px] text-[#6B7280]">Solu\u00e7\u00f5es de mobilidade perto de si, onde estiver.</p>
+          </div>
+          <ChevronRight size={18} className="text-[#c9913a]" />
+        </button>
+      </section>
+
+      {/* Province Selection Modal */}
+      {showProvinceModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
+          <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localiza\u00e7\u00e3o</h3>
+              <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
             </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Prov\u00edncia</h4>
+                <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                  {ANGOLA_PROVINCES.map((province) => (
+                    <button
+                      key={province.id}
+                      onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                        selectedProvince === province.name ? "bg-[#c9913a] text-white font-medium" : "hover:bg-[#fff8e1] text-[#171717]"
+                      }`}
+                    >
+                      {province.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {selectedProvince && municipalities.length > 0 && (
+                <div className="flex-1">
+                  <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Munic\u00edpio</h4>
+                  <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                    {municipalities.map((municipality) => (
+                      <button
+                        key={municipality}
+                        onClick={() => setSelectedMunicipality(municipality)}
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                          selectedMunicipality === municipality ? "bg-[#c9913a] text-white font-medium" : "hover:bg-[#fff8e1] text-[#171717]"
+                        }`}
+                      >
+                        {municipality}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {selectedProvince && (
+              <button
+                onClick={handleProvinceSelect}
+                className="w-full mt-6 bg-[#c9913a] text-white py-3 rounded-xl font-medium hover:bg-[#a57830] transition-colors"
+              >
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
+              </button>
+            )}
           </div>
         </div>
-      </section>
+      )}
 
       {/* Featured Stores */}
       {(featured.length > 0 || fallbackFeatured.length > 0) && (
@@ -193,3 +269,5 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
     </div>
   );
 }
+
+
