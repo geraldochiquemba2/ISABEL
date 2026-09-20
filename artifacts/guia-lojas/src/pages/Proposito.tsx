@@ -152,7 +152,7 @@ export default function Proposito() {
         <h1 className="text-[28px] font-semibold text-[#B89A78]" style={{ fontFamily: "'Playfair Display', serif" }}>
           YESOLA com propósito ♥
         </h1>
-        <p className="text-[14px] text-[#B89A78]/80 italic mt-2">porque Jesus é amor.</p>
+        <p className="text-[14px] text-[#B89A78]/80 italic mt-2">porque Jesus te ama.</p>
         <p className="text-[13px] text-[#716D69] mt-4 leading-relaxed max-w-md mx-auto">
           Ao escolher a YESOLA, ajudas a transformar vidas e fazer alguém feliz.
         </p>

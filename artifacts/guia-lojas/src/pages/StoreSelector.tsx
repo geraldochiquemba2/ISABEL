@@ -392,7 +392,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 const PURPOSE_SLIDES = [
   {
     title: "YESOLA com propósito",
-    subtitle: "porque Jesus é amor.",
+    subtitle: "porque Jesus te ama.",
     description: "Ao escolher a YESOLA, ajudas a transformar vidas e fazer alguém feliz.",
     image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop&auto=format&q=80",
   },
