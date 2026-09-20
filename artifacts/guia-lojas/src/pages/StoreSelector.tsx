@@ -437,15 +437,14 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-md border-b border-[#E8CC91]/60">
-        <div className="flex items-center justify-center px-5 py-4">
-          <div className="flex flex-col items-center">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#111111", letterSpacing: "-.02em" }}>
-              YESOLA
-            </span>
-            <svg width="30" height="8" viewBox="0 0 30 8" fill="none" className="mt-0.5">
-              <path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#A96F12" strokeWidth="1.5" fill="none" />
-            </svg>
-          </div>
+        <div className="flex items-center justify-center px-5 py-2.5">
+          <a href="/" className="flex items-center justify-center">
+            <img
+              src="/logo-yesola-star-gold.png"
+              alt="YESOLA"
+              className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_8px_rgba(201,148,50,0.2)]"
+            />
+          </a>
         </div>
       </header>
 
