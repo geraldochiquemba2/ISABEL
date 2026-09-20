@@ -209,12 +209,6 @@ export default function Proposito() {
         </div>
       </section>
 
-      {/* Help Button */}
-      <section className="px-5 py-4">
-        <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20ajudar%20a%20YESOLA%20com%20propósito." target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#25D366] text-white text-[13px] font-medium px-4 py-3 rounded-xl hover:bg-[#128C7E] transition-colors w-full">
-          <Heart size={16} /> Ajudar a YESOLA
-        </a>
-      </section>
 
       {/* Message */}
       <section className="px-5 py-4 text-center">
