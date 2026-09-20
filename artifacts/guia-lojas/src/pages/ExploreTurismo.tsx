@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Plane, Map, Compass, TreePine, Gamepad2, Landmark, Users } from "lucide-react";
+import { ArrowLeft, Plane, Map, Compass, TreePine, Gamepad2, Landmark, Users }  } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {
@@ -104,6 +104,18 @@ export default function ExploreTurismo() {
     return params.get("municipio") || null;
   });
 
+  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null;
+
+  const clearAllFilters = () => {
+    setActiveFilter(null);
+    
+    setActiveProvince(null);
+    setActiveMunicipality(null);
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.toString());
+  };
+
   const angolaProvinces: Record<string, string[]> = {
     "Luanda": ["Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Maianga", "Rangel", "Samba", "Talatona", "Viana"],
     "Benguela": ["Benguela", "Caimbambo", "Catumbela", "Chiley", "Baía Farta", "Lobito"],
@@ -187,6 +199,14 @@ export default function ExploreTurismo() {
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] bg-red-100 text-red-700 hover:bg-red-200 transition-all font-semibold border border-red-200"
+            >
+              <X size={14} /> Limpar Filtros
+            </button>
+          )}
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
               activeFilter === null ? "bg-[#00796B] text-white" : "bg-[#E0F2F1] text-[#68727c] hover:bg-[#B2DFDB]"

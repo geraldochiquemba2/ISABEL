@@ -137,6 +137,18 @@ export default function ExploreServices() {
     return params.get("municipio") || null;
   });
 
+  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null || activeSubcategory !== null;
+
+  const clearAllFilters = () => {
+    setActiveFilter(null);
+    setActiveSubcategory(null);
+    setActiveProvince(null);
+    setActiveMunicipality(null);
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.toString());
+  };
+
   const localUserStr = typeof window !== "undefined" ? localStorage.getItem("guialocal_user") : null;
   const localUser = localUserStr ? JSON.parse(localUserStr) : null;
   const currentStoreId = localUser?.storeId || localUser?.store_id;
@@ -233,6 +245,14 @@ export default function ExploreServices() {
 
         {/* Filtros */}
         <div className="flex flex-wrap gap-3 mb-12">
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] bg-red-100 text-red-700 hover:bg-red-200 transition-all font-semibold border border-red-200"
+            >
+              <X size={14} /> Limpar Filtros
+            </button>
+          )}
           <button
             onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${

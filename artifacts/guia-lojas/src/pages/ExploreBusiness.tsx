@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Compass, CircleDollarSign, Target, Scale, UsersRound, Landmark } from "lucide-react";
+import { ArrowLeft, Compass, CircleDollarSign, Target, Scale, UsersRound, Landmark }  } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {
@@ -103,6 +103,18 @@ export default function ExploreBusiness() {
     return params.get("municipio") || null;
   });
 
+  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null;
+
+  const clearAllFilters = () => {
+    setActiveFilter(null);
+    
+    setActiveProvince(null);
+    setActiveMunicipality(null);
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.toString());
+  };
+
   const angolaProvinces: Record<string, string[]> = {
     "Bengo": ["Ambriz", "Bula", "Dembos", "N'dalatando", "São José das Matas"],
     "Benguela": ["Benguela", "Caimbambo", "Catumbela", "Chiley", "Baía Farta", "Lobito"],
@@ -186,6 +198,14 @@ export default function ExploreBusiness() {
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] bg-red-100 text-red-700 hover:bg-red-200 transition-all font-semibold border border-red-200"
+            >
+              <X size={14} /> Limpar Filtros
+            </button>
+          )}
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
               activeFilter === null ? "bg-[#075342] text-white" : "bg-[#E8F2EE] text-[#6F7780] hover:bg-[#E8F2EE]"
