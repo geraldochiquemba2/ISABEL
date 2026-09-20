@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Sprout, Egg, Tractor, Leaf, Scissors, Fish, Wheat, Handshake }  } from "lucide-react";
+import { ArrowLeft, Sprout, Egg, Tractor, Leaf, Scissors, Fish, Wheat, Handshake, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

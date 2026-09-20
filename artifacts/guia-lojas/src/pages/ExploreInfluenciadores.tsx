@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Users, Video, Mic, Camera, Tv, Music, Globe, Smile, Heart }  } from "lucide-react";
+import { ArrowLeft, Users, Video, Mic, Camera, Tv, Music, Globe, Smile, Heart, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

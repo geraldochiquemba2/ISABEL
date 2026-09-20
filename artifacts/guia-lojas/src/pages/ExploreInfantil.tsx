@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Baby, Blocks, Heart, MapPin }  } from "lucide-react";
+import { ArrowLeft, Baby, Blocks, Heart, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

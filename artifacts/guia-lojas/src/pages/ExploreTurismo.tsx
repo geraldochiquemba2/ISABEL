@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Plane, Map, Compass, TreePine, Gamepad2, Landmark, Users }  } from "lucide-react";
+import { ArrowLeft, Plane, Map, Compass, TreePine, Gamepad2, Landmark, Users, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

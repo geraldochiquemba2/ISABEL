@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Dumbbell, UserCheck, Trophy, Volleyball, Waves, Swords, Shirt, Music }  } from "lucide-react";
+import { ArrowLeft, Dumbbell, UserCheck, Trophy, Volleyball, Waves, Swords, Shirt, Music, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

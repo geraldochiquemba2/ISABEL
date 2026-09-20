@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Scissors, Sparkles, Palette, Heart, Flower2 }  } from "lucide-react";
+import { ArrowLeft, Scissors, Sparkles, Palette, Heart, Flower2, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Compass, CircleDollarSign, Target, Scale, UsersRound, Landmark }  } from "lucide-react";
+import { ArrowLeft, Compass, CircleDollarSign, Target, Scale, UsersRound, Landmark, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

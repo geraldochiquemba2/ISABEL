@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Smartphone, Monitor, Headphones, Refrigerator, Wrench, Wifi, Code, Shield, MapPin } from "lucide-react";
+import { ArrowLeft, Smartphone, Monitor, Headphones, Refrigerator, Wrench, Wifi, Code, Shield, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

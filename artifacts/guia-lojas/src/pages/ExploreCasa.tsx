@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Home, Wrench, PaintBucket, TreePine, Truck, ShieldCheck, Zap, Hammer, Lock, ChevronRight }  } from "lucide-react";
+import { ArrowLeft, Home, Wrench, PaintBucket, TreePine, Truck, ShieldCheck, Zap, Hammer, Lock, ChevronRight, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

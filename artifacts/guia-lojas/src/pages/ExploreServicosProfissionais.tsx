@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, FileText, Lightbulb, Keyboard, Building2, Languages, Palette, Crown }  } from "lucide-react";
+import { ArrowLeft, FileText, Lightbulb, Keyboard, Building2, Languages, Palette, Crown, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

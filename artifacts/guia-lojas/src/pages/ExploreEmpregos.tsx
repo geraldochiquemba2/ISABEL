@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Briefcase, GraduationCap, Star, Clock, PenTool, Users }  } from "lucide-react";
+import { ArrowLeft, Briefcase, GraduationCap, Star, Clock, PenTool, Users, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, UtensilsCrossed, Cake, Zap, ChefHat, ShoppingCart, Beef, Croissant, Droplets, Package, Truck }  } from "lucide-react";
+import { ArrowLeft, UtensilsCrossed, Cake, Zap, ChefHat, ShoppingCart, Beef, Croissant, Droplets, Package, Truck, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {
