@@ -192,6 +192,8 @@ storesRouter.get("/:id", async (req, res) => {
       municipality: store.municipality,
       carrinhoAccess: store.carrinho_access,
       schedule: store.schedule || null,
+      latitude: store.latitude ? parseFloat(String(store.latitude)) || null : null,
+      longitude: store.longitude ? parseFloat(String(store.longitude)) || null : null,
       products: productsRes.rows.map((p) => ({
         id: p.id,
         name: p.name,
@@ -233,17 +235,33 @@ storesRouter.post("/", async (req, res) => {
 storesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, isOpen, schedule } = req.body;
+    const { name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, isOpen, schedule, latitude, longitude } = req.body;
     await pool.query(
       `UPDATE stores SET name=$2, category=$3, address=$4, phone=$5, whatsapp=$6,
-       description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13, is_open=$14, schedule=$15
+       description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13, is_open=$14, schedule=$15, latitude=$16, longitude=$17
        WHERE id=$1`,
-      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, isOpen, schedule ? JSON.stringify(schedule) : null]
+      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, isOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
     );
     res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erro ao atualizar loja" });
+  }
+});
+
+// PATCH /api/stores/:id/location — atualizar apenas localização
+storesRouter.patch("/:id/location", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { latitude, longitude } = req.body;
+    await pool.query(
+      `UPDATE stores SET latitude=$2, longitude=$3 WHERE id=$1`,
+      [id, latitude || null, longitude || null]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao atualizar localização" });
   }
 });
 

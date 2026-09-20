@@ -1,0 +1,188 @@
+import { useState } from "react";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
+import {
+  Heart, ChevronRight, Star, MapPin, Menu, X,
+  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
+  Truck, Package, Car, Boxes, Warehouse, Forklift,
+} from "lucide-react";
+import StoreCategorySection from "@/components/StoreCategorySection";
+
+const CATEGORIES = [
+  { id: "transporte-interprovincial", name: "Transporte Interprovincial", icon: <Truck size={28} className="text-[#F57F17]" /> },
+  { id: "mudancas-transporte", name: "Mudanças & Transporte de Bens", icon: <Package size={28} className="text-[#F57F17]" /> },
+  { id: "transporte-passageiros", name: "Transporte de Passageiros", icon: <Car size={28} className="text-[#F57F17]" /> },
+  { id: "entregas-estafetas", name: "Entregas & Estafetas", icon: <MapPin size={28} className="text-[#F57F17]" /> },
+  { id: "cargas-mercadorias", name: "Cargas & Mercadorias", icon: <Boxes size={28} className="text-[#F57F17]" /> },
+  { id: "logistica-empresarial", name: "Logística Empresarial", icon: <Warehouse size={28} className="text-[#F57F17]" /> },
+  { id: "aluguer-viaturas", name: "Aluguer de Viaturas de Carga", icon: <Forklift size={28} className="text-[#F57F17]" /> },
+];
+
+const TRUST_BADGES = [
+  { icon: <ShieldCheck size={18} />, label: "Transportadoras verificadas" },
+  { icon: <BadgeCheck size={18} />, label: "Segurança garantida" },
+  { icon: <CreditCard size={18} />, label: "Preços transparentes" },
+  { icon: <HeadphonesIcon size={18} />, label: "Apoio ao cliente" },
+];
+
+export default function TransportesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  useThemeColor("#fffde7");
+  const [, navigate] = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const { data: stores = [], isLoading } = useQuery({
+    queryKey: ["stores", "transportes-logistica"],
+    queryFn: () => fetchStores({ storeType: "transportes-logistica" }),
+    staleTime: 60_000,
+  });
+
+  const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
+  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
+
+  return (
+    <div className="min-h-[100dvh] bg-[#fffde7] text-[#3a3a1a] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        .cat-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #fff9c4; min-width: 72px; cursor: pointer; transition: all 0.2s; }
+        .cat-item:hover { border-color: #F57F17; background: #fff8e1; }
+        .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .trust-scroll::-webkit-scrollbar { display: none; }
+        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #fff9c4; }
+      `}</style>
+
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[#fffde7]/95 backdrop-blur-md border-b border-[#fff9c4]/60">
+        <div className="flex items-center justify-between px-5 py-4">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
+          <div className="flex flex-col items-center">
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#3a3a1a" }}>YESOLA</span>
+            <span className="text-[9px] tracking-[0.25em] text-[#F57F17] font-semibold uppercase mt-0.5">Transportes & Logística</span>
+          </div>
+
+        </div>
+        {menuOpen && (
+          <div className="bg-[#fffde7] border-t border-[#fff9c4]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <button onClick={() => navigate("/login-transportes")} className="py-2 text-left">Entrar</button>
+            {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
+          </div>
+        )}
+      </header>
+
+      {/* Categories */}
+      <section className="px-5 pt-4 pb-2">
+        <div className="cat-scroll">
+          {CATEGORIES.map((cat) => (
+            <button key={cat.id} onClick={() => navigate(`/explorar-transportes?categoria=${cat.id}`)} className="cat-item">
+              <div className="w-10 h-10 flex items-center justify-center">{cat.icon}</div>
+              <span className="text-[10px] font-medium text-[#3a3a1a] text-center leading-tight">{cat.name}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Hero */}
+      <section className="px-5 py-4">
+        <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "240px" }}>
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format&q=80" alt="Transportes" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
+          <div className="relative z-10 p-6 max-w-[60%]">
+            <p className="text-[10px] tracking-[0.2em] text-[#F57F17] font-semibold uppercase">Mova-se com eficiência.</p>
+            <h1 className="text-[28px] leading-[1.1] font-semibold mt-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <span className="text-[#F57F17]">Transportes</span> & Logística.
+            </h1>
+            <p className="text-[12px] text-[#6B7280] mt-3 leading-relaxed">Encontre as melhores soluções de transporte e logística para si ou para o seu negócio.</p>
+            <button onClick={() => navigate("/explorar-transportes")} className="mt-4 flex items-center gap-2 bg-[#F57F17] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#E65100] transition-colors">
+              Explorar serviços <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Province */}
+      <section className="px-5 py-3">
+        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#fff9c4]">
+          <div className="w-10 h-10 rounded-full bg-[#fffde7] flex items-center justify-center"><MapPin size={18} className="text-[#F57F17]" /></div>
+          <div className="flex-1">
+            <p className="text-[14px] font-semibold text-[#F57F17]">Em todas as províncias de Angola</p>
+            <p className="text-[11px] text-[#6B7280]">Soluções de transporte perto de si, onde estiver.</p>
+          </div>
+          <ChevronRight size={18} className="text-[#F57F17]" />
+        </div>
+      </section>
+
+      {/* Featured Stores */}
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-transportes")} className="text-[12px] font-medium text-[#F57C00] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+              <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#FFE0B2] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=transportes`}>
+                <div className="h-28 overflow-hidden">
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1449965408869-ebd3fee465f6?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#171717] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#6B7280] mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#6B7280]" />
+                      <span className="text-[10px] text-[#6B7280]">{store.province}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <StoreCategorySection categories={CATEGORIES} stores={stores} storeType="transportes-logistica" exploreRoute="/explorar-transportes" />
+      )}
+
+      {/* Counter */}
+      <section className="px-5 py-3">
+        <div className="flex items-center justify-center gap-2 bg-[#fffde7] rounded-2xl px-4 py-3 border border-[#fff9c4]">
+          <Heart size={16} className="text-[#F57F17]" />
+          <span className="text-[13px] font-medium text-[#3a3a1a]">Mais de <span className="text-[#F57F17] font-bold">+4.500</span> entregas realizadas com sucesso.</span>
+        </div>
+      </section>
+
+      {/* Trust Badges */}
+      <section className="px-5 py-3">
+        <div className="trust-scroll">
+          {TRUST_BADGES.map((badge, i) => (
+            <div key={i} className="trust-item">
+              <span className="text-[#F57F17]">{badge.icon}</span>
+              <span className="text-[11px] font-medium text-[#3a3a1a]">{badge.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="text-center py-6 px-5">
+        <p className="text-[11px] text-[#9CA3AF]">YESOLA TRANSPORTES · MOVE-MOS O MUNDO.</p>
+      </div>
+    </div>
+  );
+}

@@ -46,7 +46,7 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
     hmr: {
-      overlay: false,
+      overlay: true,
     },
     fs: {
       strict: true,

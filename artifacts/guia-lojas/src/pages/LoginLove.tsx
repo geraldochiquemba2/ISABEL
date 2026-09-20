@@ -3,16 +3,20 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
+import MapPicker from "@/components/MapPicker";
 
 const LOVE_CATEGORIES = [
   "Actos de Amor, Homenagens e Experiências",
+  "Presentes, Flores & Surpresas",
+  "Apoio & Companhia a Idosos",
+  "Entregas & Gestos Especiais",
+  "Assistência a Pessoas & Famílias",
   "Fotografia e Videomakers",
-  "Saúde, Cuidado e Bem-Estar ao Domicílio",
   "Gestão do Lar e Refeições",
   "Burocracias",
 ];
@@ -54,6 +58,9 @@ export default function LoginLove() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showForgotPwd, setShowForgotPwd] = useState(false);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
   const [, setLoc] = useWouterLocation();
 
   const {
@@ -90,7 +97,7 @@ export default function LoginLove() {
   const onRegisterSubmit = async (values: RegisterValues) => {
     setError("");
     try {
-      const res = await registerLojista({ ...values, storeType: "love-services" });
+      const res = await registerLojista({ ...values, storeType: "love-services", latitude: latitude || undefined, longitude: longitude || undefined });
       localStorage.setItem("guialocal_user", JSON.stringify({ ...res.user, storeType: "love-services" }));
       setSubmitted(true);
       setTimeout(() => setLoc("/dashboard-love"), 1000);
@@ -239,6 +246,65 @@ export default function LoginLove() {
                 <input type="text" placeholder="Rua, Bairro, Casa nº" className={inputCls} {...regReg("address")} />
                 <FieldError msg={regErr.address?.message} />
               </div>
+
+              {/* Mapa de Localização */}
+              <div>
+                <label className={labelCls}>Localização no Mapa (Opcional)</label>
+                <button
+                  type="button"
+                  onClick={() => setShowMapPicker(true)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 border rounded-xl transition-colors ${
+                    latitude && longitude 
+                      ? "border-[#1565C0] bg-blue-50" 
+                      : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    latitude && longitude ? "bg-[#1565C0]" : "bg-gray-200"
+                  }`}>
+                    <MapPin size={16} className={latitude && longitude ? "text-white" : "text-gray-500"} />
+                  </div>
+                  <div className="text-left flex-1">
+                    {latitude && longitude ? (
+                      <>
+                        <p className="text-sm font-medium text-gray-900">Localização definida</p>
+                        <p className="text-xs text-gray-500 font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-medium text-gray-700">Marcar localização no mapa</p>
+                        <p className="text-xs text-gray-400">Toque para abrir o mapa e marcar o ponto exacto</p>
+                      </>
+                    )}
+                  </div>
+                  <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-gray-400"} />
+                </button>
+                {latitude && longitude && (
+                  <button
+                    type="button"
+                    onClick={() => { setLatitude(null); setLongitude(null); }}
+                    className="text-xs text-red-500 hover:text-red-600 mt-1 ml-1"
+                  >
+                    Remover localização
+                  </button>
+                )}
+              </div>
+
+              {/* Map Picker Modal */}
+              {showMapPicker && (
+                <MapPicker
+                  initialLatitude={latitude || undefined}
+                  initialLongitude={longitude || undefined}
+                  province={watch("province")}
+                  municipality={watch("municipality")}
+                  onLocationSelect={(lat, lng) => {
+                    setLatitude(lat);
+                    setLongitude(lng);
+                    setShowMapPicker(false);
+                  }}
+                  onClose={() => setShowMapPicker(false)}
+                />
+              )}
 
               <div>
                 <label className={labelCls}>Senha</label>

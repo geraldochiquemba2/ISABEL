@@ -14,10 +14,12 @@ import StoreCategorySection from "@/components/StoreCategorySection";
 const CATEGORIES = [
   { id: "idiomas", name: "Idiomas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M4 16h24" /><path d="M16 6c-4 4-4 16 0 20" /><path d="M16 6c4 4 4 16 0 20" /></svg> },
   { id: "tecnologia", name: "Tecnologia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><rect x="4" y="6" width="24" height="16" rx="2" /><path d="M10 28h12" /><path d="M16 22v6" /><path d="M12 28h8" /></svg> },
+  { id: "gestao-negocios", name: "Gestão & Negócios", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><rect x="4" y="8" width="24" height="18" rx="2" /><path d="M12 8V6c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" /><path d="M16 16v4M14 18h4" /></svg> },
   { id: "carreira", name: "Carreira", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><rect x="4" y="8" width="24" height="18" rx="2" /><path d="M12 8V6c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2" /><path d="M16 16v4M14 18h4" /></svg> },
+  { id: "cursos-tecnicos", name: "Técnicos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><path d="M14 4l-4 4 8 8-4 4 8 8 4-4" /><path d="M18 8l8 8" /><path d="M10 24l-4 4" /></svg> },
   { id: "academico", name: "Académico", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><path d="M16 4l12 8-12 8-12-8 12-8z" /><path d="M6 12v8c0 2 4.5 6 10 6s10-4 10-6v-8" /><path d="M28 12v10" /></svg> },
-  { id: "artes", name: "Artes & Hobbies", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><circle cx="10" cy="10" r="3" /><circle cx="20" cy="8" r="2" /><circle cx="24" cy="14" r="2.5" /><circle cx="8" cy="18" r="2.5" /><path d="M14 28c0-6 3-12 8-14" /></svg> },
-  { id: "saude", name: "Saúde & Fitness", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
+  { id: "artes-musica", name: "Artes & Música", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><circle cx="10" cy="10" r="3" /><circle cx="20" cy="8" r="2" /><circle cx="24" cy="14" r="2.5" /><circle cx="8" cy="18" r="2.5" /><path d="M14 28c0-6 3-12 8-14" /></svg> },
+  { id: "formacoes-saude", name: "Saúde", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#1E737B" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -40,6 +42,10 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
     queryFn: () => fetchStores({ storeType: "formacoes" }),
     staleTime: 60_000,
   });
+
+  const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
+  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
@@ -201,6 +207,37 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
             )}
           </div>
         </div>
+      )}
+
+      {/* Featured Stores */}
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#17191A]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-formacoes")} className="text-[12px] font-medium text-[#1E737B] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+              <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#EEF3F4] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=formacoes`}>
+                <div className="h-28 overflow-hidden">
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#17191A] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#68757C] mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#68757C]" />
+                      <span className="text-[10px] text-[#68757C]">{store.province}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Stores by Category */}

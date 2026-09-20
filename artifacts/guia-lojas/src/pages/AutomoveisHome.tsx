@@ -40,6 +40,10 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
     staleTime: 60_000,
   });
 
+  const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
+  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
+
   return (
     <div className="min-h-[100dvh] bg-[#f4f6f9] text-[#1a2744] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
@@ -117,6 +121,37 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
           </div>
         </div>
       </section>
+
+      {/* Featured Stores */}
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#1a2744]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-automoveis")} className="text-[12px] font-medium text-[#c9913a] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+              <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#e2e8f0] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=automoveis`}>
+                <div className="h-28 overflow-hidden">
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#1a2744] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-white/70 mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#6B7280]" />
+                      <span className="text-[10px] text-[#6B7280]">{store.province}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Stores by Category */}
       {isLoading ? (

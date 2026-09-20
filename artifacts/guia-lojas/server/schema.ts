@@ -33,6 +33,8 @@ export async function initDB() {
         province    TEXT,
         municipality TEXT,
         store_type  TEXT DEFAULT 'collection',
+        latitude    DECIMAL(10,8),
+        longitude   DECIMAL(11,8),
         created_at  TIMESTAMPTZ DEFAULT NOW()
       );
 
@@ -132,6 +134,8 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS store_type TEXT DEFAULT 'collection'`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS store_type TEXT DEFAULT 'collection'`,
       `UPDATE users SET store_type = 'collection' WHERE store_type IS NULL`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS latitude DECIMAL(10,8)`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS longitude DECIMAL(11,8)`,
       `UPDATE wedding_groups SET title = 'Pedidos de Casamento, Noivados & Momentos Românticos' WHERE id = 'wg-02'`,
       `UPDATE wedding_groups SET image = NULL WHERE id = 'wg-01'`,
       `DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_key') THEN ALTER TABLE users DROP CONSTRAINT users_phone_key; END IF; END $$`,
@@ -194,6 +198,33 @@ export async function initDB() {
       INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
       VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'casa')
       ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'tecnologia-electronicos')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'alimentacao-restauracao')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'turismo-lazer')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'desporto-fitness')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'empregos-oportunidades')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'agricultura-agronegocio')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'influenciadores-criadores')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'transportes-logistica')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'servicos-profissionais')
+      ON CONFLICT (phone, store_type) DO NOTHING;
     `);
 
     // Inserir Categorias predefinidas se a tabela estiver vazia
@@ -201,13 +232,23 @@ export async function initDB() {
     if (parseInt(catCheck.rows[0].count) === 0) {
       const defaultCategories = [
         { id: "moda", name: "Moda", icon: "shirt", coverImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop&q=80" },
-        { id: "eletronicos", name: "Eletrônicos", icon: "smartphone", coverImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop&q=80" },
-        { id: "alimentacao", name: "Alimentação", icon: "utensils", coverImage: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop&q=80" },
-        { id: "saude-beleza", name: "Saúde & Beleza", icon: "heart", coverImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop&q=80" },
-        { id: "servicos-residenciais", name: "Serviços Residenciais", icon: "home", coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop&q=80" },
-        { id: "automotivo", name: "Automotivo", icon: "car", coverImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop&q=80" },
-        { id: "educacao", name: "Educação", icon: "book-open", coverImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop&q=80" },
+        { id: "calcado", name: "Calçado", icon: "footprints", coverImage: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&h=400&fit=crop&q=80" },
+        { id: "bolsas-acessorios", name: "Bolsas & Acessórios", icon: "briefcase", coverImage: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=400&fit=crop&q=80" },
+        { id: "joias-bijutarias", name: "Jóias & Bijutarias", icon: "gem", coverImage: "https://images.unsplash.com/photo-1515562141589-67f0d569b6f5?w=600&h=400&fit=crop&q=80" },
+        { id: "tecnologia-eletronicos", name: "Tecnologia & Electrónicos", icon: "smartphone", coverImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&h=400&fit=crop&q=80" },
+        { id: "alimentacao-restauracao", name: "Alimentação & Restauração", icon: "utensils", coverImage: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop&q=80" },
+        { id: "beleza-bem-estar", name: "Beleza & Bem-Estar", icon: "heart", coverImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop&q=80" },
+        { id: "casa-servicos", name: "Casa & Serviços", icon: "home", coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop&q=80" },
+        { id: "automotivo", name: "Automóveis & Mobilidade", icon: "car", coverImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop&q=80" },
+        { id: "educacao", name: "Educação & Formação", icon: "book-open", coverImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop&q=80" },
         { id: "pets", name: "Pets", icon: "dog", coverImage: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=600&h=400&fit=crop&q=80" },
+        { id: "turismo-lazer", name: "Turismo & Lazer", icon: "plane", coverImage: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&h=400&fit=crop&q=80" },
+        { id: "desporto-fitness", name: "Desporto & Fitness", icon: "dumbbell", coverImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop&q=80" },
+        { id: "empregos-oportunidades", name: "Empregos & Oportunidades", icon: "briefcase", coverImage: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=400&fit=crop&q=80" },
+        { id: "agricultura-agronegocio", name: "Agricultura & Agro-Negócio", icon: "sprout", coverImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop&q=80" },
+        { id: "influenciadores-criadores", name: "Influenciadores & Criadores", icon: "users", coverImage: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&h=400&fit=crop&q=80" },
+        { id: "transportes-logistica", name: "Transportes & Logística", icon: "truck", coverImage: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=400&fit=crop&q=80" },
+        { id: "servicos-profissionais", name: "Serviços Profissionais", icon: "palette", coverImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop&q=80" },
       ];
       for (const cat of defaultCategories) {
         await client.query(
@@ -219,18 +260,25 @@ export async function initDB() {
 
     // Normalizar categorias antigas e erradas
     const categoryNormalizations = [
-      ['automotivo', 'Automotivo'],
-      ['motores', 'Automotivo'],
-      ['auto motores', 'Automotivo'],
-      ['auto-motores', 'Automotivo'],
-      ['eletronicos', 'Eletrônicos'],
-      ['saude', 'Saúde & Beleza'],
-      ['saúde', 'Saúde & Beleza'],
-      ['saude-beleza', 'Saúde & Beleza'],
-      ['servicos', 'Serviços Residenciais'],
-      ['serviços', 'Serviços Residenciais'],
-      ['servicos-residenciais', 'Serviços Residenciais'],
-      ['beleza', 'Saúde & Beleza'],
+      ['automotivo', 'Automóveis & Mobilidade'],
+      ['motores', 'Automóveis & Mobilidade'],
+      ['auto motores', 'Automóveis & Mobilidade'],
+      ['auto-motores', 'Automóveis & Mobilidade'],
+      ['eletronicos', 'Tecnologia & Electrónicos'],
+      ['eletrônicos', 'Tecnologia & Electrónicos'],
+      ['saude', 'Beleza & Bem-Estar'],
+      ['saúde', 'Beleza & Bem-Estar'],
+      ['saude-beleza', 'Beleza & Bem-Estar'],
+      ['beleza', 'Beleza & Bem-Estar'],
+      ['saúde & beleza', 'Beleza & Bem-Estar'],
+      ['perucas', 'Beleza & Bem-Estar'],
+      ['servicos', 'Casa & Serviços'],
+      ['serviços', 'Casa & Serviços'],
+      ['servicos-residenciais', 'Casa & Serviços'],
+      ['casa & decoração', 'Casa & Serviços'],
+      ['casa-decoracao', 'Casa & Serviços'],
+      ['alimentação', 'Alimentação & Restauração'],
+      ['alimentacao', 'Alimentação & Restauração'],
     ];
     for (const [oldCat, newCat] of categoryNormalizations) {
       await client.query(

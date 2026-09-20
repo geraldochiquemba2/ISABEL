@@ -14,6 +14,8 @@ const CATEGORIES = [
   { id: "medicos", name: "Médicos Particulares", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M16 14v4M14 16h4" /></svg> },
   { id: "dentaria", name: "Medicina Dentária", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><path d="M10 8c-2 0-4 2-4 4 0 4 2 6 4 10 1 2 2 4 6 4s5-2 6-4c2-4 4-6 4-10 0-2-2-4-4-4-2 0-3 1-4 3-1-2-2-3-4-3-2 0-4 2-4 4 0 4 2 6 4 10" /></svg> },
   { id: "saude-mental", name: "Saúde Mental & Psicologia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><circle cx="16" cy="12" r="8" /><path d="M12 28c0-4 2-6 4-8 2 2 4 4 4 8" /><path d="M13 11c0-1.5 1.5-3 3-3s3 1.5 3 3" /></svg> },
+  { id: "farmacias", name: "Farmácias", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><rect x="8" y="4" width="16" height="24" rx="2" /><path d="M16 10v12M10 16h12" /></svg> },
+  { id: "opticas", name: "Ópticas & Saúde Visual", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><circle cx="10" cy="16" r="5" /><circle cx="22" cy="16" r="5" /><path d="M15 16h2" /><path d="M5 16h0M27 16h0" /></svg> },
   { id: "pediatria", name: "Pediatria & Neonatologia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><circle cx="16" cy="14" r="8" /><path d="M12 28c0-4 2-6 4-8 2 2 4 4 4 8" /><circle cx="14" cy="12" r="1" fill="#2E7D32" /><circle cx="18" cy="12" r="1" fill="#2E7D32" /><path d="M14 16c1 1 3 1 4 0" strokeLinecap="round" /></svg> },
   { id: "terapias", name: "Terapias Alternativas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
   { id: "nutricao", name: "Nutrição & Dietética", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
@@ -29,7 +31,7 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio ao cliente" },
 ];
 
-export default function SaúdeHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
   useThemeColor("#f0f7f0");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,6 +41,10 @@ export default function SaúdeHome({ onBackToSelector }: { onBackToSelector?: ()
     queryFn: () => fetchStores({ storeType: "saude" }),
     staleTime: 60_000,
   });
+
+  const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
+  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   return (
     <div className="min-h-[100dvh] bg-[#f0f7f0] text-[#1a3a1a] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -112,6 +118,37 @@ export default function SaúdeHome({ onBackToSelector }: { onBackToSelector?: ()
           <ChevronRight size={18} className="text-[#2E7D32]" />
         </div>
       </section>
+
+      {/* Featured Stores */}
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+        <section className="px-5 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[17px] font-semibold text-[#1a3a1a]">Lojas em destaque</h2>
+            <button onClick={() => navigate("/explorar-saude")} className="text-[12px] font-medium text-[#2E7D32] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+              <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#c8e6c9] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=saude`}>
+                <div className="h-28 overflow-hidden">
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <h4 className="text-[13px] font-semibold text-[#1a3a1a] truncate">{store.name}</h4>
+                  <p className="text-[10px] text-[#6B7280] mt-0.5">{store.category}</p>
+                  {store.province && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin size={10} className="text-[#6B7280]" />
+                      <span className="text-[10px] text-[#6B7280]">{store.province}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Stores by Category */}
       {isLoading ? (

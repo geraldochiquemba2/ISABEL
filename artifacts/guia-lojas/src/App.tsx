@@ -10,6 +10,7 @@ import StoreProfile from "@/pages/StoreProfile";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import DescobrirEstilo from "@/pages/DescobrirEstilo";
+import ConsultoresEstilo from "@/pages/ConsultoresEstilo";
 import VerCarrinhos from "@/pages/VerCarrinhos";
 import ElioraWeddings from "@/pages/ElioraWeddings";
 import ExploreServices from "@/pages/ExploreServices";
@@ -44,7 +45,7 @@ import AutomoveisHome from "@/pages/AutomoveisHome";
 import ExploreAutomoveis from "@/pages/ExploreAutomoveis";
 import LoginAutomoveis from "@/pages/LoginAutomoveis";
 import DashboardAutomoveis from "@/pages/DashboardAutomoveis";
-import SaúdeHome from "@/pages/SaudeHome";
+import SaudeHome from "@/pages/SaudeHome";
 import ExploreSaude from "@/pages/ExploreSaude";
 import LoginSaude from "@/pages/LoginSaude";
 import DashboardSaude from "@/pages/DashboardSaude";
@@ -56,13 +57,49 @@ import CasaHome from "@/pages/CasaHome";
 import ExploreCasa from "@/pages/ExploreCasa";
 import LoginCasa from "@/pages/LoginCasa";
 import DashboardCasa from "@/pages/DashboardCasa";
+import TecnologiaHome from "@/pages/TecnologiaHome";
+import ExploreTecnologia from "@/pages/ExploreTecnologia";
+import LoginTecnologia from "@/pages/LoginTecnologia";
+import DashboardTecnologia from "@/pages/DashboardTecnologia";
+import AlimentacaoHome from "@/pages/AlimentacaoHome";
+import ExploreAlimentacao from "@/pages/ExploreAlimentacao";
+import LoginAlimentacao from "@/pages/LoginAlimentacao";
+import DashboardAlimentacao from "@/pages/DashboardAlimentacao";
+import TurismoHome from "@/pages/TurismoHome";
+import ExploreTurismo from "@/pages/ExploreTurismo";
+import LoginTurismo from "@/pages/LoginTurismo";
+import DashboardTurismo from "@/pages/DashboardTurismo";
+import DesportoHome from "@/pages/DesportoHome";
+import ExploreDesporto from "@/pages/ExploreDesporto";
+import LoginDesporto from "@/pages/LoginDesporto";
+import DashboardDesporto from "@/pages/DashboardDesporto";
+import EmpregosHome from "@/pages/EmpregosHome";
+import ExploreEmpregos from "@/pages/ExploreEmpregos";
+import LoginEmpregos from "@/pages/LoginEmpregos";
+import DashboardEmpregos from "@/pages/DashboardEmpregos";
+import AgriculturaHome from "@/pages/AgriculturaHome";
+import ExploreAgricultura from "@/pages/ExploreAgricultura";
+import LoginAgricultura from "@/pages/LoginAgricultura";
+import DashboardAgricultura from "@/pages/DashboardAgricultura";
+import InfluenciadoresHome from "@/pages/InfluenciadoresHome";
+import ExploreInfluenciadores from "@/pages/ExploreInfluenciadores";
+import LoginInfluenciadores from "@/pages/LoginInfluenciadores";
+import DashboardInfluenciadores from "@/pages/DashboardInfluenciadores";
+import TransportesHome from "@/pages/TransportesHome";
+import ExploreTransportes from "@/pages/ExploreTransportes";
+import LoginTransportes from "@/pages/LoginTransportes";
+import DashboardTransportes from "@/pages/DashboardTransportes";
+import ServicosProfHome from "@/pages/ServicosProfHome";
+import ExploreServicosProfissionais from "@/pages/ExploreServicosProfissionais";
+import LoginServicosProf from "@/pages/LoginServicosProf";
+import DashboardServicosProf from "@/pages/DashboardServicosProf";
 import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
 import Proposito from "@/pages/Proposito";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -270,7 +307,7 @@ function Router() {
           <Route path="/login-saude" component={LoginSaude} />
           <Route path="/dashboard-saude" component={DashboardSaude} />
           <Route>
-            <SaúdeHome onBackToSelector={handleBackToSelector} />
+            <SaudeHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
 
@@ -314,6 +351,168 @@ function Router() {
     );
   }
 
+  if (selectedStore === "tecnologia-electronicos") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-tecnologia" component={ExploreTecnologia} />
+          <Route path="/login-tecnologia" component={LoginTecnologia} />
+          <Route path="/dashboard-tecnologia" component={DashboardTecnologia} />
+          <Route>
+            <TecnologiaHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "alimentacao-restauracao") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-alimentacao" component={ExploreAlimentacao} />
+          <Route path="/login-alimentacao" component={LoginAlimentacao} />
+          <Route path="/dashboard-alimentacao" component={DashboardAlimentacao} />
+          <Route>
+            <AlimentacaoHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "turismo-lazer") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-turismo" component={ExploreTurismo} />
+          <Route path="/login-turismo" component={LoginTurismo} />
+          <Route path="/dashboard-turismo" component={DashboardTurismo} />
+          <Route>
+            <TurismoHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "desporto-fitness") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-desporto" component={ExploreDesporto} />
+          <Route path="/login-desporto" component={LoginDesporto} />
+          <Route path="/dashboard-desporto" component={DashboardDesporto} />
+          <Route>
+            <DesportoHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "empregos-oportunidades") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-empregos" component={ExploreEmpregos} />
+          <Route path="/login-empregos" component={LoginEmpregos} />
+          <Route path="/dashboard-empregos" component={DashboardEmpregos} />
+          <Route>
+            <EmpregosHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "agricultura-agronegocio") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-agricultura" component={ExploreAgricultura} />
+          <Route path="/login-agricultura" component={LoginAgricultura} />
+          <Route path="/dashboard-agricultura" component={DashboardAgricultura} />
+          <Route>
+            <AgriculturaHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "influenciadores-criadores") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-influenciadores" component={ExploreInfluenciadores} />
+          <Route path="/login-influenciadores" component={LoginInfluenciadores} />
+          <Route path="/dashboard-influenciadores" component={DashboardInfluenciadores} />
+          <Route>
+            <InfluenciadoresHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "transportes-logistica") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-transportes" component={ExploreTransportes} />
+          <Route path="/login-transportes" component={LoginTransportes} />
+          <Route path="/dashboard-transportes" component={DashboardTransportes} />
+          <Route>
+            <TransportesHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "servicos-profissionais") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-servicos-prof" component={ExploreServicosProfissionais} />
+          <Route path="/login-servicos-prof" component={LoginServicosProf} />
+          <Route path="/dashboard-servicos" component={DashboardServicosProf} />
+          <Route>
+            <ServicosProfHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
   return (
     <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
       <ScrollToTop />
@@ -324,6 +523,7 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/login" component={Login} />
         <Route path="/descobrir-estilo" component={DescobrirEstilo} />
+        <Route path="/consultores-estilo" component={ConsultoresEstilo} />
         <Route path="/carrinhos" component={VerCarrinhos} />
         <Route path="/proposito" component={Proposito} />
         <Route path="/"><Home onBackToSelector={handleBackToSelector} /></Route>

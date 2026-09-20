@@ -12,11 +12,14 @@ type MainTab = "contas" | "categorias";
 type AccountTab = "PENDENTE" | "APROVADO" | "DESATIVADO";
 
 const LOVE_SERVICE_GROUPS = [
-  { number: "01", title: "Actos de Amor, Homenagens e Experiências", category: "actos-de-amor", items: ["Presentes e buquês", "Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
-  { number: "02", title: "Fotografia e Videomakers", category: "fotografia", items: ["Fotógrafos", "Videomakers"] },
-  { number: "03", title: "Saúde, Cuidado e Bem-Estar ao Domicílio", category: "saude", items: ["Enfermagem e médicos", "Fisioterapia e massagens", "Apoio psicológico", "Personal trainers"] },
-  { number: "04", title: "Gestão do Lar e Refeições", category: "lar", items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"] },
-  { number: "05", title: "Burocracias", category: "burocracias", items: ["Pendências diárias", "Filas", "Entregas urgentes"] },
+  { number: "01", title: "Actos de Amor, Homenagens e Experiências", category: "actos-de-amor", items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
+  { number: "02", title: "Presentes, Flores & Surpresas", category: "presentes-flores-surpresas", items: ["Flores e buquês", "Cabazes", "Presentes personalizados", "Caixas-surpresa", "Cestas", "Presentes românticos"] },
+  { number: "03", title: "Apoio & Companhia a Idosos", category: "apoio-companhia-idosos", items: ["Companhia", "Acompanhamento", "Apoio em deslocações", "Assistência não clínica"] },
+  { number: "04", title: "Entregas & Gestos Especiais", category: "entregas-gestos-especiais", items: ["Entrega de presentes", "Entrega de flores", "Surpresas ao domicílio", "Mensagens especiais"] },
+  { number: "05", title: "Assistência a Pessoas & Famílias", category: "assistencia-pessoas-familias", items: ["Acompanhamento", "Apoio familiar", "Pequenas tarefas", "Assistência pessoal não clínica"] },
+  { number: "06", title: "Fotografia e Videomakers", category: "fotografia", items: ["Fotógrafos", "Videomakers"] },
+  { number: "07", title: "Gestão do Lar e Refeições", category: "lar", items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"] },
+  { number: "08", title: "Burocracias", category: "burocracias", items: ["Pendências diárias", "Filas", "Entregas urgentes"] },
 ];
 
 const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#d96f5c] focus:ring-2 focus:ring-[#d96f5c]/10 transition-all rounded-xl";

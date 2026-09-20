@@ -36,50 +36,64 @@ const groups: CollectionGroup[] = [
     number: "02",
     title: "Moda Masculina",
     intro: "Estilo e conforto para o homem moderno.",
-    items: ["Camisas & Polos", "Calças & Berendas", "Casacos & Trajes", "Calçado Masculino", "Acessórios Masculinos"],
+    items: ["Camisas & Polos", "Calças & Berendas", "Casacos & Trajes", "Acessórios Masculinos"],
     category: "moda-masculina",
   },
   {
     number: "03",
     title: "Moda Infantil",
     intro: "Vestuário divertido e confortável para os pequenos.",
-    items: ["Roupas para Bebés", "Vestuário Infantil (2-10 anos)", "Calçado Infantil", "Acessórios Infantis", "Kits de Enxoval"],
+    items: ["Roupas para Bebés", "Vestuário Infantil (2-10 anos)", "Acessórios Infantis", "Kits de Enxoval"],
     category: "moda-infantil",
   },
   {
     number: "04",
-    title: "Saúde & Beleza",
-    intro: "Produtos e cuidados para realçar a vossa beleza natural.",
-    items: ["Skincare & Tratamentos", "Maquilhagem", "Perfumes & Fragrâncias", "Cabelo & Penteados", "Produtos Capilares"],
-    category: "beleza-saude",
+    title: "Calçado",
+    intro: "Sapatos e calçado para toda a família.",
+    items: ["Sapatos Femininos", "Sapatos Masculinos", "Calçado Infantil", "Sapatilhas", "Sandálias", "Chinelos"],
+    category: "calcado",
   },
   {
     number: "05",
-    title: "Perucas",
-    intro: "Perucas e adições capilares de alta qualidade.",
-    items: ["Perucas Naturais", "Perucas Sintéticas", "Adições & Mechas", "Acessórios para Perucas", "Manutenção & Cuidados"],
-    category: "perucas",
+    title: "Bolsas & Acessórios",
+    intro: "Bolsas, carteiras e acessórios para completar o vosso look.",
+    items: ["Bolsas Femininas", "Mochilas", "Carteiras", "Cintos", "Óculos", "Acessórios de Moda"],
+    category: "bolsas-acessorios",
   },
   {
     number: "06",
-    title: "Eletrônicos",
-    intro: "Tecnologia e gadgets para o dia a dia.",
-    items: ["Smartphones & Tablets", "Acessórios Tech", "Áudio & Fones", "Computadores", "Wearables & Gadgets"],
-    category: "eletronicos",
+    title: "Jóias & Bijutarias",
+    intro: "Peças que realçam a vossa beleza com elegância.",
+    items: ["Anéis", "Brincos", "Colares", "Pulseiras", "Jóias", "Bijutarias"],
+    category: "joias-bijutarias",
   },
   {
     number: "07",
-    title: "Casa & Decoração",
-    intro: "Tudo para tornar a vossa casa mais acolhedora.",
-    items: ["Mobiliário", "Decoração & Objetos", "Iluminação", "Têxteis & Roupa de Cama", "Utensílios de Cozinha"],
-    category: "casa-decoracao",
+    title: "Beleza & Bem-Estar",
+    intro: "Produtos, cuidados e perucas para realçar a vossa beleza natural.",
+    items: ["Skincare & Tratamentos", "Maquilhagem", "Perfumes & Fragrâncias", "Cabelo & Penteados", "Perucas & Adições Capilares", "Produtos Capilares"],
+    category: "beleza-bem-estar",
   },
   {
     number: "08",
-    title: "Alimentação",
+    title: "Tecnologia & Electrónicos",
+    intro: "Tecnologia e gadgets para o dia a dia.",
+    items: ["Smartphones & Tablets", "Acessórios Tech", "Áudio & Fones", "Computadores", "Wearables & Gadgets"],
+    category: "tecnologia-eletronicos",
+  },
+  {
+    number: "09",
+    title: "Casa & Serviços",
+    intro: "Tudo para tornar a vossa casa mais acolhedora.",
+    items: ["Mobiliário", "Decoração & Objetos", "Iluminação", "Têxteis & Roupa de Cama", "Utensílios de Cozinha"],
+    category: "casa-servicos",
+  },
+  {
+    number: "10",
+    title: "Alimentação & Restauração",
     intro: "Sabores e productos para todos os gostos.",
     items: ["Restaurantes & Take-away", "Bolos & Pastelaria", "Bebidas & Distribuidoras", "Supermercados", "Orgânicos & Naturais"],
-    category: "alimentacao",
+    category: "alimentacao-restauracao",
   },
 ];
 
@@ -196,11 +210,16 @@ export default function ExploreCollection() {
   const provinces = Object.keys(angolaProvinces);
   const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
 
+  const normalizeCategory = (s: string) =>
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&]/g, " ").replace(/\s+/g, " ").trim();
+
   const getStoresForGroup = (category: string) => {
+    const normCategory = normalizeCategory(category);
     const matched = stores.filter((s: Store) => {
-      const cat = (s.category || "").toLowerCase();
+      const cat = normalizeCategory(s.category || "");
       const group = groups.find((g) => g.category === category);
-      const matchesCategory = cat.includes(category.replace(/-/g, " ")) || (group && cat.includes(group.title.toLowerCase()));
+      const normTitle = group ? normalizeCategory(group.title) : "";
+      const matchesCategory = cat.includes(normCategory) || cat.includes(normTitle) || normCategory.split(" ").every((w) => w.length > 2 && cat.includes(w));
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
       return matchesCategory && matchesProvince && matchesMunicipality;

@@ -16,12 +16,14 @@ const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
 
 const FORMACOES_CATEGORIES = [
-  { number: "01", title: "Tecnologia, Programação e Ferramentas Digitais", category: "tecnologia" },
-  { number: "02", title: "Desenvolvimento Pessoal, Carreira e Liderança", category: "carreira" },
-  { number: "03", title: "Aulas Práticas, Artes, Música e Hobbies", category: "artes" },
-  { number: "04", title: "Saúde, Fitness e Treino Acompanhado", category: "saude" },
-  { number: "05", title: "Idiomas e Comunicação", category: "idiomas" },
+  { number: "01", title: "Idiomas e Comunicação", category: "idiomas" },
+  { number: "02", title: "Tecnologia, Programação e Ferramentas Digitais", category: "tecnologia" },
+  { number: "03", title: "Gestão, Negócios & Empreendedorismo", category: "gestao-negocios" },
+  { number: "04", title: "Desenvolvimento Pessoal, Carreira e Liderança", category: "carreira" },
+  { number: "05", title: "Cursos Técnicos & Profissionalizantes", category: "cursos-tecnicos" },
   { number: "06", title: "Apoio Académico, Reforço Escolar e Exames", category: "academico" },
+  { number: "07", title: "Artes, Música & Criatividade", category: "artes-musica" },
+  { number: "08", title: "Formações na Área da Saúde", category: "formacoes-saude" },
 ];
 
 export function FormacoesAdminPanel() {

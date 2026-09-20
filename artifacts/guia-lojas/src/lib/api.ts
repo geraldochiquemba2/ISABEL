@@ -113,6 +113,16 @@ export async function updateStoreFeatured(id: string, isFeatured: boolean): Prom
   if (!res.ok) throw new Error("Erro ao destacar loja");
 }
 
+// PATCH /api/stores/:id/location — Atualizar localização
+export async function updateStoreLocation(id: string, latitude: number | null, longitude: number | null): Promise<void> {
+  const res = await fetch(`/api/stores/${id}/location`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ latitude, longitude }),
+  });
+  if (!res.ok) throw new Error("Erro ao atualizar localização");
+}
+
 // POST /api/products — Criar produto
 export async function createProduct(product: Partial<Product> & { storeId: string }): Promise<Product> {
   const res = await fetch("/api/products", {

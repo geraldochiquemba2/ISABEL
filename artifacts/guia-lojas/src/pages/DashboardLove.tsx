@@ -4,13 +4,14 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
-  Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw,
+  Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw, MapPin, Navigation,
 } from "lucide-react";
 import {
   fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct,
-  changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword,
+  changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword, updateStoreLocation,
 } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
+import MapPicker from "@/components/MapPicker";
 
 interface DaySchedule {
   label: string;
@@ -46,31 +47,52 @@ const LOVE_SERVICE_GROUPS = [
     title: "Actos de Amor, Homenagens e Experiências",
     intro: "Faça-se presente nos dias que mais importam.",
     category: "actos-de-amor",
-    items: ["Presentes e buquês", "Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"],
+    items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"],
   },
   {
     number: "02",
+    title: "Presentes, Flores & Surpresas",
+    intro: "Gestos que falam mais alto que as palavras.",
+    category: "presentes-flores-surpresas",
+    items: ["Flores e buquês", "Cabazes", "Presentes personalizados", "Caixas-surpresa", "Cestas", "Presentes românticos"],
+  },
+  {
+    number: "03",
+    title: "Apoio & Companhia a Idosos",
+    intro: "Presença, cuidado e respeito para quem tanto deu.",
+    category: "apoio-companhia-idosos",
+    items: ["Companhia", "Acompanhamento", "Apoio em deslocações", "Assistência não clínica"],
+  },
+  {
+    number: "04",
+    title: "Entregas & Gestos Especiais",
+    intro: "Surpresas que chegam sempre ao coração.",
+    category: "entregas-gestos-especiais",
+    items: ["Entrega de presentes", "Entrega de flores", "Surpresas ao domicílio", "Mensagens especiais"],
+  },
+  {
+    number: "05",
+    title: "Assistência a Pessoas & Famílias",
+    intro: "Apoio que fortalece laços e facilita o dia a dia.",
+    category: "assistencia-pessoas-familias",
+    items: ["Acompanhamento", "Apoio familiar", "Pequenas tarefas", "Assistência pessoal não clínica"],
+  },
+  {
+    number: "06",
     title: "Fotografia e Videomakers",
     intro: "Guarde o instante. Conte a história inteira.",
     category: "fotografia",
     items: ["Fotógrafos", "Videomakers"],
   },
   {
-    number: "03",
-    title: "Saúde, Cuidado e Bem-Estar ao Domicílio",
-    intro: "Cuidado especializado, no conforto de casa.",
-    category: "saude",
-    items: ["Enfermagem e médicos", "Fisioterapia e massagens", "Apoio psicológico", "Personal trainers"],
-  },
-  {
-    number: "04",
+    number: "07",
     title: "Gestão do Lar e Refeições",
     intro: "Mais tempo para si. Uma casa que respira.",
     category: "lar",
     items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"],
   },
   {
-    number: "05",
+    number: "08",
     title: "Burocracias",
     intro: "Nós tratamos do que não pode esperar.",
     category: "burocracias",
@@ -99,6 +121,14 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(store.latitude || null);
+  const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
+
+  const locationMutation = useMutation({
+    mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
+    onSuccess: () => { setDirty(false); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
 
   const handleChange = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -266,6 +296,80 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
             ))}
           </div>
         </div>
+
+      </div>
+
+      {/* Localização no Mapa */}
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#1a3a1a]">Localização no Mapa</h3>
+        <p className="text-sm text-[#6B7280]">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+            latitude && longitude 
+              ? "border-[#1565C0] bg-blue-50" 
+              : "border-[#d4e8d4] bg-[#fafafa] hover:border-[#1565C0]"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-[#1565C0]" : "bg-[#d4e8d4]"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6B7280]"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Localização definida</p>
+                <p className="text-xs text-[#6B7280] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Marcar localização no mapa</p>
+                <p className="text-xs text-[#6B7280]">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-[#6B7280]"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => locationMutation.mutate()}
+              disabled={locationMutation.isPending}
+              className="bg-[#1565C0] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+            >
+              {locationMutation.isPending ? "A guardar..." : "Guardar localização"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Map Picker Modal */}
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={form.province || store.province}
+            municipality={form.municipality || store.municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
       </div>
     </div>
   );
@@ -469,6 +573,8 @@ function ProdutosSection({ store }: { store: any }) {
             </div>
           );
         })}
+
+
       </div>
     </div>
   );

@@ -3,18 +3,112 @@ import { pool } from "../db";
 
 const CATEGORY_LABELS: Record<string, string> = {
   moda: "Moda",
-  eletronicos: "Eletrônicos",
-  alimentacao: "Alimentação",
-  "saude-beleza": "Saúde & Beleza",
-  "saúde-beleza": "Saúde & Beleza",
-  "servicos-residenciais": "Serviços Residenciais",
-  servicos: "Serviços Residenciais",
-  serviços: "Serviços Residenciais",
-  automotivo: "Automotivo",
-  motores: "Automotivo",
-  "auto motores": "Automotivo",
-  "auto-motores": "Automotivo",
-  educacao: "Educação",
+  calcado: "Calçado",
+  "bolsas-acessorios": "Bolsas & Acessórios",
+  "joias-bijutarias": "Jóias & Bijutarias",
+  "tecnologia-eletronicos": "Tecnologia & Electrónicos",
+  "tecnologia-electrónicos": "Tecnologia & Electrónicos",
+  eletronicos: "Tecnologia & Electrónicos",
+  eletrônicos: "Tecnologia & Electrónicos",
+  telemoveis: "Tecnologia & Electrónicos",
+  computadores: "Tecnologia & Electrónicos",
+  "electrodomicilios": "Tecnologia & Electrónicos",
+  reparacao: "Tecnologia & Electrónicos",
+  internet: "Tecnologia & Electrónicos",
+  software: "Tecnologia & Electrónicos",
+  seguranca: "Tecnologia & Electrónicos",
+  "alimentacao-restauracao": "Alimentação & Restauração",
+  alimentacao: "Alimentação & Restauração",
+  restaurantes: "Alimentação & Restauração",
+  pastelarias: "Alimentação & Restauração",
+  fastfood: "Alimentação & Restauração",
+  catering: "Alimentação & Restauração",
+  supermercados: "Alimentação & Restauração",
+  talhos: "Alimentação & Restauração",
+  padarias: "Alimentação & Restauração",
+  bebidas: "Alimentação & Restauração",
+  produtos: "Alimentação & Restauração",
+  entregas: "Alimentação & Restauração",
+  "turismo-lazer": "Turismo & Lazer",
+  turismo: "Turismo & Lazer",
+  agencias: "Turismo & Lazer",
+  passeios: "Turismo & Lazer",
+  experiencias: "Turismo & Lazer",
+  parques: "Turismo & Lazer",
+  actividades: "Turismo & Lazer",
+  cultural: "Turismo & Lazer",
+  guias: "Turismo & Lazer",
+  "desporto-fitness": "Desporto & Fitness",
+  desporto: "Desporto & Fitness",
+  ginasios: "Desporto & Fitness",
+  personal: "Desporto & Fitness",
+  clubes: "Desporto & Fitness",
+  futebol: "Desporto & Fitness",
+  natacao: "Desporto & Fitness",
+  "artes-marciais": "Desporto & Fitness",
+  equipamentos: "Desporto & Fitness",
+  danca: "Desporto & Fitness",
+  "empregos-oportunidades": "Empregos & Oportunidades",
+  empregos: "Empregos & Oportunidades",
+  vagas: "Empregos & Oportunidades",
+  estagios: "Empregos & Oportunidades",
+  primeiro: "Empregos & Oportunidades",
+  temporario: "Empregos & Oportunidades",
+  freelancer: "Empregos & Oportunidades",
+  recrutamento: "Empregos & Oportunidades",
+  "agricultura-agronegocio": "Agricultura & Agro-Negócio",
+  agricultura: "Agricultura & Agro-Negócio",
+  pecuaria: "Agricultura & Agro-Negócio",
+  produtores: "Agricultura & Agro-Negócio",
+  sementes: "Agricultura & Agro-Negócio",
+  maquinas: "Agricultura & Agro-Negócio",
+  avicultura: "Agricultura & Agro-Negócio",
+  pesca: "Agricultura & Agro-Negócio",
+  "produtos-agricolas": "Agricultura & Agro-Negócio",
+  "servicos-agricolas": "Agricultura & Agro-Negócio",
+  "influenciadores-criadores": "Influenciadores & Criadores",
+  influenciadores: "Influenciadores & Criadores",
+  "criadores-conteudo": "Influenciadores & Criadores",
+  ugc: "Influenciadores & Criadores",
+  videomakers: "Influenciadores & Criadores",
+  fotografos: "Influenciadores & Criadores",
+  apresentadores: "Influenciadores & Criadores",
+  podcasters: "Influenciadores & Criadores",
+  streamers: "Influenciadores & Criadores",
+  modelos: "Influenciadores & Criadores",
+  "transportes-logistica": "Transportes & Logística",
+  transportes: "Transportes & Logística",
+  interprovincial: "Transportes & Logística",
+  mudancas: "Transportes & Logística",
+  passageiros: "Transportes & Logística",
+  cargas: "Transportes & Logística",
+  logistica: "Transportes & Logística",
+  aluguer: "Transportes & Logística",
+  "servicos-profissionais": "Serviços Profissionais",
+  documentacao: "Serviços Profissionais",
+  consultoria: "Serviços Profissionais",
+  secretariado: "Serviços Profissionais",
+  arquitetura: "Serviços Profissionais",
+  traducao: "Serviços Profissionais",
+  design: "Serviços Profissionais",
+  cerimonial: "Serviços Profissionais",
+  "beleza-bem-estar": "Beleza & Bem-Estar",
+  "saude-beleza": "Beleza & Bem-Estar",
+  "saúde-beleza": "Beleza & Bem-Estar",
+  "saúde & beleza": "Beleza & Bem-Estar",
+  saude: "Beleza & Bem-Estar",
+  saúde: "Beleza & Bem-Estar",
+  beleza: "Beleza & Bem-Estar",
+  "casa-servicos": "Casa & Serviços",
+  "servicos-residenciais": "Casa & Serviços",
+  "casa & decoração": "Casa & Serviços",
+  servicos: "Casa & Serviços",
+  serviços: "Casa & Serviços",
+  automotivo: "Automóveis & Mobilidade",
+  motores: "Automóveis & Mobilidade",
+  "auto motores": "Automóveis & Mobilidade",
+  "auto-motores": "Automóveis & Mobilidade",
+  educacao: "Educação & Formação",
   pets: "Pets",
 };
 
@@ -29,9 +123,9 @@ export const authRouter = Router();
 // POST /api/auth/register — Registo do Lojista
 authRouter.post("/register", async (req, res) => {
   try {
-    const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient } = req.body;
+    const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
     const normalizedCategory = normalizeCategory(category);
-    const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : "collection");
+    const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection");
     
     // Verificar se número já existe NESTE store_type
     const exists = await pool.query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
@@ -52,6 +146,15 @@ authRouter.post("/register", async (req, res) => {
     const isSaude = storeType === "saude";
     const isBeleza = storeType === "beleza";
     const isCasa = storeType === "casa";
+    const isTecnologia = storeType === "tecnologia-electronicos";
+    const isAlimentacao = storeType === "alimentacao-restauracao";
+    const isTurismo = storeType === "turismo-lazer";
+    const isDesporto = storeType === "desporto-fitness";
+    const isEmpregos = storeType === "empregos-oportunidades";
+    const isAgricultura = storeType === "agricultura-agronegocio";
+    const isInfluenciadores = storeType === "influenciadores-criadores";
+    const isTransportes = storeType === "transportes-logistica";
+    const isServicosProf = storeType === "servicos-profissionais";
     const description = isLove
       ? "A minha loja na YESOLA Serviços de Amor."
       : isWeddings
@@ -74,8 +177,26 @@ authRouter.post("/register", async (req, res) => {
       ? 'A minha loja na YESOLA Beleza & Bem-Estar.'
       : isCasa
       ? 'A minha loja na YESOLA Casa & Serviços.'
+      : isTecnologia
+      ? 'A minha loja na YESOLA Tecnologia & Electrónicos.'
+      : isAlimentacao
+      ? 'A minha loja na YESOLA Alimentação & Restauração.'
+      : isTurismo
+      ? 'A minha loja na YESOLA Turismo & Lazer.'
+      : isDesporto
+      ? 'A minha loja na YESOLA Desporto & Fitness.'
+      : isEmpregos
+      ? 'A minha loja na YESOLA Empregos & Oportunidades.'
+      : isAgricultura
+      ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.'
+      : isInfluenciadores
+      ? 'A minha loja na YESOLA Influenciadores & Criadores.'
+      : isTransportes
+      ? 'A minha loja na YESOLA Transportes & Logística.'
+      : isServicosProf
+      ? 'A minha loja na YESOLA Serviços Profissionais.'
       : 'A minha loja na YESOLA Collection.';
-    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : '#B89A78';
+    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : '#B89A78';
     const coverImage = isLove
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
@@ -98,11 +219,29 @@ authRouter.post("/register", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=500&fit=crop&auto=format&q=80'
       : isCasa
       ? 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTecnologia
+      ? 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=500&fit=crop&auto=format&q=80'
+      : isAlimentacao
+      ? 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTurismo
+      ? 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=500&fit=crop&auto=format&q=80'
+      : isDesporto
+      ? 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop&auto=format&q=80'
+      : isEmpregos
+      ? 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=500&fit=crop&auto=format&q=80'
+      : isAgricultura
+      ? 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop&auto=format&q=80'
+      : isInfluenciadores
+      ? 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTransportes
+      ? 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format&q=80'
+      : isServicosProf
+      ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
 
     await pool.query(
-      `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type)
-       VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11)`,
+      `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type, latitude, longitude)
+       VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
       [
         storeId,
         storeName || 'Minha Loja',
@@ -115,6 +254,8 @@ authRouter.post("/register", async (req, res) => {
         province || '',
         municipality || '',
         storeType,
+        latitude || null,
+        longitude || null,
       ]
     );
 
@@ -253,7 +394,7 @@ authRouter.post("/link-store", async (req, res) => {
     // Se userId não fornecido, procurar por phone + store_type
     let userIdToUse = userId;
     if (!userIdToUse && phone) {
-      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
+      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection";
       const userResult = await pool.query("SELECT id FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
       if (!userResult.rows.length) {
         return res.status(404).json({ error: "Utilizador não encontrado." });
@@ -281,7 +422,16 @@ authRouter.post("/link-store", async (req, res) => {
     const isS = storeType === "saude";
     const isBe = storeType === "beleza";
     const isC = storeType === "casa";
-    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : '#B89A78';
+    const isTec = storeType === "tecnologia-electronicos";
+    const isAli = storeType === "alimentacao-restauracao";
+    const isTui = storeType === "turismo-lazer";
+    const isDes = storeType === "desporto-fitness";
+    const isEmp = storeType === "empregos-oportunidades";
+    const isAge = storeType === "agricultura-agronegocio";
+    const isInf2 = storeType === "influenciadores-criadores";
+    const isTra = storeType === "transportes-logistica";
+    const isSer = storeType === "servicos-profissionais";
+    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : '#B89A78';
     const linkCoverImage = isL
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isW
@@ -304,6 +454,24 @@ authRouter.post("/link-store", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=500&fit=crop&auto=format&q=80'
       : isC
       ? 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTec
+      ? 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=500&fit=crop&auto=format&q=80'
+      : isAli
+      ? 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTui
+      ? 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=500&fit=crop&auto=format&q=80'
+      : isDes
+      ? 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop&auto=format&q=80'
+      : isEmp
+      ? 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=500&fit=crop&auto=format&q=80'
+      : isAge
+      ? 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop&auto=format&q=80'
+      : isInf2
+      ? 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=500&fit=crop&auto=format&q=80'
+      : isTra
+      ? 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format&q=80'
+      : isSer
+      ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
     await pool.query(
       `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type)
@@ -314,7 +482,7 @@ authRouter.post("/link-store", async (req, res) => {
         normalizedCategory,
         address || '',
         phone || '',
-        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : 'A minha loja na YESOLA Collection.',
+        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : 'A minha loja na YESOLA Collection.',
         linkCoverColor,
         linkCoverImage,
         province || '',

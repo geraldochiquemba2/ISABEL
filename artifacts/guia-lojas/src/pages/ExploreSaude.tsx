@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Heart, Stethoscope, Brain, Smile, Baby } from "lucide-react";
+import { ArrowLeft, Heart, Stethoscope, Brain, Smile, Baby, Pill, Eye } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 interface Store {
@@ -22,12 +22,14 @@ const SAUDE_CATEGORIES = [
   { number: "02", title: "Médicos Particulares", intro: "Profissionais dedicados ao seu bem-estar.", category: "medicos", icon: Heart, items: ["Clínica Geral & Especialidades", "Dermatologia & Estética", "Cardiologia & Neurologia"] },
   { number: "03", title: "Medicina Dentária & Ortodontia", intro: "Sorrisos saudáveis e tratamentos de qualidade.", category: "dentaria", icon: Smile, items: ["Clareamento & Estética Dental", "Ortodontia & Aparelhos", "Implantes & Próteses"] },
   { number: "04", title: "Saúde Mental & Psicologia", intro: "Cuidar da mente é cuidar da vida.", category: "saude-mental", icon: Brain, items: ["Psicologia Clínica", "Psiquiatria", "Terapia de Casal & Familiar"] },
-  { number: "05", title: "Pediatria & Neonatologia", intro: "Cuidados especializados para os mais pequenos.", category: "pediatria", icon: Baby, items: ["Pediatria Geral", "Neonatologia", "Desenvolvimento Infantil"] },
-  { number: "06", title: "Terapias Alternativas & Bem-Estar", intro: "Equilíbrio e harmonia para o corpo e mente.", category: "terapias", icon: Heart, items: ["Acupunctura & Medicina Tradicional", "Aromaterapia & Fitoterapia", "Yoga & Meditação"] },
-  { number: "07", title: "Nutrição & Dietética", intro: "Alimentação saudável para uma vida melhor.", category: "nutricao", icon: Heart, items: ["Nutrição Clínica", "Dietas Especiais", "Aconselhamento Nutricional"] },
-  { number: "08", title: "Fisioterapia & Reabilitação", intro: "Recuperação e prevenção de lesões.", category: "fisioterapia", icon: Heart, items: ["Fisioterapia Ortopédica", "Reabilitação Cardiopulmonar", "Pilates Terapêutico"] },
-  { number: "09", title: "Análises Clínicas & Exames", intro: "Diagnóstico preciso e rápido.", category: "analises", icon: Heart, items: ["Análises Clínicas Gerais", "Exames de Imagem", "Check-ups Completos"] },
-  { number: "10", title: "Planos de Saúde & Seguros", intro: "Proteção e tranquilidade para si e a sua família.", category: "planos", icon: Heart, items: ["Seguros de Saúde", "Planos Familiares", "Cobertura Internacional"] },
+  { number: "05", title: "Farmácias", intro: "Medicamentos e produtos de saúde ao seu alcance.", category: "farmacias", icon: Pill, items: ["Farmácias", "Parafarmácias", "Produtos de Primeiros Socorros", "Produtos de Saúde"] },
+  { number: "06", title: "Ópticas & Saúde Visual", intro: "Cuidar da visão é cuidar da qualidade de vida.", category: "opticas", icon: Eye, items: ["Ópticas", "Óculos Graduados", "Lentes", "Optometria", "Acessórios Ópticos"] },
+  { number: "07", title: "Pediatria & Neonatologia", intro: "Cuidados especializados para os mais pequenos.", category: "pediatria", icon: Baby, items: ["Pediatria Geral", "Neonatologia", "Desenvolvimento Infantil"] },
+  { number: "08", title: "Terapias Alternativas & Bem-Estar", intro: "Equilíbrio e harmonia para o corpo e mente.", category: "terapias", icon: Heart, items: ["Acupunctura & Medicina Tradicional", "Aromaterapia & Fitoterapia", "Yoga & Meditação"] },
+  { number: "09", title: "Nutrição & Dietética", intro: "Alimentação saudável para uma vida melhor.", category: "nutricao", icon: Heart, items: ["Nutrição Clínica", "Dietas Especiais", "Aconselhamento Nutricional"] },
+  { number: "10", title: "Fisioterapia & Reabilitação", intro: "Recuperação e prevenção de lesões.", category: "fisioterapia", icon: Heart, items: ["Fisioterapia Ortopédica", "Reabilitação Cardiopulmonar", "Pilates Terapêutico"] },
+  { number: "11", title: "Análises Clínicas & Exames", intro: "Diagnóstico preciso e rápido.", category: "analises", icon: Heart, items: ["Análises Clínicas Gerais", "Exames de Imagem", "Check-ups Completos"] },
+  { number: "12", title: "Planos de Saúde & Seguros", intro: "Proteção e tranquilidade para si e a sua família.", category: "planos", icon: Heart, items: ["Seguros de Saúde", "Planos Familiares", "Cobertura Internacional"] },
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {

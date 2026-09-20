@@ -6,7 +6,7 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import {
   Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
-  Shirt, Watch, Footprints,
+  Shirt, Watch, Footprints, Gem, Briefcase, Baby, Sparkles, Smartphone, Home as HomeIcon, UtensilsCrossed,
 } from "lucide-react";
 
 function StoreCard({ store, from }: { store: Store; from: string }) {
@@ -36,20 +36,23 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
       <div className="p-3">
         <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
         {store.description && <p className="text-[10px] text-[#716D69] mt-1 line-clamp-2">{store.description}</p>}
-        <div className="flex items-center gap-1 mt-1.5">
-          <Star size={11} className="text-[#B89A78] fill-[#B89A78]" />
-          <span className="text-[10px] font-medium text-[#171717]">4.8</span>
-        </div>
+
       </div>
     </div>
   );
 }
 
 const CATEGORIES = [
-  { id: "feminina", name: "Moda Feminina", icon: <Shirt size={24} className="text-[#B89A78]" /> },
-  { id: "masculina", name: "Moda Masculina", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B89A78" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /></svg> },
-  { id: "acessorios", name: "Acessórios", icon: <Watch size={24} className="text-[#B89A78]" /> },
+  { id: "moda-feminina", name: "Moda Feminina", icon: <Shirt size={24} className="text-[#B89A78]" /> },
+  { id: "moda-masculina", name: "Moda Masculina", icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B89A78" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /></svg> },
+  { id: "moda-infantil", name: "Moda Infantil", icon: <Baby size={24} className="text-[#B89A78]" /> },
   { id: "calcado", name: "Calçado", icon: <Footprints size={24} className="text-[#B89A78]" /> },
+  { id: "bolsas-acessorios", name: "Bolsas & Acessórios", icon: <Briefcase size={24} className="text-[#B89A78]" /> },
+  { id: "joias-bijutarias", name: "Jóias & Bijutarias", icon: <Gem size={24} className="text-[#B89A78]" /> },
+  { id: "beleza-bem-estar", name: "Beleza & Bem-Estar", icon: <Sparkles size={24} className="text-[#B89A78]" /> },
+  { id: "tecnologia-eletronicos", name: "Tecnologia", icon: <Smartphone size={24} className="text-[#B89A78]" /> },
+  { id: "casa-servicos", name: "Casa & Serviços", icon: <HomeIcon size={24} className="text-[#B89A78]" /> },
+  { id: "alimentacao-restauracao", name: "Alimentação", icon: <UtensilsCrossed size={24} className="text-[#B89A78]" /> },
 ];
 
 export default function Home({ onBackToSelector }: { onBackToSelector?: () => void }) {
@@ -89,7 +92,6 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
             <span className="text-[9px] tracking-[0.25em] text-[#B89A78] font-medium uppercase mt-0.5">COLLECTION</span>
           </div>
-          <button className="p-1"><ShoppingBag size={22} color="#171717" /></button>
         </div>
         {menuOpen && (
           <div className="bg-[#FAF8F4] border-t border-[#E8DDD0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
@@ -135,7 +137,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
 
       {/* Quick Actions */}
       <section className="px-5 py-3 space-y-3">
-        <button onClick={() => setLocation("/descobrir-estilo")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
+        <button onClick={() => setLocation("/consultores-estilo")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78]/30 transition-all">
           <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#E8DDD0]">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B89A78" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><circle cx="9" cy="9" r="1" fill="#B89A78" /><circle cx="15" cy="9" r="1" fill="#B89A78" /></svg>
           </div>

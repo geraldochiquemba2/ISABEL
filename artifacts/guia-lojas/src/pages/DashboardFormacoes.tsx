@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import MapPicker from "@/components/MapPicker";
+import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image } from "lucide-react";
+import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminPanel from "@/components/AdminPanel";
@@ -41,12 +43,14 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
 }
 
 const FORMACOES_CATEGORIES = [
-  { number: "01", title: "Tecnologia, Programação e Ferramentas Digitais", intro: "Crie o que imagina.", items: ["Programação, Desenvolvimento Web e Criação de Apps", "Informática Básica/Avançada, Pacote Office e Excel", "Ferramentas de Design (Canva, Photoshop) e Edição de Vídeo", "Marketing Digital, Tráfego Pago e Gestão de Redes Sociais"], category: "tecnologia" },
-  { number: "02", title: "Desenvolvimento Pessoal, Carreira e Liderança", intro: "Avance com intenção.", items: ["Coaching de Carreira, Orientação Profissional e Transição", "Preparação para Entrevistas de Emprego e Optimização de CV/LinkedIn", "Treinamento em Liderança, Gestão de Equipas e Resolução de Conflitos", "Gestão do Tempo, Produtividade Pessoal e Foco"], category: "carreira" },
-  { number: "03", title: "Aulas Práticas, Artes, Música e Hobbies", intro: "Faça acontecer.", items: ["Aulas de Culinária, Confeitaria e Gastronomia", "Canto, Piano, Violão, Guitarra e Outros Instrumentos", "Costura, Modelagem, Corte e Artesanato", "Fotografia Profissional e Produção de Vídeo com Telemóvel"], category: "artes" },
-  { number: "04", title: "Saúde, Fitness e Treino Acompanhado", intro: "Cuide do seu ritmo.", items: ["Personal Trainer (Presencial e Online)", "Aulas de Dança, Expressão Corporal e Postura", "Workshops de Nutrição, Reeducação Alimentar e Estilo de Vida", "Aulas de Yoga, Pilates e Treino Funcional"], category: "saude" },
-  { number: "05", title: "Idiomas e Comunicação", intro: "Fale com confiança.", items: ["Aulas de Inglês, Francês e Outros Idiomas (Geral e Negócios)", "Comunicação de Alto Impacto, Oratória e Expressão Pública", "Escrita Corporativa, Redação Académica e Preparação de Apresentações"], category: "idiomas" },
+  { number: "01", title: "Idiomas e Comunicação", intro: "Fale com confiança.", items: ["Aulas de Inglês, Francês e Outros Idiomas (Geral e Negócios)", "Comunicação de Alto Impacto, Oratória e Expressão Pública", "Escrita Corporativa, Redação Académica e Preparação de Apresentações"], category: "idiomas" },
+  { number: "02", title: "Tecnologia, Programação e Ferramentas Digitais", intro: "Crie o que imagina.", items: ["Programação, Desenvolvimento Web e Criação de Apps", "Informática Básica/Avançada, Pacote Office e Excel", "Ferramentas de Design (Canva, Photoshop) e Edição de Vídeo", "Marketing Digital, Tráfego Pago e Gestão de Redes Sociais"], category: "tecnologia" },
+  { number: "03", title: "Gestão, Negócios & Empreendedorismo", intro: "De quem quer crescer com estratégia e visão.", items: ["Gestão Empresarial", "Empreendedorismo", "Vendas", "Marketing", "Finanças", "Liderança", "Atendimento ao Cliente"], category: "gestao-negocios" },
+  { number: "04", title: "Desenvolvimento Pessoal, Carreira e Liderança", intro: "Avance com intenção.", items: ["Coaching de Carreira, Orientação Profissional e Transição", "Preparação para Entrevistas de Emprego e Optimização de CV/LinkedIn", "Treinamento em Liderança, Gestão de Equipas e Resolução de Conflitos", "Gestão do Tempo, Produtividade Pessoal e Foco"], category: "carreira" },
+  { number: "05", title: "Cursos Técnicos & Profissionalizantes", intro: "Mãos na obra.", items: ["Electricidade", "Canalização", "Mecânica", "Refrigeração", "Construção", "Informática Técnica", "Outros Ofícios"], category: "cursos-tecnicos" },
   { number: "06", title: "Apoio Académico, Reforço Escolar e Exames", intro: "Aprenda no seu ritmo.", items: ["Explicadores de Matemática, Física, Química e Biologia", "Apoio Escolar Geral e Métodos de Estudo para Crianças e Jovens", "Preparação para Exames de Admissão Universitária e Provas"], category: "academico" },
+  { number: "07", title: "Artes, Música & Criatividade", intro: "Exprima-se. Crie.", items: ["Música", "Canto", "Instrumentos Musicais", "Dança", "Teatro", "Desenho", "Pintura", "Artes Criativas"], category: "artes-musica" },
+  { number: "08", title: "Formações na Área da Saúde", intro: "Cuide do seu ritmo.", items: ["Personal Trainer (Presencial e Online)", "Aulas de Dança, Expressão Corporal e Postura", "Workshops de Nutrição, Reeducação Alimentar e Estilo de Vida", "Aulas de Yoga, Pilates e Treino Funcional"], category: "formacoes-saude" },
 ];
 
 export default function DashboardFormacoes() {
@@ -427,9 +431,17 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(store.latitude || null);
+  const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
+    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
+
+  const locationMutation = useMutation({
+    mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
     onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -565,6 +577,79 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
           ))}
         </div>
       </div>
+
+{/* Localização no Mapa */}
+<div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 space-y-6 max-w-2xl">
+  <h3 className="font-['Playfair_Display'] text-lg text-[#1a3a1a]">Localização no Mapa</h3>
+  <p className="text-sm text-[#6B7280]">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+  
+  <button
+    type="button"
+    onClick={() => setShowMapPicker(true)}
+    className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+      latitude && longitude 
+        ? "border-[#1565C0] bg-blue-50" 
+        : "border-[#d4e8d4] bg-[#fafafa] hover:border-[#1565C0]"
+    }`}
+  >
+    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+      latitude && longitude ? "bg-[#1565C0]" : "bg-[#d4e8d4]"
+    }`}>
+      <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6B7280]"} />
+    </div>
+    <div className="text-left flex-1">
+      {latitude && longitude ? (
+        <>
+          <p className="text-sm font-medium text-[#1a3a1a]">Localização definida</p>
+          <p className="text-xs text-[#6B7280] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+        </>
+      ) : (
+        <>
+          <p className="text-sm font-medium text-[#1a3a1a]">Marcar localização no mapa</p>
+          <p className="text-xs text-[#6B7280]">Toque para abrir o mapa e marcar o ponto exacto</p>
+        </>
+      )}
+    </div>
+    <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-[#6B7280]"} />
+  </button>
+  
+  {latitude && longitude && (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={() => locationMutation.mutate()}
+        disabled={locationMutation.isPending}
+        className="bg-[#1565C0] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+      >
+        {locationMutation.isPending ? "A guardar..." : "Guardar localização"}
+      </button>
+      <button
+        type="button"
+        onClick={() => { setLatitude(null); setLongitude(null); }}
+        className="text-sm text-red-500 hover:text-red-600"
+      >
+        Remover
+      </button>
+    </div>
+  )}
+
+  {/* Map Picker Modal */}
+  {showMapPicker && (
+    <MapPicker
+      initialLatitude={latitude || undefined}
+      initialLongitude={longitude || undefined}
+      province={form.province || store.province}
+      municipality={form.municipality || store.municipality}
+      onLocationSelect={(lat, lng) => {
+        setLatitude(lat);
+        setLongitude(lng);
+        setShowMapPicker(false);
+        setIsDirty(true);
+      }}
+      onClose={() => setShowMapPicker(false)}
+    />
+  )}
+</div>
 
       <button onClick={() => mutation.mutate()} disabled={mutation.isPending || !isDirty} className="bg-[#1E737B] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#175A61] transition-colors disabled:opacity-50">
         {mutation.isPending ? "A guardar..." : "Guardar alterações"}
@@ -717,6 +802,8 @@ function ProductsManager({ store }: { store: any }) {
             </div>
           </div>
         ))}
+
+
       </div>
     </div>
   );
@@ -756,3 +843,4 @@ function ContactEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; 
     </div>
   );
 }
+

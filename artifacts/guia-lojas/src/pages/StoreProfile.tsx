@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -10,6 +10,40 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
+
+function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!mapRef.current || !latitude || !longitude) return;
+
+    const loadLeaflet = async () => {
+      if (!(window as any).L) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        document.head.appendChild(link);
+
+        const script = document.createElement("script");
+        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        document.head.appendChild(script);
+        await new Promise<void>((resolve) => { script.onload = () => resolve(); });
+      }
+
+      const L = (window as any).L;
+      const map = L.map(mapRef.current, { zoomControl: false, maxZoom: 17 }).setView([latitude, longitude], 15);
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution: "" }).addTo(map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { opacity: 0.3 }).addTo(map);
+      L.marker([latitude, longitude]).addTo(map);
+
+      setTimeout(() => map.invalidateSize(), 100);
+    };
+
+    loadLeaflet();
+  }, [latitude, longitude]);
+
+  return <div ref={mapRef} className="w-full h-full bg-gray-100" />;
+}
 
 export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +55,7 @@ export default function StoreProfile() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showMapApps, setShowMapApps] = useState(false);
 
   const { data: store, isLoading } = useQuery({
     queryKey: ["store", id],
@@ -217,21 +252,111 @@ export default function StoreProfile() {
               </button>
             </a>
 
-            <a
-              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} (${store.category}) e gostaria de mais informações.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="button-message"
-              onClick={() => trackWhatsAppClick(store.id)}
+            {/* Como Chegar - Modal de Opções */}
+            <button
+              onClick={() => setShowMapApps(true)}
+              data-testid="button-directions"
+              className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap"
             >
-              <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
-                <MessageSquare size={13} />
-                Mensagem
-              </button>
-            </a>
+              <MapPin size={13} />
+              Como chegar
+            </button>
 
           </div>
         </div>
+
+        {/* Modal de Aplicativos de Mapa */}
+        <AnimatePresence>
+          {showMapApps && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+              onClick={() => setShowMapApps(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Abrir em...</h3>
+                  <button
+                    onClick={() => setShowMapApps(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <X size={18} className="text-gray-500" />
+                  </button>
+                </div>
+                <p className="text-sm text-gray-500 mb-3">Escolha o aplicativo de mapas preferido:</p>
+
+                {/* Mini Mapa */}
+                {store.latitude && store.longitude && (
+                  <div className="mb-4 rounded-xl overflow-hidden border border-gray-200" style={{ height: "180px" }}>
+                    <MapPreview latitude={store.latitude} longitude={store.longitude} />
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      const url = store.latitude && store.longitude
+                        ? `https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${store.name} ${store.province || ''} ${store.municipality || ''} ${store.address || ''}`)}`;
+                      window.open(url, "_blank");
+                      setShowMapApps(false);
+                    }}
+                    className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
+                    style={{ backgroundColor: "#4285F4" }}
+                  >
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="Google Maps" className="w-6 h-6" />
+                    <span>Google Maps</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const url = store.latitude && store.longitude
+                        ? `https://waze.com/ul?ll=${store.latitude},${store.longitude}&navigate=yes`
+                        : `https://waze.com/ul?q=${encodeURIComponent(`${store.name} ${store.province || ''} ${store.municipality || ''} ${store.address || ''}`)}`;
+                      window.open(url, "_blank");
+                      setShowMapApps(false);
+                    }}
+                    className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
+                    style={{ backgroundColor: "#33CCFF" }}
+                  >
+                    <img src="https://img.icons8.com/color/96/waze.png" alt="Waze" className="w-6 h-6" />
+                    <span>Waze</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const url = store.latitude && store.longitude
+                        ? `https://maps.apple.com/?daddr=${store.latitude},${store.longitude}&dirflg=d`
+                        : `https://maps.apple.com/?q=${encodeURIComponent(`${store.name} ${store.province || ''} ${store.municipality || ''} ${store.address || ''}`)}`;
+                      window.open(url, "_blank");
+                      setShowMapApps(false);
+                    }}
+                    className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium shadow-sm"
+                    style={{ backgroundColor: "#e8e8e8", color: "#333" }}
+                  >
+                    <img src="https://i.pinimg.com/originals/8a/61/01/8a6101fe4a7acc2ce31fad7336966c60.png" alt="Apple Maps" className="w-6 h-6" />
+                    <span>Apple Maps</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setShowMapApps(false)}
+                  className="w-full mt-4 py-3 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Cancelar
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Tabs */}
         <Tabs defaultValue={tabParam === "carrinhos" && store.carrinhoAccess === "APROVADO" ? "carrinhos" : "produtos"} className="py-6 pb-14">

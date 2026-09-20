@@ -39,10 +39,7 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
           <MapPin size={10} className="text-[#9CA3AF]" />
           <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
         </div>
-        <div className="flex items-center gap-1 mt-1">
-          <Star size={10} className="text-[#D4A843] fill-[#D4A843]" />
-          <span className="text-[10px] font-medium text-[#2D2C2B]">4.8</span>
-        </div>
+
       </div>
     </div>
   );

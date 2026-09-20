@@ -3,7 +3,10 @@ import {
   Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
   Crown, Building2, Baby, Car, ChevronRight, Stethoscope, Sparkles,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Home,
+  Smartphone, UtensilsCrossed, Plane, Dumbbell, Briefcase, Sprout,
+  Users, Truck, Palette,
 } from "lucide-react";
+import GlobalSearch from "@/components/GlobalSearch";
 
 const stores = [
   {
@@ -126,6 +129,96 @@ const stores = [
     icon: <Home size={24} className="text-white" />,
     accent: "#8B4513",
   },
+  {
+    id: "tecnologia-electronicos",
+    name: "Tecnologia & Electrónicos",
+    subtitle: "O futuro nas suas mãos",
+    description: "Smartphones, computadores, electrodomicílios, reparação e muito mais. Tecnologia acessível para todos em Angola.",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#1565C0]/80 to-[#0D47A1]/80",
+    icon: <Smartphone size={24} className="text-white" />,
+    accent: "#1565C0",
+  },
+  {
+    id: "alimentacao-restauracao",
+    name: "Alimentação & Restauração",
+    subtitle: "Sabores que unem",
+    description: "Restaurantes, pastelarias, fast food, supermercados e entregas de comida. Tudo para o seu dia a dia em Angola.",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#D84315]/80 to-[#BF360C]/80",
+    icon: <UtensilsCrossed size={24} className="text-white" />,
+    accent: "#D84315",
+  },
+  {
+    id: "turismo-lazer",
+    name: "Turismo & Lazer",
+    subtitle: "Descubra Angola",
+    description: "Agências de viagens, passeios, experiências turísticas, parques e muito mais. Explore Angola com a YESOLA.",
+    image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#00796B]/80 to-[#004D40]/80",
+    icon: <Plane size={24} className="text-white" />,
+    accent: "#00796B",
+  },
+  {
+    id: "desporto-fitness",
+    name: "Desporto & Fitness",
+    subtitle: "Mova-se com estilo",
+    description: "Ginásios, personal trainers, clubes desportivos, equipamentos e muito mais. Cuide do seu corpo em Angola.",
+    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#E65100]/80 to-[#BF360C]/80",
+    icon: <Dumbbell size={24} className="text-white" />,
+    accent: "#E65100",
+  },
+  {
+    id: "empregos-oportunidades",
+    name: "Empregos & Oportunidades",
+    subtitle: "O seu próximo passo",
+    description: "Vagas de emprego, estágios, trabalho freelancer e recrutamento. Encontre a oportunidade certa em Angola.",
+    image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#4527A0]/80 to-[#311B92]/80",
+    icon: <Briefcase size={24} className="text-white" />,
+    accent: "#4527A0",
+  },
+  {
+    id: "agricultura-agronegocio",
+    name: "Agricultura & Agro-Negócio",
+    subtitle: "Do campo à mesa",
+    description: "Agricultura, pecuária, máquinas agrícolas, produtos frescos e muito mais. O futuro de Angola começa no campo.",
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#2E7D32]/80 to-[#1B5E20]/80",
+    icon: <Sprout size={24} className="text-white" />,
+    accent: "#2E7D32",
+  },
+  {
+    id: "influenciadores-criadores",
+    name: "Influenciadores & Criadores",
+    subtitle: "Vozes que inspiram",
+    description: "Influenciadores digitais, criadores de conteúdo, fotógrafos, videomakers e muito mais. Conecte-se com os melhores profissionais.",
+    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#C2185B]/80 to-[#880E4F]/80",
+    icon: <Users size={24} className="text-white" />,
+    accent: "#C2185B",
+  },
+  {
+    id: "transportes-logistica",
+    name: "Transportes & Logística",
+    subtitle: "Movemos Angola",
+    description: "Transporte interprovincial, mudanças, entregas, cargas e logística empresarial. Conectamos províncias e pessoas.",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#F57F17]/80 to-[#E65100]/80",
+    icon: <Truck size={24} className="text-white" />,
+    accent: "#F57F17",
+  },
+  {
+    id: "servicos-profissionais",
+    name: "Serviços Profissionais",
+    subtitle: "Excelência em cada serviço",
+    description: "Documentação, consultoria, design, tradução, arquitectura e muito mais. Profissionais qualificados para si.",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#1A237E]/80 to-[#0D47A1]/80",
+    icon: <Palette size={24} className="text-white" />,
+    accent: "#1A237E",
+  },
 ];
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -225,6 +318,75 @@ const categoryIcons: Record<string, React.ReactNode> = {
       <rect x="11" y="17" width="5" height="4" rx="1" />
     </svg>
   ),
+  "tecnologia-electronicos": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <rect x="10" y="6" width="16" height="24" rx="3" />
+      <circle cx="18" cy="26" r="1.5" />
+      <path d="M14 10h8" />
+    </svg>
+  ),
+  "alimentacao-restauracao": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <path d="M12 6v10c0 2-2 4-4 4v0c2 0 4 2 4 4v10" />
+      <path d="M24 6v6c0 4 4 6 4 10s-4 6-4 6" />
+      <line x1="18" y1="6" x2="18" y2="30" />
+    </svg>
+  ),
+  "turismo-lazer": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <path d="M18 6L6 14l12 4 12-4L18 6z" />
+      <path d="M6 14v8c0 2 6 6 12 6s12-4 12-6v-8" />
+      <path d="M18 18v10" />
+    </svg>
+  ),
+  "desporto-fitness": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <path d="M8 18h4v-6h-4zM24 18h4v-6h-4z" />
+      <rect x="12" y="15" width="12" height="6" rx="1" />
+      <circle cx="6" cy="18" r="2" />
+      <circle cx="30" cy="18" r="2" />
+    </svg>
+  ),
+  "empregos-oportunidades": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <rect x="8" y="12" width="20" height="16" rx="2" />
+      <path d="M14 12V10a4 4 0 0 1 8 0v2" />
+      <circle cx="18" cy="20" r="2" />
+      <path d="M18 22v2" />
+    </svg>
+  ),
+  "agricultura-agronegocio": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <path d="M18 30V14" />
+      <path d="M12 20c-2-2-2-6 0-8 2 2 6 2 6 0" />
+      <path d="M24 20c2-2 2-6 0-8-2 2-6 2-6 0" />
+      <path d="M14 10c0-4 4-6 4-6s4 2 4 6" />
+      <path d="M10 30h16" />
+    </svg>
+  ),
+  "influenciadores-criadores": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <circle cx="18" cy="14" r="6" />
+      <path d="M8 30c0-5.5 4.5-10 10-10s10 4.5 10 10" />
+      <circle cx="28" cy="10" r="4" />
+      <path d="M26 10h4M28 8v4" />
+    </svg>
+  ),
+  "transportes-logistica": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <path d="M4 18h20v8H4z" />
+      <path d="M24 22h6l4 4v4h-10v-8z" />
+      <circle cx="10" cy="28" r="3" />
+      <circle cx="28" cy="28" r="3" />
+    </svg>
+  ),
+  "servicos-profissionais": (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+      <rect x="8" y="6" width="20" height="24" rx="2" />
+      <path d="M14 12h8M14 16h8M14 20h5" />
+      <path d="M12 24h12" />
+    </svg>
+  ),
 };
 
 const PURPOSE_SLIDES = [
@@ -286,6 +448,11 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
           </div>
         </div>
       </header>
+
+      {/* Global Search */}
+      <section className="px-5 py-3">
+        <GlobalSearch />
+      </section>
 
       {/* Hero Section */}
       <section className="relative px-5 pt-6 pb-4 overflow-hidden" style={{ minHeight: "220px" }}>

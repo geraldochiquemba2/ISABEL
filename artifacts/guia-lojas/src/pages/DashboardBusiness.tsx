@@ -1,9 +1,11 @@
-﻿import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import MapPicker from "@/components/MapPicker";
+import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu } from "lucide-react";
+import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,7 +30,7 @@ interface DaySchedule {
 
 const DEFAULT_SCHEDULE: DaySchedule[] = [
   { label: "Segunda a Sexta", closed: false, open: "08:00", close: "18:00" },
-  { label: "Sábado", closed: false, open: "09:00", close: "14:00" },
+  { label: "S�bado", closed: false, open: "09:00", close: "14:00" },
   { label: "Domingo", closed: true, open: "08:00", close: "18:00" },
 ];
 
@@ -41,12 +43,12 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
 }
 
 const BUSINESS_CATEGORIES = [
-  { number: "01", title: "Consultoria, Estratégia e Gestão Empresarial", intro: "Decisões mais claras para negócios prontos para avançar.", items: ["Consultoria de Negócios e Gestão Estratégica", "Elaboração de Planos de Negócio e Viabilidade Económica", "Mapeamento, Reestruturação e Otimização de Processos", "Mentoria para Empreendedores, Startups e Founders"], category: "consultoria" },
-  { number: "02", title: "Gestão Financeira, Contabilidade e Fiscalidade", intro: "O rigor financeiro que transforma números em confiança.", items: ["Contabilidade Certificada, Auditoria e Declarações", "Consultoria Fiscal, Planeamento Tributário e Impostos", "Gestão do Fluxo de Caixa e Finanças Empresariais", "Avaliação de Empresas (Valuation) e Análise de Risco"], category: "financas" },
-  { number: "03", title: "Marketing, Vendas e Posicionamento de Marca", intro: "Uma presença que diz o que vale, para quem importa.", items: ["Gestão de Redes Sociais, Conteúdo e Tráfego Pago", "Criação de Identidade Visual, Branding e Design", "Estratégias de Vendas, Prospecção e Treino Comercial", "Assessoria de Imprensa, Relações Públicas e Comunicação"], category: "marketing" },
-  { number: "04", title: "Soluções Legais, Jurídicas e Propriedade Intelectual", intro: "Estruturas sólidas para crescer com segurança.", items: ["Apoio Jurídico para Abertura e Registo de Empresas", "Elaboração, Análise e Auditoria de Contratos", "Registo de Marcas, Patentes e Propriedade Intelectual", "Consultoria em Conformidade (Compliance) e Regulamentação"], category: "juridico" },
-  { number: "05", title: "Recursos Humanos, Talentos e Operações", intro: "Pessoas alinhadas e operações que sustentam o ritmo.", items: ["Recrutamento, Seleção e Acolhimento de Talentos (Onboarding)", "Consultoria de RH, Avaliação e Gestão de Desempenho", "Serviços de Tradução Profissional e Interpretação", "Gestão de Operações e Cadeia de Mantimentos (Logística)"], category: "rh" },
-  { number: "06", title: "Finanças Pessoais, Investimentos e Captação", intro: "Planeamento para proteger o que construiu e abrir possibilidades.", items: ["Planeamento Financeiro Pessoal e Familiar", "Consultoria em Investimentos e Gestão de Património", "Preparação para Captação de Investimento, Crédito e Parcerias"], category: "investimento" },
+  { number: "01", title: "Consultoria, Estrat�gia e Gest�o Empresarial", intro: "Decis�es mais claras para neg�cios prontos para avan�ar.", items: ["Consultoria de Neg�cios e Gest�o Estrat�gica", "Elabora��o de Planos de Neg�cio e Viabilidade Econ�mica", "Mapeamento, Reestrutura��o e Otimiza��o de Processos", "Mentoria para Empreendedores, Startups e Founders"], category: "consultoria" },
+  { number: "02", title: "Gest�o Financeira, Contabilidade e Fiscalidade", intro: "O rigor financeiro que transforma n�meros em confian�a.", items: ["Contabilidade Certificada, Auditoria e Declara��es", "Consultoria Fiscal, Planeamento Tribut�rio e Impostos", "Gest�o do Fluxo de Caixa e Finan�as Empresariais", "Avalia��o de Empresas (Valuation) e An�lise de Risco"], category: "financas" },
+  { number: "03", title: "Marketing, Vendas e Posicionamento de Marca", intro: "Uma presen�a que diz o que vale, para quem importa.", items: ["Gest�o de Redes Sociais, Conte�do e Tr�fego Pago", "Cria��o de Identidade Visual, Branding e Design", "Estrat�gias de Vendas, Prospec��o e Treino Comercial", "Assessoria de Imprensa, Rela��es P�blicas e Comunica��o"], category: "marketing" },
+  { number: "04", title: "Solu��es Legais, Jur�dicas e Propriedade Intelectual", intro: "Estruturas s�lidas para crescer com seguran�a.", items: ["Apoio Jur�dico para Abertura e Registo de Empresas", "Elabora��o, An�lise e Auditoria de Contratos", "Registo de Marcas, Patentes e Propriedade Intelectual", "Consultoria em Conformidade (Compliance) e Regulamenta��o"], category: "juridico" },
+  { number: "05", title: "Recursos Humanos, Talentos e Opera��es", intro: "Pessoas alinhadas e opera��es que sustentam o ritmo.", items: ["Recrutamento, Sele��o e Acolhimento de Talentos (Onboarding)", "Consultoria de RH, Avalia��o e Gest�o de Desempenho", "Servi�os de Tradu��o Profissional e Interpreta��o", "Gest�o de Opera��es e Cadeia de Mantimentos (Log�stica)"], category: "rh" },
+  { number: "06", title: "Finan�as Pessoais, Investimentos e Capta��o", intro: "Planeamento para proteger o que construiu e abrir possibilidades.", items: ["Planeamento Financeiro Pessoal e Familiar", "Consultoria em Investimentos e Gest�o de Patrim�nio", "Prepara��o para Capta��o de Investimento, Cr�dito e Parcerias"], category: "investimento" },
 ];
 
 export default function DashboardBusiness() {
@@ -97,11 +99,11 @@ export default function DashboardBusiness() {
             <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-500"><ShieldAlert size={28} /></div>
             <div className="space-y-2">
               <h1 className="text-xl font-bold tracking-tight text-[#171717]">Pedido de Conta Pendente</h1>
-              <p className="text-sm text-[#6F7780]">A sua conta está em análise pela equipa de administração.</p>
+              <p className="text-sm text-[#6F7780]">A sua conta est� em an�lise pela equipa de administra��o.</p>
             </div>
             <div className="bg-amber-50/50 rounded-2xl border border-amber-100 p-4 text-xs text-amber-800 text-left space-y-2.5">
               <p className="font-semibold flex items-center gap-1.5">O que acontece agora?</p>
-              <p>Assim que o administrador aprovar a sua solicitação, poderá aceder ao painel e gerenciar os seus serviços.</p>
+              <p>Assim que o administrador aprovar a sua solicita��o, poder� aceder ao painel e gerenciar os seus servi�os.</p>
             </div>
             <div className="flex flex-col gap-2 pt-2">
               <button onClick={handleRefreshStatus} className="w-full bg-[#075342] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#054235] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
@@ -127,8 +129,8 @@ export default function DashboardBusiness() {
 
   async function handleForceChangePwd() {
     setPwdError("");
-    if (newPwd.length < 6) { setPwdError("Mínimo 6 caracteres."); return; }
-    if (newPwd !== confirmPwd) { setPwdError("Senhas não coincidem."); return; }
+    if (newPwd.length < 6) { setPwdError("M�nimo 6 caracteres."); return; }
+    if (newPwd !== confirmPwd) { setPwdError("Senhas n�o coincidem."); return; }
     setPwdLoading(true);
     try {
       await changePassword(localUser.id, newPwd);
@@ -167,12 +169,12 @@ export default function DashboardBusiness() {
 
   const sidebarItems = isAdmin
     ? [
-        { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
+        { id: "admin" as Section, label: "Administra��o", icon: <ShieldAlert size={15} /> },
       ]
     : [
-        { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
+        { id: "overview" as Section, label: "Vis�o Geral", icon: <Eye size={15} /> },
         { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
-        { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+        { id: "produtos" as Section, label: "Servi�os", icon: <Package size={15} /> },
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
       ];
 
@@ -185,7 +187,7 @@ export default function DashboardBusiness() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#075342] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#C69A3A", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Negócios</small></span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#C69A3A", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Neg�cios</small></span>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="p-2 hover:bg-white/10 rounded-lg transition-all" title="Trocar loja"><Store size={18} /></button>
@@ -202,7 +204,7 @@ export default function DashboardBusiness() {
           <div className="flex items-center gap-3 mb-5">
             <div>
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>YESOLA</span>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#C69A3A", marginTop: "1px" }}>Negócios</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#C69A3A", marginTop: "1px" }}>Neg�cios</p>
               <p className="text-[10px] text-white/50 mt-1">Painel da loja</p>
             </div>
           </div>
@@ -266,11 +268,11 @@ export default function DashboardBusiness() {
 }
 
 function OverviewSection({ store }: { store: any }) {
-  const stats = [{ label: "Serviços", value: store.products?.length || 0, icon: <Package size={18} /> }];
+  const stats = [{ label: "Servi�os", value: store.products?.length || 0, icon: <Package size={18} /> }];
   const whatsappClicks = store?.whatsapp_clicks || 0;
   return (
     <div>
-      <h2 className="font-['Playfair_Display'] text-3xl text-[#171717] mb-8">Visão Geral</h2>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#171717] mb-8">Vis�o Geral</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-[#E8F2EE] p-6">
@@ -281,7 +283,7 @@ function OverviewSection({ store }: { store: any }) {
         <div className="bg-white rounded-2xl border border-[#E8F2EE] p-5">
           <p className="text-[10px] text-[#6F7780] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
           <p className="text-2xl font-bold text-[#171717]">{whatsappClicks}</p>
-        </div>
+                </div>
       </div>
     </div>
   );
@@ -293,9 +295,17 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(store.latitude || null);
+  const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
+
+  const locationMutation = useMutation({
+    mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -336,7 +346,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
     <div>
       <div className="flex items-center justify-between mb-8">
         <h2 className="font-['Playfair_Display'] text-3xl text-[#171717]">Minha Loja</h2>
-        {isDirty && <button onClick={handleSave} disabled={mutation.isPending} className="bg-[#075342] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors">{mutation.isPending ? "A guardar..." : "Guardar alterações"}</button>}
+        {isDirty && <button onClick={handleSave} disabled={mutation.isPending} className="bg-[#075342] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors">{mutation.isPending ? "A guardar..." : "Guardar altera��es"}</button>}
         {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
       </div>
 
@@ -382,29 +392,29 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
       <div className="bg-white rounded-2xl border border-[#E8F2EE] p-8 space-y-6 max-w-2xl">
         <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">Dados da loja</h3>
         <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
-        <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
+        <div><label className={labelCls}>Descri��o</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
         <div className="grid grid-cols-2 gap-4">
           <div><label className={labelCls}>Telefone</label><input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} /></div>
-          <div><label className={labelCls}>Endereço</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
+          <div><label className={labelCls}>Endere�o</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Província</label>
+            <label className={labelCls}>Prov�ncia</label>
             <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={`${inputCls} cursor-pointer`}>
-              <option value="">Selecione a Província</option>
+              <option value="">Selecione a Prov�ncia</option>
               {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>)}
             </select>
           </div>
           <div>
-            <label className={labelCls}>Município</label>
+            <label className={labelCls}>Munic�pio</label>
             <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={`${inputCls} cursor-pointer disabled:opacity-50`} disabled={!form.province}>
-              <option value="">{form.province ? "Selecione o Município" : "Selecione a província primeiro"}</option>
+              <option value="">{form.province ? "Selecione o Munic�pio" : "Selecione a prov�ncia primeiro"}</option>
               {(ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []).map((m) => <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>)}
             </select>
           </div>
         </div>
         <div>
-          <label className={labelCls}>Horários de funcionamento</label>
+          <label className={labelCls}>Hor�rios de funcionamento</label>
           <div className="space-y-3">
             {schedule.map((day, i) => (
               <div key={day.label} className="border border-[#E8F2EE] rounded-2xl p-4 bg-[#FAF8F3]">
@@ -426,6 +436,80 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
             ))}
           </div>
         </div>
+
+      </div>
+
+      {/* Localiza��o no Mapa */}
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#1a3a1a]">Localiza��o no Mapa</h3>
+        <p className="text-sm text-[#6B7280]">Marque a localiza��o exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+            latitude && longitude 
+              ? "border-[#1565C0] bg-blue-50" 
+              : "border-[#d4e8d4] bg-[#fafafa] hover:border-[#1565C0]"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-[#1565C0]" : "bg-[#d4e8d4]"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6B7280]"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Localiza��o definida</p>
+                <p className="text-xs text-[#6B7280] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Marcar localiza��o no mapa</p>
+                <p className="text-xs text-[#6B7280]">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-[#6B7280]"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => locationMutation.mutate()}
+              disabled={locationMutation.isPending}
+              className="bg-[#1565C0] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+            >
+              {locationMutation.isPending ? "A guardar..." : "Guardar localiza��o"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Map Picker Modal */}
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={form.province || store.province}
+            municipality={form.municipality || store.municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
       </div>
     </div>
   );
@@ -450,7 +534,7 @@ function ProdutosSection({ store }: { store: any }) {
       return createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
     },
     onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
-    onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
+    onError: (error: Error) => { console.error("Erro ao guardar servi�o:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
@@ -462,7 +546,7 @@ function ProdutosSection({ store }: { store: any }) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const remaining = 5 - productImages.length;
-    if (remaining <= 0) { alert("Máximo de 5 imagens por serviço."); return; }
+    if (remaining <= 0) { alert("M�ximo de 5 imagens por servi�o."); return; }
     const toUpload = Array.from(files).slice(0, remaining);
     setUploadingImg(true);
     try {
@@ -488,8 +572,8 @@ function ProdutosSection({ store }: { store: any }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="font-['Playfair_Display'] text-3xl text-[#171717]">Serviços</h2>
-        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#075342] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors"><Plus size={15} /> Novo serviço</button>
+        <h2 className="font-['Playfair_Display'] text-3xl text-[#171717]">Servi�os</h2>
+        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#075342] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors"><Plus size={15} /> Novo servi�o</button>
       </div>
 
       <AnimatePresence>
@@ -497,11 +581,11 @@ function ProdutosSection({ store }: { store: any }) {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-8">
             <div className="bg-white rounded-2xl border border-[#E8F2EE] p-6 space-y-4 max-w-2xl">
               <div className="flex items-center justify-between">
-                <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
+                <h3 className="font-['Playfair_Display'] text-lg text-[#171717]">{editProduct ? "Editar servi�o" : "Novo servi�o"}</h3>
                 <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="text-[#6F7780] hover:text-[#171717]"><X size={18} /></button>
               </div>
               <div>
-                <label className={labelCls}>Imagens do serviço (até 5)</label>
+                <label className={labelCls}>Imagens do servi�o (at� 5)</label>
                 <div className="flex flex-wrap gap-3 mb-3">
                   {productImages.map((img, i) => (
                     <div key={i} className="relative group">
@@ -518,23 +602,23 @@ function ProdutosSection({ store }: { store: any }) {
                 </div>
                 <p className="text-[10px] text-[#6F7780]">{productImages.length}/5 imagens</p>
               </div>
-              <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Consultoria Estratégica" /></div>
+              <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Consultoria Estrat�gica" /></div>
               <div className="grid grid-cols-3 gap-4">
-                <div><label className={labelCls}>Preço</label><input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className={inputCls} /></div>
+                <div><label className={labelCls}>Pre�o</label><input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className={inputCls} /></div>
                 <div>
                   <label className={labelCls}>Moeda</label>
                   <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })} className={inputCls}>
                     <option value="AOA">AOA (Kz)</option>
                     <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
+                    <option value="EUR">EUR (�)</option>
+                    <option value="GBP">GBP (�)</option>
                   </select>
                 </div>
                 <div>
                   <label className={labelCls}>Categoria</label>
                   <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls}>
                     <option value="">Selecionar...</option>
-                    {BUSINESS_CATEGORIES.map((group) => <option key={group.category} value={group.title}>{group.number} — {group.title.split(",")[0]}</option>)}
+                    {BUSINESS_CATEGORIES.map((group) => <option key={group.category} value={group.title}>{group.number} � {group.title.split(",")[0]}</option>)}
                   </select>
                 </div>
               </div>
@@ -545,7 +629,7 @@ function ProdutosSection({ store }: { store: any }) {
                   {BUSINESS_CATEGORIES.find((g) => g.title === form.category)?.items.map((item) => <option key={item} value={item}>{item}</option>)}
                 </select>
               </div>
-              <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
+              <div><label className={labelCls}>Descri��o</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
               <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#075342] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#054235] transition-colors disabled:opacity-50">
                 {createMut.isPending ? "A guardar..." : editProduct ? "Atualizar" : "Guardar"}
               </button>
@@ -565,7 +649,7 @@ function ProdutosSection({ store }: { store: any }) {
                   <span className="font-mono text-xs tracking-[0.2em] text-[#6F7780]">{group.number}</span>
                   <div>
                     <h4 className="text-sm font-semibold text-[#171717]">{group.title}</h4>
-                    <p className="text-xs text-[#6F7780] mt-0.5">{groupProducts.length} serviço(s)</p>
+                    <p className="text-xs text-[#6F7780] mt-0.5">{groupProducts.length} servi�o(s)</p>
                   </div>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#6F7780] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
@@ -578,9 +662,9 @@ function ProdutosSection({ store }: { store: any }) {
                     <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="px-3 py-1.5 bg-[#FAF8F3] text-xs text-[#565d66] rounded-full">{item}</span>)}</div>
                   </div>
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-2">Serviços desta categoria</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-2">Servi�os desta categoria</p>
                     {groupProducts.length === 0 ? (
-                      <p className="text-xs text-[#6F7780] text-center py-6 bg-[#FAF8F3] rounded-xl">Nenhum serviço nesta categoria.</p>
+                      <p className="text-xs text-[#6F7780] text-center py-6 bg-[#FAF8F3] rounded-xl">Nenhum servi�o nesta categoria.</p>
                     ) : (
                       <div className="space-y-2">
                         {groupProducts.map((p: any) => (
@@ -588,10 +672,10 @@ function ProdutosSection({ store }: { store: any }) {
                             {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
                             <div className="flex-1">
                               <h5 className="text-xs font-medium text-[#171717]">{p.name}</h5>
-                              <p className="text-[10px] text-[#6F7780]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                              <p className="text-[10px] text-[#6F7780]">{p.subcategory || p.category} {p.price ? `� ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "�" : p.currency === "GBP" ? "�" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
                             </div>
                             <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#6F7780] hover:text-[#075342] transition-colors p-1"><Edit2 size={13} /></button>
-                            <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#6F7780] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                            <button onClick={() => { if (confirm("Eliminar este servi�o?")) deleteMut.mutate(p.id); }} className="text-[#6F7780] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
                           </div>
                         ))}
                       </div>
@@ -610,15 +694,11 @@ function ProdutosSection({ store }: { store: any }) {
 function ContactosSection({ store }: { store: any }) {
   return (
     <div>
-      <h2 className="font-['Playfair_Display'] text-3xl text-[#171717] mb-8">Contactos</h2>
-      <div className="bg-white rounded-2xl border border-[#E8F2EE] p-8 max-w-2xl space-y-6">
-        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#075342] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
-        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#171717]">{store.phone}</p></div>
-        <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#171717]">{store.address || "Não definido"}</p></div>
-        <div>
-          <label className={labelCls}>WhatsApp Direct</label>
-          <a href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre a loja ${store.name}.`)}`} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#25D366] text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-[#1da851] transition-colors">Enviar mensagem</a>
-        </div>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#1a3a1a] mb-8">Contactos</h2>
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 max-w-2xl space-y-6">
+        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
+        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#1a3a1a]">{store.phone}</p></div>
+        <div><label className={labelCls}>Endere�o</label><p className="text-sm text-[#1a3a1a]">{store.address || "N�o definido"}</p></div>
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ export default function SearchPage() {
   const filtered = useMemo(() => {
     return stores.filter((store) => {
       const matchOpen = !openOnly || store.isOpen;
-      const isService = ["Serviços Residenciais", "Automotivo", "Saúde & Beleza", "Educação"].includes(store.category);
+      const isService = ["Casa & Serviços", "Automóveis & Mobilidade", "Beleza & Bem-Estar", "Educação & Formação"].includes(store.category);
       const matchType =
         typeFilter === "all" ||
         (typeFilter === "servico" && isService) ||

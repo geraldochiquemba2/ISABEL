@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Search, Menu, X, HeartHandshake, Camera,
-  Stethoscope, Home, Clock3, MapPin, ArrowLeft,
+  Home, Clock3, MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 
 const LOVE_SERVICE_GROUPS = [
-  { number: "01", title: "Actos de Amor, Homenagens e Experiências", intro: "Faça-se presente nos dias que mais importam.", category: "actos-de-amor", icon: HeartHandshake, items: ["Presentes e buquês", "Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
-  { number: "02", title: "Fotografia e Videomakers", intro: "Guarde o instante. Conte a história inteira.", category: "fotografia", icon: Camera, items: ["Fotógrafos", "Videomakers"] },
-  { number: "03", title: "Saúde, Cuidado e Bem-Estar ao Domicílio", intro: "Cuidado especializado, no conforto de casa.", category: "saude", icon: Stethoscope, items: ["Enfermagem e médicos", "Fisioterapia e massagens", "Apoio psicológico", "Personal trainers"] },
-  { number: "04", title: "Gestão do Lar e Refeições", intro: "Mais tempo para si. Uma casa que respira.", category: "lar", icon: Home, items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"] },
-  { number: "05", title: "Burocracias", intro: "Nós tratamos do que não pode esperar.", category: "burocracias", icon: Clock3, items: ["Pendências diárias", "Filas", "Entregas urgentes"] },
+  { number: "01", title: "Actos de Amor, Homenagens e Experiências", intro: "Faça-se presente nos dias que mais importam.", category: "actos-de-amor", icon: HeartHandshake, items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
+  { number: "02", title: "Presentes, Flores & Surpresas", intro: "Gestos que falam mais alto que as palavras.", category: "presentes-flores-surpresas", icon: HeartHandshake, items: ["Flores e buquês", "Cabazes", "Presentes personalizados", "Caixas-surpresa", "Cestas", "Presentes românticos"] },
+  { number: "03", title: "Apoio & Companhia a Idosos", intro: "Presença, cuidado e respeito para quem tanto deu.", category: "apoio-companhia-idosos", icon: HeartHandshake, items: ["Companhia", "Acompanhamento", "Apoio em deslocações", "Assistência não clínica"] },
+  { number: "04", title: "Entregas & Gestos Especiais", intro: "Surpresas que chegam sempre ao coração.", category: "entregas-gestos-especiais", icon: HeartHandshake, items: ["Entrega de presentes", "Entrega de flores", "Surpresas ao domicílio", "Mensagens especiais"] },
+  { number: "05", title: "Assistência a Pessoas & Famílias", intro: "Apoio que fortalece laços e facilita o dia a dia.", category: "assistencia-pessoas-familias", icon: HeartHandshake, items: ["Acompanhamento", "Apoio familiar", "Pequenas tarefas", "Assistência pessoal não clínica"] },
+  { number: "06", title: "Fotografia e Videomakers", intro: "Guarde o instante. Conte a história inteira.", category: "fotografia", icon: Camera, items: ["Fotógrafos", "Videomakers"] },
+  { number: "07", title: "Gestão do Lar e Refeições", intro: "Mais tempo para si. Uma casa que respira.", category: "lar", icon: Home, items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"] },
+  { number: "08", title: "Burocracias", intro: "Nós tratamos do que não pode esperar.", category: "burocracias", icon: Clock3, items: ["Pendências diárias", "Filas", "Entregas urgentes"] },
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
@@ -110,12 +113,17 @@ export default function ExploreLove() {
   const provinces = Object.keys(angolaProvinces);
   const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
 
+  const normalizeCategory = (s: string) =>
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&]/g, " ").replace(/\s+/g, " ").trim();
+
   const getStoresForGroup = (category: string) => {
     const group = LOVE_SERVICE_GROUPS.find((g) => g.category === category);
+    const normCategory = normalizeCategory(category);
+    const normTitle = group ? normalizeCategory(group.title) : "";
     const matched = stores.filter((s: any) => {
       if (s.phone === "999999999") return false;
-      const cat = (s.category || "").toLowerCase();
-      const matchesCategory = (group && cat.includes(group.title.toLowerCase())) || cat.includes(category.replace(/-/g, " "));
+      const cat = normalizeCategory(s.category || "");
+      const matchesCategory = cat.includes(normCategory) || cat.includes(normTitle) || normCategory.split(" ").every((w) => w.length > 2 && cat.includes(w));
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
       return matchesCategory && matchesProvince && matchesMunicipality;

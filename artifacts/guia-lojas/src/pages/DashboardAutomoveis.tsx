@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import MapPicker from "@/components/MapPicker";
+import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu } from "lucide-react";
+import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
 import { motion, AnimatePresence } from "framer-motion";
@@ -285,7 +287,7 @@ function OverviewSection({ store }: { store: any }) {
         <div className="bg-white rounded-2xl border border-[#e8eaed] p-5">
           <p className="text-[10px] text-[#87909a] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
           <p className="text-2xl font-bold text-[#30343a]">{whatsappClicks}</p>
-        </div>
+                </div>
       </div>
     </div>
   );
@@ -297,9 +299,17 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(store.latitude || null);
+  const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
+
+  const locationMutation = useMutation({
+    mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -430,6 +440,80 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
             ))}
           </div>
         </div>
+
+      </div>
+
+      {/* Localização no Mapa */}
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#1a3a1a]">Localização no Mapa</h3>
+        <p className="text-sm text-[#6B7280]">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+            latitude && longitude 
+              ? "border-[#1565C0] bg-blue-50" 
+              : "border-[#d4e8d4] bg-[#fafafa] hover:border-[#1565C0]"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-[#1565C0]" : "bg-[#d4e8d4]"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6B7280]"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Localização definida</p>
+                <p className="text-xs text-[#6B7280] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Marcar localização no mapa</p>
+                <p className="text-xs text-[#6B7280]">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-[#6B7280]"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => locationMutation.mutate()}
+              disabled={locationMutation.isPending}
+              className="bg-[#1565C0] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+            >
+              {locationMutation.isPending ? "A guardar..." : "Guardar localização"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Map Picker Modal */}
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={form.province || store.province}
+            municipality={form.municipality || store.municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
       </div>
     </div>
   );
@@ -614,15 +698,11 @@ function ProdutosSection({ store }: { store: any }) {
 function ContactosSection({ store }: { store: any }) {
   return (
     <div>
-      <h2 className="font-['Playfair_Display'] text-3xl text-[#30343a] mb-8">Contactos</h2>
-      <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 max-w-2xl space-y-6">
-        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#0f1d32] hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
-        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#30343a]">{store.phone}</p></div>
-        <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#30343a]">{store.address || "Não definido"}</p></div>
-        <div>
-          <label className={labelCls}>WhatsApp Direct</label>
-          <a href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre a loja ${store.name}.`)}`} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#25D366] text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-[#1da851] transition-colors">Enviar mensagem</a>
-        </div>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#1a3a1a] mb-8">Contactos</h2>
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 max-w-2xl space-y-6">
+        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
+        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#1a3a1a]">{store.phone}</p></div>
+        <div><label className={labelCls}>Endere�o</label><p className="text-sm text-[#1a3a1a]">{store.address || "N�o definido"}</p></div>
       </div>
     </div>
   );

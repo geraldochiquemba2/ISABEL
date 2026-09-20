@@ -67,7 +67,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
               {[
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
-                { href: "/descobrir-estilo", label: "Estilo" },
+                { href: "/consultores-estilo", label: "Estilo" },
                 { href: "/carrinhos", label: "Carrinhos" },
               ].map((link) => (
                 <Link key={link.href} href={link.href}>
@@ -168,7 +168,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
               {[
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
-                { href: "/descobrir-estilo", label: "Descobrir Estilo" },
+                { href: "/consultores-estilo", label: "Consultores de Estilo" },
                 { href: "/carrinhos", label: "Carrinhos" },
               ].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
