@@ -111,6 +111,22 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         </div>
       </section>
 
+      {/* Province */}
+      <section className="px-5 py-3">
+        <button
+          onClick={() => setShowProvinceModal(true)}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#f8bbd9] hover:border-[#7A4549] transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#fce4ec] flex items-center justify-center"><MapPin size={18} className="text-[#7A4549]" /></div>
+          <div className="flex-1 text-left">
+            <p className="text-[14px] font-semibold text-[#7A4549]">
+              {selectedProvince ? selectedProvince + (selectedMunicipality ? " · " + selectedMunicipality : "") : "Em todas as províncias de Angola"}
+            </p>
+            <p className="text-[11px] text-[#6B7280]">Encontre os melhores salões e serviços de beleza perto de si.</p>
+          </div>
+          <ChevronRight size={18} className="text-[#7A4549]" />
+        </button>
+      </section>
 
       {/* Categories */}
       <section className="px-5 pt-4 pb-2">
@@ -193,22 +209,6 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         <StoreCategorySection categories={CATEGORIES} stores={stores} storeType="beleza" exploreRoute="/explorar-beleza" />
       )}
 
-      {/* Province */}
-      <section className="px-5 py-3">
-        <button
-          onClick={() => setShowProvinceModal(true)}
-          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#f8bbd9] hover:border-[#7A4549] transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-[#fce4ec] flex items-center justify-center"><MapPin size={18} className="text-[#7A4549]" /></div>
-          <div className="flex-1 text-left">
-            <p className="text-[14px] font-semibold text-[#7A4549]">
-              {selectedProvince ? selectedProvince + (selectedMunicipality ? " Â· " + selectedMunicipality : "") : "Em todas as provÃ­ncias de Angola"}
-            </p>
-            <p className="text-[11px] text-[#6B7280]">Encontre os melhores salÃµes e serviÃ§os de beleza perto de si.</p>
-          </div>
-          <ChevronRight size={18} className="text-[#7A4549]" />
-        </button>
-      </section>
       {/* Province Selection Modal */}
       {showProvinceModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
