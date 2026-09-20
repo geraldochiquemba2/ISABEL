@@ -23,10 +23,42 @@ function StoreCard({ store, from }: { store: Store; from: string }) {
   }, [images.length]);
 
   return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#E8DDD0] cursor-pointer hover:-translate-y-1 transition-all" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
+    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#E8DDD0] cursor-pointer hover:-translate-y-1 transition-all relative group" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
         {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
+        
+        {/* Botão de Partilha no Card */}
+        <button
+          onClick={async (e) => {
+            e.stopPropagation();
+            const url = `${window.location.origin}/loja/${store.id}?from=${from}`;
+            const shareData = {
+              title: store.name,
+              text: `Conheça a loja ${store.name} no Guia de Lojas!`,
+              url: url,
+            };
+            if (navigator.share) {
+              try {
+                await navigator.share(shareData);
+              } catch (err) {}
+            } else {
+              navigator.clipboard.writeText(url);
+              alert("Link da loja copiado!");
+            }
+          }}
+          className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center backdrop-blur-sm z-30 transition-transform hover:scale-110"
+          title="Partilhar loja"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+
         {store.isOpen !== undefined && (
           <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
             {store.isOpen ? "Aberto" : "Fechado"}
