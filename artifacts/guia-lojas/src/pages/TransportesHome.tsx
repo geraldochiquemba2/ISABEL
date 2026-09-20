@@ -130,9 +130,9 @@ export default function TransportesHome({ onBackToSelector }: { onBackToSelector
           <div className="w-10 h-10 rounded-full bg-[#fffde7] flex items-center justify-center"><MapPin size={18} className="text-[#F57F17]" /></div>
           <div className="flex-1 text-left">
             <p className="text-[14px] font-semibold text-[#F57F17]">
-              {selectedProvince ? selectedProvince + (selectedMunicipality ? " Â· " + selectedMunicipality : "") : "Em todas as provÃ­ncias de Angola"}
+              {selectedProvince ? selectedProvince + (selectedMunicipality ? " · " + selectedMunicipality : "") : "Em todas as províncias de Angola"}
             </p>
-            <p className="text-[11px] text-[#6B7280]">Encontre serviÃ§os de transporte perto de si, onde estiver.</p>
+            <p className="text-[11px] text-[#6B7280]">Encontre serviços de transporte perto de si, onde estiver.</p>
           </div>
           <ChevronRight size={18} className="text-[#F57F17]" />
         </button>
@@ -142,18 +142,18 @@ export default function TransportesHome({ onBackToSelector }: { onBackToSelector
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
           <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localizaÃ§Ã£o</h3>
+              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localização</h3>
               <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
-                <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">ProvÃ­ncia</h4>
+                <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Província</h4>
                 <div className="space-y-1 max-h-[50vh] overflow-y-auto">
                   {ANGOLA_PROVINCES.map((province) => (
                     <button
                       key={province.id}
                       onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
-                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
                         selectedProvince === province.name ? "bg-[#F57F17] text-white font-medium" : "hover:bg-[#fffde7] text-[#171717]"
                       }`}
                     >
@@ -164,13 +164,13 @@ export default function TransportesHome({ onBackToSelector }: { onBackToSelector
               </div>
               {selectedProvince && municipalities.length > 0 && (
                 <div className="flex-1">
-                  <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">MunicÃ­pio</h4>
+                  <h4 className="text-xs font-semibold text-[#6F7780] uppercase tracking-wider mb-2">Município</h4>
                   <div className="space-y-1 max-h-[50vh] overflow-y-auto">
                     {municipalities.map((municipality) => (
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}
-                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
                           selectedMunicipality === municipality ? "bg-[#F57F17] text-white font-medium" : "hover:bg-[#fffde7] text-[#171717]"
                         }`}
                       >
