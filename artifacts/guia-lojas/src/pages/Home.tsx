@@ -4,6 +4,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import {
   Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
   Shirt, Watch, Footprints, Gem, Briefcase, Baby, Sparkles, Smartphone, Home as HomeIcon, UtensilsCrossed,
@@ -91,6 +92,23 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   useThemeColor("#FAF8F4");
   const [, setLocation] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showProvinceModal, setShowProvinceModal] = useState(false);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
+
+  const municipalities = selectedProvince
+    ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
+    : [];
+
+  const handleProvinceSelect = () => {
+    if (selectedProvince) {
+      const params = new URLSearchParams();
+      params.set("provincia", selectedProvince);
+      if (selectedMunicipality) params.set("municipio", selectedMunicipality);
+      setLocation(`/explorar?` + params.toString());
+      setShowProvinceModal(false);
+    }
+  };
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "collection"],
@@ -166,6 +184,79 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
           </div>
         </div>
       </section>
+
+      {/* Province */}
+      <section className="px-5 py-3">
+        <button
+          onClick={() => setShowProvinceModal(true)}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8DDD0] hover:border-[#B89A78] transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#FAF8F4] flex items-center justify-center border border-[#E8DDD0]"><MapPin size={18} className="text-[#B89A78]" /></div>
+          <div className="flex-1 text-left">
+            <p className="text-[14px] font-semibold text-[#B89A78]">
+              {selectedProvince ? selectedProvince + (selectedMunicipality ? " · " + selectedMunicipality : "") : "Em todas as províncias de Angola"}
+            </p>
+            <p className="text-[11px] text-[#716D69]">Encontre as melhores lojas de moda perto de si.</p>
+          </div>
+          <ChevronRight size={18} className="text-[#B89A78]" />
+        </button>
+      </section>
+
+      {/* Province Selection Modal */}
+      {showProvinceModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center" onClick={() => setShowProvinceModal(false)}>
+          <div className="bg-white rounded-t-3xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-[#171717]">Escolha a sua localização</h3>
+              <button onClick={() => setShowProvinceModal(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <h4 className="text-xs font-semibold text-[#716D69] uppercase tracking-wider mb-2">Província</h4>
+                <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                  {ANGOLA_PROVINCES.map((province) => (
+                    <button
+                      key={province.id}
+                      onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                        selectedProvince === province.name ? "bg-[#B89A78] text-white font-medium" : "hover:bg-[#FAF8F4] text-[#171717]"
+                      }`}
+                    >
+                      {province.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {selectedProvince && municipalities.length > 0 && (
+                <div className="flex-1">
+                  <h4 className="text-xs font-semibold text-[#716D69] uppercase tracking-wider mb-2">Município</h4>
+                  <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                    {municipalities.map((municipality) => (
+                      <button
+                        key={municipality}
+                        onClick={() => setSelectedMunicipality(municipality)}
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                          selectedMunicipality === municipality ? "bg-[#B89A78] text-white font-medium" : "hover:bg-[#FAF8F4] text-[#171717]"
+                        }`}
+                      >
+                        {municipality}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {selectedProvince && (
+              <button
+                onClick={handleProvinceSelect}
+                className="w-full mt-6 bg-[#B89A78] text-white py-3 rounded-xl font-medium hover:bg-[#9A7D60] transition-colors"
+              >
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <section className="px-5 py-3 space-y-3">
