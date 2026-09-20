@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -111,13 +111,6 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         </div>
       </section>
 
-      {/* Search */}
-      <section className="px-5 py-2">
-        <div className="relative">
-          <input type="text" placeholder="O que procura hoje?" className="w-full bg-white border border-[#EAD9D5] rounded-full px-5 py-3 text-sm text-[#292727] placeholder:text-[#697482] outline-none focus:border-[#7A4549] transition-colors" />
-          <svg className="absolute left-4 top-1/2 -translate-y-1/2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#697482" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </div>
-      </section>
 
       {/* Categories */}
       <section className="px-5 pt-4 pb-2">
@@ -185,21 +178,6 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         </section>
       )}
 
-      {/* Promo Banner */}
-      <section className="px-5 py-3">
-        <div className="bg-white rounded-2xl px-5 py-4 border border-[#EAD9D5] flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-[#FBF7F2] flex items-center justify-center">
-            <Heart size={20} className="text-[#7A4549]" />
-          </div>
-          <div className="flex-1">
-            <p className="text-[14px] font-semibold text-[#292727]">Cuide de si com amor 💛</p>
-            <p className="text-[11px] text-[#697482]">Agende, receba e sinta-se ainda melhor. Você merece!</p>
-          </div>
-          <button className="text-[12px] font-medium text-[#7A4549] border border-[#7A4549] px-4 py-2 rounded-full hover:bg-[#FBF7F2] transition-colors">
-            Ver promoções
-          </button>
-        </div>
-      </section>
 
       {/* Stores by Category */}
       {isLoading ? (
