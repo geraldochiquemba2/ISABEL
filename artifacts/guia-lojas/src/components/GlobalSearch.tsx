@@ -473,7 +473,7 @@ const GlobalSearch = () => {
       <div className="flex gap-2">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-[#A96F12]" />
           </div>
 
           <input
@@ -487,15 +487,33 @@ const GlobalSearch = () => {
             onFocus={() => query.length >= 2 && setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder="O que procuras?"
-            className="w-full pl-12 pr-10 py-4 bg-white border border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#B89A78] focus:border-transparent shadow-sm transition-all duration-200"
+            className="w-full pl-12 pr-12 py-3.5 bg-[#FFFFFF] border border-[#E8CC91] rounded-2xl text-[#111111] placeholder-[#6F6F6F] focus:outline-none focus:ring-2 focus:ring-[#C99432] focus:border-transparent shadow-[0_2px_12px_rgba(201,148,50,0.06)] transition-all duration-200"
           />
 
-          {query && (
+          {query ? (
             <button
               onClick={clearSearch}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#6F6F6F] hover:text-[#111111] transition-colors"
             >
               <X className="h-5 w-5" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => window.location.href = "/explorar"}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#A96F12] hover:text-[#C99432] transition-colors border-l border-[#E8CC91]/60 pl-3 my-2"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14" />
+                <line x1="4" y1="10" x2="4" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12" y2="3" />
+                <line x1="20" y1="21" x2="20" y2="16" />
+                <line x1="20" y1="12" x2="20" y2="3" />
+                <line x1="1" y1="14" x2="7" y2="14" />
+                <line x1="9" y1="8" x2="15" y2="8" />
+                <line x1="17" y1="16" x2="23" y2="16" />
+              </svg>
             </button>
           )}
         </div>

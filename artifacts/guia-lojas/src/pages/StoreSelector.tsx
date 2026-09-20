@@ -223,21 +223,21 @@ const stores = [
 
 const categoryIcons: Record<string, React.ReactNode> = {
   weddings: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <circle cx="12" cy="22" r="7" />
       <circle cx="24" cy="22" r="7" />
       <path d="M19 22c-1-3 0-7 3-8" strokeLinecap="round" />
     </svg>
   ),
   formacoes: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M18 8L4 14l14 6 14-6L18 8z" />
       <path d="M8 16v8c0 2 4 4 10 4s10-2 10-4v-8" />
       <line x1="30" y1="14" x2="30" y2="26" />
     </svg>
   ),
   imoveis: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="6" y="12" width="24" height="18" rx="2" />
       <rect x="10" y="16" width="5" height="5" rx="1" />
       <rect x="21" y="16" width="5" height="5" rx="1" />
@@ -248,7 +248,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   collection: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M12 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" />
       <path d="M10 12l-2 16h20l-2-16" />
       <path d="M14 12v4" />
@@ -256,7 +256,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   eventos: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="8" y="10" width="20" height="18" rx="2" />
       <path d="M8 16h20" />
       <path d="M14 10V8" />
@@ -265,29 +265,29 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "love-services": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M18 30s-10-6-10-14c0-4 3-6 6-6 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 2 6 6 0 8-10 14-10 14z" />
       <path d="M18 18c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z" />
     </svg>
   ),
   business: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <circle cx="18" cy="18" r="10" />
       <path d="M18 10v16" />
       <path d="M14 14c0-2 2-3 4-3s4 1 4 3-2 2-4 3-4 1-4 3 2 3 4 3 4-1 4-3" />
     </svg>
   ),
   infantil: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <circle cx="18" cy="14" r="6" />
       <path d="M12 20c-2 2-3 5-3 8h24c0-3-1-6-3-8" />
-      <circle cx="15" cy="13" r="1" fill="#B89A78" />
-      <circle cx="21" cy="13" r="1" fill="#B89A78" />
+      <circle cx="15" cy="13" r="1" fill="#A96F12" />
+      <circle cx="21" cy="13" r="1" fill="#A96F12" />
       <path d="M16 16c1 1 3 1 4 0" strokeLinecap="round" />
     </svg>
   ),
   automoveis: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M6 22h24l-3-10H9L6 22z" />
       <circle cx="12" cy="24" r="2.5" />
       <circle cx="24" cy="24" r="2.5" />
@@ -296,14 +296,14 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   saude: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="6" y="8" width="24" height="20" rx="2" />
       <path d="M16 14v8M12 18h8" />
       <rect x="10" y="4" width="12" height="6" rx="1" />
     </svg>
   ),
   beleza: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M18 4l-2 8h4l-2-8z" />
       <path d="M12 12c-2 0-4 2-4 4 0 4 4 8 10 8s10-4 10-8c0-2-2-4-4-4" />
       <path d="M18 24v6" />
@@ -311,7 +311,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   casa: (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M6 16l12-10 12 10" />
       <path d="M8 14v14h20V14" />
       <rect x="14" y="22" width="8" height="6" rx="1" />
@@ -319,28 +319,28 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "tecnologia-electronicos": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="10" y="6" width="16" height="24" rx="3" />
       <circle cx="18" cy="26" r="1.5" />
       <path d="M14 10h8" />
     </svg>
   ),
   "alimentacao-restauracao": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M12 6v10c0 2-2 4-4 4v0c2 0 4 2 4 4v10" />
       <path d="M24 6v6c0 4 4 6 4 10s-4 6-4 6" />
       <line x1="18" y1="6" x2="18" y2="30" />
     </svg>
   ),
   "turismo-lazer": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M18 6L6 14l12 4 12-4L18 6z" />
       <path d="M6 14v8c0 2 6 6 12 6s12-4 12-6v-8" />
       <path d="M18 18v10" />
     </svg>
   ),
   "desporto-fitness": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M8 18h4v-6h-4zM24 18h4v-6h-4z" />
       <rect x="12" y="15" width="12" height="6" rx="1" />
       <circle cx="6" cy="18" r="2" />
@@ -348,7 +348,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "empregos-oportunidades": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="8" y="12" width="20" height="16" rx="2" />
       <path d="M14 12V10a4 4 0 0 1 8 0v2" />
       <circle cx="18" cy="20" r="2" />
@@ -356,7 +356,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "agricultura-agronegocio": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M18 30V14" />
       <path d="M12 20c-2-2-2-6 0-8 2 2 6 2 6 0" />
       <path d="M24 20c2-2 2-6 0-8-2 2-6 2-6 0" />
@@ -365,7 +365,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "influenciadores-criadores": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <circle cx="18" cy="14" r="6" />
       <path d="M8 30c0-5.5 4.5-10 10-10s10 4.5 10 10" />
       <circle cx="28" cy="10" r="4" />
@@ -373,7 +373,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "transportes-logistica": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M4 18h20v8H4z" />
       <path d="M24 22h6l4 4v4h-10v-8z" />
       <circle cx="10" cy="28" r="3" />
@@ -381,7 +381,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
     </svg>
   ),
   "servicos-profissionais": (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#B89A78" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <rect x="8" y="6" width="20" height="24" rx="2" />
       <path d="M14 12h8M14 16h8M14 20h5" />
       <path d="M12 24h12" />
@@ -423,27 +423,27 @@ interface StoreSelectorProps {
 
 export default function StoreSelector({ onSelect }: StoreSelectorProps) {
   return (
-    <div className="min-h-[100dvh] bg-[#FAF8F4] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
         .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         @media (max-width: 400px) { .category-grid { grid-template-columns: repeat(2, 1fr); } }
-        .slide-dot { width: 8px; height: 8px; border-radius: 50%; background: #B89A78; transition: all 0.3s; }
+        .slide-dot { width: 8px; height: 8px; border-radius: 50%; background: #C99432; transition: all 0.3s; }
         .slide-dot-inactive { width: 8px; height: 8px; border-radius: 50%; background: #E5DDD0; }
         .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
         .trust-scroll::-webkit-scrollbar { display: none; }
-        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #E8DDD0; }
+        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #E8CC91; }
       `}</style>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#FAF8F4]/95 backdrop-blur-md border-b border-[#E8DDD0]/60">
+      <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-md border-b border-[#E8CC91]/60">
         <div className="flex items-center justify-center px-5 py-4">
           <div className="flex flex-col items-center">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", fontWeight: 600, color: "#111111", letterSpacing: "-.02em" }}>
               YESOLA
             </span>
             <svg width="30" height="8" viewBox="0 0 30 8" fill="none" className="mt-0.5">
-              <path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#B89A78" strokeWidth="1.5" fill="none" />
+              <path d="M0 4C5 1 10 0 15 2C20 4 25 3 30 1" stroke="#A96F12" strokeWidth="1.5" fill="none" />
             </svg>
           </div>
         </div>
@@ -457,14 +457,14 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       {/* Hero Section */}
       <section className="relative px-5 pt-6 pb-4 overflow-hidden" style={{ minHeight: "220px" }}>
         <div className="relative z-10 max-w-[280px]">
-          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#171717]" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#111111]" style={{ fontFamily: "'Playfair Display', serif" }}>
             Tudo o que<br />
             procuras,<br />
-            <span className="text-[#B89A78]">encontras aqui.</span>
+            <span className="text-[#C99432]">encontras aqui.</span>
           </h1>
-          <p className="text-[13px] text-[#716D69] mt-4 leading-relaxed">
+          <p className="text-[13px] text-[#6F6F6F] mt-4 leading-relaxed">
             Soluções completas para o seu dia a dia, negócios, formações, casa e muito mais,{" "}
-            <span className="text-[#B89A78] font-medium">na sua província.</span>
+            <span className="text-[#A96F12] font-semibold">na sua província.</span>
           </p>
         </div>
         <div className="absolute right-0 top-0 w-[55%] h-full">
@@ -479,16 +479,16 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
       {/* Purpose Banner */}
       <section className="px-5 py-3">
-        <div className="relative rounded-2xl overflow-hidden bg-white border border-[#E8DDD0]" style={{ minHeight: "200px" }}>
+        <div className="relative rounded-2xl overflow-hidden bg-white border border-[#E8CC91]" style={{ minHeight: "200px" }}>
           <div className="absolute right-0 top-0 w-[50%] h-full">
             <img src={PURPOSE_SLIDES[0].image} alt={PURPOSE_SLIDES[0].title} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/30 to-transparent" />
           </div>
           <div className="relative z-10 p-5 max-w-[60%]">
-            <h3 className="text-[16px] font-semibold text-[#B89A78]">{PURPOSE_SLIDES[0].title} ♥</h3>
-            <p className="text-[13px] text-[#B89A78]/80 italic mt-0.5">{PURPOSE_SLIDES[0].subtitle}</p>
-            <p className="text-[12px] text-[#716D69] mt-3 leading-relaxed">{PURPOSE_SLIDES[0].description}</p>
-            <button onClick={() => window.location.href = "/proposito"} className="mt-4 flex items-center gap-2 bg-[#B89A78] text-white text-[12px] font-medium px-4 py-2.5 rounded-full hover:bg-[#9A7D60] transition-colors">
+            <h3 className="text-[16px] font-semibold text-[#C99432]">{PURPOSE_SLIDES[0].title} ♥</h3>
+            <p className="text-[13px] text-[#C99432]/80 italic mt-0.5">{PURPOSE_SLIDES[0].subtitle}</p>
+            <p className="text-[12px] text-[#6F6F6F] mt-3 leading-relaxed">{PURPOSE_SLIDES[0].description}</p>
+            <button onClick={() => window.location.href = "/proposito"} className="mt-4 flex items-center gap-2 bg-gradient-to-r from-[#C99432] to-[#A96F12] hover:from-[#A96F12] hover:to-[#8C590E] text-white text-[12px] font-semibold px-5 py-2.5 rounded-full shadow-md transition-all transition-colors">
               Ver
             </button>
           </div>
@@ -498,7 +498,10 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       {/* Categories - Store Selector */}
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#171717]">Escolher loja</h2>
+          <h2 className="text-[18px] font-bold text-[#111111]">Escolher loja</h2>
+          <button onClick={() => window.location.href = "/explorar"} className="text-xs font-semibold text-[#A96F12] hover:text-[#C99432] transition-colors flex items-center gap-1">
+            Ver todas <ChevronRight size={14} />
+          </button>
         </div>
         <div className="category-grid">
           {stores.map((store) => (
@@ -507,10 +510,10 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onSelect(store.id)}
-              className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border bg-white border-[#E8DDD0] hover:border-[#B89A78]/30 hover:bg-[#FFFFFF] transition-all cursor-pointer"
+              className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border bg-white border-[#E8CC91] hover:border-[#B89A78]/30 hover:bg-[#FFFFFF] transition-all cursor-pointer"
             >
               <div className="flex items-center justify-center w-12 h-12">{categoryIcons[store.id]}</div>
-              <span className="text-[11px] font-medium text-[#171717] text-center leading-tight">{store.name}</span>
+              <span className="text-[11px] font-medium text-[#111111] text-center leading-tight">{store.name}</span>
             </motion.button>
           ))}
         </div>
@@ -521,8 +524,8 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
         <div className="trust-scroll">
           {TRUST_BADGES.map((badge, i) => (
             <div key={i} className="trust-item">
-              <span className="text-[#B89A78]">{badge.icon}</span>
-              <span className="text-[11px] font-medium text-[#171717] leading-tight whitespace-pre-line">{badge.label}</span>
+              <span className="text-[#C99432]">{badge.icon}</span>
+              <span className="text-[11px] font-medium text-[#111111] leading-tight whitespace-pre-line">{badge.label}</span>
             </div>
           ))}
         </div>
