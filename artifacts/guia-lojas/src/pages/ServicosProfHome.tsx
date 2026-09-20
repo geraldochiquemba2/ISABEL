@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -55,7 +55,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-servicos-prof?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -153,9 +153,9 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
                     <button
                       key={province.id}
                       onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
-                      className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                         selectedProvince === province.name ? "bg-[#1A237E] text-white font-medium" : "hover:bg-[#e8eaf6] text-[#171717]"
-                      }}
+                      }`}
                     >
                       {province.name}
                     </button>
@@ -170,9 +170,9 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}
-                        className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                           selectedMunicipality === municipality ? "bg-[#1A237E] text-white font-medium" : "hover:bg-[#e8eaf6] text-[#171717]"
-                        }}
+                        }`}
                       >
                         {municipality}
                       </button>
@@ -186,7 +186,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
                 onClick={handleProvinceSelect}
                 className="w-full mt-6 bg-[#1A237E] text-white py-3 rounded-xl font-medium transition-colors"
               >
-                {selectedMunicipality ? Explorar em {selectedMunicipality} : Explorar em {selectedProvince}}
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
             )}
           </div>
@@ -265,5 +265,6 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
     </div>
   );
 }
+
 
 

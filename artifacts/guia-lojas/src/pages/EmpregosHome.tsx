@@ -54,7 +54,7 @@ export default function EmpregosHome({ onBackToSelector }: { onBackToSelector?: 
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-empregos?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -264,5 +264,6 @@ export default function EmpregosHome({ onBackToSelector }: { onBackToSelector?: 
     </div>
   );
 }
+
 
 

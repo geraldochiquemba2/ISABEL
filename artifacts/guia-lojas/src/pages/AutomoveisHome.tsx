@@ -57,7 +57,7 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-automoveis?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -269,5 +269,6 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
     </div>
   );
 }
+
 
 

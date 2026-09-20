@@ -56,7 +56,7 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-tecnologia?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -154,9 +154,9 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
                     <button
                       key={province.id}
                       onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
-                      className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                         selectedProvince === province.name ? "bg-[#1565C0] text-white font-medium" : "hover:bg-[#e3f2fd] text-[#171717]"
-                      }}
+                      }`}
                     >
                       {province.name}
                     </button>
@@ -171,9 +171,9 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}
-                        className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                           selectedMunicipality === municipality ? "bg-[#1565C0] text-white font-medium" : "hover:bg-[#e3f2fd] text-[#171717]"
-                        }}
+                        }`}
                       >
                         {municipality}
                       </button>
@@ -187,7 +187,7 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
                 onClick={handleProvinceSelect}
                 className="w-full mt-6 bg-[#1565C0] text-white py-3 rounded-xl font-medium transition-colors"
               >
-                {selectedMunicipality ? Explorar em {selectedMunicipality} : Explorar em {selectedProvince}}
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
             )}
           </div>
@@ -266,5 +266,6 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
     </div>
   );
 }
+
 
 

@@ -56,7 +56,7 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-desporto?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -154,9 +154,9 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
                     <button
                       key={province.id}
                       onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
-                      className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                         selectedProvince === province.name ? "bg-[#E65100] text-white font-medium" : "hover:bg-[#fff3e0] text-[#171717]"
-                      }}
+                      }`}
                     >
                       {province.name}
                     </button>
@@ -171,9 +171,9 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}
-                        className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                           selectedMunicipality === municipality ? "bg-[#E65100] text-white font-medium" : "hover:bg-[#fff3e0] text-[#171717]"
-                        }}
+                        }`}
                       >
                         {municipality}
                       </button>
@@ -187,7 +187,7 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
                 onClick={handleProvinceSelect}
                 className="w-full mt-6 bg-[#E65100] text-white py-3 rounded-xl font-medium transition-colors"
               >
-                {selectedMunicipality ? Explorar em {selectedMunicipality} : Explorar em {selectedProvince}}
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
             )}
           </div>
@@ -266,5 +266,6 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
     </div>
   );
 }
+
 
 

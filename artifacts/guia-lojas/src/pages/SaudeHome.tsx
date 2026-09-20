@@ -59,7 +59,7 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
       const params = new URLSearchParams();
       params.set("provincia", selectedProvince);
       if (selectedMunicipality) params.set("municipio", selectedMunicipality);
-      navigate($route?+ params.toString());
+      navigate(`/explorar-saude?` + params.toString());
       setShowProvinceModal(false);
     }
   };
@@ -157,9 +157,9 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
                     <button
                       key={province.id}
                       onClick={() => { setSelectedProvince(province.name); setSelectedMunicipality(null); }}
-                      className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                         selectedProvince === province.name ? "bg-[#2E7D32] text-white font-medium" : "hover:bg-[#e8f5e9] text-[#171717]"
-                      }}
+                      }`}
                     >
                       {province.name}
                     </button>
@@ -174,9 +174,9 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}
-                        className={w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors {
                           selectedMunicipality === municipality ? "bg-[#2E7D32] text-white font-medium" : "hover:bg-[#e8f5e9] text-[#171717]"
-                        }}
+                        }`}
                       >
                         {municipality}
                       </button>
@@ -190,7 +190,7 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
                 onClick={handleProvinceSelect}
                 className="w-full mt-6 bg-[#2E7D32] text-white py-3 rounded-xl font-medium transition-colors"
               >
-                {selectedMunicipality ? Explorar em {selectedMunicipality} : Explorar em {selectedProvince}}
+                {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
             )}
           </div>
@@ -269,5 +269,6 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
     </div>
   );
 }
+
 
 
