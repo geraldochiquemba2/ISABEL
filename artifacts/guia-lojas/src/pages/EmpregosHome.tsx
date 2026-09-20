@@ -104,14 +104,17 @@ export default function EmpregosHome({ onBackToSelector }: { onBackToSelector?: 
 
       {/* Province */}
       <section className="px-5 py-3">
-        <div className="flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#d1c4e9]">
+        <button
+          onClick={() => navigate("/explorar-empregos")}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#d1c4e9] hover:border-[#4527A0] transition-colors cursor-pointer text-left"
+        >
           <div className="w-10 h-10 rounded-full bg-[#ede7f6] flex items-center justify-center"><MapPin size={18} className="text-[#4527A0]" /></div>
           <div className="flex-1">
             <p className="text-[14px] font-semibold text-[#4527A0]">Em todas as províncias de Angola</p>
             <p className="text-[11px] text-[#6B7280]">Oportunidades profissionais perto de si, onde estiver.</p>
           </div>
           <ChevronRight size={18} className="text-[#4527A0]" />
-        </div>
+        </button>
       </section>
 
       {/* Featured Stores */}
