@@ -732,6 +732,87 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
     <div className="space-y-6 max-w-md">
       <h1 className="text-xl font-semibold text-foreground tracking-tight font-sans">Minha Loja</h1>
       
+      {/* Secção de Localização no Mapa - No topo */}
+      <div className="border border-black rounded-2xl p-5 bg-white space-y-4">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block">Localização no Mapa</label>
+        <p className="text-sm text-muted-foreground">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border border-black rounded-2xl transition-colors ${
+            latitude && longitude 
+              ? "border-black bg-muted" 
+              : "border-dashed border-black/25 bg-white hover:border-black"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-black" : "bg-muted"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-muted-foreground"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-foreground">Localização definida</p>
+                <p className="text-xs text-muted-foreground font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-foreground">Marcar localização no mapa</p>
+                <p className="text-xs text-muted-foreground">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-foreground" : "text-muted-foreground"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const { updateStoreLocation } = await import("@/lib/api");
+                  await updateStoreLocation(myStore.id, latitude, longitude);
+                  setDirty(false);
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 2000);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              className="bg-black text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-black/80 transition-colors"
+            >
+              Guardar localização
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+        
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={province}
+            municipality={municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
+      </div>
+
       {/* Secção de Foto de Perfil (Logo) */}
       <div className="border border-black rounded-2xl p-5 bg-white space-y-4">
         <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block">Foto de Perfil (Logotipo)</label>
@@ -1002,85 +1083,6 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
         </div>
       </div>
 
-      <div className="border border-black rounded-2xl p-5 bg-white space-y-4">
-        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block">Localização no Mapa</label>
-        <p className="text-sm text-muted-foreground">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
-        
-        <button
-          type="button"
-          onClick={() => setShowMapPicker(true)}
-          className={`w-full flex items-center gap-3 px-4 py-4 border border-black rounded-2xl transition-colors ${
-            latitude && longitude 
-              ? "border-black bg-muted" 
-              : "border-dashed border-black/25 bg-white hover:border-black"
-          }`}
-        >
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-            latitude && longitude ? "bg-black" : "bg-muted"
-          }`}>
-            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-muted-foreground"} />
-          </div>
-          <div className="text-left flex-1">
-            {latitude && longitude ? (
-              <>
-                <p className="text-sm font-medium text-foreground">Localização definida</p>
-                <p className="text-xs text-muted-foreground font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm font-medium text-foreground">Marcar localização no mapa</p>
-                <p className="text-xs text-muted-foreground">Toque para abrir o mapa e marcar o ponto exacto</p>
-              </>
-            )}
-          </div>
-          <Navigation size={16} className={latitude && longitude ? "text-foreground" : "text-muted-foreground"} />
-        </button>
-        
-        {latitude && longitude && (
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  const { updateStoreLocation } = await import("@/lib/api");
-                  await updateStoreLocation(myStore.id, latitude, longitude);
-                  setDirty(false);
-                  setSaved(true);
-                  setTimeout(() => setSaved(false), 2000);
-                } catch (err) {
-                  console.error(err);
-                }
-              }}
-              className="bg-black text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-black/80 transition-colors"
-            >
-              Guardar localização
-            </button>
-            <button
-              type="button"
-              onClick={() => { setLatitude(null); setLongitude(null); }}
-              className="text-sm text-red-500 hover:text-red-600"
-            >
-              Remover
-            </button>
-          </div>
-        )}
-        
-        {showMapPicker && (
-          <MapPicker
-            initialLatitude={latitude || undefined}
-            initialLongitude={longitude || undefined}
-            province={province}
-            municipality={municipality}
-            onLocationSelect={(lat, lng) => {
-              setLatitude(lat);
-              setLongitude(lng);
-              setShowMapPicker(false);
-              setDirty(true);
-            }}
-            onClose={() => setShowMapPicker(false)}
-          />
-        )}
-      </div>
     </div>
   );
 }

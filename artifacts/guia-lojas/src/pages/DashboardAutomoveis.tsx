@@ -354,6 +354,79 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
       </div>
 
+      {/* Localização no Mapa - No topo */}
+      <div className="bg-white rounded-2xl border border-[#d4e8d4] p-8 space-y-6 max-w-2xl mb-6">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#1a3a1a]">Localização no Mapa</h3>
+        <p className="text-sm text-[#6B7280]">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+            latitude && longitude 
+              ? "border-[#1565C0] bg-blue-50" 
+              : "border-[#d4e8d4] bg-[#fafafa] hover:border-[#1565C0]"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-[#1565C0]" : "bg-[#d4e8d4]"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6B7280]"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Localização definida</p>
+                <p className="text-xs text-[#6B7280] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-[#1a3a1a]">Marcar localização no mapa</p>
+                <p className="text-xs text-[#6B7280]">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-[#6B7280]"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => locationMutation.mutate()}
+              disabled={locationMutation.isPending}
+              className="bg-[#1565C0] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+            >
+              {locationMutation.isPending ? "A guardar..." : "Guardar localização"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Map Picker Modal */}
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={form.province || store.province}
+            municipality={form.municipality || store.municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
+      </div>
+
       <div className="bg-white rounded-2xl border border-[#e8eaed] p-8 space-y-6 max-w-2xl mb-6">
         <h3 className="font-['Playfair_Display'] text-lg text-[#30343a]">Imagens</h3>
         <div>
