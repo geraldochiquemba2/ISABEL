@@ -187,15 +187,6 @@ export default function StoreProfile() {
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
           </button>
-
-          <button
-            onClick={() => toggleFavorite(store.id)}
-            data-testid="button-favorite-cover"
-            className={`w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-foreground"} flex items-center justify-center transition-colors backdrop-blur-sm`}
-            title={isFavorite(store.id) ? "Remover dos favoritos" : "Guardar nos favoritos"}
-          >
-            <Heart size={16} className={isFavorite(store.id) ? "fill-red-500 text-red-500" : ""} />
-          </button>
         </div>
 
 
