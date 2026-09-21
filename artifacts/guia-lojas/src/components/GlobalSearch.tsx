@@ -12,137 +12,148 @@ interface ThemeMapping {
 
 const THEME_MAPPINGS: ThemeMapping[] = [
   {
-    theme: "Tecnologia & Electrónicos",
-    route: "/explorar-tecnologia",
-    keywords: ["tecnologia", "telemóvel", "iphone", "samsung", "computador", "tablet", "electrón", "electrod", "reparação", "internet", "software", "segurança"],
+    theme: "Casamentos",
+    route: "/explorar",
+    keywords: [
+      "casamento", "noiva", "noivo", "wedding", "celebração", "fotógrafo", "fotografia", "foto", 
+      "videógrafo", "festa", "bolo", "vestido", "buffet", "decoração", "cerimonial", "música", "alianças", "convites"
+    ],
     categories: [
-      { name: "Telemóveis & Tablets", subcategories: ["iPhone", "Samsung", "Xiaomi", "Tecno", "Infinix", "Huawei", "tablets", "acessórios"] },
-      { name: "Computadores & Informática", subcategories: ["Portáteis", "computadores de mesa", "monitores", "impressoras", "teclados", "ratos", "armazenamento"] },
-      { name: "Electrónica & Acessórios", subcategories: ["Televisores", "colunas", "auscultadores", "câmaras", "consolas", "acessórios electrónicos"] },
-      { name: "Electrodomicílios", subcategories: ["Frigoríficos", "arcas", "fogões", "microondas", "máquinas de lavar", "climatização"] },
-      { name: "Reparação & Assistência Técnica", subcategories: ["Telemóveis", "computadores", "televisores", "electrodomésticos"] },
-      { name: "Internet & Telecomunicações", subcategories: ["Provedores de internet", "instalação", "routers", "redes"] },
-      { name: "Software & Soluções Digitais", subcategories: ["Sites", "aplicativos", "sistemas empresariais", "software"] },
-      { name: "Segurança Electrónica & Videovigilancia", subcategories: ["CCTV", "câmaras", "alarmes", "controlo de acesso"] },
+      { name: "Planeamento & Organização", subcategories: ["Wedding Planner", "Organização", "Assessoria", "Cerimonial"] },
+      { name: "Beleza & Noiva", subcategories: ["Maquilhagem", "Cabelo", "Vestido de Noiva", "Traje de Noivo"] },
+      { name: "Fotografia & Vídeo", subcategories: ["Fotógrafo", "Fotografia", "Videógrafo", "Drone", "Ensaio Pré-Casamento", "Álbum de Casamento"] },
+      { name: "Decoração & Espaço", subcategories: ["Decoração", "Flores", "Iluminação", "Espaço de Festas", "Catering", "Bolo de Noiva"] },
     ],
   },
   {
-    theme: "Alimentação & Restauração",
-    route: "/explorar-alimentacao",
-    keywords: ["restaurante", "comida", "pastelaria", "café", "fast food", "catering", "supermercado", "talho", "padaria", "bebida", "entrega"],
+    theme: "Eventos & Celebrações",
+    route: "/explorar-eventos",
+    keywords: [
+      "evento", "festa", "aniversário", "conferência", "seminário", "fotógrafo", "fotografia", "foto",
+      "buffet", "catering", "decoração", "música", "dj", "animação", "espaço", "tendas", "gala"
+    ],
     categories: [
-      { name: "Restaurantes", subcategories: ["Cozinha angolana", "africana", "internacional", "familiar", "especializada"] },
-      { name: "Pastelarias & Cafés", subcategories: ["Cafés", "pastelarias", "casas de chá", "geladarias", "sobremesas"] },
-      { name: "Fast Food & Take-away", subcategories: ["Hambúrgueres", "pizzas", "frango", "refeições rápidas", "take-away"] },
-      { name: "Catering", subcategories: ["Festas", "casamentos", "empresas", "eventos", "buffet"] },
-      { name: "Supermercados & Mercearias", subcategories: ["Supermercados", "minimercados", "mercearias", "lojas de conveniência"] },
-      { name: "Talhos & Peixarias", subcategories: ["Carnes", "aves", "peixe", "marisco", "congelados"] },
-      { name: "Padarias", subcategories: ["Pão", "produtos de padaria", "produção artesanal"] },
-      { name: "Bebidas & Água", subcategories: ["Água mineral", "sumos", "refrigerantes", "distribuição de bebidas"] },
-      { name: "Produtos Alimentares", subcategories: ["Produtos nacionais", "importados", "naturais", "congelados"] },
-      { name: "Entregas de Comida", subcategories: ["Delivery de refeições", "entrega de compras", "entrega alimentar"] },
+      { name: "Eventos Corporativos", subcategories: ["Conferências", "Seminários", "Workshops", "Galas Empresariais"] },
+      { name: "Festas & Celebrações", subcategories: ["Aniversários", "Festas de Ano Novo", "Festas Temáticas", "Batizados"] },
+      { name: "Decoração & Ambientes", subcategories: ["Flores", "Iluminação", "Mobiliário para Festas", "Tendas"] },
+      { name: "Fotografia & Audiovisual", subcategories: ["Fotógrafo de Eventos", "Fotografia", "Videomaker", "Som & Luz", "DJ & Música"] },
+      { name: "Catering & Restauração", subcategories: ["Buffet", "Bolo de Festa", "Bebidas", "Garçons & Equipa"] },
     ],
   },
   {
-    theme: "Turismo & Lazer",
-    route: "/explorar-turismo",
-    keywords: ["turismo", "viagem", "passeio", "excursão", "parque", "lazer", "museu", "guia"],
-    categories: [
-      { name: "Agências de Viagens & Turismo", subcategories: ["Reservas", "viagens nacionais", "internacionais", "pacotes turísticos"] },
-      { name: "Passeios & Excursões", subcategories: ["Excursões", "passeios de grupo", "visitas guiadas", "passeios privados"] },
-      { name: "Experiências Turísticas", subcategories: ["Cultura", "gastronomia", "natureza", "aventura"] },
-      { name: "Parques & Espaços de Lazer", subcategories: ["Parques", "espaços recreativos", "parques infantis", "centros de lazer"] },
-      { name: "Actividades Recreativas", subcategories: ["Actividades ao ar livre", "aventura", "jogos", "entretenimento recreativo"] },
-      { name: "Turismo Cultural", subcategories: ["Museus", "monumentos", "locais históricos", "cultura", "património"] },
-      { name: "Guias Turísticos", subcategories: ["Guias locais", "culturais", "acompanhamento turístico"] },
+    theme: "Serviços de Amor",
+    route: "/explorar-love",
+    keywords: [
+      "amor", "presente", "flores", "surpresa", "romântico", "fotografia", "fotógrafo", "foto", "buquê", "ensaio"
     ],
-  },
-  {
-    theme: "Desporto & Fitness",
-    route: "/explorar-desporto",
-    keywords: ["ginásio", "academia", "personal trainer", "futebol", "natação", "artes marciais", "desporto", "dança"],
     categories: [
-      { name: "Ginásios & Academias", subcategories: ["Musculação", "cardio", "fitness", "aulas colectivas"] },
-      { name: "Personal Trainers", subcategories: ["Treino individual", "funcional", "preparação física", "acompanhamento"] },
-      { name: "Clubes & Escolas Desportivas", subcategories: ["Clubes", "academias", "escolas de formação desportiva"] },
-      { name: "Futebol & Outras Modalidades", subcategories: ["Futebol", "basquetebol", "voleibol", "ténis", "outras modalidades"] },
-      { name: "Natação", subcategories: ["Escolas de natação", "aulas individuais", "treino"] },
-      { name: "Artes Marciais", subcategories: ["Judo", "karaté", "taekwondo", "boxe", "outras modalidades"] },
-      { name: "Equipamentos & Artigos Desportivos", subcategories: ["Roupa desportiva", "calçado", "equipamentos", "acessórios"] },
-      { name: "Dança & Actividades Físicas", subcategories: ["Dança", "zumba", "aeróbica", "outras actividades"] },
-    ],
-  },
-  {
-    theme: "Empregos & Oportunidades",
-    route: "/explorar-empregos",
-    keywords: ["emprego", "vaga", "estágio", "freelancer", "recrutamento"],
-    categories: [
-      { name: "Vagas de Emprego", subcategories: ["Tempo inteiro", "tempo parcial", "presencial", "remoto", "híbrido"] },
-      { name: "Estágios Profissionais", subcategories: ["Estágio curricular", "estágio profissional", "programas para recém-formados"] },
-      { name: "Primeiro Emprego", subcategories: ["Sem experiência", "programas para jovens", "vagas de entrada"] },
-      { name: "Trabalho Temporário", subcategories: ["Eventos", "promoções", "trabalho sazonal", "substituições"] },
-      { name: "Trabalho Freelancer", subcategories: ["Design", "fotografia", "vídeo", "tecnologia", "escrita", "marketing"] },
-      { name: "Recrutamento & Seleção", subcategories: ["Empresas de recrutamento", "agências de emprego", "serviços de selecção"] },
-    ],
-  },
-  {
-    theme: "Agricultura & Agro-Negócio",
-    route: "/explorar-agricultura",
-    keywords: ["agricultura", "pecuária", "fazenda", "semente", "máquina agrícola", "aves", "pesca"],
-    categories: [
-      { name: "Agricultura & Produção Agrícola", subcategories: ["Cereais", "hortícolas", "frutas", "tubérculos", "outras culturas"] },
-      { name: "Pecuária & Criação Animal", subcategories: ["Bovinos", "caprinos", "suínos", "outras criações"] },
-      { name: "Produtores & Fazendas", subcategories: ["Fazendas", "cooperativas", "produtores individuais", "fornecedores agrícolas"] },
-      { name: "Sementes, Fertilizantes & Insumos", subcategories: ["Sementes", "fertilizantes", "adubos", "materiais agrícolas"] },
-      { name: "Máquinas & Equipamentos Agrícolas", subcategories: ["Tractores", "máquinas", "ferramentas", "irrigação"] },
-      { name: "Avicultura", subcategories: ["Criação de aves", "produção de ovos", "pintos", "produtos avícolas"] },
-      { name: "Pesca & Aquicultura", subcategories: ["Pesca", "piscicultura", "criação de peixe", "produção aquícola"] },
-      { name: "Produtos Agrícolas", subcategories: ["Produtos frescos", "transformados", "produção local"] },
-      { name: "Serviços & Consultoria Agrícola", subcategories: ["Assistência técnica", "consultoria", "formação agrícola"] },
+      { name: "Presentes & Buquês", subcategories: ["Flores", "Cartões", "Presentes Personalizados", "Buquês de Rosas"] },
+      { name: "Surpresas Românticas", subcategories: ["Pedidos de Casamento", "Aniversários de Namoro", "Jantares Românticos"] },
+      { name: "Fotografia de Casais", subcategories: ["Fotógrafo de Casais", "Sessão Namorados", "Ensaio Romântico"] },
     ],
   },
   {
     theme: "Influenciadores & Criadores",
     route: "/explorar-influenciadores",
-    keywords: ["influenciador", "criador", "conteúdo", "ugc", "videomaker", "fotógrafo", "podcaster", "streamer", "modelo"],
-    categories: [
-      { name: "Influenciadores Digitais", subcategories: ["Moda", "Beleza", "Gastronomia", "Lifestyle", "Cristão", "Negócios", "Música"] },
-      { name: "Criadores de Conteúdo", subcategories: ["Conteúdo para Redes Sociais", "Reels & Vídeos Curtos", "Conteúdo para Marcas"] },
-      { name: "Criadores UGC", subcategories: ["Demonstração de Produtos", "Reviews", "Unboxing", "Testemunhos"] },
-      { name: "Videomakers", subcategories: ["Vídeos Publicitários", "Reels", "Vídeos Institucionais", "Produção Audiovisual"] },
-      { name: "Fotógrafos Comerciais", subcategories: ["Fotografia de Produtos", "Fotografia para Marcas", "Fotografia Corporativa"] },
-      { name: "Apresentadores & Hosts", subcategories: ["Apresentadores para Marcas", "Apresentadores de Eventos", "Hosts Digitais"] },
-      { name: "Podcasters", subcategories: ["Entrevistas", "Negócios", "Educação", "Entretenimento", "Cristão"] },
-      { name: "Streamers", subcategories: ["Gaming", "Entretenimento", "Conversas & Lives", "Educação"] },
-      { name: "Modelos para Marcas", subcategories: ["Moda", "Beleza", "Publicidade", "E-commerce"] },
+    keywords: [
+      "influenciador", "criador", "conteúdo", "ugc", "videomaker", "fotógrafo", "fotografia", "foto", "podcaster", "streamer", "modelo"
     ],
-  },
-  {
-    theme: "Transportes & Logística",
-    route: "/explorar-transportes",
-    keywords: ["transporte", "mudança", "entrega", "carga", "logística", "táxi", "interprovincial"],
     categories: [
-      { name: "Transporte Interprovincial", subcategories: ["Passageiros", "Encomendas entre Províncias", "Mercadorias", "Cargas Interprovinciais"] },
-      { name: "Mudanças & Transporte de Bens", subcategories: ["Mudanças Residenciais", "Mudanças de Escritórios", "Transporte de Móveis"] },
-      { name: "Transporte de Passageiros", subcategories: ["Táxi", "Transporte Particular", "Transporte Executivo", "Transfers"] },
-      { name: "Entregas & Estafetas", subcategories: ["Entrega de Encomendas", "Entrega de Documentos", "Entregas ao Domicílio"] },
-      { name: "Cargas & Mercadorias", subcategories: ["Transporte de Mercadorias", "Cargas Ligeiras", "Cargas Pesadas", "Camiões"] },
-      { name: "Logística Empresarial", subcategories: ["Distribuição de Mercadorias", "Logística para E-commerce", "Apoio Logístico"] },
-      { name: "Aluguer de Viaturas de Carga", subcategories: ["Carrinhas de Carga", "Pickups", "Camiões", "Viaturas para Mudanças"] },
+      { name: "Fotógrafos Comerciais", subcategories: ["Fotógrafo de Produtos", "Fotógrafo para Marcas", "Fotografia Corporativa", "Ensaios"] },
+      { name: "Videomakers", subcategories: ["Vídeos Publicitários", "Reels & TikTok", "Vídeos Institucionais", "Produção Audiovisual"] },
+      { name: "Influenciadores Digitais", subcategories: ["Moda", "Beleza", "Gastronomia", "Lifestyle", "Cristão", "Negócios", "Música"] },
+      { name: "Criadores UGC", subcategories: ["Demonstração de Produtos", "Reviews", "Unboxing", "Testemunhos"] },
+      { name: "Apresentadores & Podcasters", subcategories: ["Hosts de Eventos", "Entrevistas", "Podcasts"] },
     ],
   },
   {
     theme: "Serviços Profissionais",
     route: "/explorar-servicos",
-    keywords: ["documentação", "consultoria", "secretariado", "arquitectura", "tradução", "design", "cerimonial"],
+    keywords: [
+      "documentação", "consultoria", "secretariado", "arquitectura", "tradução", "design", "cerimonial", "fotógrafo", "fotografia"
+    ],
     categories: [
+      { name: "Design & Fotografia", subcategories: ["Design Gráfico", "Fotógrafo Profissional", "Branding", "Criação de Logótipos"] },
       { name: "Documentação & Tramitação", subcategories: ["Documentação Empresarial", "Licenciamento", "Registos", "Despachante"] },
       { name: "Consultoria Especializada", subcategories: ["Consultoria de Imagem", "Consultoria de Carreira", "Consultoria Técnica"] },
-      { name: "Secretariado & Assistência Profissional", subcategories: ["Assistentes Virtuais", "Secretariado Remoto", "Assistência Administrativa"] },
       { name: "Arquitectura & Engenharia", subcategories: ["Arquitectos", "Engenheiros Civis", "Desenho Técnico", "Fiscalização de Obras"] },
       { name: "Tradução & Interpretação", subcategories: ["Tradução de Documentos", "Tradução Técnica", "Intérpretes"] },
-      { name: "Design & Serviços Criativos", subcategories: ["Design Gráfico", "Criação de Logótipos", "Identidade Visual", "Branding"] },
-      { name: "Cerimonial & Protocolo", subcategories: ["Cerimonialistas", "Protocolo Empresarial", "Organização Protocolar"] },
+      { name: "Cerimonial & Protocolo", subcategories: ["Cerimonialistas", "Protocolo Empresarial"] },
+    ],
+  },
+  {
+    theme: "Beleza & Bem-Estar",
+    route: "/explorar-beleza",
+    keywords: ["cabelo", "unha", "maquiagem", "skincare", "barba", "salão", "beleza", "estética", "massagem", "spa"],
+    categories: [
+      { name: "Cabelo", subcategories: ["Corte", "Tratamento", "Tintura", "Penteado", "Tranças"] },
+      { name: "Unhas", subcategories: ["Manicure", "Pedicure", "Gel", "Acrílico", "Nail Art"] },
+      { name: "Maquiagem", subcategories: ["Maquiagem Profissional", "Maquiagem de Noiva", "Maquiagem para Eventos"] },
+      { name: "Skincare & Estética", subcategories: ["Tratamentos Faciais", "Limpeza de Pele", "Massagens", "Spa"] },
+      { name: "Barba & Barbearia", subcategories: ["Barba", "Design de Sobrancelhas", "Barbearia"] },
+    ],
+  },
+  {
+    theme: "Formações",
+    route: "/explorar-formacoes",
+    keywords: ["curso", "formação", "aula", "idioma", "treinamento", "workshop", "certificado"],
+    categories: [
+      { name: "Idiomas", subcategories: ["Inglês", "Francês", "Espanhol", "Mandarim"] },
+      { name: "Tecnologia & Programação", subcategories: ["Programação", "Design UI/UX", "Marketing Digital", "Sistemas"] },
+      { name: "Negócios & Gestão", subcategories: ["Empreendedorismo", "Gestão de Empresas", "Finanças", "Liderança"] },
+    ],
+  },
+  {
+    theme: "Infantil & Maternidade",
+    route: "/explorar-infantil",
+    keywords: ["bebê", "criança", "brinquedo", "maternidade", "enxoval", "festa infantil", "fotógrafo infantil"],
+    categories: [
+      { name: "Moda Infantil", subcategories: ["Roupas de Bebé", "Calçado Infantil", "Acessórios"] },
+      { name: "Brinquedos & Jogos", subcategories: ["Educativos", "Eletrónicos", "Pelúcia", "Jogos"] },
+      { name: "Enxoval & Puericultura", subcategories: ["Enxoval de Bebé", "Carrinhos", "Quarto do Bebé"] },
+      { name: "Fotografia Infantil", subcategories: ["Ensaio Newborn", "Fotógrafo Infantil", "Festa Infantil"] },
+    ],
+  },
+  {
+    theme: "Imóveis & Alojamento",
+    route: "/explorar-imoveis",
+    keywords: ["imóvel", "apartamento", "casa", "arrendamento", "hotel", "alojamento", "terreno", "estadia"],
+    categories: [
+      { name: "Arrendamento", subcategories: ["Apartamentos T1/T2/T3", "Casas", "Escritórios", "Lojas"] },
+      { name: "Venda de Imóveis", subcategories: ["Terrenos", "Apartamentos", "Vivendas", "Espaços Comerciais"] },
+      { name: "Alojamento & Hotéis", subcategories: ["Hotéis", "Pensões", "Guesthouses", "Apartamentos de Férias"] },
+    ],
+  },
+  {
+    theme: "Alimentação & Restauração",
+    route: "/explorar-alimentacao",
+    keywords: ["restaurante", "comida", "pastelaria", "café", "fast food", "catering", "supermercado", "talho", "padaria", "bebida", "entrega", "bolo"],
+    categories: [
+      { name: "Restaurantes", subcategories: ["Cozinha Angolana", "Africana", "Internacional", "Marisqueira"] },
+      { name: "Pastelarias & Cafés", subcategories: ["Cafés", "Pastelarias", "Geladarias", "Bolos de Aniversário"] },
+      { name: "Fast Food & Take-away", subcategories: ["Hambúrgueres", "Pizzas", "Frango Assado", "Take-away"] },
+      { name: "Catering & Eventos", subcategories: ["Buffet de Festas", "Catering Empresarial", "Banquetes"] },
+      { name: "Supermercados & Mercearias", subcategories: ["Supermercados", "Minimercados", "Talhos", "Peixarias"] },
+    ],
+  },
+  {
+    theme: "Tecnologia & Electrónicos",
+    route: "/explorar-tecnologia",
+    keywords: ["tecnologia", "telemóvel", "iphone", "samsung", "computador", "tablet", "electrón", "reparação", "internet", "software", "câmara"],
+    categories: [
+      { name: "Telemóveis & Tablets", subcategories: ["iPhone", "Samsung", "Xiaomi", "Tecno", "Tablets", "Acessórios"] },
+      { name: "Computadores & Informática", subcategories: ["Portáteis", "Desktops", "Monitores", "Impressoras"] },
+      { name: "Electrónica & Fotografia", subcategories: ["Televisores", "Colunas", "Auscultadores", "Câmaras Fotográficas", "Drones"] },
+      { name: "Reparação & Assistência", subcategories: ["Reparação de Telemóveis", "Computadores", "Electrodomésticos"] },
+    ],
+  },
+  {
+    theme: "Negócios & Finanças",
+    route: "/explorar-business",
+    keywords: ["negócio", "finança", "investimento", "consultoria", "empresa", "crédito", "seguros", "contabilidade"],
+    categories: [
+      { name: "Consultoria Empresarial", subcategories: ["Estratégia", "Gestão", "Marketing", "Contabilidade"] },
+      { name: "Finanças & Seguros", subcategories: ["Investimentos", "Crédito", "Seguros Empresariais", "Banca"] },
     ],
   },
   {
@@ -150,115 +161,77 @@ const THEME_MAPPINGS: ThemeMapping[] = [
     route: "/explorar-saude",
     keywords: ["dentista", "médico", "clínica", "hospital", "psicólogo", "farmácia", "óptica", "nutrição", "fisioterapia"],
     categories: [
-      { name: "Clínicas & Hospitais", subcategories: ["Clínica Geral", "Especialidades", "Laboratório", "Imagiologia"] },
-      { name: "Médicos Particulares", subcategories: ["Clínica Geral", "Especialidades", "Consultas", "Domicílio"] },
-      { name: "Medicina Dentária", subcategories: ["Dentista", "Ortodontia", "Implantes", "Clareamento"] },
-      { name: "Saúde Mental & Psicologia", subcategories: ["Psicólogo", "Psiquiatria", "Terapia", "Aconselhamento"] },
-      { name: "Farmácias", subcategories: ["Medicamentos", "Parafarmácia", "Entrega ao Domicílio"] },
-      { name: "Ópticas & Saúde Visual", subcategories: ["Óculos", "Lentes de Contacto", "Exames Visuais"] },
-      { name: "Nutrição & Dietética", subcategories: ["Nutricionista", "Dietas", "Acompanhamento"] },
-      { name: "Fisioterapia & Reabilitação", subcategories: ["Fisioterapia", "Reabilitação", "Massagens"] },
+      { name: "Clínicas & Hospitais", subcategories: ["Clínica Geral", "Especialidades Médicas", "Laboratórios"] },
+      { name: "Medicina Dentária", subcategories: ["Dentista", "Ortodontia", "Implantes", "Branqueamento"] },
+      { name: "Saúde Mental & Psicologia", subcategories: ["Psicólogo", "Psiquiatria", "Terapia de Casal"] },
+      { name: "Farmácias & Ópticas", subcategories: ["Medicamentos", "Óculos", "Lentes de Contacto"] },
     ],
   },
   {
-    theme: "Beleza & Bem-Estar",
-    route: "/explorar-beleza",
-    keywords: ["cabelo", "unha", "maquiagem", "skincare", "barba", "salão", "beleza"],
+    theme: "Turismo & Lazer",
+    route: "/explorar-turismo",
+    keywords: ["turismo", "viagem", "passeio", "excursão", "parque", "lazer", "museu", "guia", "resort"],
     categories: [
-      { name: "Cabelo", subcategories: ["Corte", "Tratamento", "Tintura", "Penteado"] },
-      { name: "Unhas", subcategories: ["Manicure", "Pedicure", "Gel", "Acrylic"] },
-      { name: "Maquiagem", subcategories: ["Maquiagem Profissional", "Maquiagem Diária", "Maquiagem para Eventos"] },
-      { name: "Skincare", subcategories: ["Tratamentos Faciais", "Limpeza de Pele", "Produtos"] },
-      { name: "Barba", subcategories: ["Barba", "Design de Sobrancelhas", "Aparência"] },
+      { name: "Agências de Viagens & Turismo", subcategories: ["Reservas", "Viagens Nacionais", "Pacotes Turísticos"] },
+      { name: "Passeios & Excursões", subcategories: ["Excursões", "Visitas Guiadas", "Passeios de Barco"] },
+      { name: "Parques & Lazer", subcategories: ["Parques Recreativos", "Resorts", "Espaços de Lazer"] },
+    ],
+  },
+  {
+    theme: "Desporto & Fitness",
+    route: "/explorar-desporto",
+    keywords: ["ginásio", "academia", "personal trainer", "futebol", "natação", "artes marciais", "desporto", "dança"],
+    categories: [
+      { name: "Ginásios & Academias", subcategories: ["Musculação", "Cardio", "Fitness", "Crossfit"] },
+      { name: "Personal Trainers", subcategories: ["Treino Individual", "Preparação Física", "Nutrição Desportiva"] },
+      { name: "Modalidades Desportivas", subcategories: ["Futebol", "Basquetebol", "Natação", "Artes Marciais", "Dança"] },
+    ],
+  },
+  {
+    theme: "Empregos & Oportunidades",
+    route: "/explorar-empregos",
+    keywords: ["emprego", "vaga", "estágio", "freelancer", "recrutamento", "fotógrafo", "designer"],
+    categories: [
+      { name: "Vagas de Emprego", subcategories: ["Tempo Inteiro", "Tempo Parcial", "Presencial", "Remoto"] },
+      { name: "Trabalho Freelancer", subcategories: ["Design", "Fotografia", "Vídeo", "Programação", "Marketing"] },
+      { name: "Estágios & Recrutamento", subcategories: ["Estágios Profissionais", "Empresas de Recrutamento"] },
+    ],
+  },
+  {
+    theme: "Agricultura & Agro-Negócio",
+    route: "/explorar-agricultura",
+    keywords: ["agricultura", "pecuária", "fazenda", "semente", "máquina agrícola", "aves", "pesca"],
+    categories: [
+      { name: "Produção Agrícola & Fazendas", subcategories: ["Cereais", "Hortícolas", "Frutas", "Fazendas"] },
+      { name: "Pecuária & Avicultura", subcategories: ["Criação Animal", "Produção de Ovos", "Aves"] },
+      { name: "Máquinas & Insumos", subcategories: ["Tractores", "Ferramentas", "Sementes", "Fertilizantes"] },
+    ],
+  },
+  {
+    theme: "Transportes & Logística",
+    route: "/explorar-transportes",
+    keywords: ["transporte", "mudança", "entrega", "carga", "logística", "táxi", "interprovincial"],
+    categories: [
+      { name: "Transporte Interprovincial", subcategories: ["Passageiros", "Encomendas entre Províncias", "Cargas"] },
+      { name: "Mudanças & Entregas", subcategories: ["Mudanças Residenciais", "Entregas Rápidas", "Estafetas"] },
     ],
   },
   {
     theme: "Casa & Serviços",
     route: "/explorar-casa",
-    keywords: ["casa", "limpeza", "canalização", "pintura", "jardim", "manutenção"],
+    keywords: ["casa", "limpeza", "canalização", "pintura", "jardim", "manutenção", "obra"],
     categories: [
-      { name: "Limpeza", subcategories: ["Limpeza Residencial", "Limpeza Comercial", "Limpeza Pós-Obra"] },
-      { name: "Canalização", subcategories: ["Reparações", "Instalações", "Desentupimentos"] },
-      { name: "Pintura", subcategories: ["Pintura Residencial", "Pintura Comercial", "Decorativa"] },
-      { name: "Jardinagem", subcategories: ["Paisagismo", "Manutenção", "Irrigação"] },
+      { name: "Limpeza & Manutenção", subcategories: ["Limpeza Residencial", "Limpeza Comercial", "Limpeza Pós-Obra"] },
+      { name: "Reparações & Obras", subcategories: ["Canalização", "Pintura", "Electricidade", "Jardinagem"] },
     ],
   },
   {
     theme: "Automóveis & Mobilidade",
     route: "/explorar-automoveis",
-    keywords: ["carro", "viatura", "mecânico", "seguro", "automóvel", "veículo"],
+    keywords: ["carro", "viatura", "mecânico", "seguro", "automóvel", "veículo", "peças"],
     categories: [
-      { name: "Vendas de Viaturas", subcategories: ["Novas", "Usadas", "Importação"] },
-      { name: "Mecânica", subcategories: ["Reparações", "Manutenção", "Diagnóstico"] },
-      { name: "Seguros", subcategories: ["Seguro Auto", "Seguro Obrigatório", "Seguro Facultativo"] },
-    ],
-  },
-  {
-    theme: "Casamentos",
-    route: "/explorar",
-    keywords: ["casamento", "noiva", "wedding", "celebração"],
-    categories: [
-      { name: "Planeamento", subcategories: ["Wedding Planner", "Organização", "Assessoria"] },
-      { name: "Beleza", subcategories: ["Maquilhagem", "Cabelo", "Vestuário"] },
-      { name: "Fotografia", subcategories: ["Fotógrafo", "Videógrafo", "Drone"] },
-    ],
-  },
-  {
-    theme: "Formações",
-    route: "/explorar-formacoes",
-    keywords: ["curso", "formação", "aula", "idioma", "treinamento"],
-    categories: [
-      { name: "Idiomas", subcategories: ["Inglês", "Francês", "Espanhol", "Mandarim"] },
-      { name: "Tecnologia", subcategories: ["Programação", "Design", "Marketing Digital"] },
-      { name: "Negócios", subcategories: ["Empreendedorismo", "Gestão", "Finanças"] },
-    ],
-  },
-  {
-    theme: "Infantil & Maternidade",
-    route: "/explorar-infantil",
-    keywords: ["bebê", "criança", "brinquedo", "maternidade", "enxoval"],
-    categories: [
-      { name: "Moda Infantil", subcategories: ["Roupas", "Calçado", "Acessórios"] },
-      { name: "Brinquedos", subcategories: ["Educativos", "Eletrónicos", "Pelúcia"] },
-      { name: "Enxoval", subcategories: ["Bebé", "Grávida", "Puericultura"] },
-    ],
-  },
-  {
-    theme: "Imóveis & Alojamento",
-    route: "/explorar-imoveis",
-    keywords: ["imóvel", "apartamento", "casa", "arrendamento", "hotel", "alojamento"],
-    categories: [
-      { name: "Arrendamento", subcategories: ["Apartamentos", "Casas", "Escritórios"] },
-      { name: "Venda", subcategories: ["Terrenos", "Apartamentos", "Casas"] },
-      { name: "Alojamento", subcategories: ["Hotéis", "Pensões", "Apartamentos"] },
-    ],
-  },
-  {
-    theme: "Eventos & Celebrações",
-    route: "/explorar-eventos",
-    keywords: ["evento", "festa", "aniversário", "conferência", "seminário"],
-    categories: [
-      { name: "Eventos Corporativos", subcategories: ["Conferências", "Seminários", "Workshops"] },
-      { name: "Festas", subcategories: ["Aniversários", "Festas de Ano Novo", "Festas Temáticas"] },
-      { name: "Decoração", subcategories: ["Flores", "Iluminação", "Mobiliário"] },
-    ],
-  },
-  {
-    theme: "Serviços de Amor",
-    route: "/explorar-love",
-    keywords: ["amor", "presente", "flores", "surpresa", "romântico"],
-    categories: [
-      { name: "Presentes", subcategories: ["Flores", "Cartões", "Presentes Personalizados"] },
-      { name: "Surpresas", subcategories: ["Pedidos de Casamento", "Aniversários", "Romantismo"] },
-    ],
-  },
-  {
-    theme: "Negócios & Finanças",
-    route: "/explorar-business",
-    keywords: ["negócio", "finança", "investimento", "consultoria", "empresa"],
-    categories: [
-      { name: "Consultoria", subcategories: ["Estratégia", "Gestão", "Marketing"] },
-      { name: "Finanças", subcategories: ["Investimento", "Crédito", "Seguros"] },
+      { name: "Venda & Aluguer", subcategories: ["Viaturas Novas", "Usadas", "Aluguer de Carros"] },
+      { name: "Mecânica & Reparação", subcategories: ["Mecânica Geral", "Diagnóstico", "Pneus", "Peças"] },
     ],
   },
 ];
@@ -293,53 +266,71 @@ const ROUTE_TO_STORE: Record<string, string> = {
   "/explorar-business": "business",
 };
 
+const normalize = (str: string) =>
+  str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
 const GlobalSearch = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [location, navigate] = useLocation();
+  const [, navigate] = useLocation();
 
   const suggestions = useMemo(() => {
-    if (query.length < 2) return [];
+    if (query.trim().length < 2) return [];
 
-    const lowerQuery = query.toLowerCase();
+    const normQuery = normalize(query.trim());
     const results: SearchSuggestion[] = [];
 
     THEME_MAPPINGS.forEach((theme) => {
+      const normTheme = normalize(theme.theme);
+      const isThemeMatch = normTheme.includes(normQuery);
+
       const matchedKeyword = theme.keywords.find((kw) =>
-        kw.toLowerCase().includes(lowerQuery)
+        normalize(kw).includes(normQuery)
       );
 
-      if (matchedKeyword) {
+      // Check subcategories unconditionally
+      theme.categories.forEach((cat) => {
+        const normCat = normalize(cat.name);
+        const isCatMatch = normCat.includes(normQuery);
+
+        cat.subcategories.forEach((sub) => {
+          const normSub = normalize(sub);
+          if (normSub.includes(normQuery)) {
+            results.push({
+              theme,
+              category: cat.name,
+              subcategory: sub,
+              matchedKeyword: sub,
+            });
+          }
+        });
+
+        if (isCatMatch) {
+          results.push({
+            theme,
+            category: cat.name,
+            subcategory: null,
+            matchedKeyword: cat.name,
+          });
+        } else if ((isThemeMatch || matchedKeyword) && !results.some(r => r.theme.route === theme.route && r.category === cat.name)) {
+          results.push({
+            theme,
+            category: cat.name,
+            subcategory: null,
+            matchedKeyword: matchedKeyword || theme.theme,
+          });
+        }
+      });
+
+      if ((isThemeMatch || matchedKeyword) && !results.some(r => r.theme.route === theme.route)) {
         results.push({
           theme,
           category: null,
           subcategory: null,
-          matchedKeyword,
-        });
-
-        theme.categories.forEach((cat) => {
-          if (cat.name.toLowerCase().includes(lowerQuery)) {
-            results.push({
-              theme,
-              category: cat.name,
-              subcategory: null,
-              matchedKeyword: cat.name,
-            });
-          }
-
-          cat.subcategories.forEach((sub) => {
-            if (sub.toLowerCase().includes(lowerQuery)) {
-              results.push({
-                theme,
-                category: cat.name,
-                subcategory: sub,
-                matchedKeyword: sub,
-              });
-            }
-          });
+          matchedKeyword: matchedKeyword || theme.theme,
         });
       }
     });
@@ -355,7 +346,7 @@ const GlobalSearch = () => {
         )
     );
 
-    return uniqueResults.slice(0, 8);
+    return uniqueResults.slice(0, 10);
   }, [query]);
 
   useEffect(() => {
@@ -509,7 +500,7 @@ const GlobalSearch = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
+            className="absolute z-50 w-full mt-2 bg-white border border-[#E8CC91] rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="max-h-96 overflow-y-auto">
               {suggestions.map((suggestion, index) => (
@@ -517,12 +508,12 @@ const GlobalSearch = () => {
                   key={`${suggestion.theme.route}-${suggestion.category}-${suggestion.subcategory}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.03 }}
                   onClick={() => handleSelectSuggestion(suggestion)}
                   onMouseEnter={() => setHighlightedIndex(index)}
                   className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors duration-150 ${
                     highlightedIndex === index
-                      ? "bg-[#B89A78]/10"
+                      ? "bg-[#C99432]/10"
                       : "hover:bg-gray-50"
                   }`}
                 >
@@ -531,15 +522,15 @@ const GlobalSearch = () => {
                   </span>
 
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-800 truncate">
+                    <div className="font-semibold text-[#111111] truncate">
                       {suggestion.theme.theme}
                     </div>
 
                     {suggestion.category && (
-                      <div className="text-sm text-gray-500 truncate">
+                      <div className="text-sm text-[#6F6F6F] truncate">
                         {suggestion.category}
                         {suggestion.subcategory && (
-                          <span className="text-[#B89A78]">
+                          <span className="text-[#A96F12] font-medium">
                             {" "}
                             → {suggestion.subcategory}
                           </span>
@@ -547,13 +538,13 @@ const GlobalSearch = () => {
                       </div>
                     )}
 
-                    <div className="text-xs text-gray-400 mt-0.5">
+                    <div className="text-xs text-[#A96F12]/80 mt-0.5 font-medium">
                       {suggestion.matchedKeyword}
                     </div>
                   </div>
 
                   <svg
-                    className="h-5 w-5 text-gray-300 flex-shrink-0"
+                    className="h-5 w-5 text-[#C99432] flex-shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -569,11 +560,11 @@ const GlobalSearch = () => {
               ))}
             </div>
 
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
-              <p className="text-xs text-gray-500 text-center">
-                Pressione <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded text-xs">↑</kbd>{" "}
-                <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded text-xs">↓</kbd> para navegar,{" "}
-                <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded text-xs">Enter</kbd> para selecionar
+            <div className="px-4 py-3 bg-[#FFFDF8] border-t border-[#E8CC91]/60">
+              <p className="text-xs text-[#6F6F6F] text-center">
+                Pressione <kbd className="px-1.5 py-0.5 bg-white border border-[#E8CC91] rounded text-xs">↑</kbd>{" "}
+                <kbd className="px-1.5 py-0.5 bg-white border border-[#E8CC91] rounded text-xs">↓</kbd> para navegar,{" "}
+                <kbd className="px-1.5 py-0.5 bg-white border border-[#E8CC91] rounded text-xs">Enter</kbd> para selecionar
               </p>
             </div>
           </motion.div>
@@ -587,14 +578,14 @@ const GlobalSearch = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden"
+          className="absolute z-50 w-full mt-2 bg-white border border-[#E8CC91] rounded-2xl shadow-xl overflow-hidden"
         >
           <div className="px-4 py-8 text-center">
-            <Search className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 font-medium">
+            <Search className="h-12 w-12 text-[#A96F12]/40 mx-auto mb-3" />
+            <p className="text-[#111111] font-medium">
               Nenhum resultado encontrado para "{query}"
             </p>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-[#6F6F6F] mt-1">
               Tente com outros termos ou navegue pelas categorias
             </p>
           </div>
