@@ -276,12 +276,17 @@ export default function StoreProfile() {
               </button>
             </a>
 
-            <a href={`https://tel:244${store.phone}`} target="_blank" rel="noopener noreferrer" data-testid="button-call">
-              <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
-                <Phone size={13} />
-                Ligar
-              </button>
-            </a>
+            {store.phone && (
+              <a 
+                href={`tel:${store.phone.startsWith('+') ? store.phone : `+244${store.phone.replace(/\D/g, '')}`}`}
+                data-testid="button-call"
+              >
+                <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                  <Phone size={13} />
+                  Ligar
+                </button>
+              </a>
+            )}
 
             {/* Botão de Partilhar Loja */}
             <button
