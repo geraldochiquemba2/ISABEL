@@ -5,9 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import WhereSearch from "@/components/WhereSearch";
+import type { Scope } from "@/components/WhereSearch";
+import { norm } from "@/lib/locationIndex";
 import {
   Heart, ChevronRight, Star, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
+  Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
@@ -34,6 +38,7 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
   const [showProvinceModal, setShowProvinceModal] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
+  const [locationFilter, setLocationFilter] = useState("");
 
   const { data: stores = [], isLoading } = useQuery({
     queryKey: ["stores", "eventos"],
@@ -48,6 +53,36 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
     : [];
+
+  const filteredProvinces = ANGOLA_PROVINCES.filter(
+    (pr) => !locationFilter.trim() || norm(pr.name).includes(norm(locationFilter))
+  );
+  const filteredMunicipalities = municipalities.filter(
+    (mun) => !locationFilter.trim() || norm(mun).includes(norm(locationFilter))
+  );
+
+  const handleScopeSelect = (scope: Scope) => {
+    try {
+      localStorage.setItem("eliora-location-scope", JSON.stringify(scope));
+    } catch {
+      /* armazenamento indisponivel */
+    }
+    const params = new URLSearchParams();
+    params.set("provincia", scope.province);
+    if (scope.municipality) params.set("municipio", scope.municipality);
+    if (scope.kind === "nearby" && scope.locality) params.set("localidade", scope.locality);
+    params.set("scope", scope.kind);
+    navigate(`/explorar-eventos?` + params.toString());
+    setShowProvinceModal(false);
+  };
+
+  const handleScopeClear = () => {
+    try {
+      localStorage.removeItem("eliora-location-scope");
+    } catch {
+      /* armazenamento indisponivel */
+    }
+  };
 
   const handleProvinceSelect = () => {
     if (selectedProvince) {
@@ -147,13 +182,29 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
                 <X size={20} />
               </button>
             </div>
+            <div className="mb-4">
+              <WhereSearch onScope={handleScopeSelect} onClear={handleScopeClear} accent="#C45125" />
+            </div>
+            <div className="relative mb-2">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                placeholder="Pesquisar província ou município..."
+                className="w-full border border-gray-200 rounded-xl bg-gray-50 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-gray-400 placeholder:text-gray-400"
+              />
+            </div>
+            <p className="text-[11px] text-gray-500 mb-3">Pesquise por bairro/localidade acima, ou escolha manualmente abaixo:</p>
 
             <div className="flex gap-4">
               {/* Províncias */}
               <div className="flex-1">
                 <h4 className="text-xs font-semibold text-[#6E7077] uppercase tracking-wider mb-2">Província</h4>
                 <div className="space-y-1 max-h-[50vh] overflow-y-auto">
-                  {ANGOLA_PROVINCES.map((province) => (
+                  {filteredProvinces.length === 0 && (
+                      <p className="px-3 py-4 text-sm text-gray-500 text-center">Nenhuma província encontrada.</p>
+                    )}
+                    {filteredProvinces.map((province) => (
                     <button
                       key={province.id}
                       onClick={() => {
@@ -177,7 +228,10 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
                 <div className="flex-1">
                   <h4 className="text-xs font-semibold text-[#6E7077] uppercase tracking-wider mb-2">Município</h4>
                   <div className="space-y-1 max-h-[50vh] overflow-y-auto">
-                    {municipalities.map((municipality) => (
+                    {filteredMunicipalities.length === 0 && (
+                          <p className="px-3 py-4 text-sm text-gray-500 text-center">Nenhum município encontrado.</p>
+                        )}
+                        {filteredMunicipalities.map((municipality) => (
                       <button
                         key={municipality}
                         onClick={() => setSelectedMunicipality(municipality)}

@@ -14,6 +14,10 @@ export interface Store {
   id: string;
   name: string;
   category: string;
+  /** Categorias extra (até 4 no total, incluindo `category`) */
+  categories?: string[];
+  /** Bairro/localidade exacta (cadastro e Minha Loja) */
+  locality?: string;
   address: string;
   phone: string;
   whatsapp: string;
@@ -26,6 +30,13 @@ export interface Store {
   products: Product[];
   province?: string;
   municipality?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  carrinhoAccess?: string;
+  schedule?: any;
+  whatsapp_clicks?: number;
+  bairro?: string;
+  subcategory?: string;
   isFeatured?: boolean;
   isTrending?: boolean;
 }

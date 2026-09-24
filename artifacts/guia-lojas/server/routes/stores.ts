@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db";
+import { normalizeCategory } from "./auth";
 
 export const storesRouter = Router();
 
@@ -32,6 +33,7 @@ storesRouter.get("/admin/all", async (req, res) => {
       id: r.id,
       name: r.name,
       category: r.category,
+      categories: r.categories && r.categories.length ? r.categories : (r.category ? [r.category] : []),
       address: r.address,
       phone: r.phone,
       whatsapp: r.whatsapp,
@@ -45,6 +47,7 @@ storesRouter.get("/admin/all", async (req, res) => {
       logoUrl: r.logo_url,
       province: r.province,
       municipality: r.municipality,
+      locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
       products: r.products || [],
     })));
@@ -74,6 +77,8 @@ storesRouter.get("/carrinho-access/pending", async (req, res) => {
       id: r.id,
       name: r.name,
       category: r.category,
+      categories: r.categories && r.categories.length ? r.categories : (r.category ? [r.category] : []),
+      locality: r.locality || "",
       ownerName: r.owner_name,
       ownerPhone: r.owner_phone,
       carrinhoAccess: r.carrinho_access,
@@ -125,7 +130,7 @@ storesRouter.get("/", async (req, res) => {
     }
     if (category) {
       params.push(category);
-      conditions.push(`s.category = $${params.length}`);
+      conditions.push(`(s.category = $${params.length} OR $${params.length} = ANY(s.categories))`);
     }
     if (q) {
       params.push(`%${q}%`);
@@ -140,6 +145,7 @@ storesRouter.get("/", async (req, res) => {
       id: r.id,
       name: r.name,
       category: r.category,
+      categories: r.categories && r.categories.length ? r.categories : (r.category ? [r.category] : []),
       address: r.address,
       phone: r.phone,
       whatsapp: r.whatsapp,
@@ -153,6 +159,7 @@ storesRouter.get("/", async (req, res) => {
       isFeatured: r.is_featured,
       isTrending: r.is_trending,
       municipality: r.municipality,
+      locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
       products: r.products || [],
     }));
@@ -179,6 +186,7 @@ storesRouter.get("/:id", async (req, res) => {
       id: store.id,
       name: store.name,
       category: store.category,
+      categories: store.categories && store.categories.length ? store.categories : (store.category ? [store.category] : []),
       address: store.address,
       phone: store.phone,
       whatsapp: store.whatsapp,
@@ -190,6 +198,7 @@ storesRouter.get("/:id", async (req, res) => {
       logoUrl: store.logo_url,
       province: store.province,
       municipality: store.municipality,
+      locality: store.locality || "",
       carrinhoAccess: store.carrinho_access,
       schedule: store.schedule || null,
       latitude: store.latitude ? parseFloat(String(store.latitude)) || null : null,
@@ -214,15 +223,31 @@ storesRouter.get("/:id", async (req, res) => {
   }
 });
 
+// Normaliza até 4 categorias; a primeira é a principal (compat com `category`).
+// Aplica o mesmo mapa de rótulos do registo (auth) para não divergir.
+function normalizeStoreCategories(body: any): { primary: string; all: string[] } {
+  const raw = Array.isArray(body?.categories) ? body.categories.filter((c: any) => typeof c === "string" && c.trim()) : [];
+  const seen = new Set<string>();
+  const all: string[] = [];
+  for (const c of [...raw, body?.category].filter(Boolean)) {
+    const v = normalizeCategory(String(c));
+    if (v && !seen.has(v)) { seen.add(v); all.push(v); }
+    if (all.length >= 4) break;
+  }
+  const primary = all[0] || normalizeCategory(typeof body?.category === "string" ? body.category : undefined);
+  return { primary, all: all.length ? all : [primary] };
+}
+
 // POST /api/stores — criar loja
 storesRouter.post("/", async (req, res) => {
   try {
-    const { id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality } = req.body;
+    const { id, name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality } = req.body;
+    const { primary: category, all: categories } = normalizeStoreCategories(req.body);
     await pool.query(
-      `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, cover_images, logo_url, province, municipality)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
-       ON CONFLICT (id) DO UPDATE SET name=$2, category=$3, address=$4, phone=$5, whatsapp=$6, description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13`,
-      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality]
+      `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, cover_images, logo_url, province, municipality, locality)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+       ON CONFLICT (id) DO UPDATE SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7, description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15`,
+      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, locality || ""]
     );
     res.json({ success: true });
   } catch (err) {
@@ -235,12 +260,39 @@ storesRouter.post("/", async (req, res) => {
 storesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, isOpen, schedule, latitude, longitude } = req.body;
+    const { name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality, isOpen, schedule, latitude, longitude } = req.body;
+    // Guardas independentes: só escreve categorias/localidade se foram enviadas
+    // (array vazio ou ausência = preserva o que está na BD, nunca apaga)
+    const providedCats = Array.isArray(req.body.categories)
+      ? req.body.categories.filter((c: any) => typeof c === "string" && c.trim())
+      : undefined;
+    const providedCat = typeof req.body.category === "string" && req.body.category.trim()
+      ? req.body.category.trim()
+      : undefined;
+    const providedLocality = typeof locality === "string" ? locality : undefined;
+    const catsGiven = !!(providedCats?.length || providedCat);
+    let category: string;
+    let categories: string[];
+    let localityVal: string;
+    if (!catsGiven || providedLocality === undefined) {
+      const cur = await pool.query("SELECT category, categories, locality FROM stores WHERE id=$1", [id]);
+      const row = cur.rows[0];
+      if (!catsGiven && row) {
+        category = row.category;
+        categories = row.categories && row.categories.length ? row.categories : [row.category];
+      } else {
+        ({ primary: category, all: categories } = normalizeStoreCategories({ categories: providedCats, category: providedCat }));
+      }
+      localityVal = providedLocality !== undefined ? providedLocality : (row?.locality || "");
+    } else {
+      ({ primary: category, all: categories } = normalizeStoreCategories({ categories: providedCats, category: providedCat }));
+      localityVal = providedLocality;
+    }
     await pool.query(
-      `UPDATE stores SET name=$2, category=$3, address=$4, phone=$5, whatsapp=$6,
-       description=$7, cover_color=$8, cover_image=$9, cover_images=$10, logo_url=$11, province=$12, municipality=$13, is_open=$14, schedule=$15, latitude=$16, longitude=$17
+      `UPDATE stores SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7,
+       description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, is_open=$16, schedule=$17, latitude=$18, longitude=$19
        WHERE id=$1`,
-      [id, name, category, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, isOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
+      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, localityVal, isOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
     );
     res.json({ success: true });
   } catch (err) {

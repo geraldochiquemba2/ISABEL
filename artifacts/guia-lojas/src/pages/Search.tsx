@@ -138,7 +138,7 @@ export default function SearchPage() {
   }
 
   const activeFilters = [
-    selectedCategory && { key: "categoria", label: CATEGORIES.find((c) => c.id === selectedCategory)?.name || selectedCategory },
+    selectedCategory && { key: "categoria", label: CATEGORIES.find((c: any) => c.id === selectedCategory)?.name || selectedCategory },
     selectedSubcategory && { key: "subcategoria", label: selectedSubcategory },
     selectedBairro && { key: "bairro", label: selectedBairro },
     selectedProvince && { key: "provincia", label: selectedProvince },

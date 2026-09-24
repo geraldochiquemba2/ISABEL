@@ -5,12 +5,17 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getAreaCategories } from "@/data/areaCategories";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { getLocalities } from "@/lib/locationIndex";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin" | "pagina-inicial";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
 
 const inputCls = "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#2c3035] focus:ring-2 focus:ring-[#2c3035]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
@@ -308,7 +313,7 @@ export default function DashboardWeddings() {
         <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
           {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
           {section === "admin" && <AdminPanel storeType="weddings" accentColor="#E8A0BF" />}
-          {section === "pagina-inicial" && <PageContentEditor />}
+
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
@@ -378,7 +383,7 @@ function OverviewSection({ store }: { store: any }) {
 /* ── Loja ──────────────────────────────────────────────── */
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "" });
+  const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -387,7 +392,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
 
   const mutation = useMutation({
-    mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
+    mutationFn: () => updateStore(store.id, { ...store, ...form, categories: (form as any).categories ?? [], category: ((form as any).categories?.[0] as string) || store.category, locality: (form as any).locality || "", schedule }),
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -396,7 +401,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
-  const handleChange = (field: string, value: string) => { setForm((prev) => ({ ...prev, [field]: value })); setDirty(true); };
+  const handleChange = (field: string, value: string | string[]) => { setForm((prev) => ({ ...prev, [field]: value as any })); setDirty(true); };
   const handleSave = () => mutation.mutate();
   saveFnRef.current = handleSave;
 
@@ -579,26 +584,13 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div><label className={labelCls}>Telefone</label><input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} /></div>
           <div><label className={labelCls}>Endereço</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Província</label>
-            <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={`${inputCls} cursor-pointer`}>
-              <option value="">Selecione a Província</option>
-              {ANGOLA_PROVINCES.map((p) => (
-                <option key={p.name} value={p.name} className="bg-white text-[#30343a]">{p.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className={labelCls}>Município</label>
-            <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={`${inputCls} cursor-pointer disabled:opacity-50`} disabled={!form.province}>
-              <option value="">{form.province ? "Selecione o Município" : "Selecione a província primeiro"}</option>
-              {(ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []).map((m) => (
-                <option key={m} value={m} className="bg-white text-[#30343a]">{m}</option>
-              ))}
-            </select>
-          </div>
+        <div>
+          <label className={labelCls}>Categorias da Loja (até 4)</label>
+          <CategoryMultiSelect options={getAreaCategories("weddings")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#2c3035" />
         </div>
+        <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#2c3035" testId="select-store-province" />
+        <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#2c3035" testId="select-store-municipality" />
+        <LocationCombobox label="Localidade exacta" value={(form as any).locality || ""} options={getLocalities(form.province, form.municipality)} onChange={(v) => handleChange("locality", v)} placeholder={form.municipality ? "Selecione a localidade" : "Selecione o município primeiro"} disabled={!form.municipality} accent="#2c3035" testId="select-store-locality" />
 
         <div>
           <label className={labelCls}>Horários de funcionamento</label>
@@ -729,18 +721,19 @@ function ProdutosSection({ store }: { store: any }) {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
   const createMut = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (editProduct) {
-        return updateProduct(editProduct.id, {
+        await updateProduct(editProduct.id, {
           ...form,
           price: Number(form.price) || 0,
           imageUrl: productImages[0] || "",
           imageUrls: productImages,
         });
+        return;
       }
       const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const selectedGroup = WEDDING_SERVICE_GROUPS.find((g) => g.title === form.category);
-      return createProduct({
+      await createProduct({
         id,
         ...form,
         category: selectedGroup ? selectedGroup.title : form.category,
@@ -814,7 +807,7 @@ function ProdutosSection({ store }: { store: any }) {
             <div className="bg-white rounded-2xl border border-[#e8eaed] p-6 space-y-4 max-w-2xl">
               <div className="flex items-center justify-between">
                 <h3 className="font-serif text-lg text-[#30343a]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
-                <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", category: "", subcategory: "", description: "" }); setProductImage(""); }} className="text-[#87909a] hover:text-[#30343a]"><X size={18} /></button>
+                <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="text-[#87909a] hover:text-[#30343a]"><X size={18} /></button>
               </div>
 
               {/* Imagens do produto */}

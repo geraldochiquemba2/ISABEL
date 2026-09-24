@@ -112,10 +112,24 @@ const CATEGORY_LABELS: Record<string, string> = {
   pets: "Pets",
 };
 
-function normalizeCategory(category?: string) {
+export function normalizeCategory(category?: string) {
   if (!category) return "Geral";
   const normalized = category.trim().toLowerCase();
   return CATEGORY_LABELS[normalized] || category;
+}
+
+// Normaliza até 4 categorias (a primeira é a principal)
+function normalizeStoreCategories(body: any): { primary: string; all: string[] } {
+  const raw = Array.isArray(body?.categories) ? body.categories.filter((c: any) => typeof c === "string" && c.trim()) : [];
+  const seen = new Set<string>();
+  const all: string[] = [];
+  for (const c of [...raw, body?.category].filter(Boolean)) {
+    const v = normalizeCategory(String(c));
+    if (v && !seen.has(v)) { seen.add(v); all.push(v); }
+    if (all.length >= 4) break;
+  }
+  const primary = all[0] || "Geral";
+  return { primary, all: all.length ? all : [primary] };
 }
 
 export const authRouter = Router();
@@ -124,7 +138,7 @@ export const authRouter = Router();
 authRouter.post("/register", async (req, res) => {
   try {
     const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
-    const normalizedCategory = normalizeCategory(category);
+    const { primary: normalizedCategory, all: normalizedCategories } = normalizeStoreCategories(req.body);
     const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection");
     
     // Verificar se número já existe NESTE store_type
@@ -240,12 +254,13 @@ authRouter.post("/register", async (req, res) => {
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
 
     await pool.query(
-      `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type, latitude, longitude)
-       VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+      `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, locality, store_type, latitude, longitude)
+       VALUES ($1, $2, $3, $4, $5, $6, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
       [
         storeId,
         storeName || 'Minha Loja',
         normalizedCategory,
+        normalizedCategories,
         address || '',
         phone || '',
         description,
@@ -253,6 +268,7 @@ authRouter.post("/register", async (req, res) => {
         coverImage,
         province || '',
         municipality || '',
+        req.body.locality || '',
         storeType,
         latitude || null,
         longitude || null,
@@ -406,7 +422,7 @@ authRouter.post("/link-store", async (req, res) => {
       return res.status(400).json({ error: "Dados inválidos." });
     }
 
-    const normalizedCategory = normalizeCategory(category);
+    const { primary: normalizedCategory, all: normalizedCategories } = normalizeStoreCategories(req.body);
     const storeId = `loja-${Date.now()}`;
     
     // Criar nova loja vinculada ao utilizador
@@ -474,12 +490,13 @@ authRouter.post("/link-store", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
     await pool.query(
-      `INSERT INTO stores (id, name, category, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, store_type)
-       VALUES ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9, $10, $11)`,
+      `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, locality, store_type)
+       VALUES ($1, $2, $3, $4, $5, $6, $6, $7, $8, $9, $10, $11, $12, $13)`,
       [
         storeId,
         storeName || 'Minha Loja',
         normalizedCategory,
+        normalizedCategories,
         address || '',
         phone || '',
         isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : 'A minha loja na YESOLA Collection.',
@@ -487,6 +504,7 @@ authRouter.post("/link-store", async (req, res) => {
         linkCoverImage,
         province || '',
         municipality || '',
+        req.body.locality || '',
         storeType,
       ]
     );

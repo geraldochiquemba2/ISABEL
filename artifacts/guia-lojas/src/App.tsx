@@ -103,7 +103,7 @@ type StoreType = "weddings" | "love-services" | "collection" | "business" | "for
 
 interface StoreContextType {
   selectedStore: StoreType;
-  setSelectedStore: (store: StoreType) => void;
+  setSelectedStore: (store: string) => void;
 }
 
 export const StoreContext = createContext<StoreContextType>({
@@ -123,9 +123,55 @@ function ScrollToTop() {
   return null;
 }
 
+function inferStoreFromUrl(): StoreType {
+  try {
+    const url = new URL(window.location.href);
+    const from = url.searchParams.get("from");
+    if (!from) return null;
+    const f = from.toLowerCase();
+    const map: Record<string, StoreType> = {
+      weddings: "weddings",
+      "love-services": "love-services",
+      love: "love-services",
+      collection: "collection",
+      business: "business",
+      formacoes: "formacoes",
+      eventos: "eventos",
+      imoveis: "imoveis",
+      infantil: "infantil",
+      automoveis: "automoveis",
+      saude: "saude",
+      beleza: "beleza",
+      casa: "casa",
+      tecnologia: "tecnologia-electronicos",
+      "tecnologia-electronicos": "tecnologia-electronicos",
+      alimentacao: "alimentacao-restauracao",
+      "alimentacao-restauracao": "alimentacao-restauracao",
+      turismo: "turismo-lazer",
+      "turismo-lazer": "turismo-lazer",
+      desporto: "desporto-fitness",
+      "desporto-fitness": "desporto-fitness",
+      empregos: "empregos-oportunidades",
+      "empregos-oportunidades": "empregos-oportunidades",
+      agricultura: "agricultura-agronegocio",
+      "agricultura-agronegocio": "agricultura-agronegocio",
+      influenciadores: "influenciadores-criadores",
+      "influenciadores-criadores": "influenciadores-criadores",
+      transportes: "transportes-logistica",
+      "transportes-logistica": "transportes-logistica",
+      servicos: "servicos-profissionais",
+      "servicos-profissionais": "servicos-profissionais",
+      "servicos-prof": "servicos-profissionais",
+    };
+    return map[f] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function Router() {
   const [selectedStore, setSelectedStore] = useState<StoreType>(
-    () => localStorage.getItem("eliora-selected-store") as StoreType
+    () => (localStorage.getItem("eliora-selected-store") as StoreType) ?? inferStoreFromUrl()
   );
   const [location] = useLocation();
 
@@ -133,10 +179,23 @@ function Router() {
     history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
   }, []);
+
+  // Deep-link: se abriu /loja/:id?from=colecao sem loja escolhida,
+  // assume essa vertical para a loja abrir e o voltar funcionar em 2 níveis.
+  useEffect(() => {
+    if (!selectedStore) {
+      const inferred = inferStoreFromUrl();
+      if (inferred && window.location.pathname.startsWith("/loja")) {
+        localStorage.setItem("eliora-selected-store", inferred);
+        setSelectedStore(inferred);
+      }
+    }
+  }, [selectedStore]);
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
+    setSelectedStore(storeId as StoreType);
     window.location.href = "/";
   };
 
@@ -160,7 +219,9 @@ function Router() {
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
           <Route path="/explorar" component={ExploreServices} />
-          <Route path="/love-services" component={MimoHome} />
+          <Route path="/love-services">
+            <MimoHome onBackToSelector={handleBackToSelector} />
+          </Route>
           <Route path="/login-weddings" component={LoginWeddings} />
           <Route path="/dashboard-weddings" component={DashboardWeddings} />
           <Route>

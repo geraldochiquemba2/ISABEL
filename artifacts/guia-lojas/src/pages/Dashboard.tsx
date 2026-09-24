@@ -9,7 +9,12 @@ import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, Trending
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { CATEGORIES } from "@/data/mock";
+import { CATEGORIES, type Product } from "@/data/mock";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getAreaCategories } from "@/data/areaCategories";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { getLocalities } from "@/lib/locationIndex";
 
 type Section = "overview" | "loja" | "produtos" | "carrinhos" | "admin";
 
@@ -603,7 +608,8 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
   const [schedule, setSchedule] = useState<DaySchedule[]>(DEFAULT_SCHEDULE);
   const [province, setProvince] = useState(myStore?.province || "Luanda");
   const [municipality, setMunicipality] = useState(myStore?.municipality || "Luanda");
-  const [category, setCategory] = useState(myStore?.category || "Moda");
+  const [locality, setLocality] = useState(myStore?.locality || "");
+  const [categories, setCategories] = useState<string[]>(getStoreCategories(myStore));
   
   // Novos estados para Inputs
   const [name, setName] = useState(myStore?.name || "");
@@ -694,24 +700,27 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
       await updateStore(myStore.id, {
         ...myStore,
         name,
-        category,
+        categories,
+        category: categories[0] || myStore?.category || "Moda",
         description,
         phone,
         address,
         province,
         municipality,
+        locality,
         logoUrl,
         coverImage: coverImages[0] || "",
         coverImages,
         latitude,
         longitude,
       });
-      
+
       // Atualizar objeto local
       myStore.name = name;
-      myStore.category = category;
+      myStore.categories = categories;
+      myStore.category = categories[0] || myStore?.category || "Moda";
       Object.assign(myStore, {
-        name, category, description, phone, address, province, municipality, logoUrl, coverImage: coverImages[0] || "", coverImages, schedule,
+        name, categories, category: categories[0] || myStore?.category || "Moda", description, phone, address, province, municipality, locality, logoUrl, coverImage: coverImages[0] || "", coverImages, schedule,
       });
 
       setSaved(true);
@@ -945,69 +954,28 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
         />
       </div>
       
-      {/* Categoria Dropdown */}
+      {/* Categorias da Loja (até 4) */}
       <div>
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Categoria da Loja</label>
-        <select
-          data-testid="select-store-category"
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
+        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Categorias da Loja (até 4)</label>
+        <CategoryMultiSelect
+          options={getAreaCategories("collection")}
+          value={categories}
+          onChange={(next) => {
+            setCategories(next);
             setSaved(false);
             setDirty(true);
           }}
-          className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground outline-none focus:border-foreground transition-colors cursor-pointer"
-        >
-          <option value="" className="text-muted-foreground">Selecione a categoria</option>
-          {CATEGORIES.map((cat) => (
-            <option key={cat.id} value={cat.name} className="text-foreground bg-white">{cat.name}</option>
-          ))}
-        </select>
-      </div>
-      
-      {/* Província Dropdown */}
-      <div>
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Província (Angola)</label>
-        <select
-          data-testid="select-store-province"
-          value={province}
-          onChange={(e) => {
-            setProvince(e.target.value);
-            setMunicipality("");
-            setSaved(false);
-            setDirty(true);
-          }}
-          className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground outline-none focus:border-foreground transition-colors cursor-pointer"
-        >
-          <option value="" className="text-muted-foreground">Selecione a província</option>
-          {ANGOLA_PROVINCES.map((p) => (
-            <option key={p.id} value={p.name} className="text-foreground bg-white">{p.name}</option>
-          ))}
-        </select>
+        />
       </div>
 
-      {/* Município Dropdown */}
-      <div>
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Município</label>
-        <select
-          data-testid="select-store-municipality"
-          value={municipality}
-          disabled={!province}
-          onChange={(e) => {
-            setMunicipality(e.target.value);
-            setSaved(false);
-            setDirty(true);
-          }}
-          className="w-full border-b border-border bg-transparent py-2 text-sm text-foreground outline-none focus:border-foreground transition-colors cursor-pointer disabled:opacity-50"
-        >
-          <option value="" className="text-muted-foreground">
-            {province ? "Selecione o Município" : "Selecione a província primeiro"}
-          </option>
-          {municipalities.map((m) => (
-            <option key={m} value={m} className="text-foreground bg-white">{m}</option>
-          ))}
-        </select>
-      </div>
+      {/* Província (seleção com pesquisa) */}
+      <LocationCombobox label="Província (Angola)" value={province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setProvince(v); setMunicipality(""); setLocality(""); setSaved(false); setDirty(true); }} placeholder="Selecione a província" testId="select-store-province" />
+
+      {/* Município (seleção com pesquisa) */}
+      <LocationCombobox label="Município" value={municipality} options={municipalities} onChange={(v) => { setMunicipality(v); setLocality(""); setSaved(false); setDirty(true); }} placeholder={province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!province} testId="select-store-municipality" />
+
+      {/* Localidade exacta (só opções da base) */}
+      <LocationCombobox label="Localidade exacta" value={locality} options={getLocalities(province, municipality)} onChange={(v) => { setLocality(v); setSaved(false); setDirty(true); }} placeholder={municipality ? "Selecione a localidade" : "Selecione o município primeiro"} disabled={!municipality} testId="select-store-locality" />
 
       <div>
         <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Endereço detalhado</label>
@@ -1172,7 +1140,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
     setError("");
     try {
       const cat = PRODUCT_CATEGORIES.find((c) => c.id === newCategoryId);
-      const sub = cat?.subcategories.find((s) => s.id === newSubcategoryId);
+      const sub = cat?.subcategories.find((s: any) => s.id === newSubcategoryId);
 
       const { createProduct } = await import("@/lib/api");
       await createProduct({
@@ -1359,7 +1327,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
                       Subcategoria em <span className="text-foreground">{selectedCategory.name}</span>
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {selectedCategory.subcategories.map((sub) => (
+                      {selectedCategory.subcategories.map((sub: any) => (
                         <button
                           key={sub.id}
                           data-testid={`button-subcat-${sub.id}`}
@@ -1392,7 +1360,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
                   Classificado como:{" "}
                   <span className="font-semibold text-foreground">
                     {selectedCategory?.name}
-                    {newSubcategoryId && ` › ${selectedCategory?.subcategories.find((s) => s.id === newSubcategoryId)?.name}`}
+                    {newSubcategoryId && ` › ${selectedCategory?.subcategories.find((s: any) => s.id === newSubcategoryId)?.name}`}
                   </span>
                 </p>
               </motion.div>
@@ -1886,7 +1854,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
   });
   const [editSubcategoryId, setEditSubcategoryId] = useState(() => {
     const cat = PRODUCT_CATEGORIES.find(c => c.name === product.category);
-    const sub = cat?.subcategories.find(s => s.name === product.subcategory);
+    const sub = cat?.subcategories.find((s: any) => s.name === product.subcategory);
     return sub?.id || "";
   });
 
@@ -1919,7 +1887,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
     try {
       const { updateProduct } = await import("@/lib/api");
       const cat = PRODUCT_CATEGORIES.find(c => c.id === editCategoryId);
-      const sub = cat?.subcategories.find(s => s.id === editSubcategoryId);
+      const sub = cat?.subcategories.find((s: any) => s.id === editSubcategoryId);
       const updated = {
         ...product,
         name: editName,
@@ -2044,7 +2012,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
             <div>
               <label className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground block mb-2">Subcategoria</label>
               <div className="flex flex-wrap gap-1.5">
-                {editSelectedCategory.subcategories.map(sub => (
+                {editSelectedCategory.subcategories.map((sub: any) => (
                   <button key={sub.id} type="button"
                     onClick={() => setEditSubcategoryId(sub.id === editSubcategoryId ? "" : sub.id)}
                     className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${editSubcategoryId === sub.id ? "bg-foreground text-background border-black" : "border-border text-muted-foreground hover:border-black hover:text-foreground"}`}>

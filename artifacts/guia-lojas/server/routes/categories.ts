@@ -7,13 +7,13 @@ export const categoriesRouter = Router();
 categoriesRouter.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT c.*, 
-        EXISTS(SELECT 1 FROM stores s WHERE s.category = c.name) as is_used,
+      SELECT c.*,
+        EXISTS(SELECT 1 FROM stores s WHERE s.category = c.name OR c.name = ANY(s.categories)) as is_used,
         ARRAY(
-          SELECT DISTINCT p.subcategory 
-          FROM products p 
-          JOIN stores s ON p.store_id = s.id 
-          WHERE s.category = c.name AND p.subcategory IS NOT NULL
+          SELECT DISTINCT p.subcategory
+          FROM products p
+          JOIN stores s ON p.store_id = s.id
+          WHERE (s.category = c.name OR c.name = ANY(s.categories)) AND p.subcategory IS NOT NULL
         ) as used_subcategories
       FROM categories c 
       ORDER BY c.name ASC

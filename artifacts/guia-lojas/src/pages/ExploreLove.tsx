@@ -6,6 +6,10 @@ import {
   Home, Clock3, MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
+import WhereSearch from "@/components/WhereSearch";
 
 const LOVE_SERVICE_GROUPS = [
   { number: "01", title: "Actos de Amor, Homenagens e Experiências", intro: "Faça-se presente nos dias que mais importam.", category: "actos-de-amor", icon: HeartHandshake, items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
@@ -81,16 +85,41 @@ export default function ExploreLove() {
     const params = new URLSearchParams(window.location.search);
     return params.get("municipio") || null;
   });
+  const [locationScope, setLocationScope] = useState<Scope | null>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const kind = params.get("scope") as Scope["kind"] | null;
+      const province = params.get("provincia");
+      const municipality = params.get("municipio");
+      const locality = params.get("localidade");
+      if (kind && province && municipality && (kind === "nearby" || kind === "municipality" || kind === "province")) {
+        return { kind, province, municipality, locality: locality || municipality };
+      }
+      // Fallback: scope guardado pela Home quando a Explore abre sem params de scope
+      if (!params.get("provincia") && !params.get("municipio")) {
+        const raw = localStorage.getItem("eliora-location-scope");
+        if (raw) {
+          const s = JSON.parse(raw) as Scope;
+          if (s && s.province && s.municipality && (s.kind === "nearby" || s.kind === "municipality" || s.kind === "province")) return s;
+        }
+      }
+    } catch {
+      /* ignora scope inválido */
+    }
+    return null;
+  });
 
-  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null;
+  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null || locationScope !== null;
 
   const clearAllFilters = () => {
     setActiveFilter(null);
     
     setActiveProvince(null);
     setActiveMunicipality(null);
+    setLocationScope(null);
     const url = new URL(window.location.href);
     url.search = "";
+    try { localStorage.removeItem("eliora-location-scope"); } catch { /* ignora */ }
     window.history.replaceState({}, "", url.toString());
   };
 
@@ -100,30 +129,9 @@ export default function ExploreLove() {
     staleTime: 60_000,
   });
 
-  const angolaProvinces: Record<string, string[]> = {
-    "Bengo": ["Ambriz", "Bula", "Dembos", "N'dalatando", "São José das Matas"],
-    "Benguela": ["Benguela", "Caimbambo", "Catumbela", "Chiley", "Baía Farta", "Lobito"],
-    "Bié": ["Camacupa", "Catabola", "Chinguar", "Chitembo", "Cuito", "Andulo", "N'harea"],
-    "Cabinda": ["Cabinda", "Cacongo", "Belize", "Buco-Zau"],
-    "Cuando-Cubango": ["Calai", "Cuangar", "Curoca", "Mavinga", "Menongue", "Rivungo"],
-    "Cuanza Norte": ["Ambaca", "Bolongongo", "Cazengo", "Golungo Alto", "Lucala", "Samba Cajù"],
-    "Cuanza Sul": ["Amboim", "Cassongue", "Cela", "Conda", "Ebo", "Mussende", "Porto Amboim", "Quilenda", "Quirimbo"],
-    "Cunene": ["Cahama", "Cuanhala", "Curoca", "Cuvelai", "Namacunde", "Ombadja"],
-    "Huambo": ["Huambo", "Caála", "Ecunha", "Londuimbali", "Mungo", "Bailundo", "Ukuma", "Chipica"],
-    "Huíla": ["Cacula", "Chibia", "Chinjenje", "Cuiva", "Cuvango", "Humpata", "Lubango", "Matala", "Quilengues", "Quipungo"],
-    "Icolo e Bengo": ["Dondo", "Dembos", "Icolo e Bengo", "Catete"],
-    "Luanda": ["Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Maianga", "Rangel", "Samba", "Talatona", "Viana"],
-    "Lunda Norte": ["Caungula", "Cazombo", "Cambulo", "Capenda-Camulemba", "Catchiungo", "Chitato", "Cuango", "Luau", "Luremo"],
-    "Lunda Sul": ["Dala", "Muconda", "Saurimo"],
-    "Malanje": ["Cacuso", "Calandula", "Cambundi-Catembo", "Cangandala", "Caombo", "Cuaba Ndongu", "Luquembo", "Malanje", "Marimba", "Massango", "Mucari", "Quela", "Quiçama"],
-    "Moxico": ["Alto Zambeze", "Bundas", "Luccala", "Cameia", "Moxico", "Nacu-Curo"],
-    "Namibe": ["Bibala", "Lacuando", "Mossâmedes", "Namibe", "Tômbua", "Virei"],
-    "Uíge": ["Alto Cauale", "Ambuíla", "Bembe", "Buengas", "Bungo", "Cassanje", "Cazombo", "Damba", "Milunga", "Mucaba", "Negage", "Puri", "Quimavunde", "Santa Comba Dao", "Songo", "Uíge", "Vimoque"],
-    "Zaire": ["Cuimba", "Iombe", "M'banza-Kongo", "Nóqui", "Soyo", "Terras do Zaire"],
-  };
 
-  const provinces = Object.keys(angolaProvinces);
-  const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
+  const provinces = ANGOLA_PROVINCES.map((p) => p.name);
+  const municipalities = activeProvince ? getMunicipalities(activeProvince) : [];
 
   const normalizeCategory = (s: string) =>
     s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&]/g, " ").replace(/\s+/g, " ").trim();
@@ -134,13 +142,14 @@ export default function ExploreLove() {
     const normTitle = group ? normalizeCategory(group.title) : "";
     const matched = stores.filter((s: any) => {
       if (s.phone === "999999999") return false;
-      const cat = normalizeCategory(s.category || "");
-      const matchesCategory = cat.includes(normCategory) || cat.includes(normTitle) || normCategory.split(" ").every((w) => w.length > 2 && cat.includes(w));
+      const cats = getStoreCategories(s).map((c) => normalizeCategory(c));
+      const matchesCategory = cats.some((cat) => (cat.includes(normCategory) || cat.includes(normTitle) || normCategory.split(" ").every((w) => w.length > 2 && cat.includes(w))));
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
+      if (locationScope && !storeMatchesScope(s, locationScope)) return false;
       return matchesCategory && matchesProvince && matchesMunicipality;
     });
-    return matched.map((store: any) => {
+    const __mapped = matched.map((store: any) => {
       const productImages: string[] = [];
       (store.products || []).forEach((p: any) => {
         const urls = typeof p.imageUrls === "string"
@@ -151,6 +160,11 @@ export default function ExploreLove() {
       });
       return { store, productImages };
     });
+    const scope = locationScope;
+    if (scope && scope.kind === "nearby") {
+      __mapped.sort((a: any, b: any) => scopeRank(a.store, scope) - scopeRank(b.store, scope));
+    }
+    return __mapped;
   };
 
   const filteredGroups = activeFilter
@@ -198,6 +212,22 @@ export default function ExploreLove() {
         </div>
 
         {/* Filtro por província */}
+        <div className="mb-6">
+          <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Onde procuras?</span>
+          <div className="mt-2 max-w-md">
+            <WhereSearch onScope={setLocationScope} onClear={() => setLocationScope(null)} accent="#171416" />
+          </div>
+          {locationScope && (
+            <button
+              onClick={() => setLocationScope(null)}
+              className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.15em] text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#171416" }}
+            >
+              <X size={14} /> Perto de {locationScope.locality} ({locationScope.kind})
+            </button>
+          )}
+        </div>
+
         <div className="mb-6">
           <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Província:</span>
           <select
@@ -296,7 +326,7 @@ export default function ExploreLove() {
                     )}
                   </div>
                   <div className="mt-4 md:mt-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6F696B] mb-3">Lojas recentes</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6F696B] mb-3">Lojas/Serviços disponíveis</p>
                     {groupStores.length > 0 ? (
                       <div className="flex flex-col gap-3">
                         {groupStores.slice(0, 2).map(({ store, productImages }: any) => (

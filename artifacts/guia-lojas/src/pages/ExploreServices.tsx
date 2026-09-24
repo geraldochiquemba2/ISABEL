@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowUpRight, X, Mail, Phone, Instagram } from "lucide-react";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
+import WhereSearch from "@/components/WhereSearch";
 
 type ServiceGroup = {
   number: string;
@@ -14,12 +18,14 @@ interface Store {
   id: string;
   name: string;
   category: string;
+  categories?: string[];
   image?: string;
   coverImage?: string;
   logoUrl?: string;
   description?: string;
   isOpen?: boolean;
   province?: string;
+  municipality?: string;
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
@@ -136,16 +142,41 @@ export default function ExploreServices() {
     const params = new URLSearchParams(window.location.search);
     return params.get("municipio") || null;
   });
+  const [locationScope, setLocationScope] = useState<Scope | null>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const kind = params.get("scope") as Scope["kind"] | null;
+      const province = params.get("provincia");
+      const municipality = params.get("municipio");
+      const locality = params.get("localidade");
+      if (kind && province && municipality && (kind === "nearby" || kind === "municipality" || kind === "province")) {
+        return { kind, province, municipality, locality: locality || municipality };
+      }
+      // Fallback: scope guardado pela Home quando a Explore abre sem params de scope
+      if (!params.get("provincia") && !params.get("municipio")) {
+        const raw = localStorage.getItem("eliora-location-scope");
+        if (raw) {
+          const s = JSON.parse(raw) as Scope;
+          if (s && s.province && s.municipality && (s.kind === "nearby" || s.kind === "municipality" || s.kind === "province")) return s;
+        }
+      }
+    } catch {
+      /* ignora scope inválido */
+    }
+    return null;
+  });
 
-  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null || activeSubcategory !== null;
+  const hasActiveFilters = activeFilter !== null || activeProvince !== null || activeMunicipality !== null || locationScope !== null || activeSubcategory !== null;
 
   const clearAllFilters = () => {
     setActiveFilter(null);
     setActiveSubcategory(null);
     setActiveProvince(null);
     setActiveMunicipality(null);
+    setLocationScope(null);
     const url = new URL(window.location.href);
     url.search = "";
+    try { localStorage.removeItem("eliora-location-scope"); } catch { /* ignora */ }
     window.history.replaceState({}, "", url.toString());
   };
 
@@ -171,41 +202,21 @@ export default function ExploreServices() {
     staleTime: 60_000,
   });
 
-  const angolaProvinces: Record<string, string[]> = {
-    "Bengo": ["Ambriz", "Bula", "Dembos", "N'dalatando", "São José das Matas"],
-    "Benguela": ["Benguela", "Caimbambo", "Catumbela", "Chiley", "Baía Farta", "Lobito"],
-    "Bié": ["Camacupa", "Catabola", "Chinguar", "Chitembo", "Cuito", "Andulo", "N'harea"],
-    "Cabinda": ["Cabinda", "Cacongo", "Belize", "Buco-Zau"],
-    "Cuando-Cubango": ["Calai", "Cuangar", "Curoca", "Mavinga", "Menongue", "Rivungo"],
-    "Cuanza Norte": ["Ambaca", "Bolongongo", "Cazengo", "Golungo Alto", "Lucala", "Samba Cajù"],
-    "Cuanza Sul": ["Amboim", "Cassongue", "Cela", "Conda", "Ebo", "Mussende", "Porto Amboim", "Quilenda", "Quirimbo"],
-    "Cunene": ["Cahama", "Cuanhala", "Curoca", "Cuvelai", "Namacunde", "Ombadja"],
-    "Huambo": ["Huambo", "Caála", "Ecunha", "Londuimbali", "Mungo", "Bailundo", "Ukuma", "Chipica"],
-    "Huíla": ["Cacula", "Chibia", "Chinjenje", "Cuiva", "Cuvango", "Humpata", "Lubango", "Matala", "Quilengues", "Quipungo"],
-    "Icolo e Bengo": ["Dondo", "Dembos", "Icolo e Bengo", "Catete"],
-    "Luanda": ["Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Maianga", "Rangel", "Samba", "Talatona", "Viana"],
-    "Lunda Norte": ["Caungula", "Cazombo", "Cambulo", "Capenda-Camulemba", "Catchiungo", "Chitato", "Cuango", "Luau", "Luremo"],
-    "Lunda Sul": ["Dala", "Muconda", "Saurimo"],
-    "Malanje": ["Cacuso", "Calandula", "Cambundi-Catembo", "Cangandala", "Caombo", "Cuaba Ndongu", "Luquembo", "Malanje", "Marimba", "Massango", "Mucari", "Quela", "Quiçama"],
-    "Moxico": ["Alto Zambeze", "Bundas", "Luccala", "Cameia", "Moxico", "Nacu-Curo"],
-    "Namibe": ["Bibala", "Lacuando", "Mossâmedes", "Namibe", "Tômbua", "Virei"],
-    "Uíge": ["Alto Cauale", "Ambuíla", "Bembe", "Buengas", "Bungo", "Cassanje", "Cazombo", "Damba", "Milunga", "Mucaba", "Negage", "Puri", "Quimavunde", "Santa Comba Dao", "Songo", "Uíge", "Vimoque"],
-    "Zaire": ["Cuimba", "Iombe", "M'banza-Kongo", "Nóqui", "Soyo", "Terras do Zaire"],
-  };
 
-  const provinces = Object.keys(angolaProvinces);
-  const municipalities = activeProvince ? angolaProvinces[activeProvince] || [] : [];
+  const provinces = ANGOLA_PROVINCES.map((p) => p.name);
+  const municipalities = activeProvince ? getMunicipalities(activeProvince) : [];
 
   const getStoresForGroup = (category: string) => {
     const matched = stores.filter((s: Store) => {
-      const matchesCategory = s.category?.toLowerCase().includes(category.toLowerCase());
+      const matchesCategory = getStoreCategories(s).some((c) => c.toLowerCase().includes(category.toLowerCase()));
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
+      if (locationScope && !storeMatchesScope(s, locationScope)) return false;
       return matchesCategory && matchesProvince && matchesMunicipality;
     });
-    return matched.map((store) => {
+    const __mapped = matched.map((store: any) => {
       const productImages: string[] = [];
-      (store.products || []).forEach((p) => {
+      (store.products || []).forEach((p: any) => {
         const urls = typeof p.imageUrls === "string"
           ? p.imageUrls.split(" ").filter(Boolean)
           : Array.isArray(p.imageUrls) ? p.imageUrls : [];
@@ -214,6 +225,11 @@ export default function ExploreServices() {
       });
       return { store, productImages };
     });
+    const scope = locationScope;
+    if (scope && scope.kind === "nearby") {
+      __mapped.sort((a: any, b: any) => scopeRank(a.store, scope) - scopeRank(b.store, scope));
+    }
+    return __mapped;
   };
 
   const filteredGroups = activeFilter
@@ -279,6 +295,22 @@ export default function ExploreServices() {
         </div>
 
         {/* Filtro por província */}
+        <div className="mb-6">
+          <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Onde procuras?</span>
+          <div className="mt-2 max-w-md">
+            <WhereSearch onScope={setLocationScope} onClear={() => setLocationScope(null)} accent="#2c3035" />
+          </div>
+          {locationScope && (
+            <button
+              onClick={() => setLocationScope(null)}
+              className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.15em] text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#2c3035" }}
+            >
+              <X size={14} /> Perto de {locationScope.locality} ({locationScope.kind})
+            </button>
+          )}
+        </div>
+
         <div className="mb-6">
           <span className="text-xs uppercase tracking-[0.15em] text-[#87909a] mr-2">Província:</span>
           <select
@@ -389,10 +421,10 @@ export default function ExploreServices() {
                   )}
                 </div>
                 <div className="mt-4 md:mt-0">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas recentes</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas/Serviços disponíveis</p>
                   {getStoresForGroup(group.category).length > 0 ? (
                     <div className="flex flex-col gap-3">
-                      {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }) => (
+                      {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }: any) => (
                         <StoreCard key={store.id} store={store} productImages={productImages} />
                       ))}
                     </div>

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useParams, Link, useSearch } from "wouter";
+import { useParams, Link, useSearch, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
@@ -47,11 +47,23 @@ function MapPreview({ latitude, longitude }: { latitude: number; longitude: numb
 
 export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
+  const [, setLocation] = useLocation();
   const search = useSearch();
   const params = new URLSearchParams(search);
   const tabParam = params.get("tab");
   const isFromWeddings = params.get("from") === "weddings";
   const servicoParam = params.get("servico");
+
+  // Voltar com fallback: quando a loja é aberta diretamente por link
+  // partilhado (nova aba), não há histórico para voltar — nesse caso
+  // navegamos para a home em vez de não fazer nada.
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      setLocation("/");
+    }
+  };
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -79,7 +91,7 @@ export default function StoreProfile() {
   if (isLoading) {
     return (
       <div className="max-w-xl mx-auto px-4 py-24 text-center">
-        <p className="text-muted-foreground text-sm">Carregando dados da loja...</p>
+        <p className="text-[#77736D] text-sm">Carregando dados da loja...</p>
       </div>
     );
   }
@@ -87,9 +99,9 @@ export default function StoreProfile() {
   if (!store) {
     return (
       <div className="max-w-xl mx-auto px-4 py-24 text-center">
-        <p className="text-muted-foreground mb-4 text-sm">Loja não encontrada.</p>
+        <p className="text-[#77736D] mb-4 text-sm">Loja não encontrada.</p>
         <Link href="/busca">
-          <span className="text-sm font-medium text-foreground underline">Voltar</span>
+          <span className="text-sm font-medium text-[#171717] underline">Voltar</span>
         </Link>
       </div>
     );
@@ -109,9 +121,9 @@ export default function StoreProfile() {
 
   return (
     <PageTransition>
-      <div className={isFromWeddings ? `${weddingsBg} min-h-screen` : ""}>
+      <div className={isFromWeddings ? `${weddingsBg} min-h-screen` : "bg-[#FBF7EC] min-h-screen text-[#171717]"}>
       {/* Cover com carrossel */}
-      <div className={`relative h-72 sm:h-96 w-full overflow-hidden ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-muted"}`}>
+      <div className={`relative h-72 sm:h-96 w-full overflow-hidden ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-[#E9D9B6]"}`}>
         {!coverError && currentImage ? (
           <>
             {/* Fundo borrado */}
@@ -152,8 +164,8 @@ export default function StoreProfile() {
 
         <button
           data-testid="button-back"
-          onClick={() => window.history.back()}
-          className={`absolute top-4 left-4 w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-foreground"} flex items-center justify-center transition-colors backdrop-blur-sm z-20`}
+          onClick={handleBack}
+          className={`absolute top-4 left-4 w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} flex items-center justify-center transition-colors backdrop-blur-sm z-20`}
         >
           <ArrowLeft size={16} />
         </button>
@@ -176,7 +188,7 @@ export default function StoreProfile() {
               }
             }}
             data-testid="button-share-cover"
-            className={`w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-foreground"} flex items-center justify-center transition-colors backdrop-blur-sm`}
+            className={`w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} flex items-center justify-center transition-colors backdrop-blur-sm`}
             title="Partilhar loja"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -193,15 +205,15 @@ export default function StoreProfile() {
       </div>
 
       {/* Store title row below cover */}
-      <div className={`max-w-4xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4 border-b ${isFromWeddings ? weddingsBorder : "border-border"}`}>
+      <div className={`max-w-4xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4 border-b bg-white ${isFromWeddings ? weddingsBorder : "border-[#E9D9B6]"}`}>
         {store.logoUrl ? (
           <img
             src={store.logoUrl}
             alt={`${store.name} Logo`}
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover bg-white border border-black/10 shadow-sm flex-shrink-0"
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover bg-white border border-[#E9D9B6] shadow-sm flex-shrink-0"
           />
         ) : (
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-muted border border-black/10 flex items-center justify-center flex-shrink-0 text-lg font-bold text-foreground">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#E9D9B6] border border-[#E9D9B6] flex items-center justify-center flex-shrink-0 text-lg font-bold text-[#171717]">
             {store.name.substring(0, 2).toUpperCase()}
           </div>
         )}
@@ -210,18 +222,18 @@ export default function StoreProfile() {
             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${
               store.isOpen
                 ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                : "bg-muted text-muted-foreground border-border"
+                : "bg-[#E9D9B6]/40 text-[#77736D] border-[#E9D9B6]"
             }`}>
               {store.isOpen ? "Aberto agora" : "Fechado"}
             </span>
           </div>
-          <h1 className={`text-xl sm:text-2xl font-semibold tracking-tight truncate ${isFromWeddings ? weddingsText : "text-foreground"}`}>{store.name}</h1>
+          <h1 className={`text-xl sm:text-2xl font-semibold tracking-tight truncate ${isFromWeddings ? weddingsText : "text-[#171717]"}`}>{store.name}</h1>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-            <p className="text-sm text-muted-foreground">{store.category}</p>
+            <p className="text-sm text-[#77736D]">{store.category}</p>
             {store.province && store.municipality && (
               <>
-                <span className="text-muted-foreground text-xs">·</span>
-                <span className="text-xs font-medium text-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
+                <span className="text-[#77736D] text-xs">·</span>
+                <span className="text-xs font-medium text-[#171717] bg-[#FBF7EC] px-1.5 py-0.5 rounded border border-[#E9D9B6]">
                   {store.province}, {store.municipality}
                 </span>
               </>
@@ -232,14 +244,14 @@ export default function StoreProfile() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Meta bar */}
-        <div className="py-5 border-b border-border space-y-4">
-          <p className="text-sm text-muted-foreground max-w-2xl">{store.description}</p>
+        <div className="py-5 border-b border-[#E9D9B6] space-y-4">
+          <p className="text-sm text-[#77736D] max-w-2xl">{store.description}</p>
 
           {/* Address */}
           {(store.province || store.municipality || (store.address && store.address.trim())) && (
             <div className="flex items-start gap-2">
-              <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-foreground">
+              <MapPin size={14} className="text-[#77736D] mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-[#171717]">
                 {store.province && store.municipality ? `${store.province}, ${store.municipality}${store.address && store.address.trim() ? ` — ${store.address}` : ""}` : store.address}
               </p>
             </div>
@@ -247,14 +259,14 @@ export default function StoreProfile() {
 
           {/* Horários */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-[#77736D]">
               <Clock size={14} />
               <span className="text-xs font-semibold uppercase tracking-widest">Horários:</span>
             </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-foreground">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#171717]">
               {hours.map((h) => (
-                <div key={h.day} className="flex items-center gap-1.5 bg-muted/50 px-2 py-0.5 rounded border border-border/50">
-                  <span className="text-muted-foreground">{h.day}</span>
+                <div key={h.day} className="flex items-center gap-1.5 bg-[#FBF7EC]/50 px-2 py-0.5 rounded border border-[#E9D9B6]/50">
+                  <span className="text-[#77736D]">{h.day}</span>
                   <span className="font-medium">{h.time}</span>
                 </div>
               ))}
@@ -281,7 +293,7 @@ export default function StoreProfile() {
                 href={`tel:${store.phone.startsWith('+') ? store.phone : `+244${store.phone.replace(/\D/g, '')}`}`}
                 data-testid="button-call"
               >
-                <button className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap">
+                <button className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap">
                   <Phone size={13} />
                   Ligar
                 </button>
@@ -308,7 +320,7 @@ export default function StoreProfile() {
                 }
               }}
               data-testid="button-share-store"
-              className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap"
+              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="18" cy="5" r="3"/>
@@ -324,7 +336,7 @@ export default function StoreProfile() {
             <button
               onClick={() => setShowMapApps(true)}
               data-testid="button-directions"
-              className="flex items-center gap-1.5 sm:gap-2 border border-border text-foreground text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-muted transition-colors whitespace-nowrap"
+              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
             >
               <MapPin size={13} />
               Como chegar
@@ -428,7 +440,7 @@ export default function StoreProfile() {
 
         {/* Tabs */}
         <Tabs defaultValue={tabParam === "carrinhos" && store.carrinhoAccess === "APROVADO" ? "carrinhos" : "produtos"} className="py-6 pb-14">
-          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-border w-full justify-start rounded-none h-auto overflow-x-auto">
+          <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-[#E9D9B6] w-full justify-start rounded-none h-auto overflow-x-auto">
             {[
               { value: "produtos", label: "Produtos", labelFull: "Produtos / Serviços" },
               ...(store.carrinhoAccess === "APROVADO" ? [{ value: "carrinhos", label: "Carrinhos", labelFull: "Carrinhos" }] : []),
@@ -438,7 +450,7 @@ export default function StoreProfile() {
                 key={tab.value}
                 value={tab.value}
                 data-testid={`tab-${tab.value}`}
-                className="rounded-none border-0 bg-transparent px-3 sm:px-4 pb-3 text-xs sm:text-sm font-medium text-muted-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground whitespace-nowrap flex-shrink-0"
+                className="rounded-none border-0 bg-transparent px-3 sm:px-4 pb-3 text-xs sm:text-sm font-medium text-[#77736D] data-[state=active]:text-[#171717] data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-[#D8B532] whitespace-nowrap flex-shrink-0"
               >
                 <span className="hidden sm:inline">{tab.labelFull}</span>
                 <span className="sm:hidden">{tab.label}</span>
@@ -459,26 +471,26 @@ export default function StoreProfile() {
           <TabsContent value="info">
             <div className="grid sm:grid-cols-2 gap-6 max-w-2xl">
               <div className="space-y-4">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Contato</p>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D]">Contato</p>
                 <div className="flex items-start gap-3">
-                  <MapPin size={15} className="text-muted-foreground mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-foreground">{store.address}</p>
+                  <MapPin size={15} className="text-[#77736D] mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-[#171717]">{store.address}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Phone size={15} className="text-muted-foreground flex-shrink-0" />
-                  <p className="text-sm text-foreground">{store.phone}</p>
+                  <Phone size={15} className="text-[#77736D] flex-shrink-0" />
+                  <p className="text-sm text-[#171717]">{store.phone}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-1.5">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D] mb-4 flex items-center gap-1.5">
                   <Clock size={11} /> Horários
                 </p>
                 <div className="space-y-2">
                   {hours.map((h) => (
                     <div key={h.day} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{h.day}</span>
-                      <span className="font-medium text-foreground">{h.time}</span>
+                      <span className="text-[#77736D]">{h.day}</span>
+                      <span className="font-medium text-[#171717]">{h.time}</span>
                     </div>
                   ))}
                 </div>
@@ -499,7 +511,7 @@ function formatPrice(price: number): string {
   return `${formatted},${dec}`;
 }
 
-function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
+function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -594,8 +606,8 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
               onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                 !activeCategory
-                  ? "bg-foreground text-background border-foreground"
-                  : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                  ? "bg-[#D8B532] text-white border-[#D8B532]"
+                  : "border-[#E9D9B6] text-[#77736D] hover:border-[#D8B532] hover:text-[#171717]"
               }`}
             >
               Todos
@@ -614,8 +626,8 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                 }}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                   activeCategory === cat
-                    ? "bg-foreground text-background border-foreground"
-                    : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                    ? "bg-[#D8B532] text-white border-[#D8B532]"
+                    : "border-[#E9D9B6] text-[#77736D] hover:border-[#D8B532] hover:text-[#171717]"
                 }`}
               >
                 <span className="flex items-center gap-1.5">
@@ -637,7 +649,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                 className="overflow-hidden"
               >
                 <div className="flex flex-wrap gap-2 pl-1">
-                  <span className="flex items-center text-xs text-muted-foreground gap-1 mr-1">
+                  <span className="flex items-center text-xs text-[#77736D] gap-1 mr-1">
                     <ChevronRight size={11} /> em {activeCategory}:
                   </span>
                   {subcategories.map((sub) => (
@@ -646,8 +658,8 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                       onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
                       className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
                         activeSubcategory === sub
-                          ? "bg-foreground text-background border-foreground"
-                          : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                          ? "bg-[#D8B532] text-white border-[#D8B532]"
+                          : "border-[#E9D9B6] text-[#77736D] hover:border-[#D8B532] hover:text-[#171717]"
                       }`}
                     >
                       {sub}
@@ -674,7 +686,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
           />
         ))}
         {filtered.length === 0 && (
-          <p className="col-span-full text-sm text-muted-foreground py-8 text-center">Nenhum item nesta categoria.</p>
+          <p className="col-span-full text-sm text-[#77736D] py-8 text-center">Nenhum item nesta categoria.</p>
         )}
       </div>
 
@@ -828,13 +840,13 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.04 }}
-      className="group cursor-pointer border border-black rounded-2xl p-3 bg-card flex flex-col justify-between h-full shadow-sm hover:shadow-md transition-shadow"
+      className="group cursor-pointer border border-[#E9D9B6] rounded-2xl p-3 bg-white flex flex-col justify-between h-full shadow-sm hover:shadow-md hover:border-[#D8B532] transition-shadow"
       data-testid={`card-product-${product.id}`}
     >
       <div className="flex flex-col flex-grow">
-        <div 
+        <div
           onClick={(e) => { e.stopPropagation(); onPhotoClick(); }}
-          className="relative overflow-hidden rounded-xl h-36 mb-3 bg-muted border border-black/10 cursor-zoom-in"
+          className="relative overflow-hidden rounded-xl h-36 mb-3 bg-[#FBF7EC] border border-[#E9D9B6] cursor-zoom-in"
         >
           {product.imageUrls?.length || product.imageUrl ? (
             <img
@@ -847,15 +859,15 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
             <div className="w-full h-full" style={{ backgroundColor: product.imageColor }} />
           )}
         </div>
-        <p className="text-sm font-medium text-foreground leading-tight">{product.name}</p>
+        <p className="text-sm font-medium text-[#171717] leading-tight">{product.name}</p>
         {product.description && (
-          <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{product.description}</p>
+          <p className="text-xs text-[#77736D] mt-1 leading-relaxed line-clamp-2">{product.description}</p>
         )}
       </div>
       <div className="mt-2 flex flex-col justify-between">
         <div>
           {product.price > 0 ? (
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-sm font-semibold text-[#171717]">
               {product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} {formatPrice(product.price)}
             </p>
           ) : (
@@ -865,13 +877,13 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
           {(product.category || product.subcategory) && (
             <div className="flex items-center gap-1 mt-1.5 flex-wrap">
               {product.category && (
-                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
-                  <Tag size={8} />
+                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 bg-[#FBF7EC] rounded-full text-[#77736D] border border-[#E9D9B6] font-medium">
+                  <Tag size={8} className="text-[#D8B532]" />
                   {product.category}
                 </span>
               )}
               {product.subcategory && (
-                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 bg-muted rounded-full text-muted-foreground font-medium">
+                <span className="inline-flex items-center text-[10px] px-1.5 py-0.5 bg-[#FBF7EC] rounded-full text-[#77736D] border border-[#E9D9B6] font-medium">
                   {product.subcategory}
                 </span>
               )}
@@ -883,7 +895,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackWhatsAppClick(storeId)}
-          className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold py-2 rounded-xl transition-colors border border-black/10"
+          className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold py-2 rounded-xl transition-colors border border-[#E9D9B6]"
         >
           <SiWhatsapp size={13} />
           Pedir
@@ -948,7 +960,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
     return (
       <div className="text-center py-12">
         <ShoppingCart size={40} className="mx-auto text-gray-300 mb-3" />
-        <p className="text-sm text-muted-foreground">Nenhum carrinho disponível nesta loja.</p>
+        <p className="text-sm text-[#77736D]">Nenhum carrinho disponível nesta loja.</p>
       </div>
     );
   }

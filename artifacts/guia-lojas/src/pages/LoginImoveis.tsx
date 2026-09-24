@@ -9,6 +9,9 @@ import { loginLojista, registerLojista } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getLocalities } from "@/lib/locationIndex";
 
 const IMOVEIS_CATEGORIES = [
   "Hotéis & Resorts",
@@ -25,6 +28,8 @@ const registerSchema = z.object({
   storeName: z.string().min(2, "Nome muito curto").regex(/[a-zA-ZáàâãéèêíïóôõúüçÁÀÂÃÉÈÊÍÏÓÔÕÚÜÇ]/, "O nome deve conter pelo menos uma letra"),
   phone: z.string().regex(/^\d{9}$/, "Número deve ter exatamente 9 dígitos"),
   category: z.string().min(1, "Selecione a categoria"),
+  categories: z.array(z.string()).min(1, "Selecione pelo menos 1 categoria").max(4, "Máximo 4 categorias"),
+  locality: z.string().optional(),
   province: z.string().min(1, "Selecione a província"),
   municipality: z.string().min(1, "Selecione o município"),
   address: z.string().min(2, "Endereço muito curto"),
@@ -70,7 +75,7 @@ export default function LoginImoveis() {
     watch,
     setValue,
     formState: { errors: regErr },
-  } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema) });
+  } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema), defaultValues: { categories: [] as string[], locality: "" } });
 
   const selectedProvinceName = watch("province");
   const selectedProvince = ANGOLA_PROVINCES.find((p) => p.name === selectedProvinceName);
@@ -195,45 +200,51 @@ export default function LoginImoveis() {
               </div>
 
               <div>
-                <label className={labelCls}>Categoria da Loja</label>
-                <select className={`${inputCls} cursor-pointer`} {...regReg("category")}>
-                  <option value="">Selecione a categoria</option>
-                  {IMOVEIS_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-white text-[#171717]">
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-                <FieldError msg={regErr.category?.message} />
+                <label className={labelCls}>Categorias da Loja (até 4)</label>
+                <CategoryMultiSelect
+                  options={IMOVEIS_CATEGORIES}
+                  value={watch("categories") ?? []}
+                  onChange={(next) => { setValue("categories", next, { shouldValidate: true }); setValue("category", next[0] || "", { shouldValidate: true }); }}
+                  accent="#0B2D56"
+                />
+                <FieldError msg={regErr.categories?.message} />
               </div>
 
               <div>
                 <label className={labelCls}>Província (Angola)</label>
-                <select
-                  className={`${inputCls} cursor-pointer`}
-                  {...regReg("province", { onChange: () => setValue("municipality", "") })}
-                >
-                  <option value="">Selecione a Província</option>
-                  {ANGOLA_PROVINCES.map((p) => (
-                    <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>
-                  ))}
-                </select>
+                <LocationCombobox
+                  options={ANGOLA_PROVINCES.map((p) => p.name)}
+                  value={watch("province") ?? ""}
+                  onChange={(v) => { setValue("province", v, { shouldValidate: true }); setValue("municipality", "", { shouldValidate: true }); setValue("locality", "", { shouldValidate: true }); }}
+                  placeholder="Selecione a Província"
+                  accent="#0B2D56"
+                />
                 <FieldError msg={regErr.province?.message} />
               </div>
 
               <div>
                 <label className={labelCls}>Município</label>
-                <select
-                  className={`${inputCls} cursor-pointer disabled:opacity-50`}
+                <LocationCombobox
+                  options={municipalities}
+                  value={watch("municipality") ?? ""}
+                  onChange={(v) => { setValue("municipality", v, { shouldValidate: true }); setValue("locality", "", { shouldValidate: true }); }}
+                  placeholder={selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}
                   disabled={!selectedProvinceName}
-                  {...regReg("municipality")}
-                >
-                  <option value="">{selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}</option>
-                  {municipalities.map((m) => (
-                    <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>
-                  ))}
-                </select>
+                  accent="#0B2D56"
+                />
                 <FieldError msg={regErr.municipality?.message} />
+              </div>
+
+              <div>
+                <label className={labelCls}>Localidade / Bairro (Opcional)</label>
+                <LocationCombobox
+                  options={getLocalities(watch("province") ?? "", watch("municipality") ?? "")}
+                  value={watch("locality") ?? ""}
+                  onChange={(v) => setValue("locality", v, { shouldValidate: true })}
+                  placeholder={watch("municipality") ? "Selecione a Localidade" : "Selecione o município primeiro"}
+                  disabled={!watch("municipality")}
+                  accent="#0B2D56"
+                />
               </div>
 
               <div>

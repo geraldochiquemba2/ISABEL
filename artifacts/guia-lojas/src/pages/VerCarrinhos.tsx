@@ -26,6 +26,7 @@ interface CarrinhoStore {
   category: string;
   logoUrl: string | null;
   coverColor: string;
+  coverImages?: string[];
   products: any[];
 }
 
@@ -102,19 +103,19 @@ export default function VerCarrinhos() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gradient-to-b from-amber-50/30 to-white">
+      <div className="min-h-screen bg-[#FBF7EC]">
         {/* Header */}
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-100">
+        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E9D9B6]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
             <div className="flex items-center gap-3 mb-4">
               <Link href="/">
-                <span className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center hover:bg-amber-100 transition-colors cursor-pointer">
-                  <ArrowLeft size={20} className="text-[#D4A843]" />
+                <span className="w-10 h-10 rounded-full bg-[#FBF7EC] flex items-center justify-center hover:bg-[#E9D9B6] transition-colors cursor-pointer">
+                  <ArrowLeft size={20} className="text-[#D8B532]" />
                 </span>
               </Link>
               <div className="flex items-center gap-2">
-                <ShoppingCart size={24} className="text-[#D4A843]" />
-                <h1 className="text-xl font-bold text-gray-900">Carrinhos</h1>
+                <ShoppingCart size={24} className="text-[#D8B532]" />
+                <h1 className="text-xl font-bold text-[#171717]">Carrinhos</h1>
               </div>
             </div>
             
@@ -126,7 +127,7 @@ export default function VerCarrinhos() {
                 placeholder={activeTab === "carrinhos" ? "Pesquisar carrinhos..." : "Pesquisar lojas..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:border-[#D4A843] focus:ring-2 focus:ring-[#D4A843]/20 outline-none transition-all text-sm"
+                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:border-[#D8B532] focus:ring-2 focus:ring-[#D8B532]/20 outline-none transition-all text-sm"
               />
             </div>
 
@@ -136,7 +137,7 @@ export default function VerCarrinhos() {
                 onClick={() => setActiveTab("carrinhos")}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
                   activeTab === "carrinhos"
-                    ? "bg-[#D4A843] text-white shadow-lg shadow-amber-500/30"
+                    ? "bg-[#D8B532] text-white shadow-lg shadow-[#D8B532]/30"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -146,7 +147,7 @@ export default function VerCarrinhos() {
                 onClick={() => setActiveTab("lojas")}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
                   activeTab === "lojas"
-                    ? "bg-[#D4A843] text-white shadow-lg shadow-amber-500/30"
+                    ? "bg-[#D8B532] text-white shadow-lg shadow-[#D8B532]/30"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -164,7 +165,7 @@ export default function VerCarrinhos() {
                 onClick={() => setSelectedCategory(null)}
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   !selectedCategory
-                    ? "bg-[#D4A843] text-white shadow-lg shadow-amber-500/30"
+                    ? "bg-[#D8B532] text-white shadow-lg shadow-[#D8B532]/30"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-amber-200"
                 }`}
               >
@@ -172,15 +173,15 @@ export default function VerCarrinhos() {
               </button>
               {categories.map((cat) => (
                 <button
-                  key={cat}
+                  key={cat as string}
                   onClick={() => setSelectedCategory(cat as string)}
                   className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                     selectedCategory === cat
-                      ? "bg-[#D4A843] text-white shadow-lg shadow-amber-500/30"
+                      ? "bg-[#D8B532] text-white shadow-lg shadow-[#D8B532]/30"
                       : "bg-white text-gray-600 border border-gray-200 hover:border-amber-200"
                   }`}
                 >
-                  {cat}
+                  {cat as string}
                 </button>
               ))}
             </div>
@@ -230,17 +231,17 @@ export default function VerCarrinhos() {
                             {product.storeLogo && (
                               <img src={product.storeLogo} alt="" className="w-5 h-5 rounded-full object-cover" />
                             )}
-                            <p className="text-[10px] text-[#D4A843] font-medium">{product.storeName}</p>
+                            <p className="text-[10px] text-[#D8B532] font-medium">{product.storeName}</p>
                           </div>
                           <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2">{product.name}</h3>
                         </div>
                       </Link>
                       <div className="px-3 pb-3 flex items-center justify-between">
-                        <span className="text-sm font-bold text-[#D4A843]">
+                        <span className="text-sm font-bold text-[#D8B532]">
                           {product.price.toLocaleString("pt-AO")} {product.currency}
                         </span>
                         <Link href={`/loja/${product.storeId}?tab=carrinhos`}>
-                          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D4A843] text-white text-xs font-semibold hover:bg-[#C9963A] transition-all cursor-pointer">
+                          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D8B532] text-white text-xs font-semibold hover:bg-[#B8962A] transition-all cursor-pointer">
                             <ShoppingCart size={12} />
                             Adicionar
                           </span>
@@ -287,7 +288,7 @@ export default function VerCarrinhos() {
                           <img src={store.logoUrl} alt="" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm -mt-8 relative" />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center -mt-8 relative border-2 border-white shadow-sm">
-                            <Store size={20} className="text-[#D4A843]" />
+                            <Store size={20} className="text-[#D8B532]" />
                           </div>
                         )}
                         <div>
@@ -308,7 +309,7 @@ export default function VerCarrinhos() {
           <div className="fixed bottom-6 right-6 z-50">
             <button
               onClick={sendToWhatsApp}
-              className="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#D4A843] to-[#B8860B] text-white rounded-2xl shadow-xl shadow-amber-500/30 hover:shadow-2xl hover:shadow-amber-500/40 transition-all"
+              className="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#D8B532] to-[#B8962A] text-white rounded-2xl shadow-xl shadow-[#D8B532]/30 hover:shadow-2xl hover:shadow-[#D8B532]/40 transition-all"
             >
               <MessageCircle size={20} />
               <span className="font-semibold">Enviar ({cart.length})</span>

@@ -96,30 +96,30 @@ function UtilizadoresTab({ storeType, accentColor }: { storeType: string; accent
   }
 
   async function handleApprove(id: number) {
-    try { await approveLojista(id); loadUsers(); } catch { alert("Erro ao aprovar."); }
+    try { await approveLojista(String(id)); loadUsers(); } catch { alert("Erro ao aprovar."); }
   }
 
   async function handleReject() {
     if (!rejectId || !rejectReason.trim()) return;
-    try { await rejectLojista(rejectId, rejectReason); setRejectId(null); setRejectReason(""); loadUsers(); } catch { alert("Erro ao recusar."); }
+    try { await rejectLojista(String(rejectId), rejectReason); setRejectId(null); setRejectReason(""); loadUsers(); } catch { alert("Erro ao recusar."); }
   }
 
   async function handleSuspend() {
     if (!suspendId || !suspendReason.trim()) return;
-    try { await suspendLojista(suspendId, suspendReason); setSuspendId(null); setSuspendReason(""); loadUsers(); } catch { alert("Erro ao suspender."); }
+    try { await suspendLojista(String(suspendId), suspendReason); setSuspendId(null); setSuspendReason(""); loadUsers(); } catch { alert("Erro ao suspender."); }
   }
 
   async function handleReactivate(id: number) {
-    try { await reactivateLojista(id); loadUsers(); } catch { alert("Erro ao reativar."); }
+    try { await reactivateLojista(String(id)); loadUsers(); } catch { alert("Erro ao reativar."); }
   }
 
   async function handleCancel(id: number) {
     if (!confirm("Cancelar e eliminar esta conta?")) return;
-    try { await cancelApplication(id); loadUsers(); } catch { alert("Erro ao cancelar."); }
+    try { await cancelApplication(String(id)); loadUsers(); } catch { alert("Erro ao cancelar."); }
   }
 
   async function handleReset(id: number) {
-    try { await resetUserPassword(id); setResetId(null); alert("Senha redefinida para 123456789."); loadUsers(); } catch { alert("Erro ao redefinir senha."); }
+    try { await resetUserPassword(String(id)); setResetId(null); alert("Senha redefinida para 123456789."); loadUsers(); } catch { alert("Erro ao redefinir senha."); }
   }
 
   const filtered = users.filter((u) => {

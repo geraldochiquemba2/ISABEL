@@ -79,7 +79,7 @@ export default function DescobrirEstilo() {
         {/* Dicas */}
         <div className="max-w-4xl mx-auto px-4 py-12">
           <div className="space-y-8">
-            {dicas.map((dica, index) => (
+            {dicas.map((dica: any, index: any) => (
               <motion.article
                 key={dica.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -99,7 +99,7 @@ export default function DescobrirEstilo() {
                     <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{dica.titulo}</h2>
                     <p className="text-gray-600 mb-5">{dica.descricao}</p>
                     <ul className="space-y-3">
-                      {dica.dicas.map((dicaItem, i) => (
+                      {dica.dicas.map((dicaItem: any, i: any) => (
                         <li key={i} className="flex items-start gap-3">
                           <span className="w-6 h-6 bg-yellow-100 text-yellow-700 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                             {i + 1}

@@ -8,7 +8,9 @@ import {
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
 
-const stores = [
+// Hierarquia YESOLA: Área → Categoria → Subcategoria → Loja/Profissional
+// Aqui cada item é uma ÁREA (ex: Casamentos, Coleção, Negócios)
+const areas = [
   {
     id: "weddings",
     name: "Casamentos",
@@ -494,25 +496,25 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
         </div>
       </section>
 
-      {/* Categories - Store Selector */}
+      {/* Áreas - Seletor por área */}
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[18px] font-bold text-[#111111]">Escolher loja</h2>
+          <h2 className="text-[18px] font-bold text-[#111111]">Escolha por área</h2>
           <button onClick={() => window.location.href = "/explorar"} className="text-xs font-semibold text-[#A96F12] hover:text-[#C99432] transition-colors flex items-center gap-1">
             Ver todas <ChevronRight size={14} />
           </button>
         </div>
         <div className="category-grid">
-          {stores.map((store) => (
+          {areas.map((area) => (
             <motion.button
-              key={store.id}
+              key={area.id}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => onSelect(store.id)}
+              onClick={() => onSelect(area.id)}
               className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border bg-white border-[#E8CC91] hover:border-[#B89A78]/30 hover:bg-[#FFFFFF] transition-all cursor-pointer"
             >
-              <div className="flex items-center justify-center w-12 h-12">{categoryIcons[store.id]}</div>
-              <span className="text-[11px] font-medium text-[#111111] text-center leading-tight">{store.name}</span>
+              <div className="flex items-center justify-center w-12 h-12">{categoryIcons[area.id]}</div>
+              <span className="text-[11px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
             </motion.button>
           ))}
         </div>

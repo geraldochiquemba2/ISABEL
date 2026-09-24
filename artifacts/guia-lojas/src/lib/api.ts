@@ -269,7 +269,7 @@ export async function changePassword(userId: string, newPassword: string): Promi
 }
 
 // POST /api/auth/link-store — Associar loja a utilizador existente
-export async function linkStore(data: { userId?: string; phone?: string; storeName: string; category: string; province?: string; municipality?: string; address?: string }): Promise<any> {
+export async function linkStore(data: { userId?: string; phone?: string; storeName: string; category: string; categories?: string[]; province?: string; municipality?: string; locality?: string; address?: string }): Promise<any> {
   const res = await fetch("/api/auth/link-store", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

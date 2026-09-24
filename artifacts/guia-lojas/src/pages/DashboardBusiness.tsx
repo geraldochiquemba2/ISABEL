@@ -8,6 +8,11 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getAreaCategories } from "@/data/areaCategories";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { getLocalities } from "@/lib/locationIndex";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
@@ -291,7 +296,7 @@ function OverviewSection({ store }: { store: any }) {
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "" });
+  const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -300,7 +305,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
   const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
 
   const mutation = useMutation({
-    mutationFn: () => updateStore(store.id, { ...store, ...form, schedule }),
+    mutationFn: () => updateStore(store.id, { ...store, ...form, categories: (form as any).categories ?? [], category: ((form as any).categories?.[0] as string) || store.category, locality: (form as any).locality || "", schedule }),
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
@@ -309,7 +314,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
     onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
   });
 
-  const handleChange = (field: string, value: string) => { setForm((prev) => ({ ...prev, [field]: value })); setDirty(true); };
+  const handleChange = (field: string, value: string | string[]) => { setForm((prev) => ({ ...prev, [field]: value as any })); setDirty(true); };
   const handleSave = () => mutation.mutate();
   saveFnRef.current = handleSave;
 
@@ -397,22 +402,13 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div><label className={labelCls}>Telefone</label><input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} /></div>
           <div><label className={labelCls}>Endere�o</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Prov�ncia</label>
-            <select value={form.province} onChange={(e) => { handleChange("province", e.target.value); handleChange("municipality", ""); }} className={`${inputCls} cursor-pointer`}>
-              <option value="">Selecione a Prov�ncia</option>
-              {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name} className="bg-white text-[#171717]">{p.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className={labelCls}>Munic�pio</label>
-            <select value={form.municipality} onChange={(e) => handleChange("municipality", e.target.value)} className={`${inputCls} cursor-pointer disabled:opacity-50`} disabled={!form.province}>
-              <option value="">{form.province ? "Selecione o Munic�pio" : "Selecione a prov�ncia primeiro"}</option>
-              {(ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []).map((m) => <option key={m} value={m} className="bg-white text-[#171717]">{m}</option>)}
-            </select>
-          </div>
+        <div>
+          <label className={labelCls}>Categorias da Loja (até 4)</label>
+          <CategoryMultiSelect options={getAreaCategories("business")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#075342" />
         </div>
+        <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#075342" testId="select-store-province" />
+        <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#075342" testId="select-store-municipality" />
+        <LocationCombobox label="Localidade exacta" value={(form as any).locality || ""} options={getLocalities(form.province, form.municipality)} onChange={(v) => handleChange("locality", v)} placeholder={form.municipality ? "Selecione a localidade" : "Selecione o município primeiro"} disabled={!form.municipality} accent="#075342" testId="select-store-locality" />
         <div>
           <label className={labelCls}>Hor�rios de funcionamento</label>
           <div className="space-y-3">
@@ -525,13 +521,14 @@ function ProdutosSection({ store }: { store: any }) {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
   const createMut = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (editProduct) {
-        return updateProduct(editProduct.id, { ...form, price: Number(form.price) || 0, imageUrl: productImages[0] || "", imageUrls: productImages });
+        await updateProduct(editProduct.id, { ...form, price: Number(form.price) || 0, imageUrl: productImages[0] || "", imageUrls: productImages });
+        return;
       }
       const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const selectedCat = BUSINESS_CATEGORIES.find((g) => g.title === form.category);
-      return createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
+      await createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
     },
     onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
     onError: (error: Error) => { console.error("Erro ao guardar servi�o:", error.message); alert("Erro ao guardar: " + error.message); },
