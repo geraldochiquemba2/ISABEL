@@ -10,22 +10,31 @@ interface MapPickerProps {
   onClose: () => void;
 }
 
-// Centros das províncias de Angola
+// Centros das províncias de Angola (chaves = ANGOLA_PROVINCES.name;
+// mantidos aliases antigos "Kwanza ..." e "Lobito" por compatibilidade
+// com lojas já guardadas com essas grafias).
 const PROVINCE_COORDS: Record<string, { lat: number; lng: number }> = {
   "Luanda": { lat: -8.8399, lng: 13.2894 },
+  "Bengo": { lat: -8.5786, lng: 13.6648 },
   "Benguela": { lat: -12.5785, lng: 13.4027 },
+  "Bié": { lat: -12.3836, lng: 16.9416 },
   "Huambo": { lat: -12.7642, lng: 15.7356 },
   "Lobito": { lat: -12.3647, lng: 13.5364 },
   "Cabinda": { lat: -5.5578, lng: 12.1892 },
   "Huíla": { lat: -14.9216, lng: 14.3283 },
   "Uíge": { lat: -7.6089, lng: 15.0561 },
   "Zaire": { lat: -7.3347, lng: 12.8593 },
+  "Cuanza Norte": { lat: -9.2989, lng: 14.9112 },
+  "Cuanza Sul": { lat: -11.2061, lng: 13.8434 },
   "Kwanza Norte": { lat: -9.2421, lng: 14.8354 },
   "Kwanza Sul": { lat: -10.6486, lng: 14.3704 },
   "Malanje": { lat: -9.5402, lng: 16.3411 },
   "Lunda Norte": { lat: -8.3503, lng: 19.1874 },
   "Lunda Sul": { lat: -10.2913, lng: 20.7402 },
   "Moxico": { lat: -13.4287, lng: 20.3315 },
+  "Moxico Leste": { lat: -11.8833, lng: 22.9 },
+  "Cuando": { lat: -15.1667, lng: 19.1667 },
+  "Cubango": { lat: -14.6578, lng: 17.6906 },
   "Cuando Cubango": { lat: -17.8739, lng: 20.1575 },
   "Cunene": { lat: -17.1954, lng: 15.4833 },
   "Namibe": { lat: -15.1965, lng: 12.1525 },

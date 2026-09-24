@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Search, MapPin, Star, ChevronRight } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
 
 interface Store {
   id: string;
@@ -150,24 +151,9 @@ export default function ConsultoresEstilo() {
             className="w-full px-4 py-2.5 rounded-xl border border-[#E8DDD0] bg-white text-sm text-[#171717] focus:outline-none focus:border-[#B89A78]"
           >
             <option value="">Todas as províncias</option>
-            <option value="Luanda">Luanda</option>
-            <option value="Benguela">Benguela</option>
-            <option value="Huambo">Huambo</option>
-            <option value="Lobito">Lobito</option>
-            <option value="Cabinda">Cabinda</option>
-            <option value="Huila">Huíla</option>
-            <option value="Uíge">Uíge</option>
-            <option value="Zaire">Zaire</option>
-            <option value="Kwanza Norte">Kwanza Norte</option>
-            <option value="Kwanza Sul">Kwanza Sul</option>
-            <option value="Malanje">Malanje</option>
-            <option value="Lunda Norte">Lunda Norte</option>
-            <option value="Lunda Sul">Lunda Sul</option>
-            <option value="Moxico">Moxico</option>
-            <option value="Cuando Cubango">Cuando Cubango</option>
-            <option value="Cunene">Cunene</option>
-            <option value="Namibe">Namibe</option>
-            <option value="Icolo e Bengo">Icolo e Bengo</option>
+            {ANGOLA_PROVINCES.map((p) => (
+              <option key={p.id} value={p.name}>{p.name}</option>
+            ))}
           </select>
         </div>
       </section>
