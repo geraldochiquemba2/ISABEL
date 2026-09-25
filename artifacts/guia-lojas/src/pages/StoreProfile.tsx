@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useParams, Link, useSearch, useLocation } from "wouter";
+import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
+import { goBackFromStore } from "@/lib/storeBack";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -47,23 +48,16 @@ function MapPreview({ latitude, longitude }: { latitude: number; longitude: numb
 
 export default function StoreProfile() {
   const { id } = useParams<{ id: string }>();
-  const [, setLocation] = useLocation();
   const search = useSearch();
   const params = new URLSearchParams(search);
   const tabParam = params.get("tab");
   const isFromWeddings = params.get("from") === "weddings";
   const servicoParam = params.get("servico");
 
-  // Voltar com fallback: quando a loja é aberta diretamente por link
-  // partilhado (nova aba), não há histórico para voltar — nesse caso
-  // navegamos para a home em vez de não fazer nada.
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      setLocation("/");
-    }
-  };
+  // Voltar com fallback determinístico (ver @/lib/storeBack):
+  // link direto (WhatsApp/partilha) não tem histórico interno — nesse caso
+  // vamos para a home da vertical de ?from= em vez de página vazia.
+  const handleBack = () => goBackFromStore(params.get("from"));
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
