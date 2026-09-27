@@ -5,6 +5,7 @@ import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
+import { fetchStores } from "@/lib/api";
 
 type ServiceGroup = {
   number: string;
@@ -212,11 +213,7 @@ export default function ExploreFormacoes() {
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores", "formacoes"],
-    queryFn: async () => {
-      const res = await fetch("/api/stores?store_type=formacoes");
-      if (!res.ok) return [];
-      return res.json();
-    },
+    queryFn: () => fetchStores({ storeType: "formacoes" }) as unknown as Promise<any[]>,
     staleTime: 60_000,
   });
 

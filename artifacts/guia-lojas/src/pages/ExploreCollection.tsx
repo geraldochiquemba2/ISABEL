@@ -5,6 +5,7 @@ import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
+import { fetchStores } from "@/lib/api";
 
 type CollectionGroup = {
   number: string;
@@ -218,11 +219,7 @@ export default function ExploreCollection() {
 
   const { data: stores = [] } = useQuery({
     queryKey: ["stores"],
-    queryFn: async () => {
-      const res = await fetch("/api/stores");
-      if (!res.ok) return [];
-      return res.json();
-    },
+    queryFn: () => fetchStores({ storeType: "collection" }) as unknown as Promise<any[]>,
     staleTime: 60_000,
   });
 
