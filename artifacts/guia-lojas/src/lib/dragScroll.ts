@@ -73,7 +73,7 @@ export function enableAutoScroll() {
   const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none";
   const STEP = 220;
   const INTERVAL = 2000;
-  const RESUME_AFTER = 5000;
+  const RESUME_AFTER = 3000;
 
   let lastInteract = 0;
   let hovered: HTMLElement | null = null;
@@ -103,7 +103,7 @@ export function enableAutoScroll() {
     const rows = document.querySelectorAll<HTMLElement>(ROWS);
     rows.forEach((row) => {
       // Pausa de hover expira ao fim de 5s parado — rato parado não trava para sempre
-      if (row === hovered && Date.now() - hoverTime < 5000) return;
+      if (row === hovered && Date.now() - hoverTime < 3000) return;
       if (row.getAttribute("role") === "tablist") return;
       if (row.scrollWidth <= row.clientWidth + 4) return;
       if (!row.querySelector("img")) return;
