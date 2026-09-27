@@ -62,6 +62,7 @@ export default function StoreProfile() {
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMapApps, setShowMapApps] = useState(false);
+  const coverTouch = useRef<{ x: number } | null>(null);
 
   const { data: store, isLoading } = useQuery({
     queryKey: ["store", id],
@@ -73,6 +74,13 @@ export default function StoreProfile() {
   const images = store?.coverImages && store.coverImages.length > 0
     ? store.coverImages
     : (store?.coverImage ? [store.coverImage] : []);
+
+  // Swipe lateral (toque e rato) para navegar nas fotos da capa
+  const swipeCover = (dx: number) => {
+    if (images.length <= 1) return;
+    if (dx < -40) setCurrentImageIndex((p) => (p + 1) % images.length);
+    else if (dx > 40) setCurrentImageIndex((p) => (p - 1 + images.length) % images.length);
+  };
 
   useEffect(() => {
     if (images.length <= 1) return;
@@ -117,7 +125,23 @@ export default function StoreProfile() {
     <PageTransition>
       <div className={isFromWeddings ? `${weddingsBg} min-h-screen` : "bg-[#FBF7EC] min-h-screen text-[#171717]"}>
       {/* Cover com carrossel */}
-      <div className={`relative h-72 sm:h-96 w-full overflow-hidden ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-[#E9D9B6]"}`}>
+      <div
+        className={`relative h-72 sm:h-96 w-full overflow-hidden cursor-grab active:cursor-grabbing select-none touch-pan-y ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-[#E9D9B6]"}`}
+        onTouchStart={(e) => { coverTouch.current = { x: e.touches[0].clientX }; }}
+        onTouchEnd={(e) => {
+          if (!coverTouch.current) return;
+          const dx = e.changedTouches[0].clientX - coverTouch.current.x;
+          coverTouch.current = null;
+          swipeCover(dx);
+        }}
+        onMouseDown={(e) => { coverTouch.current = { x: e.clientX }; }}
+        onMouseUp={(e) => {
+          if (!coverTouch.current) return;
+          const dx = e.clientX - coverTouch.current.x;
+          coverTouch.current = null;
+          swipeCover(dx);
+        }}
+      >
         {!coverError && currentImage ? (
           <>
             {/* Fundo borrado */}
@@ -134,6 +158,8 @@ export default function StoreProfile() {
               transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
               src={currentImage}
               alt={store.name}
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
               className="w-full h-full object-contain relative z-0"
               onError={() => setCoverError(true)}
             />
@@ -820,6 +846,16 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
 function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }; index: number; storeId: string; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
   const [imgError, setImgError] = useState(false);
 
+  // Roda as fotos do produto (1s) quando há mais de uma imagem
+  const pImgs = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+  const [pImgIdx, setPImgIdx] = useState(0);
+
+  useEffect(() => {
+    if (pImgs.length <= 1) return;
+    const t = setInterval(() => setPImgIdx((p) => (p + 1) % pImgs.length), 2000);
+    return () => clearInterval(t);
+  }, [pImgs.length]);
+
   const whatsappMessage = encodeURIComponent(
     `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
     `Produto: ${product.name}\n` +
@@ -843,12 +879,26 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
           className="relative overflow-hidden rounded-xl h-36 mb-3 bg-[#FBF7EC] border border-[#E9D9B6] cursor-zoom-in"
         >
           {product.imageUrls?.length || product.imageUrl ? (
-            <img
-              src={product.imageUrls?.length ? product.imageUrls[0] : product.imageUrl}
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              onError={() => setImgError(true)}
-            />
+            <>
+              <img
+                src={product.imageUrls?.length ? product.imageUrls[pImgIdx % product.imageUrls.length] : product.imageUrl}
+                alt={product.name}
+                draggable={false}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={() => setImgError(true)}
+              />
+              {pImgs.length > 1 && (
+                <div className="absolute bottom-1.5 right-1.5 z-10 flex gap-1">
+                  {pImgs.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={(e) => { e.stopPropagation(); setPImgIdx(i); }}
+                      className={`h-1.5 rounded-full transition-all ${i === pImgIdx % pImgs.length ? "bg-white w-3" : "bg-white/50 w-1.5"}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
             <div className="w-full h-full" style={{ backgroundColor: product.imageColor }} />
           )}

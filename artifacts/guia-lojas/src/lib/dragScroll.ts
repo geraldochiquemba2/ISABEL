@@ -14,6 +14,10 @@ export function enableDragScroll() {
   let dragged = false;
 
   const onDown = (e: MouseEvent) => {
+    // Reset sempre no início de cada pressão: o "dragged" anterior já cumpriu
+    // o seu papel (ou ficou preso se o mouseup foi fora da janela). Sem isto,
+    // o próximo clique válido (ex: nos pontos do carrossel) era engolido.
+    dragged = false;
     if (e.button !== 0) return;
     const t = e.target as HTMLElement;
     if (t.closest?.("input, textarea, select")) return;
