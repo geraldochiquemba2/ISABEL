@@ -210,6 +210,11 @@
    Só as capas têm a combinação object-cover + object-top (heros e logos não). */
 img.object-cover.object-top { object-fit: contain; background-color: #f0eeea; }
 
+/* Carrosséis de lojas: deslize por páginas (assenta em cada card, como a capa da loja) */
+.store-scroll, .scrollbar-none { scroll-snap-type: x mandatory; }
+.scrollbar-hide:has(img) { scroll-snap-type: x proximity; }
+.store-scroll > *, .scrollbar-none > *, .scrollbar-hide:has(img) > * { scroll-snap-align: start; }
+
 /* Filas horizontais: cursor de "agarrar" + feedback durante o arrasto com o rato */
 .store-scroll, .scrollbar-hide, .scrollbar-none, .cat-scroll, .trust-scroll { cursor: grab; touch-action: pan-x pan-y; -webkit-overflow-scrolling: touch; }
 body.drag-scrolling, body.drag-scrolling * { user-select: none !important; cursor: grabbing !important; }
