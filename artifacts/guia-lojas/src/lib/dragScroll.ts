@@ -86,6 +86,12 @@ export function enableAutoScroll() {
   document.addEventListener("pointerdown", markInteract, true);
   document.addEventListener("wheel", markInteract, { capture: true, passive: true });
   document.addEventListener("touchstart", markInteract, { capture: true, passive: true });
+  // Durante o gesto (dedo/rato premido em movimento) mantém a pausa — sem isto,
+  // um arrasto com mais de RESUME_AFTER relançava o autoplay a meio do gesto
+  document.addEventListener("touchmove", markInteract, { capture: true, passive: true });
+  document.addEventListener("pointermove", (e) => {
+    if ((e as PointerEvent).buttons > 0) markInteract();
+  }, { capture: true, passive: true });
 
   document.addEventListener("mouseover", (e) => {
     hovered = ((e.target as HTMLElement).closest?.(ROWS) as HTMLElement | null) ?? null;
