@@ -69,7 +69,7 @@ export function enableAutoScroll() {
   const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none";
   const STEP = 220;
   const INTERVAL = 2000;
-  const RESUME_AFTER = 8000;
+  const RESUME_AFTER = 5000;
 
   let lastInteract = 0;
   let hovered: HTMLElement | null = null;
