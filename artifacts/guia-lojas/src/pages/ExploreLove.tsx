@@ -41,7 +41,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
       onClick={() => window.location.href = `/loja/${store.id}?from=love-services`}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
+        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" />
         {store.logoUrl && (
           <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" />
         )}
@@ -169,7 +169,7 @@ export default function ExploreLove() {
 
   const filteredGroups = activeFilter
     ? LOVE_SERVICE_GROUPS.filter((g) => g.category === activeFilter)
-    : LOVE_SERVICE_GROUPS;
+    : [...LOVE_SERVICE_GROUPS].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#FCFAF8] text-[#171416]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

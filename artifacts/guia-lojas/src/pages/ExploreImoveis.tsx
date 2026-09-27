@@ -50,7 +50,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -187,7 +187,7 @@ export default function ExploreImoveis() {
 
   const filteredGroups = activeFilter
     ? IMOVEIS_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : IMOVEIS_CATEGORIES;
+    : [...IMOVEIS_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#f8f6f3] text-[#0B2D56]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

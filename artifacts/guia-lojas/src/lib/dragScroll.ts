@@ -73,9 +73,11 @@ export function enableAutoScroll() {
 
   let lastInteract = 0;
   let hovered: HTMLElement | null = null;
+  let hoverTime = 0;
 
   const markInteract = () => {
     lastInteract = Date.now();
+    hovered = null; // qualquer interação limpa a pausa de hover (evita ficar presa, ex. após tap no telemóvel)
   };
   document.addEventListener("pointerdown", markInteract, true);
   document.addEventListener("wheel", markInteract, { capture: true, passive: true });
@@ -83,6 +85,7 @@ export function enableAutoScroll() {
 
   document.addEventListener("mouseover", (e) => {
     hovered = ((e.target as HTMLElement).closest?.(ROWS) as HTMLElement | null) ?? null;
+    if (hovered) hoverTime = Date.now();
   });
   document.addEventListener("mouseout", (e) => {
     const to = (e.relatedTarget as HTMLElement | null)?.closest?.(ROWS) ?? null;
@@ -95,7 +98,8 @@ export function enableAutoScroll() {
     if (Date.now() - lastInteract < RESUME_AFTER) return;
     const rows = document.querySelectorAll<HTMLElement>(ROWS);
     rows.forEach((row) => {
-      if (row === hovered) return;
+      // Pausa de hover expira ao fim de 5s parado — rato parado não trava para sempre
+      if (row === hovered && Date.now() - hoverTime < 5000) return;
       if (row.getAttribute("role") === "tablist") return;
       if (row.scrollWidth <= row.clientWidth + 4) return;
       if (!row.querySelector("img")) return;

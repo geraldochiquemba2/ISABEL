@@ -53,7 +53,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -190,7 +190,7 @@ export default function ExploreBusiness() {
 
   const filteredGroups = activeFilter
     ? BUSINESS_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : BUSINESS_CATEGORIES;
+    : [...BUSINESS_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#E8F2EE] text-[#075342]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

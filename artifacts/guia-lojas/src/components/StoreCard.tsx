@@ -52,7 +52,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
                 transition={{ duration: 0.6, ease: "easeInOut" }}
                 src={currentImage}
                 alt={store.name}
-                className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover object-top relative z-10 transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
                 onError={() => setImgError(true)}
               />

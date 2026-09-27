@@ -186,7 +186,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {trending.map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>
@@ -211,7 +211,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>

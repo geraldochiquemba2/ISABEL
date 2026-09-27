@@ -206,6 +206,10 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Fotos de capa dos cards de loja: imagem completa (sem corte), alinhada ao topo.
+   Só as capas têm a combinação object-cover + object-top (heros e logos não). */
+img.object-cover.object-top { object-fit: contain; background-color: #f0eeea; }
+
 /* Filas horizontais: cursor de "agarrar" + feedback durante o arrasto com o rato */
 .store-scroll, .scrollbar-hide, .scrollbar-none, .cat-scroll, .trust-scroll { cursor: grab; }
 body.drag-scrolling, body.drag-scrolling * { user-select: none !important; cursor: grabbing !important; }

@@ -49,7 +49,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -187,7 +187,7 @@ export default function ExploreInfantil() {
 
   const filteredGroups = activeFilter
     ? INFANTIL_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : INFANTIL_CATEGORIES;
+    : [...INFANTIL_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#FFF7E6] text-[#F7C948]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

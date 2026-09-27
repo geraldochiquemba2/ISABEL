@@ -55,7 +55,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -192,7 +192,7 @@ export default function ExploreDesporto() {
 
   const filteredGroups = activeFilter
     ? DESPORTO_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : DESPORTO_CATEGORIES;
+    : [...DESPORTO_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#FFF8F0] text-[#1A0D00]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

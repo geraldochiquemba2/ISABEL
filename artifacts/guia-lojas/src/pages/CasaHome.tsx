@@ -263,7 +263,7 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
             {trending.map((store: any) => (
               <div key={store.id} className="provider-card" onClick={() => window.location.href = `/loja/${store.id}?from=casa`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#272727] truncate">{store.name}</h4>
@@ -288,7 +288,7 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
             {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
               <div key={store.id} className="provider-card" onClick={() => window.location.href = `/loja/${store.id}?from=casa`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#272727] truncate">{store.name}</h4>

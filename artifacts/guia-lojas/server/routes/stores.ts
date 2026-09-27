@@ -107,11 +107,13 @@ storesRouter.get("/", async (req, res) => {
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s
-      JOIN users u ON u.store_id = s.id
+      JOIN users u ON u.store_id = s.id AND u.status = 'APROVADO'
       LEFT JOIN products p ON p.store_id = s.id
     `;
     const conditions: string[] = [];
     const params: unknown[] = [];
+
+    // Montra pública: só lojas de contas aprovadas (pendentes/recusadas/suspensas ficam ocultas)
 
     if (store_type) {
       params.push(store_type);
@@ -170,11 +172,17 @@ storesRouter.get("/", async (req, res) => {
   }
 });
 
-// GET /api/stores/:id — detalhes de uma loja
+// GET /api/stores/:id — detalhes de uma loja (montra pública: só contas aprovadas;
+// o dono vê e gere a própria loja no dashboard após aprovação)
 storesRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const storeRes = await pool.query("SELECT * FROM stores WHERE id=$1", [id]);
+    const storeRes = await pool.query(
+      `SELECT s.* FROM stores s
+       JOIN users u ON u.store_id = s.id AND u.status = 'APROVADO'
+       WHERE s.id = $1 LIMIT 1`,
+      [id]
+    );
     if (!storeRes.rows.length) return res.status(404).json({ error: "Loja não encontrada" });
 
     const productsRes = await pool.query(

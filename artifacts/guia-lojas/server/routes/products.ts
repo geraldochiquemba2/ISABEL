@@ -34,6 +34,8 @@ productsRouter.get("/", async (req, res) => {
     } else if (is_carrinho === "false") {
       conditions.push(`p.is_carrinho = FALSE`);
     }
+    // Montra pública: esconde produtos de lojas com conta pendente/recusada/suspensa
+    conditions.push(`NOT EXISTS (SELECT 1 FROM users u WHERE u.store_id = p.store_id AND u.status <> 'APROVADO')`);
     if (conditions.length) query += " WHERE " + conditions.join(" AND ");
     query += " ORDER BY p.created_at DESC";
     const result = await pool.query(query, params);

@@ -57,7 +57,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -194,7 +194,7 @@ export default function ExploreCasa() {
 
   const filteredGroups = activeFilter
     ? CASA_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : CASA_CATEGORIES;
+    : [...CASA_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#F8F5F0] text-[#272727]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

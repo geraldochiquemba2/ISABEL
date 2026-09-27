@@ -10,7 +10,7 @@ import {
 import {
   KeyRound, ShieldAlert, Phone, Store, Package, Check, X, Ban, RefreshCw,
   Eye, Star, TrendingUp, FolderPlus, Edit2, Trash2, ChevronDown, ChevronUp,
-  RotateCcw, ShoppingCart,
+  RotateCcw, ShoppingCart, Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -450,6 +450,7 @@ function LojasTab({ storeType, accentColor }: { storeType: string; accentColor: 
   const queryClient = useQueryClient();
   const [stores, setStores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => { loadStores(); }, []);
 
@@ -479,12 +480,28 @@ function LojasTab({ storeType, accentColor }: { storeType: string; accentColor: 
 
   if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
 
+  const visible = stores.filter((s) => {
+    const t = searchTerm.trim().toLowerCase();
+    if (!t) return true;
+    return (s.name || "").toLowerCase().includes(t)
+      || (s.phone || "").toLowerCase().includes(t)
+      || (s.category || "").toLowerCase().includes(t)
+      || (s.municipality || "").toLowerCase().includes(t);
+  });
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-[#87909a]">{stores.length} lojas — destaque nas páginas iniciais</p>
 
+      <div className="relative">
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#87909a]" />
+        <input type="text" placeholder="Pesquisar loja por nome, telefone, categoria..."
+          value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border border-[#EDE8DE] rounded-2xl pl-9 pr-4 py-2.5 text-xs outline-none focus:border-[#87909a] bg-white" />
+      </div>
+
       <div className="space-y-3">
-        {stores.map((store) => (
+        {visible.map((store) => (
           <div key={store.id} className="border border-[#EDE8DE] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div className="flex items-start gap-3 flex-1">
               <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0f0f0] flex-shrink-0">
@@ -511,7 +528,7 @@ function LojasTab({ storeType, accentColor }: { storeType: string; accentColor: 
             </div>
           </div>
         ))}
-        {stores.length === 0 && <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhuma loja encontrada.</p>}
+        {visible.length === 0 && <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhuma loja encontrada.</p>}
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -196,7 +196,7 @@ export default function ExploreSaude() {
 
   const filteredGroups = activeFilter
     ? SAUDE_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : SAUDE_CATEGORIES;
+    : [...SAUDE_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#f0f7f0] text-[#1a3a1a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

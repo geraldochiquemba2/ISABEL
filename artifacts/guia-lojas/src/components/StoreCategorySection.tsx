@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { ChevronRight, Star, MapPin, TrendingUp } from "lucide-react";
+import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
 import { getStoreCategories } from "@/lib/storeCategories";
 
@@ -51,7 +51,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
       onClick={() => { window.location.href = `/loja/${store.id}?from=${from}`; }}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
+        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" />
         {store.logoUrl && (
           <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />
         )}
@@ -137,10 +137,11 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
   };
 
   const nonAdmin = stores.filter((s: Store) => s.phone !== "999999999");
-  const featured = nonAdmin.filter((s: Store) => s.isFeatured).slice(0, 6);
   const trending = nonAdmin.filter((s: Store) => s.isTrending).slice(0, 6);
-  const hasAnyStores = categories.some((cat) => getStoresForCategory(cat.name).length > 0);
-  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
+  // Ordenação dinâmica: categorias com mais lojas primeiro, vazias no fim
+  const sortedCategories = [...categories].sort(
+    (a, b) => getStoresForCategory(b.name).length - getStoresForCategory(a.name).length
+  );
 
   return (
     <div className="px-5 py-4 space-y-6">
@@ -160,23 +161,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
         </div>
       )}
 
-      {/* Destaques */}
-      {featured.length > 0 && (
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <Star size={16} className="text-[#D4A843] fill-[#D4A843]" />
-            <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Lojas em destaque</h3>
-            {featured.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
-          </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {featured.map((store: Store) => (
-              <StoreCard key={store.id} store={store} from={storeType} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {categories.map((cat) => {
+      {sortedCategories.map((cat) => {
         const categoryStores = getStoresForCategory(cat.name);
         return (
           <div key={cat.id}>
@@ -205,17 +190,6 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
         );
       })}
 
-      {!hasAnyStores && !featured.length && fallbackFeatured.length > 0 && (
-        <div>
-          <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3">Destaques</h3>
-          {fallbackFeatured.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {fallbackFeatured.map((store: Store) => (
-              <StoreCard key={store.id} store={store} from={storeType} />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

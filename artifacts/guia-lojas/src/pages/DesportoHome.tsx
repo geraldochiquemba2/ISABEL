@@ -262,7 +262,7 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
             {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#ffcc80] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=desporto`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#3a2a1a] truncate">{store.name}</h4>

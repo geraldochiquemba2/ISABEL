@@ -53,7 +53,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -188,7 +188,7 @@ export default function ExploreEventos() {
 
   const filteredGroups = activeFilter
     ? EVENTOS_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : EVENTOS_CATEGORIES;
+    : [...EVENTOS_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#FBF8F4] text-[#191817]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

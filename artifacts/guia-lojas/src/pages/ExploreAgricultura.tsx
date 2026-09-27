@@ -56,7 +56,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -193,7 +193,7 @@ export default function ExploreAgricultura() {
 
   const filteredGroups = activeFilter
     ? AGRICULTURA_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : AGRICULTURA_CATEGORIES;
+    : [...AGRICULTURA_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#F0F8F0] text-[#0A2E0D]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

@@ -57,7 +57,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
         {store.logoUrl && (
           <img
@@ -194,7 +194,7 @@ export default function ExploreAlimentacao() {
 
   const filteredGroups = activeFilter
     ? ALIMENTACAO_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
-    : ALIMENTACAO_CATEGORIES;
+    : [...ALIMENTACAO_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
     <main className="min-h-[100dvh] bg-[#FFF8F0] text-[#2D1B0E]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
