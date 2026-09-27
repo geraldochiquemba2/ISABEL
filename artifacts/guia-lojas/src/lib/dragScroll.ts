@@ -164,11 +164,14 @@ export function enableTouchDrag() {
     const dx = t.clientX - startX;
     const dy = t.clientY - startY;
     if (!locked) {
-      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        locked = true;
-      } else if (Math.abs(dy) > 10) {
+      // A fila ganha o gesto ao menor sinal lateral; só devolve à página
+      // quando o movimento é claramente vertical (2x maior que o lateral).
+      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 2) {
         release(); // intenção vertical: devolve o gesto à página
         return;
+      }
+      if (Math.abs(dx) > 12) {
+        locked = true;
       } else {
         return;
       }
