@@ -2,8 +2,37 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ChevronRight, Star, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
+import { getStoreCategories } from "@/lib/storeCategories";
 
-function StoreCard({ store, from }: { store: Store; from: string }) {
+// Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
+// das secções, para lojas registadas com categorias livres não ficarem invisíveis.
+// Audiências confinam ao grupo próprio; marcas generalistas abrangem a moda.
+const WORD_ALIASES: Record<string, string[]> = {
+  mulher: ["feminina"],
+  senhoras: ["feminina"],
+  homem: ["masculina"],
+  senhores: ["masculina"],
+  crianca: ["infantil"],
+  bebe: ["infantil"],
+  kids: ["infantil"],
+  shein: ["moda"],
+  zara: ["moda"],
+};
+
+const normWords = (s: string) =>
+  s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&\-_]/g, " ").replace(/\s+/g, " ").trim();
+
+const expandWords = (n: string): string[] => {
+  const words = n.split(" ").filter((w) => w.length > 2);
+  const out = [...words];
+  for (const w of words) {
+    const als = WORD_ALIASES[w];
+    if (als) for (const a of als) if (!out.includes(a)) out.push(a);
+  }
+  return out;
+};
+
+export function StoreCard({ store, from }: { store: Store; from: string }) {
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   const images = store.coverImages && store.coverImages.length > 0
     ? store.coverImages
@@ -94,9 +123,16 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
   const [, navigate] = useLocation();
 
   const getStoresForCategory = (categoryName: string) => {
+    const target = normWords(categoryName);
+    const targetWords = expandWords(target);
     return stores.filter((s: Store) => {
-      const cat = (s.category || "").toLowerCase();
-      return cat.includes(categoryName.toLowerCase());
+      const cats = getStoreCategories(s as any).map(normWords);
+      return cats.some((cat) => {
+        if (!cat) return false;
+        if (cat.includes(target) || target.includes(cat)) return true;
+        const storeWords = expandWords(cat);
+        return storeWords.some((w) => targetWords.includes(w));
+      });
     });
   };
 
@@ -114,6 +150,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={16} className="text-[#D4A843]" />
             <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Em alta</h3>
+            {trending.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {trending.map((store: Store) => (
@@ -129,6 +166,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
           <div className="flex items-center gap-2 mb-3">
             <Star size={16} className="text-[#D4A843] fill-[#D4A843]" />
             <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Lojas em destaque</h3>
+            {featured.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {featured.map((store: Store) => (
@@ -146,6 +184,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 flex items-center justify-center">{cat.icon}</div>
                 <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{cat.name}</h3>
+                {categoryStores.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
               </div>
               <button onClick={() => navigate(`${exploreRoute}?categoria=${cat.id}`)} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">
                 Ver mais <ChevronRight size={12} />
@@ -153,7 +192,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             </div>
             {categoryStores.length > 0 ? (
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-                {categoryStores.slice(0, 4).map((store: Store) => (
+                {categoryStores.map((store: Store) => (
                   <StoreCard key={store.id} store={store} from={storeType} />
                 ))}
               </div>
@@ -169,6 +208,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
       {!hasAnyStores && !featured.length && fallbackFeatured.length > 0 && (
         <div>
           <h3 className="text-[14px] font-semibold text-[#2D2C2B] mb-3">Destaques</h3>
+          {fallbackFeatured.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {fallbackFeatured.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />

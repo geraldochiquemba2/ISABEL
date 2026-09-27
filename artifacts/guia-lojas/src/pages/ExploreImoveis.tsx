@@ -330,9 +330,10 @@ export default function ExploreImoveis() {
                   </div>
                   <div className="mt-4 md:mt-0">
                     <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#A7B3C5] mb-3">Lojas/Serviços disponíveis</p>
+                    {groupStores.length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                     {groupStores.length > 0 ? (
-                      <div className="flex flex-col gap-3">
-                        {groupStores.slice(0, 2).map((store: any) => (
+                      <div className={activeFilter === group.category ? "store-grid" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
+                        {groupStores.map((store: any) => (
                           <StoreCard key={store.id} store={store} productImages={getProductsForStore(store.id)} />
                         ))}
                       </div>

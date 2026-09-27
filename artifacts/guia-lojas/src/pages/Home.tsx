@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
@@ -6,77 +6,14 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
+import StoreCategorySection, { StoreCard } from "@/components/StoreCategorySection";
 import type { Scope } from "@/components/WhereSearch";
 import { norm } from "@/lib/locationIndex";
 import {
   Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
   Shirt, Watch, Footprints, Gem, Briefcase, Baby, Sparkles, Smartphone, Home as HomeIcon, UtensilsCrossed,
+  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
-
-function StoreCard({ store, from }: { store: Store; from: string }) {
-  const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages && store.coverImages.length > 0
-    ? store.coverImages
-    : [store.coverImage || fallbackImage];
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const interval = setInterval(() => setCurrentIdx((prev) => (prev + 1) % images.length), 3000);
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  return (
-    <div className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#E9D9B6] cursor-pointer hover:-translate-y-1 transition-all relative group" onClick={() => window.location.href = `/loja/${store.id}?from=${from}`}>
-      <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover" />
-        {store.logoUrl && <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />}
-        
-        {/* Botão de Partilha no Card */}
-        <button
-          onClick={async (e) => {
-            e.stopPropagation();
-            const url = `${window.location.origin}/loja/${store.id}?from=${from}`;
-            const shareData = {
-              title: store.name,
-              text: `Conheça a loja ${store.name} no Guia de Lojas!`,
-              url: url,
-            };
-            if (navigator.share) {
-              try {
-                await navigator.share(shareData);
-              } catch (err) {}
-            } else {
-              navigator.clipboard.writeText(url);
-              alert("Link da loja copiado!");
-            }
-          }}
-          className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center backdrop-blur-sm z-30 transition-transform hover:scale-110"
-          title="Partilhar loja"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="18" cy="5" r="3"/>
-            <circle cx="6" cy="12" r="3"/>
-            <circle cx="18" cy="19" r="3"/>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-          </svg>
-        </button>
-
-        {store.isOpen !== undefined && (
-          <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
-            {store.isOpen ? "Aberto" : "Fechado"}
-          </span>
-        )}
-      </div>
-      <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
-        {store.description && <p className="text-[10px] text-[#77736D] mt-1 line-clamp-2">{store.description}</p>}
-
-      </div>
-    </div>
-  );
-}
 
 const CATEGORIES = [
   { id: "moda-feminina", name: "Moda Feminina", icon: <Shirt size={24} className="text-[#D8B532]" /> },
@@ -89,6 +26,25 @@ const CATEGORIES = [
   { id: "tecnologia-eletronicos", name: "Tecnologia", icon: <Smartphone size={24} className="text-[#D8B532]" /> },
   { id: "casa-servicos", name: "Casa & Serviços", icon: <HomeIcon size={24} className="text-[#D8B532]" /> },
   { id: "alimentacao-restauracao", name: "Alimentação", icon: <UtensilsCrossed size={24} className="text-[#D8B532]" /> },
+];
+
+// Secções de lojas por categoria (nomes curtos para corresponder às categorias reais das lojas)
+const SECTION_CATEGORIES = [
+  { id: "moda-feminina", name: "Moda Feminina", icon: <Shirt size={24} className="text-[#D8B532]" /> },
+  { id: "calcado", name: "Calçado", icon: <Footprints size={24} className="text-[#D8B532]" /> },
+  { id: "bolsas-acessorios", name: "Bolsas", icon: <Briefcase size={24} className="text-[#D8B532]" /> },
+  { id: "joias-bijutarias", name: "Jóias", icon: <Gem size={24} className="text-[#D8B532]" /> },
+  { id: "beleza-bem-estar", name: "Beleza", icon: <Sparkles size={24} className="text-[#D8B532]" /> },
+  { id: "tecnologia-eletronicos", name: "Tecnologia", icon: <Smartphone size={24} className="text-[#D8B532]" /> },
+  { id: "casa-servicos", name: "Casa", icon: <HomeIcon size={24} className="text-[#D8B532]" /> },
+  { id: "alimentacao-restauracao", name: "Alimentação", icon: <UtensilsCrossed size={24} className="text-[#D8B532]" /> },
+];
+
+const TRUST_BADGES = [
+  { icon: <ShieldCheck size={18} />, label: "Compra segura" },
+  { icon: <BadgeCheck size={18} />, label: "Lojas verificadas" },
+  { icon: <CreditCard size={18} />, label: "Pagamento facilitado" },
+  { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
 export default function Home({ onBackToSelector }: { onBackToSelector?: () => void }) {
@@ -164,6 +120,9 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         .cat-item:hover { border-color: #D8B532; background: #E9D9B6; }
         .store-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }
         .store-scroll::-webkit-scrollbar { display: none; }
+        .trust-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .trust-scroll::-webkit-scrollbar { display: none; }
+        .trust-item { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border-radius: 12px; border: 1px solid #E9D9B6; }
       `}</style>
 
       {/* Header */}
@@ -336,19 +295,60 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       </section>
 
       {/* Featured Stores */}
-      <section className="px-5 py-5">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
-          <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#D8B532] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+        <section className="px-5 py-5">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
+            <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#D8B532] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
+          </div>
+          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (
+            <p className="swipe-hint mb-2">Desliza para ver mais →</p>
+          )}
+          {isLoading ? (
+            <div className="store-scroll">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+          ) : (
+            <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+          )}
+        </section>
+      )}
+
+      {/* Stores by Category */}
+      {isLoading ? (
+        <div className="px-5 space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-3 animate-pulse" />
+              <div className="flex gap-3">{[1, 2].map((j) => <div key={j} className="flex-shrink-0 w-44 h-44 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
+            </div>
+          ))}
         </div>
-        {isLoading ? (
-          <div className="store-scroll">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
-        ) : (featured.length > 0 ? featured : fallbackFeatured).length > 0 ? (
-          <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
-        ) : (
-          <p className="text-sm text-[#9CA3AF] text-center py-6">Nenhuma loja disponível de momento.</p>
-        )}
+      ) : (
+        <StoreCategorySection categories={SECTION_CATEGORIES} stores={stores} storeType="collection" exploreRoute="/explorar" />
+      )}
+
+      {/* Counter */}
+      <section className="px-5 py-3">
+        <div className="flex items-center justify-center gap-2 bg-[#FFF8E1] rounded-2xl px-4 py-3 border border-[#E9D9B6]">
+          <ShoppingBag size={16} className="text-[#D8B532]" />
+          <span className="text-[13px] font-medium text-[#171717]">Moda, calçado e acessórios de <span className="text-[#D8B532] font-bold">todas as províncias</span> num só lugar.</span>
+        </div>
       </section>
+
+      {/* Trust Badges */}
+      <section className="px-5 py-3">
+        <div className="trust-scroll">
+          {TRUST_BADGES.map((badge, i) => (
+            <div key={i} className="trust-item">
+              <span className="text-[#D8B532]">{badge.icon}</span>
+              <span className="text-[11px] font-medium text-[#171717]">{badge.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="text-center py-6 px-5">
+        <p className="text-[11px] text-[#77736D]">YESOLA COLLECTION · ESTILO QUE FAZ PARTE DE SI.</p>
+      </div>
     </div>
   );
 }

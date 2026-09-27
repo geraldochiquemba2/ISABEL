@@ -205,3 +205,16 @@
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Filas horizontais: cursor de "agarrar" + feedback durante o arrasto com o rato */
+.store-scroll, .scrollbar-hide, .scrollbar-none, .cat-scroll, .trust-scroll { cursor: grab; }
+body.drag-scrolling, body.drag-scrolling * { user-select: none !important; cursor: grabbing !important; }
+
+/* Dica "desliza para ver mais" — só em aparelhos com rato (no telemóvel o gesto é natural) */
+.swipe-hint { display: none; align-items: center; font-size: 10px; font-weight: 500; color: #9CA3AF; white-space: nowrap; }
+@media (hover: hover) and (pointer: fine) { .swipe-hint { display: inline-flex; } }
+
+/* Grelha de lojas na vista focada ("Ver mais"): cards preenchem as colunas */
+.store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 768px) { .store-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.store-grid > * { width: 100% !important; flex-shrink: 1 !important; }

@@ -10,7 +10,7 @@ import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { getLocalities } from "@/lib/locationIndex";
-import { LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminPanel from "@/components/AdminPanel";
@@ -119,6 +119,60 @@ export default function DashboardInfluencers() {
             <div className="flex flex-col gap-2 pt-2">
               <button onClick={handleRefreshStatus} className="w-full bg-[#C2185B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#880E4F] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
               <button onClick={() => setLoc("/login-influenciadores")} className="w-full border border-[#d4e8d4] text-[#6B7280] hover:bg-[#f0f0f0] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && localUser.status === "RECUSADO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#fdf2f6] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#1a3a1a]">Solicitação Recusada</h1>
+              <p className="text-sm text-[#6B7280]">Lamentamos, mas o seu pedido de conta não foi aceite no momento.</p>
+            </div>
+            {localUser.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{localUser.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#C2185B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#880E4F] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-influenciadores"); }} className="w-full text-xs text-[#6B7280] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && localUser.status === "SUSPENSO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#fdf2f6] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#1a3a1a]">Conta Suspensa</h1>
+              <p className="text-sm text-[#6B7280]">A sua conta foi temporariamente suspensa por um administrador.</p>
+            </div>
+            {localUser.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{localUser.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#C2185B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#880E4F] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-influenciadores"); }} className="w-full text-xs text-[#6B7280] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>

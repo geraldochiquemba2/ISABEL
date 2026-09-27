@@ -230,15 +230,47 @@ export default function ExploreCollection() {
   const municipalities = activeProvince ? getMunicipalities(activeProvince) : [];
 
   const normalizeCategory = (s: string) =>
-    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&]/g, " ").replace(/\s+/g, " ").trim();
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&\-_]/g, " ").replace(/\s+/g, " ").trim();
+
+  // Aliases de etiquetas genéricas (lojas registadas com categorias livres
+  // como "Mulher" ou "SHEIN") → palavras-chave dos grupos da Collection.
+  // Audiências confinam ao grupo próprio; marcas generalistas abrangem a moda.
+  const WORD_ALIASES: Record<string, string[]> = {
+    mulher: ["feminina"],
+    senhoras: ["feminina"],
+    homem: ["masculina"],
+    senhores: ["masculina"],
+    crianca: ["infantil"],
+    bebe: ["infantil"],
+    kids: ["infantil"],
+    shein: ["moda"],
+    zara: ["moda"],
+  };
+
+  const expandWords = (norm: string): string[] => {
+    const words = norm.split(" ").filter((w) => w.length > 2);
+    const out = [...words];
+    for (const w of words) {
+      const als = WORD_ALIASES[w];
+      if (als) for (const a of als) if (!out.includes(a)) out.push(a);
+    }
+    return out;
+  };
 
   const getStoresForGroup = (category: string) => {
     const normCategory = normalizeCategory(category);
+    const group = groups.find((g) => g.category === category);
+    const normTitle = group ? normalizeCategory(group.title) : "";
+    const groupWords = [...normCategory.split(" "), ...normTitle.split(" ")].filter((w) => w.length > 2);
     const matched = stores.filter((s: Store) => {
       const cats = getStoreCategories(s).map((c) => normalizeCategory(c));
-      const group = groups.find((g) => g.category === category);
-      const normTitle = group ? normalizeCategory(group.title) : "";
-      const matchesCategory = cats.some((cat) => (cat.includes(normCategory) || cat.includes(normTitle) || normCategory.split(" ").every((w) => w.length > 2 && cat.includes(w))));
+      const matchesCategory = cats.some((cat) => {
+        if (!cat) return false;
+        if (cat.includes(normCategory) || normCategory.includes(cat)) return true;
+        if (normTitle && (cat.includes(normTitle) || normTitle.includes(cat))) return true;
+        const storeWords = expandWords(cat);
+        return storeWords.some((w) => groupWords.includes(w));
+      });
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
       if (locationScope && !storeMatchesScope(s, locationScope)) return false;
@@ -448,9 +480,10 @@ export default function ExploreCollection() {
                 </div>
                 <div className="mt-4 md:mt-0">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#77736D] mb-3">Lojas/Serviços disponíveis</p>
+                  {getStoresForGroup(group.category).length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                   {getStoresForGroup(group.category).length > 0 ? (
-                    <div className="flex flex-col gap-3">
-                      {getStoresForGroup(group.category).slice(0, 2).map(({ store, productImages }: any) => (
+                    <div className={activeFilter === group.category ? "store-grid" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
+                      {getStoresForGroup(group.category).map(({ store, productImages }: any) => (
                         <StoreCard key={store.id} store={store} productImages={productImages} />
                       ))}
                     </div>

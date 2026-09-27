@@ -1,6 +1,6 @@
 @echo off
-start "API Server" powershell -ExecutionPolicy Bypass -File "C:\Users\geral\Desktop\ISABEL LOJA\start-api.ps1"
-start "Frontend" powershell -ExecutionPolicy Bypass -File "C:\Users\geral\Desktop\ISABEL LOJA\start-frontend.ps1"
+start "API Server" powershell -ExecutionPolicy Bypass -File "C:\Users\geral\Desktop\Nova pasta (3)\ISABEL LOJA\start-api.ps1"
+start "Frontend" powershell -ExecutionPolicy Bypass -File "C:\Users\geral\Desktop\Nova pasta (3)\ISABEL LOJA\start-frontend.ps1"
 echo.
 echo ============================================
 echo   Frontend: http://localhost:3000

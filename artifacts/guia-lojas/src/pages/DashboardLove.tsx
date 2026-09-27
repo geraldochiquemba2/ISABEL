@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
+  Ban, Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
   Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw, MapPin, Navigation,
 } from "lucide-react";
 import {
@@ -11,6 +11,7 @@ import {
   changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword, updateStoreLocation,
 } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
+import { PageTransition } from "@/components/PageTransition";
 import MapPicker from "@/components/MapPicker";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
@@ -634,6 +635,96 @@ export default function DashboardLove() {
     queryFn: () => fetchStoreById(user?.storeId),
     enabled: !!user?.storeId,
   });
+
+  const handleRefreshStatus = async () => {
+    try {
+      const res = await fetch(`/api/auth/status/${user.id}`);
+      const data = await res.json();
+      const updated = { ...user, status: data.status, statusReason: data.statusReason };
+      localStorage.setItem("guialocal_user", JSON.stringify(updated));
+      window.location.reload();
+    } catch {}
+  };
+
+  if (!user) return null;
+
+  if (!isAdmin && user.status === "PENDENTE") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F7E9EB] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-500"><ShieldAlert size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#791226]">Pedido de Conta Pendente</h1>
+              <p className="text-sm text-[#6F696B]">A sua conta está em análise pela equipa de administração.</p>
+            </div>
+            <div className="bg-amber-50/50 rounded-2xl border border-amber-100 p-4 text-xs text-amber-800 text-left space-y-2.5">
+              <p className="font-semibold">O que acontece agora?</p>
+              <p>Assim que o administrador aprovar a sua solicitação, poderá aceder ao painel e gerenciar os seus serviços.</p>
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <button onClick={handleRefreshStatus} className="w-full bg-[#A71936] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#791226] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => setLoc("/login-love")} className="w-full border border-[#F7E9EB] text-[#6F696B] hover:bg-white py-2.5 rounded-full text-xs font-semibold transition-colors">Voltar ao Login</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && user.status === "RECUSADO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F7E9EB] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#791226]">Solicitação Recusada</h1>
+              <p className="text-sm text-[#6F696B]">Lamentamos, mas o seu pedido de conta não foi aceite no momento.</p>
+            </div>
+            {user.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{user.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#A71936] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#791226] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-love"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && user.status === "SUSPENSO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F7E9EB] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#791226]">Conta Suspensa</h1>
+              <p className="text-sm text-[#6F696B]">A sua conta foi temporariamente suspensa por um administrador.</p>
+            </div>
+            {user.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{user.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#A71936] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#791226] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-love"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("guialocal_user");
