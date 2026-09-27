@@ -120,3 +120,65 @@ export function enableAutoScroll() {
     });
   }, INTERVAL);
 }
+
+/**
+ * Arrasto tátil manual nas filas (telemóvel): a fila segue o dedo 1:1.
+ * Só assume o gesto quando a intenção é horizontal (|dx| > |dy|); se for
+ * vertical, liberta para a página continuar a rolar normalmente.
+ */
+export function enableTouchDrag() {
+  const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none, .cat-scroll, .trust-scroll";
+  let row: HTMLElement | null = null;
+  let startX = 0;
+  let startY = 0;
+  let startScroll = 0;
+  let locked = false;
+  let tracking = false;
+
+  const release = () => {
+    row = null;
+    tracking = false;
+    locked = false;
+  };
+
+  const onStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) {
+      release();
+      return;
+    }
+    const t = e.target as HTMLElement;
+    if (t.closest?.("input, textarea, select")) return;
+    const target = t.closest?.(ROWS) as HTMLElement | null;
+    if (!target) return;
+    row = target;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    startScroll = target.scrollLeft;
+    locked = false;
+    tracking = true;
+  };
+
+  const onMove = (e: TouchEvent) => {
+    if (!tracking || !row) return;
+    const t = e.touches[0];
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    if (!locked) {
+      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        locked = true;
+      } else if (Math.abs(dy) > 10) {
+        release(); // intenção vertical: devolve o gesto à página
+        return;
+      } else {
+        return;
+      }
+    }
+    e.preventDefault();
+    row.scrollLeft = startScroll - dx;
+  };
+
+  document.addEventListener("touchstart", onStart, { capture: true, passive: true });
+  document.addEventListener("touchmove", onMove, { capture: true, passive: false });
+  document.addEventListener("touchend", release, { capture: true });
+  document.addEventListener("touchcancel", release, { capture: true });
+}
