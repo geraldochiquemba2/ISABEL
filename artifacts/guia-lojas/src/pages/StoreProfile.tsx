@@ -63,6 +63,8 @@ export default function StoreProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMapApps, setShowMapApps] = useState(false);
   const coverTouch = useRef<{ x: number } | null>(null);
+  const coverDragging = useRef(false);
+  const [dragX, setDragX] = useState<number | null>(null);
 
   const { data: store, isLoading } = useQuery({
     queryKey: ["store", id],
@@ -85,6 +87,7 @@ export default function StoreProfile() {
   useEffect(() => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
+      if (coverDragging.current) return;
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     }, 3500);
     return () => clearInterval(interval);
@@ -110,6 +113,11 @@ export default function StoreProfile() {
   }
 
   const currentImage = images[currentImageIndex];
+  const endCoverDrag = (dx: number | null) => {
+    coverDragging.current = false;
+    setDragX(null);
+    if (dx !== null) swipeCover(dx);
+  };
 
   const hours = [
     { day: "Segunda — Sexta", time: "08:00 – 18:00" },
@@ -127,42 +135,57 @@ export default function StoreProfile() {
       {/* Cover com carrossel */}
       <div
         className={`relative h-72 sm:h-96 w-full overflow-hidden cursor-grab active:cursor-grabbing select-none touch-pan-y ${isFromWeddings ? "bg-[#e5e7e9]" : "bg-[#E9D9B6]"}`}
-        onTouchStart={(e) => { coverTouch.current = { x: e.touches[0].clientX }; }}
+        onTouchStart={(e) => { coverTouch.current = { x: e.touches[0].clientX }; coverDragging.current = true; }}
+        onTouchMove={(e) => { if (!coverTouch.current) return; setDragX(e.touches[0].clientX - coverTouch.current.x); }}
         onTouchEnd={(e) => {
           if (!coverTouch.current) return;
           const dx = e.changedTouches[0].clientX - coverTouch.current.x;
           coverTouch.current = null;
-          swipeCover(dx);
+          endCoverDrag(dx);
         }}
-        onMouseDown={(e) => { coverTouch.current = { x: e.clientX }; }}
+        onMouseDown={(e) => { coverTouch.current = { x: e.clientX }; coverDragging.current = true; }}
+        onMouseMove={(e) => { if (!coverTouch.current) return; setDragX(e.clientX - coverTouch.current.x); }}
         onMouseUp={(e) => {
           if (!coverTouch.current) return;
           const dx = e.clientX - coverTouch.current.x;
           coverTouch.current = null;
-          swipeCover(dx);
+          endCoverDrag(dx);
+        }}
+        onMouseLeave={() => {
+          if (!coverTouch.current) return;
+          coverTouch.current = null;
+          endCoverDrag(null);
         }}
       >
-        {!coverError && currentImage ? (
+        {!coverError && images.length > 0 ? (
           <>
-            {/* Fundo borrado */}
-            <div 
-              key={`bg-profile-${currentImageIndex}`}
-              className="absolute inset-0 bg-cover bg-center blur-xl scale-110 opacity-70 transition-all duration-1000 ease-out"
-              style={{ backgroundImage: `url(${currentImage})` }} 
-            />
-            {/* Imagem principal contida */}
-            <motion.img
-              key={`img-profile-${currentImageIndex}`}
-              initial={{ opacity: 0, filter: "blur(8px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-              src={currentImage}
-              alt={store.name}
-              draggable={false}
-              onDragStart={(e) => e.preventDefault()}
-              className="w-full h-full object-contain relative z-0"
-              onError={() => setCoverError(true)}
-            />
+            {/* Pista deslizante 1:1 com o dedo */}
+            <div
+              className="flex h-full w-full"
+              style={{
+                transform: `translateX(calc(${-currentImageIndex * 100}% + ${dragX ?? 0}px))`,
+                transition: dragX === null ? "transform 0.35s ease-out" : "none",
+              }}
+            >
+              {images.map((src, i) => (
+                <div key={i} className="relative h-full w-full flex-shrink-0 overflow-hidden">
+                  {/* Fundo borrado */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center blur-xl scale-110 opacity-70"
+                    style={{ backgroundImage: `url(${src})` }}
+                  />
+                  {/* Imagem principal contida */}
+                  <img
+                    src={src}
+                    alt={store.name}
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="relative z-0 h-full w-full object-contain"
+                    onError={() => setCoverError(true)}
+                  />
+                </div>
+              ))}
+            </div>
             {/* Indicadores do carrossel */}
             {images.length > 1 && (
               <div className="absolute bottom-16 right-4 z-20 flex gap-1">
