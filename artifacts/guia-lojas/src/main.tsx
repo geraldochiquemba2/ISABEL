@@ -3,11 +3,10 @@ import App from "./App";
 import "./index.css";
 import { enableDragScroll, enableAutoScroll, enableTouchDrag } from "./lib/dragScroll";
 
-// Permite arrastar as filas de lojas com o rato (PC não tem swipe)
-// e deslize automático das filas só no PC (pausa quando o utilizador manipula)
+// Só movimento manual: arrastar com o rato no PC, swipe nativo no telemóvel.
+// O deslize automático está desligado (enableAutoScroll e enableTouchDrag são no-ops).
 enableDragScroll();
 enableAutoScroll();
-// No telemóvel usa-se o scroll nativo com inércia (enableTouchDrag é no-op)
 enableTouchDrag();
 
 createRoot(document.getElementById("root")!).render(<App />);

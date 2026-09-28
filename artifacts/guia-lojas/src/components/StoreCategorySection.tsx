@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
@@ -37,13 +37,8 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   const images = store.coverImages && store.coverImages.length > 0
     ? store.coverImages
     : [store.coverImage || fallbackImage];
+  // Sem rotação automática: a foto só muda por toque manual nos pontos.
   const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const t = setInterval(() => setCurrentIdx((p) => (p + 1) % images.length), 3000);
-    return () => clearInterval(t);
-  }, [images.length]);
 
   return (
     <div
@@ -91,6 +86,22 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
           <span className={`absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 ${store.isOpen ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
             {store.isOpen ? "Aberto" : "Fechado"}
           </span>
+        )}
+
+        {/* Pontos manuais: toque muda a foto (sem autoplay) */}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+            {images.slice(0, 5).map((_, i) => (
+              <button
+                key={i}
+                aria-label={`Ver foto ${i + 1}`}
+                onClick={(e) => { e.stopPropagation(); setCurrentIdx(i); }}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === currentIdx ? "bg-white w-4" : "bg-white/50 w-1.5"
+                }`}
+              />
+            ))}
+          </div>
         )}
       </div>
       <div className="p-3">

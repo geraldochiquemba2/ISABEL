@@ -62,65 +62,12 @@ export function enableDragScroll() {
 }
 
 /**
- * Deslize automático das filas de LOJAS (não toca em categorias/selos/tabs).
- * O utilizador pode manipular à vontade: qualquer interação (toque, clique,
- * roda do rato, arrasto) pausa tudo por alguns segundos; passar o rato por
- * cima de uma fila pausa só essa fila. Respeita `prefers-reduced-motion`.
+ * Deslize automático das filas: DESLIGADO por pedido do utilizador.
+ * As filas mexem-se apenas com gesto manual (swipe no telemóvel,
+ * arrasto com o rato no PC). Mantida por compatibilidade com main.tsx.
  */
 export function enableAutoScroll() {
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-  // No telemóvel o autoplay luta com o dedo e parte o swipe: só PC com rato.
-  if (window.matchMedia?.("(hover: none) and (pointer: coarse)").matches) return;
-
-  const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none";
-  const STEP = 220;
-  const INTERVAL = 4000;
-  const RESUME_AFTER = 6000;
-
-  let lastInteract = 0;
-  let hovered: HTMLElement | null = null;
-  let hoverTime = 0;
-
-  const markInteract = () => {
-    lastInteract = Date.now();
-    hovered = null; // qualquer interação limpa a pausa de hover (evita ficar presa, ex. após tap no telemóvel)
-  };
-  document.addEventListener("pointerdown", markInteract, true);
-  document.addEventListener("wheel", markInteract, { capture: true, passive: true });
-  document.addEventListener("touchstart", markInteract, { capture: true, passive: true });
-  // Durante o gesto (dedo/rato premido em movimento) mantém a pausa — sem isto,
-  // um arrasto com mais de RESUME_AFTER relançava o autoplay a meio do gesto
-  document.addEventListener("touchmove", markInteract, { capture: true, passive: true });
-  document.addEventListener("pointermove", (e) => {
-    if ((e as PointerEvent).buttons > 0) markInteract();
-  }, { capture: true, passive: true });
-
-  document.addEventListener("mouseover", (e) => {
-    hovered = ((e.target as HTMLElement).closest?.(ROWS) as HTMLElement | null) ?? null;
-    if (hovered) hoverTime = Date.now();
-  });
-  document.addEventListener("mouseout", (e) => {
-    const to = (e.relatedTarget as HTMLElement | null)?.closest?.(ROWS) ?? null;
-    if (to !== hovered) hovered = (to as HTMLElement | null) ?? null;
-  });
-
-  setInterval(() => {
-    if (document.hidden) return;
-    if (document.body.classList.contains("drag-scrolling")) return;
-    if (Date.now() - lastInteract < RESUME_AFTER) return;
-    const rows = document.querySelectorAll<HTMLElement>(ROWS);
-    rows.forEach((row) => {
-      // Pausa de hover expira ao fim de 5s parado — rato parado não trava para sempre
-      if (row === hovered && Date.now() - hoverTime < 3000) return;
-      if (row.getAttribute("role") === "tablist") return;
-      if (row.scrollWidth <= row.clientWidth + 4) return;
-      if (!row.querySelector("img")) return;
-      const r = row.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > window.innerHeight) return;
-      const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 8;
-      row.scrollBy({ left: atEnd ? -row.scrollLeft : STEP, behavior: "smooth" });
-    });
-  }, INTERVAL);
+  return;
 }
 
 /**

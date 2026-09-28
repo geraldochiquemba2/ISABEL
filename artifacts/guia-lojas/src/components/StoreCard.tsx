@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Store } from "@/data/mock";
@@ -17,17 +17,11 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
 
-  const images = store.coverImages && store.coverImages.length > 0 
-    ? store.coverImages 
+  const images = store.coverImages && store.coverImages.length > 0
+    ? store.coverImages
     : (store.coverImage ? [store.coverImage] : []);
 
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [images.length]);
+  // Sem rotação automática: a foto só muda por toque manual nos pontos.
 
   const currentImage = images[currentImageIndex];
 
@@ -66,14 +60,16 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
             </div>
           )}
 
-          {/* Image dots indicator */}
+          {/* Pontos manuais: toque muda a foto (sem autoplay) */}
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
               {images.slice(0, 5).map((_, i) => (
-                <div 
-                  key={i} 
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    i === currentImageIndex ? "bg-white w-4" : "bg-white/50"
+                <button
+                  key={i}
+                  aria-label={`Ver foto ${i + 1}`}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex(i); }}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === currentImageIndex ? "bg-white w-4" : "bg-white/50 w-1.5"
                   }`}
                 />
               ))}
