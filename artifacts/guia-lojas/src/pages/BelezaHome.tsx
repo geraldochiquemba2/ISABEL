@@ -195,6 +195,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
               </div>
             ))}
           </div>
+          {trending.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 
@@ -226,6 +227,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
               </div>
             ))}
           </div>
+          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 

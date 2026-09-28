@@ -288,6 +288,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
               </div>
             ))}
           </div>
+          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 

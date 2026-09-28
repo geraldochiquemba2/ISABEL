@@ -162,13 +162,13 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={16} className="text-[#D4A843]" />
             <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Em alta</h3>
-            {trending.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {trending.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />
             ))}
           </div>
+          {trending.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </div>
       )}
 
@@ -180,18 +180,20 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 flex items-center justify-center">{cat.icon}</div>
                 <h3 className="text-[14px] font-semibold text-[#2D2C2B]">{cat.name}</h3>
-                {categoryStores.length > 2 && (<span className="swipe-hint">Desliza para ver mais →</span>)}
               </div>
               <button onClick={() => navigate(`${exploreRoute}?categoria=${cat.id}`)} className="text-[12px] text-[#D4A843] font-medium flex items-center gap-1">
                 Ver mais <ChevronRight size={12} />
               </button>
             </div>
             {categoryStores.length > 0 ? (
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-                {categoryStores.map((store: Store) => (
-                  <StoreCard key={store.id} store={store} from={storeType} />
-                ))}
-              </div>
+              <>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                  {categoryStores.map((store: Store) => (
+                    <StoreCard key={store.id} store={store} from={storeType} />
+                  ))}
+                </div>
+                {categoryStores.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
+              </>
             ) : (
               <div className="rounded-2xl border border-dashed border-[#EDE8DE] p-6 text-center bg-white">
                 <p className="text-[12px] text-[#9CA3AF]">Em breve novas lojas</p>

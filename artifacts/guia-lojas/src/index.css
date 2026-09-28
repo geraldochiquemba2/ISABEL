@@ -241,9 +241,10 @@ img.object-cover.object-top { object-fit: contain; background-color: #f0eeea; }
 }
 body.drag-scrolling, body.drag-scrolling * { user-select: none !important; cursor: grabbing !important; }
 
-/* Dica "desliza para ver mais" — só em aparelhos com rato (no telemóvel o gesto é natural) */
-.swipe-hint { display: none; align-items: center; font-size: 10px; font-weight: 500; color: #9CA3AF; white-space: nowrap; }
-@media (hover: hover) and (pointer: fine) { .swipe-hint { display: inline-flex; } }
+/* Dica "desliza para ver mais" — visível em todos os aparelhos, incluindo telemóvel */
+.swipe-hint { display: inline-flex; align-items: center; font-size: 10px; font-weight: 500; color: #9CA3AF; white-space: nowrap; }
+/* ... por baixo de cada fila de cards, centrada */
+.swipe-hint-below { display: block; text-align: center; font-size: 10px; font-weight: 500; color: #9CA3AF; margin: 6px 0 0; }
 
 /* Grelha de lojas na vista focada ("Ver mais"): cards preenchem as colunas */
 .store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

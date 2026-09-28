@@ -301,13 +301,15 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
             <button onClick={() => setLocation("/explorar")} className="text-[13px] text-[#D8B532] font-medium flex items-center gap-1">Ver todas <ChevronRight size={14} /></button>
           </div>
-          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (
-            <p className="swipe-hint mb-2">Desliza para ver mais →</p>
-          )}
           {isLoading ? (
             <div className="store-scroll">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
           ) : (
-            <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+            <>
+              <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+              {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (
+                <p className="swipe-hint-below">Desliza para ver mais →</p>
+              )}
+            </>
           )}
         </section>
       )}
