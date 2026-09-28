@@ -225,6 +225,11 @@ img.object-cover.object-top { object-fit: contain; background-color: #f0eeea; }
   scroll-snap-stop: normal;
 }
 
+/* A página nunca anda para os lados: só as filas rolam por dentro.
+   (clip preserva position: sticky; hidden é só fallback p/ browsers antigos) */
+html, body { overflow-x: clip; }
+@supports not (overflow: clip) { html, body { overflow-x: hidden; } }
+
 /* Filas horizontais: scroll nativo com inércia no telemóvel + arrastar com rato no PC */
 .store-scroll, .scrollbar-hide, .scrollbar-none {
   overscroll-behavior-x: contain;

@@ -403,7 +403,7 @@ export default function ExploreFormacoes() {
             <article key={group.number} className={`group border-t border-[#EEF3F4] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
               <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
                 <span className="font-mono text-xs tracking-[0.2em] text-[#68757C]">{group.number}</span>
-                <div>
+                <div className="min-w-0">
                   <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#17191A] md:text-[2.8rem]" style={{ fontFamily: "'Playfair Display', serif" }}>{group.title}</h3>
                   <p className="mt-4 max-w-md text-sm leading-7 text-[#68757C]">{group.intro}</p>
                    <ul className="mt-6 space-y-3 border-l border-[#EEF3F4] pl-5 text-sm leading-5 text-[#68757C]">
@@ -429,7 +429,7 @@ export default function ExploreFormacoes() {
                     </button>
                   )}
                 </div>
-                <div className="mt-4 md:mt-0">
+                <div className="min-w-0 mt-4 md:mt-0">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#68757C] mb-3">Lojas/Serviços disponíveis</p>
                   {getStoresForGroup(group.category).length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                   {getStoresForGroup(group.category).length > 0 ? (

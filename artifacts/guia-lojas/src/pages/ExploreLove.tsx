@@ -289,7 +289,7 @@ export default function ExploreLove() {
               <article key={group.number} className={`group border-t border-[#F7E9EB] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
                   <span className="font-mono text-xs tracking-[0.2em] text-[#6F696B]">{group.number}</span>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#171416] md:text-[2.8rem]">{group.title}</h3>
                     <p className="mt-4 max-w-md text-sm leading-7 text-[#6F696B]">{group.intro}</p>
                     <ul className="mt-6 space-y-3 border-l border-[#F7E9EB] pl-5 text-sm leading-5 text-[#6F696B]">
@@ -325,7 +325,7 @@ export default function ExploreLove() {
                       </button>
                     )}
                   </div>
-                  <div className="mt-4 md:mt-0">
+                  <div className="min-w-0 mt-4 md:mt-0">
                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6F696B] mb-3">Lojas/Serviços disponíveis</p>
                     {groupStores.length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                     {groupStores.length > 0 ? (

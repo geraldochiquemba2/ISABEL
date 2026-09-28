@@ -314,7 +314,7 @@ export default function ExploreTecnologia() {
               <article key={group.number} className={`group border-t border-[#B3C9D6] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
                   <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#1565C0]">{group.number}</span>
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex items-center gap-3 mb-3">
                       <Icon size={24} className="text-[#1565C0]" />
                       <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#0D1B2A] md:text-[2.8rem]">{group.title}</h3>
@@ -337,7 +337,7 @@ export default function ExploreTecnologia() {
                       </button>
                     )}
                   </div>
-                  <div className="mt-4 md:mt-0">
+                  <div className="min-w-0 mt-4 md:mt-0">
                     <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#5C6B73] mb-3">Lojas/Serviços disponíveis</p>
                     {groupStores.length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                     {groupStores.length > 0 ? (

@@ -391,7 +391,7 @@ export default function ExploreServices() {
             <article key={group.number} className={`group border-t border-[#d1d4d8] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
               <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
                 <span className="font-mono text-xs tracking-[0.2em] text-[#89919a]">{group.number}</span>
-                <div>
+                <div className="min-w-0">
                   <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#30343a] md:text-[2.8rem]">{group.title}</h3>
                   <p className="mt-4 max-w-md text-sm leading-7 text-[#686e76]">{group.intro}</p>
                    <ul className="mt-6 space-y-3 border-l border-[#d7dade] pl-5 text-sm leading-5 text-[#565d66]">
@@ -417,7 +417,7 @@ export default function ExploreServices() {
                     </button>
                   )}
                 </div>
-                <div className="mt-4 md:mt-0">
+                <div className="min-w-0 mt-4 md:mt-0">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas/Serviços disponíveis</p>
                   {getStoresForGroup(group.category).length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                   {getStoresForGroup(group.category).length > 0 ? (
