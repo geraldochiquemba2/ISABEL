@@ -69,11 +69,13 @@ export function enableDragScroll() {
  */
 export function enableAutoScroll() {
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  // No telemóvel o autoplay luta com o dedo e parte o swipe: só PC com rato.
+  if (window.matchMedia?.("(hover: none) and (pointer: coarse)").matches) return;
 
   const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none";
   const STEP = 220;
-  const INTERVAL = 2000;
-  const RESUME_AFTER = 3000;
+  const INTERVAL = 4000;
+  const RESUME_AFTER = 6000;
 
   let lastInteract = 0;
   let hovered: HTMLElement | null = null;
@@ -122,66 +124,13 @@ export function enableAutoScroll() {
 }
 
 /**
- * Arrasto tátil manual nas filas (telemóvel): a fila segue o dedo 1:1.
- * Só assume o gesto quando a intenção é horizontal (|dx| > |dy|); se for
- * vertical, liberta para a página continuar a rolar normalmente.
+ * Arrasto tátil (telemóvel): intencionalmente vazio.
+ * O scroll nativo do browser (overflow-x: auto + -webkit-overflow-scrolling)
+ * já dá swipe com inércia/momentum. O hijack manual anterior (touchmove +
+ * preventDefault + scrollLeft 1:1) matava a inércia e fazia as filas
+ * "falhar"/prender no dedo, além de lutar com o scroll-snap.
+ * Mantida por compatibilidade com main.tsx — não instala listeners.
  */
 export function enableTouchDrag() {
-  const ROWS = ".store-scroll, .scrollbar-hide, .scrollbar-none, .cat-scroll, .trust-scroll";
-  let row: HTMLElement | null = null;
-  let startX = 0;
-  let startY = 0;
-  let startScroll = 0;
-  let locked = false;
-  let tracking = false;
-
-  const release = () => {
-    row = null;
-    tracking = false;
-    locked = false;
-  };
-
-  const onStart = (e: TouchEvent) => {
-    if (e.touches.length !== 1) {
-      release();
-      return;
-    }
-    const t = e.target as HTMLElement;
-    if (t.closest?.("input, textarea, select")) return;
-    const target = t.closest?.(ROWS) as HTMLElement | null;
-    if (!target) return;
-    row = target;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    startScroll = target.scrollLeft;
-    locked = false;
-    tracking = true;
-  };
-
-  const onMove = (e: TouchEvent) => {
-    if (!tracking || !row) return;
-    const t = e.touches[0];
-    const dx = t.clientX - startX;
-    const dy = t.clientY - startY;
-    if (!locked) {
-      // A fila ganha o gesto ao menor sinal lateral; só devolve à página
-      // quando o movimento é claramente vertical (2x maior que o lateral).
-      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 2) {
-        release(); // intenção vertical: devolve o gesto à página
-        return;
-      }
-      if (Math.abs(dx) > 12) {
-        locked = true;
-      } else {
-        return;
-      }
-    }
-    e.preventDefault();
-    row.scrollLeft = startScroll - dx;
-  };
-
-  document.addEventListener("touchstart", onStart, { capture: true, passive: true });
-  document.addEventListener("touchmove", onMove, { capture: true, passive: false });
-  document.addEventListener("touchend", release, { capture: true });
-  document.addEventListener("touchcancel", release, { capture: true });
+  return;
 }
