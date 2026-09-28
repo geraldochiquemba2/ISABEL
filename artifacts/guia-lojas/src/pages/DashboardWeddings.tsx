@@ -842,9 +842,20 @@ function ProdutosSection({ store }: { store: any }) {
 
   const products = store.products || [];
 
-  const getProductsForGroup = (category: string) => {
-    return products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
+  const groupMatchesProduct = (group: { title: string; category: string }, p: any) => {
+    const cats = [p.category, p.subcategory].filter(Boolean).map((c: string) => c.toLowerCase());
+    if (!cats.length) return false;
+    const title = group.title.toLowerCase();
+    const key = group.category.toLowerCase().replace(/-/g, " ");
+    return cats.some((cat) => cat.includes(title) || title.includes(cat) || cat.includes(key));
   };
+
+  const getProductsForGroup = (category: string) => {
+    const group = WEDDING_SERVICE_GROUPS.find((g) => g.category === category);
+    if (!group) return [];
+    return products.filter((p: any) => groupMatchesProduct(group, p));
+  };
+  const orphanProducts = products.filter((p: any) => !WEDDING_SERVICE_GROUPS.some((g) => groupMatchesProduct(g, p)));
 
   return (
     <div>
@@ -922,9 +933,10 @@ function ProdutosSection({ store }: { store: any }) {
                 </select>
               </div>
               <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
-              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name} className="bg-[#2c3035] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#1a1d20] transition-colors disabled:opacity-50">
+              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name || (!editProduct && !form.category)} className="bg-[#2c3035] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#1a1d20] transition-colors disabled:opacity-50">
                 {createMut.isPending ? "A guardar..." : editProduct ? "Atualizar" : "Guardar"}
               </button>
+              {!editProduct && !form.category && <p className="text-[11px] text-red-500">Seleciona uma categoria para poderes guardar.</p>}
             </div>
           </motion.div>
         )}
@@ -994,6 +1006,32 @@ function ProdutosSection({ store }: { store: any }) {
             </div>
           );
         })}
+        {orphanProducts.length > 0 && (
+          <div className="bg-white rounded-2xl border border-dashed border-[#e8eaed] overflow-hidden">
+            <div className="w-full flex items-center gap-4 p-5 text-left">
+              <span className="font-mono text-xs tracking-[0.2em] text-[#87909a]">!</span>
+              <div>
+                <h4 className="text-sm font-semibold text-[#30343a]">Sem categoria</h4>
+                <p className="text-xs text-[#87909a] mt-0.5">{orphanProducts.length} serviço(s) por classificar — edita para atribuir categoria ou elimina.</p>
+              </div>
+            </div>
+            <div className="border-t border-[#e8eaed] p-5">
+              <div className="space-y-2">
+                {orphanProducts.map((p: any) => (
+                  <div key={p.id} className="flex items-center gap-3 p-3 bg-[#fafafa] rounded-xl">
+                    {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
+                    <div className="flex-1">
+                      <h5 className="text-xs font-medium text-[#30343a]">{p.name}</h5>
+                      <p className="text-[10px] text-[#87909a]">Sem categoria {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                    </div>
+                    <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#87909a] hover:text-[#2c3035] transition-colors p-1"><Edit2 size={13} /></button>
+                    <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#87909a] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
