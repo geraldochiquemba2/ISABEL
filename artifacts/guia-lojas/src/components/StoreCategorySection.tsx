@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
@@ -37,8 +37,16 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   const images = store.coverImages && store.coverImages.length > 0
     ? store.coverImages
     : [store.coverImage || fallbackImage];
-  // Sem rotação automática: a foto só muda por toque manual nos pontos.
+  // Rotação automática: cards com +1 foto trocam a cada 3 segundos.
   const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
     <div
@@ -88,7 +96,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
           </span>
         )}
 
-        {/* Pontos manuais: toque muda a foto (sem autoplay) */}
+        {/* Pontos: toque muda a foto (a rotação automática continua) */}
         {images.length > 1 && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
             {images.slice(0, 5).map((_, i) => (
