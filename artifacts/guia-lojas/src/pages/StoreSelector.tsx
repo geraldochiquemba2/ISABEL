@@ -9,7 +9,7 @@ import {
 import GlobalSearch from "@/components/GlobalSearch";
 
 // Hierarquia YESOLA: Área → Categoria → Subcategoria → Loja/Profissional
-// Aqui cada item é uma ÁREA (ex: Casamentos, Coleção, Negócios)
+// Aqui cada item é uma ÁREA (ex: Casamentos, Moda & Acessórios, Negócios)
 const areas = [
   {
     id: "weddings",
@@ -33,7 +33,7 @@ const areas = [
   },
   {
     id: "collection",
-    name: "Coleção",
+    name: "Moda & Acessórios",
     subtitle: "Estilo e elegância",
     description: "Moda, acessórios e lifestyle para quem carrega a luz de Deus. Descubra o vosso estilo com dignidade.",
     image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=600&fit=crop&auto=format&q=80",

@@ -46,8 +46,8 @@ type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
 const inputCls =
-  "w-full border border-[#d1d4d8] bg-white py-3 px-4 text-sm text-[#30343a] placeholder:text-[#87909a] outline-none focus:border-[#2c3035] focus:ring-2 focus:ring-[#2c3035]/10 transition-all rounded-xl";
-const labelCls = "block text-xs text-[#87909a] font-semibold uppercase tracking-wider mb-1.5";
+  "w-full border border-[#E9D9B6] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#77736D] outline-none focus:border-[#D8B532] focus:ring-2 focus:ring-[#D8B532]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#77736D] font-semibold uppercase tracking-wider mb-1.5";
 
 function FieldError({ msg }: { msg?: string }) {
   return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
@@ -109,7 +109,7 @@ export default function LoginWeddings() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[#fafafa] text-[#30343a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <main className="min-h-[100dvh] bg-[#FBF7EC] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
       `}</style>
@@ -117,7 +117,7 @@ export default function LoginWeddings() {
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/weddings"}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#30343a] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#77736D] hover:text-[#171717] transition-colors mb-12"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -126,18 +126,18 @@ export default function LoginWeddings() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <img src="/logo-yesola-icon-dark.png" alt="YESOLA Weddings" className="w-10 h-10" />
-            <span className="font-serif text-xl tracking-[0.08em] text-[#2d2c2b]">YESOLA <i className="font-normal">Weddings</i></span>
+            <span className="font-serif text-xl tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal">Weddings</i></span>
           </div>
 
-          <div className="flex gap-6 mb-8 border-b border-[#d1d4d8]">
+          <div className="flex gap-6 mb-8 border-b border-[#E9D9B6]">
             {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
                 className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                   mode === m
-                    ? "border-[#2c3035] text-[#30343a]"
-                    : "border-transparent text-[#87909a] hover:text-[#30343a]"
+                    ? "border-[#D8B532] text-[#171717]"
+                    : "border-transparent text-[#77736D] hover:text-[#171717]"
                 }`}
               >
                 {m === "login" ? "Entrar" : "Criar conta"}
@@ -153,10 +153,10 @@ export default function LoginWeddings() {
 
           {submitted ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-              <p className="text-sm font-medium text-[#30343a] mb-1">
+              <p className="text-sm font-medium text-[#171717] mb-1">
                 {mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!"}
               </p>
-              <p className="text-xs text-[#87909a] mb-6">Redirecionando para o painel...</p>
+              <p className="text-xs text-[#77736D] mb-6">Redirecionando para o painel...</p>
             </motion.div>
           ) : mode === "login" ? (
             <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
@@ -170,23 +170,23 @@ export default function LoginWeddings() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#77736D]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={loginErr.password?.message} />
               </div>
 
-              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#87909a] hover:underline mt-2 mb-2">
+              <button type="button" onClick={() => setShowForgotPwd(true)} className="text-xs text-[#77736D] hover:underline mt-2 mb-2">
                 Esqueci a senha?
               </button>
 
-              <button type="submit" className="w-full bg-[#2c3035] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1a1d20] transition-colors">
+              <button type="submit" className="w-full bg-[#D8B532] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1a1d20] transition-colors">
                 Entrar
               </button>
 
               <div className="text-center pt-2">
-                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Weddings.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#87909a] hover:text-[#30343a] underline underline-offset-2 transition-colors">
+                <a href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Weddings.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#77736D] hover:text-[#171717] underline underline-offset-2 transition-colors">
                   Esqueci a minha palavra-passe
                 </a>
               </div>
@@ -211,7 +211,7 @@ export default function LoginWeddings() {
                   options={WEDDING_CATEGORIES}
                   value={watch("categories") ?? []}
                   onChange={(next) => { setValue("categories", next, { shouldValidate: true }); setValue("category", next[0] || "", { shouldValidate: true }); }}
-                  accent="#2c3035"
+                  accent="#D8B532"
                 />
                 <FieldError msg={regErr.categories?.message} />
               </div>
@@ -223,7 +223,7 @@ export default function LoginWeddings() {
                   value={watch("province") ?? ""}
                   onChange={(v) => { setValue("province", v, { shouldValidate: true }); setValue("municipality", "", { shouldValidate: true }); setValue("locality", "", { shouldValidate: true }); }}
                   placeholder="Selecione a Província"
-                  accent="#2c3035"
+                  accent="#D8B532"
                 />
                 <FieldError msg={regErr.province?.message} />
               </div>
@@ -236,7 +236,7 @@ export default function LoginWeddings() {
                   onChange={(v) => { setValue("municipality", v, { shouldValidate: true }); setValue("locality", "", { shouldValidate: true }); }}
                   placeholder={selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"}
                   disabled={!selectedProvinceName}
-                  accent="#2c3035"
+                  accent="#D8B532"
                 />
                 <FieldError msg={regErr.municipality?.message} />
               </div>
@@ -249,7 +249,7 @@ export default function LoginWeddings() {
                   onChange={(v) => setValue("locality", v, { shouldValidate: true })}
                   placeholder={watch("municipality") ? "Selecione a Localidade" : "Selecione o município primeiro"}
                   disabled={!watch("municipality")}
-                  accent="#2c3035"
+                  accent="#D8B532"
                 />
               </div>
 
@@ -267,12 +267,12 @@ export default function LoginWeddings() {
                   onClick={() => setShowMapPicker(true)}
                   className={`w-full flex items-center gap-3 px-4 py-3 border rounded-xl transition-colors ${
                     latitude && longitude 
-                      ? "border-[#1565C0] bg-blue-50" 
+                      ? "border-[#D8B532] bg-blue-50" 
                       : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    latitude && longitude ? "bg-[#1565C0]" : "bg-gray-200"
+                    latitude && longitude ? "bg-[#D8B532]" : "bg-gray-200"
                   }`}>
                     <MapPin size={16} className={latitude && longitude ? "text-white" : "text-gray-500"} />
                   </div>
@@ -289,7 +289,7 @@ export default function LoginWeddings() {
                       </>
                     )}
                   </div>
-                  <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-gray-400"} />
+                  <Navigation size={16} className={latitude && longitude ? "text-[#D8B532]" : "text-gray-400"} />
                 </button>
                 {latitude && longitude && (
                   <button
@@ -322,7 +322,7 @@ export default function LoginWeddings() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#77736D]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -333,21 +333,21 @@ export default function LoginWeddings() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#87909a]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#77736D]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
 
-              <button type="submit" className="w-full bg-[#2c3035] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1a1d20] transition-colors">
+              <button type="submit" className="w-full bg-[#D8B532] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1a1d20] transition-colors">
                 Criar conta
               </button>
             </form>
           )}
         </div>
       </div>
-      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="weddings" accentColor="#E8A0BF" />
+      <ForgotPasswordModal open={showForgotPwd} onClose={() => setShowForgotPwd(false)} storeType="weddings" accentColor="#E6CD72" />
     </main>
   );
 }

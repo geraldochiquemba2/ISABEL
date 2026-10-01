@@ -25,6 +25,7 @@ const CATEGORIES = [
   { id: "mudancas", name: "Mudanças & Transporte", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><rect x="4" y="10" width="18" height="14" rx="2" /><path d="M22 14h4l4 6v4h-8" /><circle cx="10" cy="24" r="3" /><circle cx="26" cy="24" r="3" /></svg> },
   { id: "reparacoes", name: "Reparações & Manutenção", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M14 4l-4 4 8 8-4 4 8 8 4-4" /><path d="M18 8l8 8" /><path d="M10 24l-4 4" /></svg> },
   { id: "seguranca", name: "Segurança Residencial", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M16 4L6 10v6c0 6 4.5 11.6 10 13 5.5-1.4 10-7 10-13v-6L16 4z" /><path d="M12 16l3 3 5-6" /></svg> },
+  { id: "lar", name: "Gestão do Lar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -52,7 +53,6 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
   const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
   const trending = nonAdmin.filter((s: any) => s.isTrending).slice(0, 6);
-  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
@@ -277,7 +277,7 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
       )}
 
       {/* Featured Stores */}
-      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+      {(featured.length > 0) && (
         <section className="px-5 py-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[17px] font-semibold text-[#272727]">Lojas em destaque</h2>
@@ -286,7 +286,7 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
             </button>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+            {featured.map((store: any) => (
               <div key={store.id} className="provider-card" onClick={() => window.location.href = `/loja/${store.id}?from=casa`}>
                 <div className="h-28 overflow-hidden">
                   <img src={store.coverImage || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
@@ -304,7 +304,7 @@ export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () =
               </div>
             ))}
           </div>
-          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
+          {featured.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 

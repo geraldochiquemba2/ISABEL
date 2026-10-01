@@ -22,6 +22,7 @@ const SERVICOS_CATEGORIES = [
   "Tradução & Interpretação",
   "Design & Serviços Criativos",
   "Cerimonial & Protocolo",
+  "Burocracias",
 ];
 
 const loginSchema = z.object({

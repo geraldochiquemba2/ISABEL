@@ -23,6 +23,7 @@ const CATEGORIES = [
   { id: "traducao-interpretacao", name: "Tradução & Interpretação", icon: <Languages size={28} className="text-[#1A237E]" /> },
   { id: "design-criativos", name: "Design & Serviços Criativos", icon: <Palette size={28} className="text-[#1A237E]" /> },
   { id: "cerimonial-protocolo", name: "Cerimonial & Protocolo", icon: <Crown size={28} className="text-[#1A237E]" /> },
+  { id: "burocracias", name: "Burocracias", icon: <FileText size={28} className="text-[#1A237E]" /> },
 ];
 
 const TRUST_BADGES = [
@@ -49,7 +50,6 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
 
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
   const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
-  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
@@ -249,7 +249,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
 
 
       {/* Featured Stores */}
-      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+      {(featured.length > 0) && (
         <section className="px-5 py-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
@@ -258,7 +258,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
             </button>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+            {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#EEF3F4] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=servicos`}>
                 <div className="h-28 overflow-hidden">
                   <img src={store.coverImage || "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
@@ -276,7 +276,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
               </div>
             ))}
           </div>
-          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
+          {featured.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 

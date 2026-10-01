@@ -11,7 +11,7 @@ import type { Scope } from "@/components/WhereSearch";
 import { norm } from "@/lib/locationIndex";
 import {
   Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
-  Shirt, Watch, Footprints, Gem, Briefcase, Baby, Sparkles, Smartphone, Home as HomeIcon, UtensilsCrossed,
+  Shirt, Watch, Footprints, Gem, Briefcase, Baby,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
 
@@ -22,10 +22,6 @@ const CATEGORIES = [
   { id: "calcado", name: "Calçado", icon: <Footprints size={24} className="text-[#D8B532]" /> },
   { id: "bolsas-acessorios", name: "Bolsas & Acessórios", icon: <Briefcase size={24} className="text-[#D8B532]" /> },
   { id: "joias-bijutarias", name: "Jóias & Bijutarias", icon: <Gem size={24} className="text-[#D8B532]" /> },
-  { id: "beleza-bem-estar", name: "Beleza & Bem-Estar", icon: <Sparkles size={24} className="text-[#D8B532]" /> },
-  { id: "tecnologia-eletronicos", name: "Tecnologia", icon: <Smartphone size={24} className="text-[#D8B532]" /> },
-  { id: "casa-servicos", name: "Casa & Serviços", icon: <HomeIcon size={24} className="text-[#D8B532]" /> },
-  { id: "alimentacao-restauracao", name: "Alimentação", icon: <UtensilsCrossed size={24} className="text-[#D8B532]" /> },
 ];
 
 // Secções de lojas por categoria (nomes curtos para corresponder às categorias reais das lojas)
@@ -34,10 +30,6 @@ const SECTION_CATEGORIES = [
   { id: "calcado", name: "Calçado", icon: <Footprints size={24} className="text-[#D8B532]" /> },
   { id: "bolsas-acessorios", name: "Bolsas", icon: <Briefcase size={24} className="text-[#D8B532]" /> },
   { id: "joias-bijutarias", name: "Jóias", icon: <Gem size={24} className="text-[#D8B532]" /> },
-  { id: "beleza-bem-estar", name: "Beleza", icon: <Sparkles size={24} className="text-[#D8B532]" /> },
-  { id: "tecnologia-eletronicos", name: "Tecnologia", icon: <Smartphone size={24} className="text-[#D8B532]" /> },
-  { id: "casa-servicos", name: "Casa", icon: <HomeIcon size={24} className="text-[#D8B532]" /> },
-  { id: "alimentacao-restauracao", name: "Alimentação", icon: <UtensilsCrossed size={24} className="text-[#D8B532]" /> },
 ];
 
 const TRUST_BADGES = [
@@ -108,7 +100,6 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
 
   const nonAdmin = useMemo(() => stores.filter((s: Store) => s.phone !== "999999999"), [stores]);
   const featured = useMemo(() => nonAdmin.filter((s: Store) => s.isFeatured).slice(0, 6), [nonAdmin]);
-  const fallbackFeatured = useMemo(() => !featured.length ? nonAdmin.slice(0, 6) : [], [featured, nonAdmin]);
 
   return (
     <div className="min-h-[100dvh] bg-[#FBF7EC] text-[#171717] pb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -133,7 +124,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
           </button>
           <div className="flex flex-col items-center">
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
-            <span className="text-[9px] tracking-[0.25em] text-[#D8B532] font-medium uppercase mt-0.5">COLLECTION</span>
+            <span className="text-[9px] tracking-[0.25em] text-[#D8B532] font-medium uppercase mt-0.5">MODA & ACESSÓRIOS</span>
           </div>
         </div>
         {menuOpen && (
@@ -295,7 +286,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       </section>
 
       {/* Featured Stores */}
-      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+      {(featured.length > 0) && (
         <section className="px-5 py-5">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-[17px] font-semibold text-[#171717]">Lojas em destaque</h2>
@@ -305,8 +296,8 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <div className="store-scroll">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-44 h-48 rounded-2xl bg-gray-200 animate-pulse" />)}</div>
           ) : (
             <>
-              <div className="store-scroll">{(featured.length > 0 ? featured : fallbackFeatured).map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
-              {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (
+              <div className="store-scroll">{featured.map((store: Store) => <StoreCard key={store.id} store={store} from="collection" />)}</div>
+              {featured.length > 2 && (
                 <p className="swipe-hint-below">Desliza para ver mais →</p>
               )}
             </>
@@ -349,7 +340,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       </section>
 
       <div className="text-center py-6 px-5">
-        <p className="text-[11px] text-[#77736D]">YESOLA COLLECTION · ESTILO QUE FAZ PARTE DE SI.</p>
+        <p className="text-[11px] text-[#77736D]">YESOLA — MODA & ACESSÓRIOS · ESTILO QUE FAZ PARTE DE SI.</p>
       </div>
     </div>
   );

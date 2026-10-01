@@ -33,6 +33,7 @@ const CASA_CATEGORIES = [
   { number: "08", title: "Mudanças & Transporte", intro: "Mudanças rápidas, seguras e bem organizadas.", category: "mudancas", icon: Truck, items: ["Mudanças Residenciais", "Mudanças Comerciais", "Embalamento", "Armazenamento"] },
   { number: "09", title: "Reparações & Manutenção", intro: "Manutenção preventiva e corretiva para o lar.", category: "reparacoes", icon: Wrench, items: ["Reparações Gerais", "Alvenaria", "Canalização", "Marcenaria"] },
   { number: "10", title: "Segurança Residencial", intro: "Proteja a sua família e o seu património.", category: "seguranca", icon: ShieldCheck, items: ["Câmaras de Videovigilância", "Alarmes", "Cofres", "Fechaduras Inteligentes"] },
+  { number: "11", title: "Gestão do Lar", intro: "Mais tempo para si. Uma casa que respira.", category: "lar", icon: Home, items: ["Cozinheiras e meal prep", "Personal organizers", "Limpeza profunda", "Assistente de compras"] },
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {

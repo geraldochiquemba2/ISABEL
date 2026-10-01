@@ -64,7 +64,20 @@ export async function fetchStoreById(id: string): Promise<Store> {
   return applyDynamicOpenStatus(store);
 }
 
-// Calcula dinamicamente se a loja está aberta baseada no horário padrão e fuso de Angola
+// Calcula dinamicamente se a loja está aberta baseada no horário
+// configurado pelo dono (store.schedule) e fuso de Angola.
+// Formato do schedule: [{ label: "Segunda a Sexta", closed, open: "08:00", close: "18:00" }, { Sábado }, { Domingo }]
+// Sem schedule válido, usa o horário padrão (Seg–Sex 08:00–18:00, Sáb 09:00–14:00, Dom fechado).
+function parseHora(hhmm: string): number | null {
+  if (typeof hhmm !== "string") return null;
+  const m = hhmm.match(/(\d{1,2}):(\d{2})/);
+  if (!m) return null;
+  const h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  if (h < 0 || h > 23 || min < 0 || min > 59) return null;
+  return h * 100 + min;
+}
+
 function applyDynamicOpenStatus(store: Store): Store {
   if (store.isOpen === false) return store; // Respeita fecho forçado pelo dono
 
@@ -72,6 +85,29 @@ function applyDynamicOpenStatus(store: Store): Store {
   const angolaTime = new Date(agora.toLocaleString("en-US", { timeZone: "Africa/Luanda" }));
   const diaSemana = angolaTime.getDay(); // 0 = Domingo
   const horaAtual = angolaTime.getHours() * 100 + angolaTime.getMinutes();
+
+  // Horário configurado pelo dono (pode vir como string JSON da BD)
+  let sched: any = (store as any).schedule;
+  if (typeof sched === "string") {
+    try {
+      sched = JSON.parse(sched);
+    } catch {
+      sched = null;
+    }
+  }
+
+  if (Array.isArray(sched) && sched.length >= 3) {
+    const dia = diaSemana >= 1 && diaSemana <= 5 ? sched[0] : diaSemana === 6 ? sched[1] : sched[2];
+    if (!dia || dia.closed) return { ...store, isOpen: false };
+    const abre = parseHora(dia.open);
+    const fecha = parseHora(dia.close);
+    if (abre === null || fecha === null) return { ...store, isOpen: false };
+    // Suporta turno da noite (ex: 18:00–02:00)
+    const isOpen = fecha > abre
+      ? horaAtual >= abre && horaAtual < fecha
+      : horaAtual >= abre || horaAtual < fecha;
+    return { ...store, isOpen };
+  }
 
   let isOpen = false;
   if (diaSemana >= 1 && diaSemana <= 5) {

@@ -14,6 +14,7 @@ import ConsultoresEstilo from "@/pages/ConsultoresEstilo";
 import VerCarrinhos from "@/pages/VerCarrinhos";
 import ElioraWeddings from "@/pages/ElioraWeddings";
 import ExploreServices from "@/pages/ExploreServices";
+import ExploreWeddings from "@/pages/ExploreWeddings";
 import LoginWeddings from "@/pages/LoginWeddings";
 import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
@@ -219,6 +220,7 @@ function Router() {
         <Switch>
           <Route path="/loja/:id" component={StoreProfile} />
           <Route path="/explorar" component={ExploreServices} />
+          <Route path="/explorar-weddings" component={ExploreWeddings} />
           <Route path="/love-services">
             <MimoHome onBackToSelector={handleBackToSelector} />
           </Route>

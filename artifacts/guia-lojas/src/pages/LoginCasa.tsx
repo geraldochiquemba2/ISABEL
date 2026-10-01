@@ -24,6 +24,7 @@ const CASA_CATEGORIES = [
   "Mudanças & Transporte",
   "Reparações & Manutenção",
   "Segurança Residencial",
+  "Gestão do Lar",
 ];
 
 const loginSchema = z.object({

@@ -605,7 +605,17 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [schedule, setSchedule] = useState<DaySchedule[]>(DEFAULT_SCHEDULE);
+  const [schedule, setSchedule] = useState<DaySchedule[]>(() => {
+    const s = myStore?.schedule;
+    if (Array.isArray(s) && s.length >= 3) return s;
+    if (typeof s === "string") {
+      try {
+        const p = JSON.parse(s);
+        if (Array.isArray(p) && p.length >= 3) return p;
+      } catch { /* usa padrão */ }
+    }
+    return DEFAULT_SCHEDULE;
+  });
   const [province, setProvince] = useState(myStore?.province || "Luanda");
   const [municipality, setMunicipality] = useState(myStore?.municipality || "Luanda");
   const [locality, setLocality] = useState(myStore?.locality || "");
@@ -879,13 +889,16 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
                     className="w-full h-full object-contain relative z-10"
                   />
                   <button
+                    type="button"
+                    title="Remover imagem"
+                    aria-label="Remover imagem da galeria"
                     onClick={(e) => {
                       e.preventDefault();
                       setCoverImages((prev) => prev.filter((_, i) => i !== idx));
                       setSaved(false);
                       setDirty(true);
                     }}
-                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500/90 text-white flex items-center justify-center opacity-100 transition-opacity z-20 hover:bg-red-600 shadow-sm"
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500/90 text-white flex items-center justify-center opacity-100 transition-opacity z-20 hover:bg-red-600 shadow-md border border-white cursor-pointer"
                   >
                     <X size={12} />
                   </button>

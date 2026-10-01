@@ -72,34 +72,6 @@ const groups: CollectionGroup[] = [
     items: ["Anéis", "Brincos", "Colares", "Pulseiras", "Jóias", "Bijutarias"],
     category: "joias-bijutarias",
   },
-  {
-    number: "07",
-    title: "Beleza & Bem-Estar",
-    intro: "Produtos, cuidados e perucas para realçar a vossa beleza natural.",
-    items: ["Skincare & Tratamentos", "Maquilhagem", "Perfumes & Fragrâncias", "Cabelo & Penteados", "Perucas & Adições Capilares", "Produtos Capilares"],
-    category: "beleza-bem-estar",
-  },
-  {
-    number: "08",
-    title: "Tecnologia & Electrónicos",
-    intro: "Tecnologia e gadgets para o dia a dia.",
-    items: ["Smartphones & Tablets", "Acessórios Tech", "Áudio & Fones", "Computadores", "Wearables & Gadgets"],
-    category: "tecnologia-eletronicos",
-  },
-  {
-    number: "09",
-    title: "Casa & Serviços",
-    intro: "Tudo para tornar a vossa casa mais acolhedora.",
-    items: ["Mobiliário", "Decoração & Objetos", "Iluminação", "Têxteis & Roupa de Cama", "Utensílios de Cozinha"],
-    category: "casa-servicos",
-  },
-  {
-    number: "10",
-    title: "Alimentação & Restauração",
-    intro: "Sabores e productos para todos os gostos.",
-    items: ["Restaurantes & Take-away", "Bolos & Pastelaria", "Bebidas & Distribuidoras", "Supermercados", "Orgânicos & Naturais"],
-    category: "alimentacao-restauracao",
-  },
 ];
 
 function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
@@ -230,7 +202,7 @@ export default function ExploreCollection() {
     s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&\-_]/g, " ").replace(/\s+/g, " ").trim();
 
   // Aliases de etiquetas genéricas (lojas registadas com categorias livres
-  // como "Mulher" ou "SHEIN") → palavras-chave dos grupos da Collection.
+  // como "Mulher" ou "SHEIN") → palavras-chave dos grupos de Moda & Acessórios.
   // Audiências confinam ao grupo próprio; marcas generalistas abrangem a moda.
   const WORD_ALIASES: Record<string, string[]> = {
     mulher: ["feminina"],
@@ -306,7 +278,7 @@ export default function ExploreCollection() {
           <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#77736D] hover:text-[#171717] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#171717" }}>YESOLA<small style={{ display: "block", color: "#D8B532", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Collection</small></span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#171717" }}>YESOLA<small style={{ display: "block", color: "#D8B532", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Moda & Acessórios</small></span>
           <a href="/explorar" className="text-xs font-bold uppercase tracking-[0.14em] text-[#77736D] hover:text-[#D8B532] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
@@ -507,13 +479,13 @@ export default function ExploreCollection() {
           <div className="mt-10 md:mt-0 md:w-80">
             <p className="text-sm leading-6 text-[#E9D9B6]">Contem-nos o que procuram. A nossa equipa responde com tempo, atenção e as melhores opções.</p>
             <div className="mt-7 flex items-center gap-4">
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Moda%20%26%20Acess%C3%B3rios%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Phone size={14} /> Ligar
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Moda%20%26%20Acess%C3%B3rios%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 <Mail size={14} /> Email
               </a>
-              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Moda%20%26%20Acess%C3%B3rios%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#e3e7eb] hover:text-white transition-colors">
                 WhatsApp
               </a>
             </div>
@@ -523,13 +495,13 @@ export default function ExploreCollection() {
 
       <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#FBF7EC]">
         <div className="flex items-center gap-3">
-          <img src="/logo-yesola-icon-dark.png" alt="YESOLA Collection" className="w-8 h-8" />
-          <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal" style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".15em", fontSize: "9px" }}>COLLECTION</i></span>
+          <img src="/logo-yesola-icon-dark.png" alt="YESOLA — Moda & Acessórios" className="w-8 h-8" />
+          <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal" style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".15em", fontSize: "9px" }}>MODA & ACESSÓRIOS</i></span>
         </div>
         <p className="text-xs text-[#77736D]">Tudo o que procurais, encontrais aqui.</p>
         <div className="flex items-center gap-5 text-[#77736D]">
-          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
-          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Collection%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Moda%20%26%20Acess%C3%B3rios%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Mail size={16} /></a>
+          <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20vim%20pela%20YESOLA%20Moda%20%26%20Acess%C3%B3rios%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Phone size={16} /></a>
 
           <span className="font-mono text-[10px] tracking-[0.2em]">© 2024 YESOLA</span>
         </div>

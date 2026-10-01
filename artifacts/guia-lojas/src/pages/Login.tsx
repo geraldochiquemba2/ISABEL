@@ -129,30 +129,30 @@ export default function Login() {
         <div className="hidden lg:flex flex-col justify-between w-5/12 bg-muted p-12">
           <Link href="/">
             <div className="flex items-center gap-2">
-              <img 
-                src="/logo-yesola-icon-dark.png" 
-                alt="YESOLA Collection" 
+              <img
+                src="/logo-yesola-icon-dark.png"
+                alt="YESOLA — Moda & Acessórios"
                 className="w-10 h-10"
               />
               <span className="text-sm font-medium text-foreground">
-                YESOLA<span className="font-light">Collection</span>
+                YESOLA<span className="font-light"> — Moda & Acessórios</span>
               </span>
             </div>
           </Link>
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">Depoimento</p>
             <blockquote className="text-xl font-light text-foreground leading-relaxed">
-              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem a YESOLA Collection."
+              "Encontrei um excelente salão de beleza a dois quarteirões de casa. Nunca teria achado sem a YESOLA — Moda & Acessórios."
             </blockquote>
             <p className="text-sm text-muted-foreground mt-4">— Maria, Luanda</p>
           </div>
           <div className="flex items-center gap-2">
-            <img 
-              src="/logo-yesola-icon-dark.png" 
-              alt="YESOLA Collection" 
-              className="w-6 h-6"
-            />
-            <p className="text-xs text-muted-foreground">© 2024 YESOLA Collection</p>
+              <img
+                src="/logo-yesola-icon-dark.png"
+                alt="YESOLA — Moda & Acessórios"
+                className="w-6 h-6"
+              />
+              <p className="text-xs text-muted-foreground">© 2024 YESOLA — Moda & Acessórios</p>
           </div>
         </div>
 
@@ -257,7 +257,7 @@ export default function Login() {
 
                 <div className="text-center pt-2">
                   <a
-                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA Collection.")}`}
+                    href={`https://wa.me/244922001778?text=${encodeURIComponent("Olá! Gostaria de redefinir a minha palavra-passe na YESOLA — Moda & Acessórios.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"

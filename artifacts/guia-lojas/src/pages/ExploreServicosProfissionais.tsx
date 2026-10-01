@@ -29,6 +29,7 @@ const SERVICOS_CATEGORIES = [
   { number: "05", title: "Tradução & Interpretação", intro: "Comunicação eficaz entre línguas e culturas.", category: "traducao-interpretacao", icon: Languages, items: ["Tradução de Documentos", "Tradução Técnica", "Tradução Empresarial", "Tradução Académica", "Intérpretes", "Interpretação em Reuniões", "Interpretação em Eventos"] },
   { number: "06", title: "Design & Serviços Criativos", intro: "Soluções visuais que destacam a sua marca.", category: "design-criativos", icon: Palette, items: ["Design Gráfico", "Criação de Logótipos", "Identidade Visual", "Branding", "Design Publicitário", "Ilustração", "Design Editorial", "Apresentações Profissionais"] },
   { number: "07", title: "Cerimonial & Protocolo", intro: "Profissionais para eventos institucionais e corporativos.", category: "cerimonial-protocolo", icon: Crown, items: ["Cerimonialistas", "Profissionais de Protocolo", "Protocolo Empresarial", "Protocolo Institucional", "Recepção & Acompanhamento Protocolar", "Organização Protocolar de Cerimónias"] },
+  { number: "08", title: "Burocracias", intro: "Nós tratamos do que não pode esperar.", category: "burocracias", icon: FileText, items: ["Pendências diárias", "Filas", "Entregas urgentes"] },
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {

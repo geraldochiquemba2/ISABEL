@@ -20,8 +20,6 @@ const LOVE_CATEGORIES = [
   "Entregas & Gestos Especiais",
   "Assistência a Pessoas & Famílias",
   "Fotografia e Videomakers",
-  "Gestão do Lar e Refeições",
-  "Burocracias",
 ];
 
 const loginSchema = z.object({

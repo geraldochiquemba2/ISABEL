@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
-  Search, Menu, X, HeartHandshake, Camera,
-  Home, Clock3, MapPin, ArrowLeft,
+  Search, Menu, X, HeartHandshake, Heart, Camera, Sparkles,
+  MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 import { getStoreCategories } from "@/lib/storeCategories";
@@ -11,17 +11,16 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
 
-const LOVE_SERVICE_GROUPS = [
-  { number: "01", title: "Actos de Amor, Homenagens e Experiências", intro: "Faça-se presente nos dias que mais importam.", category: "actos-de-amor", icon: HeartHandshake, items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
-  { number: "02", title: "Presentes, Flores & Surpresas", intro: "Gestos que falam mais alto que as palavras.", category: "presentes-flores-surpresas", icon: HeartHandshake, items: ["Flores e buquês", "Cabazes", "Presentes personalizados", "Caixas-surpresa", "Cestas", "Presentes românticos"] },
-  { number: "03", title: "Apoio & Companhia a Idosos", intro: "Presença, cuidado e respeito para quem tanto deu.", category: "apoio-companhia-idosos", icon: HeartHandshake, items: ["Companhia", "Acompanhamento", "Apoio em deslocações", "Assistência não clínica"] },
-  { number: "04", title: "Entregas & Gestos Especiais", intro: "Surpresas que chegam sempre ao coração.", category: "entregas-gestos-especiais", icon: HeartHandshake, items: ["Entrega de presentes", "Entrega de flores", "Surpresas ao domicílio", "Mensagens especiais"] },
-  { number: "05", title: "Assistência a Pessoas & Famílias", intro: "Apoio que fortalece laços e facilita o dia a dia.", category: "assistencia-pessoas-familias", icon: HeartHandshake, items: ["Acompanhamento", "Apoio familiar", "Pequenas tarefas", "Assistência pessoal não clínica"] },
-  { number: "06", title: "Fotografia e Videomakers", intro: "Guarde o instante. Conte a história inteira.", category: "fotografia", icon: Camera, items: ["Fotógrafos", "Videomakers"] },
+const WEDDING_SERVICE_GROUPS = [
+  { number: "01", title: "Planeamento & Organização de Casamentos", intro: "Do primeiro sim ao último brinde, guardamos o fio invisível de tudo.", category: "planeamento", icon: HeartHandshake, items: ["Wedding Planner & Assessoria", "Assistente Pessoal dos Noivos", "Mestre de Cerimónias", "Hostesses e Acolhimento VIP"] },
+  { number: "02", title: "Pedidos de Casamento, Noivados & Momentos Românticos", intro: "Gestos íntimos, pensados para a vossa história.", category: "noivados", icon: Heart, items: ["Pedidos de Casamento", "Aniversários de Namoro/Casamento", "Jantares Íntimos", "Serenatas e Músicos"] },
+  { number: "03", title: "Fotografia, Vídeo & Produção Audiovisual", intro: "A memória viva de cada detalhe.", category: "fotografia", icon: Camera, items: ["Fotógrafo de Casamento", "Videógrafo & Cinematografia", "Drone & Cobertura Aérea", "Álbuns & Livros de Fotos"] },
+  { number: "04", title: "Beleza & Estilismo para Noivas e Noivos", intro: "A vossa melhor versão, sentida e vista.", category: "beleza", icon: Sparkles, items: ["Maquilhagem Profissional", "Penteado & Hair Styling", "Estilismo & Consultoria de Imagem", "Grooming & Barba para Noivos"] },
+  { number: "05", title: "Decoração, Flores & Experiências", intro: "O cenário e o ritmo que dão alma à celebração.", category: "decoracao", icon: HeartHandshake, items: ["Espaços para Eventos", "Design Floral & Decoração", "Catering & Bolos de Noiva", "DJs, Bandas e Entretenimento"] },
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
-  const fallbackImage = "https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=400&h=300&fit=crop&auto=format&q=75";
+  const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
   const images = (productImages && productImages.length > 0 ? productImages : (store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage])).filter(Boolean);
   const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -35,8 +34,8 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 
   return (
     <div
-      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#F7E9EB] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=love-services`}
+      className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E9D9B6] cursor-pointer hover:-translate-y-1"
+      onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
     >
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" />
@@ -58,19 +57,19 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         )}
       </div>
       <div className="p-3">
-        <h4 className="text-sm font-semibold text-[#171416] truncate">{store.name}</h4>
-        {store.description && <p className="text-[10px] text-[#6F696B] mt-1 line-clamp-2">{store.description}</p>}
+        <h4 className="text-sm font-semibold text-[#171717] truncate">{store.name}</h4>
+        {store.description && <p className="text-[10px] text-[#77736D] mt-1 line-clamp-2">{store.description}</p>}
       </div>
     </div>
   );
 }
 
-export default function ExploreLove() {
+export default function ExploreWeddings() {
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria") || params.get("servico");
     if (cat) {
-      const group = LOVE_SERVICE_GROUPS.find((g) => g.title.toLowerCase().includes(cat.toLowerCase()) || g.category?.toLowerCase() === cat.toLowerCase());
+      const group = WEDDING_SERVICE_GROUPS.find((g) => g.title.toLowerCase().includes(cat.toLowerCase()) || g.category?.toLowerCase() === cat.toLowerCase());
       return group ? group.category : null;
     }
     return null;
@@ -122,8 +121,8 @@ export default function ExploreLove() {
   };
 
   const { data: stores = [] } = useQuery({
-    queryKey: ["stores", "love-services"],
-    queryFn: () => fetchStores({ storeType: "love-services" }),
+    queryKey: ["stores", "weddings"],
+    queryFn: () => fetchStores({ storeType: "weddings" }),
     staleTime: 60_000,
   });
 
@@ -135,7 +134,7 @@ export default function ExploreLove() {
     s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&]/g, " ").replace(/\s+/g, " ").trim();
 
   const getStoresForGroup = (category: string) => {
-    const group = LOVE_SERVICE_GROUPS.find((g) => g.category === category);
+    const group = WEDDING_SERVICE_GROUPS.find((g) => g.category === category);
     const normCategory = normalizeCategory(category);
     const normTitle = group ? normalizeCategory(group.title) : "";
     const matched = stores.filter((s: any) => {
@@ -166,25 +165,25 @@ export default function ExploreLove() {
   };
 
   const filteredGroups = activeFilter
-    ? LOVE_SERVICE_GROUPS.filter((g) => g.category === activeFilter)
-    : [...LOVE_SERVICE_GROUPS].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
+    ? WEDDING_SERVICE_GROUPS.filter((g) => g.category === activeFilter)
+    : [...WEDDING_SERVICE_GROUPS].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
 
   return (
-    <main className="min-h-[100dvh] bg-[#FCFAF8] text-[#171416]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FCFAF8]/95 backdrop-blur-md border-b border-[#F7E9EB]/60">
+    <main className="min-h-[100dvh] bg-[#FBF7EC] text-[#171717]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#FBF7EC]/95 backdrop-blur-md border-b border-[#E9D9B6]/60">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between px-6 py-4 md:px-12">
-          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#6F696B] hover:text-[#171416] transition-colors">
+          <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm text-[#77736D] hover:text-[#171717] transition-colors">
             <ArrowLeft size={16} /> Voltar
           </button>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#791226" }}>YESOLA<small style={{ display: "block", color: "#A71936", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Serviços de Amor</small></span>
-          <a href="/explorar-love" className="text-xs font-bold uppercase tracking-[0.14em] text-[#6F696B] hover:text-[#A71936] transition-colors hidden md:block">Explorar</a>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#7A6410" }}>YESOLA<small style={{ display: "block", color: "#D8B532", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Casamentos</small></span>
+          <a href="/explorar-weddings" className="text-xs font-bold uppercase tracking-[0.14em] text-[#77736D] hover:text-[#D8B532] transition-colors hidden md:block">Explorar</a>
         </div>
       </header>
 
       <div className="mx-auto max-w-[1380px] px-6 pt-28 pb-12 md:px-12">
 
         <div className="mb-16">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6F696B]">Explorar serviços</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#77736D]">Explorar serviços</p>
           <h1 className="mt-4 font-serif text-5xl tracking-[-0.03em] md:text-7xl">O nosso<br /><i>universo.</i></h1>
         </div>
 
@@ -199,27 +198,27 @@ export default function ExploreLove() {
           )}
           <button onClick={() => setActiveFilter(null)}
             className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-              activeFilter === null ? "bg-[#171416] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+              activeFilter === null ? "bg-[#171717] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
             }`}>Todos</button>
-          {LOVE_SERVICE_GROUPS.map((group) => (
+          {WEDDING_SERVICE_GROUPS.map((group) => (
             <button key={group.category} onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeFilter === group.category ? "bg-[#171416] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+                activeFilter === group.category ? "bg-[#171717] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
               }`}>{group.number} {group.title.split(",")[0].split(" e ")[0]}</button>
           ))}
         </div>
 
         {/* Filtro por província */}
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Onde procuras?</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#77736D] mr-2">Onde procuras?</span>
           <div className="mt-2 max-w-md">
-            <WhereSearch onScope={setLocationScope} onClear={() => setLocationScope(null)} accent="#171416" />
+            <WhereSearch onScope={setLocationScope} onClear={() => setLocationScope(null)} accent="#171717" />
           </div>
           {locationScope && (
             <button
               onClick={() => setLocationScope(null)}
               className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.15em] text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: "#171416" }}
+              style={{ backgroundColor: "#171717" }}
             >
               <X size={14} /> Perto de {locationScope.locality} ({locationScope.kind})
             </button>
@@ -227,11 +226,11 @@ export default function ExploreLove() {
         </div>
 
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Província:</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-[#77736D] mr-2">Província:</span>
           <select
             value={activeProvince || ""}
             onChange={(e) => { setActiveProvince(e.target.value || null); setActiveMunicipality(null); }}
-            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#F7E9EB] bg-white text-[#171416] outline-none"
+            className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E9D9B6] bg-white text-[#171717] outline-none"
           >
             <option value="">Todas</option>
             {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -239,12 +238,12 @@ export default function ExploreLove() {
           <div className="hidden md:flex flex-wrap gap-3 mt-2">
             <button onClick={() => { setActiveProvince(null); setActiveMunicipality(null); }}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                activeProvince === null ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+                activeProvince === null ? "bg-[#77736D] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
               }`}>Todas</button>
             {provinces.map((province) => (
               <button key={province} onClick={() => { setActiveProvince(activeProvince === province ? null : province); setActiveMunicipality(null); }}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeProvince === province ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+                  activeProvince === province ? "bg-[#77736D] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
                 }`}>{province}</button>
             ))}
           </div>
@@ -253,21 +252,21 @@ export default function ExploreLove() {
         {/* Filtro por município */}
         {municipalities.length > 0 && (
           <div className="mb-12">
-            <span className="text-xs uppercase tracking-[0.15em] text-[#6F696B] mr-2">Município:</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-[#77736D] mr-2">Município:</span>
             <select value={activeMunicipality || ""} onChange={(e) => setActiveMunicipality(e.target.value || null)}
-              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#F7E9EB] bg-white text-[#171416] outline-none">
+              className="mt-2 md:hidden w-full px-4 py-3 rounded-xl text-sm border border-[#E9D9B6] bg-white text-[#171717] outline-none">
               <option value="">Todos</option>
               {municipalities.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
             <div className="hidden md:flex flex-wrap gap-3 mt-2">
               <button onClick={() => setActiveMunicipality(null)}
                 className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                  activeMunicipality === null ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+                  activeMunicipality === null ? "bg-[#77736D] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
                 }`}>Todos</button>
               {municipalities.map((m) => (
                 <button key={m} onClick={() => setActiveMunicipality(activeMunicipality === m ? null : m)}
                   className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] transition-all ${
-                    activeMunicipality === m ? "bg-[#6F696B] text-white" : "bg-[#F7E9EB] text-[#6F696B] hover:bg-[#F7E9EB]"
+                    activeMunicipality === m ? "bg-[#77736D] text-white" : "bg-[#E9D9B6] text-[#77736D] hover:bg-[#E9D9B6]"
                   }`}>{m}</button>
               ))}
             </div>
@@ -284,28 +283,28 @@ export default function ExploreLove() {
               });
             });
             return (
-              <article key={group.number} className={`group border-t border-[#F7E9EB] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
+              <article key={group.number} className={`group border-t border-[#E9D9B6] py-8 md:py-12 ${i % 2 ? "md:ml-20" : ""}`}>
                 <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
-                  <span className="font-mono text-xs tracking-[0.2em] text-[#6F696B]">{group.number}</span>
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#77736D]">{group.number}</span>
                   <div className="min-w-0">
-                    <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#171416] md:text-[2.8rem]">{group.title}</h3>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-[#6F696B]">{group.intro}</p>
-                    <ul className="mt-6 space-y-3 border-l border-[#F7E9EB] pl-5 text-sm leading-5 text-[#6F696B]">
+                    <h3 className="max-w-xl font-serif text-3xl leading-[1.08] text-[#171717] md:text-[2.8rem]">{group.title}</h3>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-[#77736D]">{group.intro}</p>
+                    <ul className="mt-6 space-y-3 border-l border-[#E9D9B6] pl-5 text-sm leading-5 text-[#77736D]">
                       {group.items.map((item) => {
                         const itemProducts = allProducts.filter((p) => (p.subcategory || "").toLowerCase().includes(item.toLowerCase()));
                         return (
                           <li key={item}>
                             <div className="flex gap-3">
-                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#F7E9EB]" />
+                              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#E9D9B6]" />
                               <div className="flex-1">
                                 <span>{item}</span>
                                 {itemProducts.length > 0 && (
                                   <div className="mt-1.5 ml-0 space-y-1">
                                     {itemProducts.map((p) => (
-                                      <a key={p.id} href={`/loja/${p.storeId}?from=love-services`}
-                                        className="flex items-center gap-2 text-[11px] text-[#6F696B] hover:text-[#171416] transition-colors">
-                                        <span className="h-0.5 w-0.5 rounded-full bg-[#A71936] flex-shrink-0" />
-                                        {p.name} {p.price ? <span className="text-[#F7E9EB]">· {p.currency === "USD" ? "$" : "Kz"} {p.price.toLocaleString("pt-AO")}</span> : null}
+                                      <a key={p.id} href={`/loja/${p.storeId}?from=weddings`}
+                                        className="flex items-center gap-2 text-[11px] text-[#77736D] hover:text-[#171717] transition-colors">
+                                        <span className="h-0.5 w-0.5 rounded-full bg-[#D8B532] flex-shrink-0" />
+                                        {p.name} {p.price ? <span className="text-[#E9D9B6]">· {p.currency === "USD" ? "$" : "Kz"} {p.price.toLocaleString("pt-AO")}</span> : null}
                                       </a>
                                     ))}
                                   </div>
@@ -318,13 +317,13 @@ export default function ExploreLove() {
                     </ul>
                     {groupStores.length > 0 && (
                       <button onClick={() => setActiveFilter(activeFilter === group.category ? null : group.category)}
-                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#6F696B] hover:text-[#171416] transition-colors">
+                        className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-[#77736D] hover:text-[#171717] transition-colors">
                         Ver mais
                       </button>
                     )}
                   </div>
                   <div className="min-w-0 mt-4 md:mt-0">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6F696B] mb-3">Lojas/Serviços disponíveis</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#77736D] mb-3">Lojas/Serviços disponíveis</p>
                     {groupStores.length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                     {groupStores.length > 0 ? (
                       <div className={activeFilter === group.category ? "store-grid" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
@@ -333,8 +332,8 @@ export default function ExploreLove() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-[#F7E9EB] p-6 text-center">
-                        <p className="text-xs text-[#6F696B]">Em breve novas lojas</p>
+                      <div className="rounded-2xl border border-dashed border-[#E9D9B6] p-6 text-center">
+                        <p className="text-xs text-[#77736D]">Em breve novas lojas</p>
                       </div>
                     )}
                   </div>
@@ -345,17 +344,17 @@ export default function ExploreLove() {
         </div>
       </div>
 
-      <section className="relative overflow-hidden border-t border-[#F7E9EB] bg-[#171416] px-6 py-24 text-[#FCFAF8] md:px-12 md:py-32">
+      <section className="relative overflow-hidden border-t border-[#E9D9B6] bg-[#171717] px-6 py-24 text-[#FBF7EC] md:px-12 md:py-32">
         <div className="relative mx-auto max-w-[1380px] md:flex md:items-end md:justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#F7E9EB]">O primeiro passo</p>
-            <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">Precisa de ajuda<br /><i>com algo especial?</i></h2>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#E9D9B6]">O primeiro passo</p>
+            <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[1.02] md:text-7xl">O seu dia<br /><i>perfeito?</i></h2>
           </div>
           <div className="mt-10 md:mt-0 md:w-80">
-            <p className="text-sm leading-6 text-[#F7E9EB]">Conte-nos o que precisa. A nossa equipa responde com tempo, atenção e cuidado.</p>
+            <p className="text-sm leading-6 text-[#E9D9B6]">Conte-nos o vosso sonho. A nossa equipa responde com tempo, atenção e cuidado.</p>
             <div className="mt-7">
-              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Servi%C3%A7os%20de%20Amor." target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#A71936] text-white text-sm font-medium rounded-full hover:bg-[#A71936] transition-colors">
+              <a href="https://wa.me/244922001778?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20YESOLA%20Casamentos." target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#D8B532] text-white text-sm font-medium rounded-full hover:bg-[#D8B532] transition-colors">
                 Falar connosco
               </a>
             </div>

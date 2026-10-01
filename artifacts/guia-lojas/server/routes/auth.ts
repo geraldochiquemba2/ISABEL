@@ -509,9 +509,9 @@ authRouter.post("/link-store", async (req, res) => {
       ]
     );
 
-    // Atualizar utilizador com nova loja
+    // Atualizar utilizador com nova loja — nova loja exige nova aprovação
     await pool.query(
-      `UPDATE users SET store_id = $2 WHERE id = $1`,
+      `UPDATE users SET store_id = $2, status = 'PENDENTE', status_reason = 'Nova loja aguarda aprovação' WHERE id = $1`,
       [userIdToUse, storeId]
     );
 

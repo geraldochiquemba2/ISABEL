@@ -407,6 +407,11 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
     await updateStore(store.id, { ...store, coverImages: newImages });
     queryClient.invalidateQueries({ queryKey: ["myStore"] });
   };
+  const handleRemoveCover = async () => {
+    await updateStore(store.id, { ...store, coverImage: "" });
+    queryClient.invalidateQueries({ queryKey: ["myStore"] });
+  };
+
 
   return (
     <div>
@@ -431,7 +436,12 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div>
           <label className={labelCls}>Imagem de capa</label>
           <div className="flex items-center gap-4">
-            {store.coverImage && <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#d4e8d4]" />}
+            {store.coverImage && (
+              <div className="relative group shrink-0">
+                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#d4e8d4]" />
+                <button type="button" title="Remover capa" aria-label="Remover imagem de capa" onClick={handleRemoveCover} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
+              </div>
+            )}
             <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d4e8d4] rounded-xl text-xs text-[#6B7280] hover:border-[#D84315] hover:text-[#1a3a1a] cursor-pointer transition-colors">
               <Image size={14} />{uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
@@ -444,7 +454,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
             {(store.coverImages || []).map((img: string, i: number) => (
               <div key={i} className="relative group">
                 <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#d4e8d4]" />
-                <button onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
+                <button type="button" title="Remover imagem" aria-label="Remover imagem da galeria" onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             ))}
             <label className="w-24 h-24 border border-dashed border-[#d4e8d4] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6B7280] hover:border-[#D84315] hover:text-[#1a3a1a] cursor-pointer transition-colors">

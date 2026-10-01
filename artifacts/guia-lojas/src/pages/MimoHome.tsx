@@ -18,9 +18,6 @@ import StoreCategorySection from "@/components/StoreCategorySection";
 const CATEGORIES = [
   { id: "actos-de-amor", name: "Actos de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
   { id: "fotografia", name: "Fotografia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><rect x="4" y="10" width="24" height="16" rx="3" /><circle cx="16" cy="18" r="5" /><circle cx="16" cy="18" r="2" /><rect x="12" y="7" width="8" height="3" rx="1" /></svg> },
-  { id: "saude", name: "Saúde & Bem-Estar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><circle cx="16" cy="12" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M13 12h6" /><path d="M16 9v6" /></svg> },
-  { id: "lar", name: "Gestão do Lar", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
-  { id: "burocracias", name: "Burocracias", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><rect x="7" y="5" width="18" height="22" rx="2" /><path d="M11 11h10M11 15h10M11 19h6" /></svg> },
 ];
 
 const TRUST_BADGES = [
@@ -47,7 +44,6 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
 
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
   const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
-  const fallbackFeatured = !featured.length ? nonAdmin.slice(0, 6) : [];
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
@@ -261,7 +257,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
       )}
 
       {/* Featured Stores */}
-      {(featured.length > 0 || fallbackFeatured.length > 0) && (
+      {(featured.length > 0) && (
         <section className="px-5 py-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[17px] font-semibold text-[#171416]">Lojas em destaque</h2>
@@ -270,7 +266,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
             </button>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
-            {(featured.length > 0 ? featured : fallbackFeatured).map((store: any) => (
+            {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#F7E9EB] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=love`}>
                 <div className="h-28 overflow-hidden">
                   <img src={store.coverImage || "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
@@ -288,7 +284,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
               </div>
             ))}
           </div>
-          {(featured.length > 0 ? featured : fallbackFeatured).length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
+          {featured.length > 2 && (<p className="swipe-hint-below">Desliza para ver mais →</p>)}
         </section>
       )}
 

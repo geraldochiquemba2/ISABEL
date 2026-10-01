@@ -50,6 +50,7 @@ storesRouter.get("/admin/all", async (req, res) => {
       municipality: r.municipality,
       locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
+      schedule: r.schedule || null,
       products: r.products || [],
     })));
   } catch (err) {
@@ -165,6 +166,7 @@ storesRouter.get("/", async (req, res) => {
       municipality: r.municipality,
       locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
+      schedule: r.schedule || null,
       products: r.products || [],
     }));
     res.json(rows);
