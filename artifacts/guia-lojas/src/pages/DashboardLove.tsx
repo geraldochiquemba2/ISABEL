@@ -91,8 +91,6 @@ const LOVE_SERVICE_GROUPS = [
     category: "fotografia",
     items: ["Fotógrafos", "Videomakers"],
   },
-  {
-  {
 ];
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
