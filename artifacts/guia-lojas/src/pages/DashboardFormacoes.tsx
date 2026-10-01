@@ -830,7 +830,7 @@ function ProductsManager({ store }: { store: any }) {
                 {productImages.map((url, i) => (
                   <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#EEF3F4]">
                     <img src={url} alt="" className="w-full h-full object-cover" />
-                    <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} className="absolute top-0 right-0 bg-red-500 text-white p-0.5 rounded-bl-lg"><X size={10} /></button>
+                    <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} type="button" title="Remover imagem" aria-label="Remover imagem" className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
                   </div>
                 ))}
               </div>

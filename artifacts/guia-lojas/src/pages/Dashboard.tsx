@@ -1259,10 +1259,12 @@ function ProdutosSection({ myStore }: { myStore: any }) {
                     <img src={url} alt="" className="w-full h-full object-cover" />
                     <button
                       type="button"
+                      title="Remover imagem"
+                      aria-label="Remover imagem"
                       onClick={() => setNewImageUrls((prev) => prev.filter((_, idx) => idx !== i))}
-                      className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center shadow-sm hover:bg-red-600 transition-colors z-10"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"
                     >
-                      <X size={10} />
+                      <X size={12} />
                     </button>
                   </div>
                 ))}
@@ -1719,12 +1721,15 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
                   <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
                     <img src={url} alt="" className="w-full h-full object-cover" />
                     <button
+                      type="button"
+                      title="Remover imagem"
+                      aria-label="Remover imagem"
                       onClick={() => {
                         const newUrls = formData.imageUrls.filter((_, idx) => idx !== i);
                         setFormData({ ...formData, imageUrls: newUrls, imageUrl: newUrls[0] || "" });
                       }}
-                      className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center"
-                    >×</button>
+                      className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"
+                    ><X size={12} /></button>
                   </div>
                 ))}
               </div>
@@ -1988,9 +1993,9 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
               {editImageUrls.map((url, i) => (
                 <div key={i} className="relative w-14 h-14 rounded-xl border border-border overflow-hidden bg-muted flex-shrink-0">
                   <img src={url} alt="" className="w-full h-full object-cover" />
-                  <button type="button" onClick={() => setEditImageUrls(prev => prev.filter((_, idx) => idx !== i))}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 z-10">
-                    <X size={9} />
+                  <button type="button" title="Remover imagem" aria-label="Remover imagem" onClick={() => setEditImageUrls(prev => prev.filter((_, idx) => idx !== i))}
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10">
+                    <X size={12} />
                   </button>
                 </div>
               ))}

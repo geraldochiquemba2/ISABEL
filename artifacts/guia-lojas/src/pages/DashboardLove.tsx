@@ -487,7 +487,7 @@ function ProdutosSection({ store }: { store: any }) {
                   {productImages.map((img, i) => (
                     <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#F7E9EB]">
                       <img src={img} alt="" className="w-full h-full object-cover" />
-                      <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5"><X size={10} /></button>
+                      <button onClick={() => setProductImages((prev) => prev.filter((_, j) => j !== i))} type="button" title="Remover imagem" aria-label="Remover imagem" className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
                     </div>
                   ))}
                   {productImages.length < 5 && (

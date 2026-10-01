@@ -888,8 +888,11 @@ function ProdutosSection({ store }: { store: any }) {
                     <div key={i} className="relative group">
                       <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#E9D9B6]" />
                       <button
+                        type="button"
+                        title="Remover imagem"
+                        aria-label="Remover imagem"
                         onClick={() => removeProductImage(i)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                        className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"
                       >
                         <X size={12} />
                       </button>
