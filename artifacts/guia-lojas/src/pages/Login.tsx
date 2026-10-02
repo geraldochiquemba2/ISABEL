@@ -9,7 +9,7 @@ import { useLocation as useWouterLocation } from "wouter";
 import { PageTransition } from "@/components/PageTransition";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { registerLojista, loginLojista } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
+import { getAreaCategories } from "@/data/areaCategories";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -69,14 +69,7 @@ export default function Login() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [, setLoc] = useWouterLocation();
 
-  const { data: CATEGORIES = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await fetch("/api/categories");
-      if (!res.ok) return [];
-      return res.json();
-    },
-  });
+  const CATEGORIES = getAreaCategories("collection");
 
   /* login form */
   const {
