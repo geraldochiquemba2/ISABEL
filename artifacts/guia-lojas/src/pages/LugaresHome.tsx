@@ -105,10 +105,9 @@ export default function LugaresHome() {
 
   const catOf = (p: Place) =>
     p.kind === "igreja" ? "Igrejas" : (p.category || "Serviços Públicos");
-  const shownCats = kind === "igreja" ? ["Igrejas"] : kind === "servico-publico"
-    ? [...new Set(places.filter((p: Place) => p.kind !== "igreja").map(catOf))]
-    : ["Igrejas", ...new Set(places.filter((p: Place) => p.kind !== "igreja").map(catOf))];
-  const catsToShow = shownCats.length > 0 ? shownCats : DEFAULT_CATS;
+  const presentServiceCats = [...new Set(places.filter((p: Place) => p.kind !== "igreja").map(catOf))];
+  const allServiceCats = [...new Set([...DEFAULT_CATS.filter((c) => c !== "Igrejas"), ...presentServiceCats])];
+  const catsToShow = kind === "igreja" ? ["Igrejas"] : kind === "servico-publico" ? allServiceCats : ["Igrejas", ...allServiceCats];
   const forCat = (c: string) =>
     places.filter((p: Place) => catOf(p) === c || (c === "Igrejas" && p.kind === "igreja"));
 
