@@ -138,7 +138,7 @@ storesRouter.get("/", async (req, res) => {
     }
     if (q) {
       params.push(`%${q}%`);
-      conditions.push(`(s.name ILIKE $${params.length} OR s.description ILIKE $${params.length})`);
+      conditions.push(`(s.name ILIKE $${params.length} OR s.description ILIKE $${params.length} OR s.category ILIKE $${params.length} OR EXISTS (SELECT 1 FROM unnest(COALESCE(s.categories, '{}')) AS c WHERE c ILIKE $${params.length}))`);
     }
 
     if (conditions.length) query += " WHERE " + conditions.join(" AND ");

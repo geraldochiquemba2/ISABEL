@@ -455,7 +455,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       );
       const seen = new Map<string, any>();
       results.flat().forEach((s: any) => {
-        if (s && s.id && !seen.has(s.id)) seen.set(s.id, s);
+        if (s && s.id && s.phone !== "999999999" && !seen.has(s.id)) seen.set(s.id, s);
       });
       return [...seen.values()].sort((x: any, y: any) =>
         String(x.name || "").localeCompare(String(y.name || ""), "pt")

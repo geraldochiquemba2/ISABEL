@@ -100,6 +100,7 @@ export default function SearchPage() {
 
   const filtered = useMemo(() => {
     return stores.filter((store) => {
+      if (store.phone === "999999999") return false; // Oculta conta admin
       const matchOpen = !openOnly || store.isOpen;
       const isService = ["Casa & Serviços", "Automóveis & Mobilidade", "Beleza & Bem-Estar", "Educação & Formação"].includes(store.category);
       const matchType =
