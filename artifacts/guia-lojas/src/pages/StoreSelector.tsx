@@ -519,25 +519,27 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </section>
 
       {/* Hero Section */}
-      <section className="relative px-5 pt-6 pb-4 overflow-hidden" style={{ minHeight: "220px" }}>
+      <section className="px-5 pt-6 pb-4 sm:relative sm:overflow-hidden" style={{ minHeight: "220px" }}>
         <div className="relative z-10 max-w-[280px]">
-          <h1 className="text-[32px] leading-[1.1] font-semibold text-[#111111]" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h1 className="text-[32px] leading-[1.15] font-semibold text-[#111111]" style={{ fontFamily: "'Playfair Display', serif" }}>
             Tudo o que<br />
             procuras,<br />
             <span className="text-[#C99432]">encontras aqui.</span>
           </h1>
           <p className="text-[13px] text-[#6F6F6F] mt-4 leading-relaxed">
-            Soluções completas para o seu dia a dia, negócios, formações, casa e muito mais,{" "}
+            Soluções completas para<br />
+            o seu dia a dia, negócios,<br />
+            formações, casa e muito mais,{" "}
             <span className="text-[#A96F12] font-semibold">na sua província.</span>
           </p>
         </div>
-        <div className="absolute right-0 top-0 w-[55%] h-full">
+        <div className="relative mt-4 h-52 overflow-hidden rounded-2xl border border-[#E8CC91]/60 sm:absolute sm:right-0 sm:top-0 sm:mt-0 sm:h-full sm:w-[55%] sm:rounded-none sm:border-0">
           <img
             src="/tudo-que-procura.jpg"
             alt="Tudo o que procuras, encontras aqui"
             className="w-full h-full object-cover object-top"
-            style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }}
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFFDF8]/70 via-transparent to-transparent hidden sm:block" />
         </div>
       </section>
 
