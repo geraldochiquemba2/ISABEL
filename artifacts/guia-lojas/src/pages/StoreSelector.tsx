@@ -1,7 +1,10 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { fetchStores } from "@/lib/api";
 import {
   Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
-  Crown, Building2, Baby, Car, ChevronRight, Stethoscope, Sparkles,
+  Crown, Building2, Baby, Car, ChevronRight, ChevronDown, Search, Stethoscope, Sparkles,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Home,
   Smartphone, UtensilsCrossed, Plane, Dumbbell, Briefcase, Sprout,
   Users, Truck, Palette,
@@ -424,6 +427,50 @@ interface StoreSelectorProps {
 }
 
 export default function StoreSelector({ onSelect }: StoreSelectorProps) {
+  const [showAllStores, setShowAllStores] = useState(false);
+  const [storeSearch, setStoreSearch] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showAllStores) return;
+    const close = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowAllStores(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [showAllStores]);
+
+  const { data: allStores = [], isLoading: loadingStores } = useQuery({
+    queryKey: ["allStoresSelector"],
+    queryFn: async () => {
+      const results = await Promise.all(
+        areas.map(async (a) => {
+          try {
+            const list = await fetchStores({ storeType: a.id });
+            return list.map((s: any) => ({ ...s, _areaId: a.id, _areaName: a.name }));
+          } catch {
+            return [];
+          }
+        })
+      );
+      const seen = new Map<string, any>();
+      results.flat().forEach((s: any) => {
+        if (s && s.id && !seen.has(s.id)) seen.set(s.id, s);
+      });
+      return [...seen.values()].sort((x: any, y: any) =>
+        String(x.name || "").localeCompare(String(y.name || ""), "pt")
+      );
+    },
+    enabled: showAllStores,
+    staleTime: 5 * 60_000,
+  });
+
+  const visibleStores = useMemo(() => {
+    const q = storeSearch.trim().toLowerCase();
+    if (!q) return allStores;
+    return (allStores as any[]).filter((s: any) => String(s.name || "").toLowerCase().includes(q));
+  }, [allStores, storeSearch]);
+
   return (
     <div className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
@@ -500,9 +547,42 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       <section className="px-5 py-5">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-[18px] font-bold text-[#111111]">Escolha por área</h2>
-          <button onClick={() => window.location.href = "/explorar"} className="text-xs font-semibold text-[#A96F12] hover:text-[#C99432] transition-colors flex items-center gap-1">
-            Ver todas <ChevronRight size={14} />
-          </button>
+          <div className="relative" ref={dropdownRef}>
+            <button onClick={() => setShowAllStores((v) => !v)} className="text-xs font-semibold text-[#A96F12] hover:text-[#C99432] transition-colors flex items-center gap-1">
+              Ver todas <ChevronDown size={14} className={`transition-transform ${showAllStores ? "rotate-180" : ""}`} />
+            </button>
+            {showAllStores && (
+              <div className="absolute right-0 mt-2 w-72 max-w-[80vw] bg-white border border-[#E8CC91] rounded-2xl shadow-xl z-50 overflow-hidden">
+                <div className="p-2 border-b border-[#E8CC91]/60 flex items-center gap-2">
+                  <Search size={14} className="text-[#A96F12] shrink-0 ml-1" />
+                  <input
+                    value={storeSearch}
+                    onChange={(e) => setStoreSearch(e.target.value)}
+                    placeholder="Pesquisar loja..."
+                    className="w-full text-xs py-1.5 outline-none placeholder:text-[#9CA3AF]"
+                  />
+                </div>
+                <div className="max-h-72 overflow-y-auto py-1">
+                  {loadingStores ? (
+                    <p className="text-xs text-[#6F6F6F] text-center py-6">A carregar lojas...</p>
+                  ) : visibleStores.length === 0 ? (
+                    <p className="text-xs text-[#6F6F6F] text-center py-6">Nenhuma loja encontrada.</p>
+                  ) : (
+                    (visibleStores as any[]).map((s: any) => (
+                      <button
+                        key={s.id}
+                        onClick={() => { setShowAllStores(false); window.location.href = `/loja/${s.id}?from=${s._areaId}`; }}
+                        className="w-full text-left px-4 py-2.5 hover:bg-[#FFF8EC] transition-colors"
+                      >
+                        <span className="block text-[13px] font-medium text-[#111111] truncate">{s.name}</span>
+                        <span className="block text-[10px] text-[#A96F12]">{s._areaName}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="category-grid">
           {areas.map((area) => (
