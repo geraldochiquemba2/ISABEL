@@ -1,0 +1,812 @@
+import { useEffect, useState, useRef } from "react";
+import { useLocation } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage } from "@/lib/api";
+import MapPicker from "@/components/MapPicker";
+import { updateStoreLocation } from "@/lib/api";
+import { ANGOLA_PROVINCES } from "@/data/angolaData";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getAreaCategories } from "@/data/areaCategories";
+import { getStoreCategories } from "@/lib/storeCategories";
+import { getLocalities } from "@/lib/locationIndex";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
+import { PageTransition } from "@/components/PageTransition";
+import AdminPanel from "@/components/AdminPanel";
+import { motion, AnimatePresence } from "framer-motion";
+
+type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+
+const inputCls = "w-full border border-[#DED2F8] bg-white py-3 px-4 text-sm text-[#221C35] placeholder:text-[#6F6A8A] outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/10 transition-all rounded-xl";
+const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#6F6A8A] mb-1.5";
+
+const TIME_OPTIONS = Array.from({ length: 32 }, (_, i) => {
+  const h = Math.floor(i / 2) + 6;
+  const m = i % 2 === 0 ? "00" : "30";
+  return `${String(h).padStart(2, "0")}:${m}`;
+});
+
+interface DaySchedule {
+  label: string;
+  closed: boolean;
+  open: string;
+  close: string;
+}
+
+const DEFAULT_SCHEDULE: DaySchedule[] = [
+  { label: "Segunda a Sexta", closed: false, open: "08:00", close: "18:00" },
+  { label: "Sábado", closed: false, open: "09:00", close: "14:00" },
+  { label: "Domingo", closed: true, open: "08:00", close: "18:00" },
+];
+
+function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  return (
+    <select value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled} className={`${inputCls} cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}>
+      {TIME_OPTIONS.map((t) => <option key={t} value={t}>{t}</option>)}
+    </select>
+  );
+}
+
+const ENTRETENIMENTO_CATEGORIES = [
+  { number: "01", title: "Cinema & Filmes", intro: "Salas escuras, grandes histórias.", items: ["Salas de Cinema", "Cinema ao Ar Livre", "Clubes de Cinema", "Aluguer de Filmes"], category: "cinema" },
+  { number: "02", title: "Música & Concertos", intro: "Palcos, vozes e noites que ficam.", items: ["Concertos & Festivais", "Bandas & Artistas", "Estúdios de Música", "Aulas de Música"], category: "musica" },
+  { number: "03", title: "Teatro & Espetáculos", intro: "Histórias contadas ao vivo.", items: ["Peças de Teatro", "Stand-Up Comedy", "Dança & Espetáculos", "Grupos Teatrais"], category: "teatro" },
+  { number: "04", title: "Animação de Festas", intro: "A festa não para.", items: ["Animadores de Festas", "DJs & Pistas", "Insufláveis & Brinquedos", "Pinturas Faciais"], category: "animacao-festas" },
+  { number: "05", title: "Gaming & E-Sports", intro: "Para quem vive a jogar.", items: ["Arenas Gaming", "Torneios & E-Sports", "Aluguer de Consolas", "Realidade Virtual"], category: "gaming" },
+  { number: "06", title: "Espetáculos Desportivos", intro: "A emoção dentro de campo.", items: ["Jogos & Campeonatos", "Bilhetes & Acessos", "Clubes & Fan Zones", "Transmissões ao Vivo"], category: "espetaculos-desportivos" },
+];
+
+export default function DashboardEntretenimento() {
+  const [loc, setLoc] = useLocation();
+  const queryClient = useQueryClient();
+  const localUserStr = localStorage.getItem("guialocal_user");
+  const localUser = localUserStr ? JSON.parse(localUserStr) : null;
+
+  const isAdmin = localUser?.phone === "999999999";
+
+  useEffect(() => {
+    if (!localUser) setLoc("/login-entretenimento");
+  }, [localUser, setLoc]);
+
+  useEffect(() => {
+    if (!localUser || localUser.status === "APROVADO") return;
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/auth/status/${localUser.id}`);
+        const data = await res.json();
+        if (data.status && data.status !== localUser.status) {
+          const updated = { ...localUser, status: data.status, statusReason: data.statusReason };
+          localStorage.setItem("guialocal_user", JSON.stringify(updated));
+          window.location.reload();
+        }
+      } catch {}
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [localUser]);
+
+  const handleRefreshStatus = async () => {
+    try {
+      const res = await fetch(`/api/auth/status/${localUser.id}`);
+      const data = await res.json();
+      const updated = { ...localUser, status: data.status, statusReason: data.statusReason };
+      localStorage.setItem("guialocal_user", JSON.stringify(updated));
+      window.location.reload();
+    } catch {}
+  };
+
+  if (!localUser) return null;
+
+  if (!isAdmin && localUser.status === "PENDENTE") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F5F0FF] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-500"><ShieldAlert size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#221C35]">Pedido de Conta Pendente</h1>
+              <p className="text-sm text-[#6F6A8A]">A sua conta está em análise pela equipa de administração.</p>
+            </div>
+            <div className="bg-amber-50/50 rounded-2xl border border-amber-100 p-4 text-xs text-amber-800 text-left space-y-2.5">
+              <p className="font-semibold flex items-center gap-1.5">O que acontece agora?</p>
+              <p>Assim que o administrador aprovar a sua solicitação, poderá aceder ao painel e gerenciar os seus serviços.</p>
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <button onClick={handleRefreshStatus} className="w-full bg-[#7C3AED] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#221C35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <a href="/login-entretenimento" className="w-full border border-[#DED2F8] text-[#6F6A8A] hover:bg-[#E9DEF9] py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Voltar ao Login</a>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && localUser.status === "RECUSADO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F5F0FF] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#221C35]">Solicitação Recusada</h1>
+              <p className="text-sm text-[#6F6A8A]">Lamentamos, mas o seu pedido de conta não foi aceite no momento.</p>
+            </div>
+            {localUser.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{localUser.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#7C3AED] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#221C35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-entretenimento"); }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!isAdmin && localUser.status === "SUSPENSO") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-[#F5F0FF] flex items-center justify-center px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-500"><Ban size={28} /></div>
+            <div className="space-y-2">
+              <h1 className="text-xl font-bold tracking-tight text-[#221C35]">Conta Suspensa</h1>
+              <p className="text-sm text-[#6F6A8A]">A sua conta foi temporariamente suspensa por um administrador.</p>
+            </div>
+            {localUser.statusReason && (
+              <div className="bg-red-50/50 rounded-2xl border border-red-100 p-4 text-xs text-red-800 text-left space-y-1.5">
+                <p className="font-semibold">Motivo apresentado pelo administrador:</p>
+                <p className="italic bg-white p-2.5 rounded-xl border border-red-100/50 text-red-900 font-medium">"{localUser.statusReason}"</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-2 pt-2">
+              <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
+              <button onClick={handleRefreshStatus} className="w-full bg-[#7C3AED] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#221C35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-entretenimento"); }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  const [section, setSection] = useState<Section>(isAdmin ? "admin" : "overview");
+  const [isDirty, setIsDirty] = useState(false);
+  const saveFnRef = useRef<(() => void) | null>(null);
+
+  const [showChangePwd, setShowChangePwd] = useState(!!localUser?.mustChangePassword);
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [pwdError, setPwdError] = useState("");
+  const [pwdLoading, setPwdLoading] = useState(false);
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+
+  async function handleForceChangePwd() {
+    setPwdError("");
+    if (newPwd.length < 6) { setPwdError("Mínimo 6 caracteres."); return; }
+    if (newPwd !== confirmPwd) { setPwdError("Senhas não coincidem."); return; }
+    setPwdLoading(true);
+    try {
+      await changePassword(localUser.id, newPwd);
+      localStorage.setItem("guialocal_user", JSON.stringify({ ...localUser, mustChangePassword: false }));
+      setShowChangePwd(false);
+    } catch (e: any) { setPwdError(e.message); } finally { setPwdLoading(false); }
+  }
+
+  useEffect(() => {
+    const handle = (e: BeforeUnloadEvent) => { if (isDirty) { e.preventDefault(); e.returnValue = ""; } };
+    window.addEventListener("beforeunload", handle);
+    return () => window.removeEventListener("beforeunload", handle);
+  }, [isDirty]);
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (s: Section) => {
+    if (isDirty && !window.confirm("Sair sem salvar?")) return;
+    setIsDirty(false);
+    setSection(s);
+    setMobileMenuOpen(false);
+  };
+
+  const { data: store, isLoading } = useQuery({
+    queryKey: ["myStore", localUser?.storeId],
+    queryFn: () => fetchStoreById(localUser.storeId),
+    enabled: !!localUser?.storeId,
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem("guialocal_user");
+    window.location.href = "/";
+  };
+
+  if (!localUser) return null;
+
+  const sidebarItems = isAdmin
+    ? [
+        { id: "admin" as Section, label: "Administração", icon: <ShieldAlert size={15} /> },
+      ]
+    : [
+        { id: "overview" as Section, label: "Visão Geral", icon: <Eye size={15} /> },
+        { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
+        { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
+        { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      ];
+
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#F5F0FF]"><p className="text-sm text-[#6F6A8A]">Carregando...</p></div>;
+
+  return (
+    <PageTransition>
+      <div className="min-h-screen bg-[#F5F0FF] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+
+        {/* Mobile Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#7C3AED] text-white px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em", color: "#fff" }}>YESOLA<small style={{ display: "block", color: "#E9DEF9", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", marginTop: "1px" }}>Entretenimento</small></span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="p-2 hover:bg-white/10 rounded-lg transition-all" title="Trocar loja"><Store size={18} /></button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-all">
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+
+        {mobileMenuOpen && <div className="md:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)} />}
+
+        {/* Sidebar */}
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#7C3AED] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
+          <div className="flex items-center gap-3 mb-5">
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
+            <div>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "15px", letterSpacing: "-.02em" }}>YESOLA</span>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "7px", color: "#E9DEF9", marginTop: "1px" }}>Entretenimento</p>
+              <p className="text-[10px] text-white/50 mt-1">Painel da loja</p>
+            </div>
+          </div>
+
+          <nav className="space-y-1">
+            <button onClick={() => window.location.href = "/entretenimento"} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
+              <Eye size={15} /> Ver site
+            </button>
+            {sidebarItems.map((item) => (
+              <button key={item.id} onClick={() => handleNavClick(item.id)}
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition-all ${section === item.id ? "bg-white/15 text-white" : "text-white/60 hover:text-white hover:bg-white/5"}`}>
+                {item.icon} {item.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="space-y-2 pt-4 mt-4 border-t border-white/10">
+            <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><Store size={15} /> Trocar loja</button>
+            <button onClick={() => setShowChangePwd(true)} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all"><KeyRound size={15} /> Alterar senha</button>
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"><LogOut size={15} /> Sair</button>
+          </div>
+        </aside>
+
+        {/* Main */}
+        <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
+          {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
+          {section === "admin" && <AdminPanel storeType="entretenimento" accentColor="#7C3AED" />}
+          {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
+          {section === "produtos" && store && <ProdutosSection store={store} />}
+          {section === "contactos" && store && <ContactosSection store={store} />}
+        </main>
+      </div>
+
+      {/* Modal alterar senha */}
+      <AnimatePresence>
+        {showChangePwd && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl p-8 max-w-sm w-full">
+              <h3 className="font-['Playfair_Display'] text-xl text-[#221C35] mb-4">Alterar senha</h3>
+              {pwdError && <p className="text-xs text-red-500 mb-3">{pwdError}</p>}
+              <div className="space-y-3">
+                <div className="relative">
+                  <input type={showNewPwd ? "text" : "password"} placeholder="Nova senha" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} className={`${inputCls} pr-8`} />
+                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-3 text-[#6F6A8A]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                </div>
+                <div className="relative">
+                  <input type={showConfirmPwd ? "text" : "password"} placeholder="Confirmar senha" value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} className={`${inputCls} pr-8`} />
+                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-3 text-[#6F6A8A]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleForceChangePwd} disabled={pwdLoading} className="flex-1 bg-[#7C3AED] text-white py-3 rounded-xl text-sm font-medium hover:bg-[#221C35] transition-colors">{pwdLoading ? "A guardar..." : "Guardar"}</button>
+                {!localUser?.mustChangePassword && <button onClick={() => setShowChangePwd(false)} className="flex-1 border border-[#DED2F8] py-3 rounded-xl text-sm text-[#6F6A8A] hover:bg-gray-50 transition-colors">Cancelar</button>}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </PageTransition>
+  );
+}
+
+function OverviewSection({ store }: { store: any }) {
+  const stats = [{ label: "Serviços", value: store.products?.length || 0, icon: <Package size={18} /> }];
+  const whatsappClicks = store?.whatsapp_clicks || 0;
+  return (
+    <div>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#221C35] mb-8">Visão Geral</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-white rounded-2xl border border-[#DED2F8] p-6">
+            <div className="flex items-center gap-3 mb-3 text-[#6F6A8A]">{s.icon}<span className="text-xs uppercase tracking-wider">{s.label}</span></div>
+            <p className="text-3xl font-semibold text-[#221C35]">{s.value}</p>
+          </div>
+        ))}
+        <div className="bg-white rounded-2xl border border-[#DED2F8] p-5">
+          <p className="text-[10px] text-[#6F6A8A] uppercase tracking-wider mb-1">Cliques WhatsApp</p>
+          <p className="text-2xl font-bold text-[#221C35]">{whatsappClicks}</p>
+                </div>
+      </div>
+    </div>
+  );
+}
+
+function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", categories: getStoreCategories(store), locality: store.locality || "" });
+  const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
+  const [saved, setSaved] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(store.latitude || null);
+  const [longitude, setLongitude] = useState<number | null>(store.longitude || null);
+
+  const mutation = useMutation({
+    mutationFn: () => updateStore(store.id, { ...store, ...form, schedule, categories: form.categories ?? [], category: form.categories?.[0] || store.category, locality: form.locality }),
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
+
+  const locationMutation = useMutation({
+    mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+  });
+
+  const handleChange = (field: string, value: string) => { setForm((prev) => ({ ...prev, [field]: value })); setDirty(true); };
+  const handleSave = () => mutation.mutate();
+  saveFnRef.current = handleSave;
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: "logoUrl" | "coverImage" | "coverImages") => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(field);
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result as string;
+        const res = await uploadImage(base64, `${store.id}-${field}`);
+        if (field === "coverImages") {
+          const currentImages = store.coverImages || [];
+          await updateStore(store.id, { ...store, coverImages: [...currentImages, res.imageUrl] });
+        } else {
+          await updateStore(store.id, { ...store, [field]: res.imageUrl });
+        }
+        queryClient.invalidateQueries({ queryKey: ["myStore"] });
+        setUploading(null);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) { console.error("Upload error:", err); setUploading(null); }
+  };
+
+  const handleRemoveCoverImage = async (index: number) => {
+    const currentImages = store.coverImages || [];
+    const newImages = currentImages.filter((_: any, i: number) => i !== index);
+    await updateStore(store.id, { ...store, coverImages: newImages });
+    queryClient.invalidateQueries({ queryKey: ["myStore"] });
+  };
+  const handleRemoveCover = async () => {
+    await updateStore(store.id, { ...store, coverImage: "" });
+    queryClient.invalidateQueries({ queryKey: ["myStore"] });
+  };
+
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="font-['Playfair_Display'] text-3xl text-[#221C35]">Minha Loja</h2>
+        {isDirty && <button onClick={handleSave} disabled={mutation.isPending} className="bg-[#7C3AED] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#221C35] transition-colors">{mutation.isPending ? "A guardar..." : "Guardar alterações"}</button>}
+        {saved && <span className="text-xs text-green-600 font-medium">Guardado!</span>}
+      </div>
+
+      <div className="bg-white rounded-2xl border border-[#DED2F8] p-8 space-y-6 max-w-2xl mb-6">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#221C35]">Imagens</h3>
+        <div>
+          <label className={labelCls}>Logo da loja</label>
+          <div className="flex items-center gap-4">
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#DED2F8]" />}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#DED2F8] rounded-xl text-xs text-[#6F6A8A] hover:border-[#7C3AED] hover:text-[#221C35] cursor-pointer transition-colors">
+              <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
+            </label>
+          </div>
+        </div>
+        <div>
+          <label className={labelCls}>Imagem de capa</label>
+          <div className="flex items-center gap-4">
+            {store.coverImage && (
+              <div className="relative group shrink-0">
+                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#DED2F8]" />
+                <button type="button" title="Remover capa" aria-label="Remover imagem de capa" onClick={handleRemoveCover} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
+              </div>
+            )}
+            <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#DED2F8] rounded-xl text-xs text-[#6F6A8A] hover:border-[#7C3AED] hover:text-[#221C35] cursor-pointer transition-colors">
+              <Image size={14} />{uploading === "coverImage" ? "A enviar..." : store.coverImage ? "Trocar capa" : "Adicionar capa"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImage")} disabled={uploading !== null} />
+            </label>
+          </div>
+        </div>
+        <div>
+          <label className={labelCls}>Galeria de imagens</label>
+          <div className="flex flex-wrap gap-3 mb-3">
+            {(store.coverImages || []).map((img: string, i: number) => (
+              <div key={i} className="relative group">
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#DED2F8]" />
+                <button type="button" title="Remover imagem" aria-label="Remover imagem da galeria" onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
+              </div>
+            ))}
+            <label className="w-24 h-24 border border-dashed border-[#DED2F8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F6A8A] hover:border-[#7C3AED] hover:text-[#221C35] cursor-pointer transition-colors">
+              <Camera size={16} className="mb-1" />{uploading === "coverImages" ? "..." : "Adicionar"}
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-[#DED2F8] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#221C35]">Dados da loja</h3>
+        <div><label className={labelCls}>Nome da loja</label><input value={form.name} onChange={(e) => handleChange("name", e.target.value)} className={inputCls} /></div>
+        <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={3} className={inputCls} /></div>
+        <div className="grid grid-cols-2 gap-4">
+          <div><label className={labelCls}>Telefone</label><input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} /></div>
+          <div><label className={labelCls}>Endereço</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
+        </div>
+        <div>
+          <label className={labelCls}>Categorias da Loja (até 4)</label>
+          <CategoryMultiSelect options={getAreaCategories("entretenimento")} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#7C3AED" />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { handleChange("province", v); handleChange("municipality", ""); handleChange("locality", ""); }} placeholder="Selecione a Província" accent="#7C3AED" />
+          <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { handleChange("municipality", v); handleChange("locality", ""); }} placeholder={form.province ? "Selecione o Município" : "Selecione a província primeiro"} disabled={!form.province} accent="#7C3AED" />
+        </div>
+        <LocationCombobox label="Localidade exacta" value={form.locality} options={getLocalities(form.province, form.municipality)} onChange={(v) => handleChange("locality", v)} placeholder={form.municipality ? "Selecione a localidade" : "Selecione o município primeiro"} disabled={!form.municipality} accent="#7C3AED" />
+        <div>
+          <label className={labelCls}>Horários de funcionamento</label>
+
+
+          <div className="space-y-3">
+            {schedule.map((day, i) => (
+              <div key={day.label} className="border border-[#DED2F8] rounded-2xl p-4 bg-[#F5F0FF]">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-[#221C35]">{day.label}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${day.closed ? "bg-red-50 text-red-600 border border-red-200" : "bg-emerald-50 text-emerald-600 border border-emerald-200"}`}>{day.closed ? "Fechado" : "Aberto"}</span>
+                  </div>
+                  <button type="button" onClick={() => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, closed: !d.closed } : d)); setDirty(true); }}
+                    className={`relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 cursor-pointer ${!day.closed ? "bg-emerald-500" : "bg-red-400"}`}>
+                    <span className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${!day.closed ? "translate-x-4" : "translate-x-0"}`} />
+                  </button>
+                </div>
+                <div className={`grid grid-cols-2 gap-3 transition-all duration-200 ${day.closed ? "opacity-50 pointer-events-none" : ""}`}>
+                  <div><p className="text-[10px] text-[#6F6A8A] mb-1.5 font-medium uppercase tracking-wide">Abertura</p><TimeSelect value={day.open} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, open: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
+                  <div><p className="text-[10px] text-[#6F6A8A] mb-1.5 font-medium uppercase tracking-wide">Fechamento</p><TimeSelect value={day.close} onChange={(v) => { setSchedule((prev) => prev.map((d, idx) => idx === i ? { ...d, close: v } : d)); setDirty(true); }} disabled={day.closed} /></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Localização no Mapa */}
+      <div className="bg-white rounded-2xl border border-[#DED2F8] p-8 space-y-6 max-w-2xl">
+        <h3 className="font-['Playfair_Display'] text-lg text-[#221C35]">Localização no Mapa</h3>
+        <p className="text-sm text-[#6F6A8A]">Marque a localização exacta da sua loja para que os clientes encontrem facilmente.</p>
+        
+        <button
+          type="button"
+          onClick={() => setShowMapPicker(true)}
+          className={`w-full flex items-center gap-3 px-4 py-4 border rounded-xl transition-colors ${
+            latitude && longitude 
+              ? "border-[#7C3AED] bg-blue-50" 
+              : "border-[#DED2F8] bg-[#F5F0FF] hover:border-[#7C3AED]"
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            latitude && longitude ? "bg-[#7C3AED]" : "bg-[#DED2F8]"
+          }`}>
+            <MapPin size={18} className={latitude && longitude ? "text-white" : "text-[#6F6A8A]"} />
+          </div>
+          <div className="text-left flex-1">
+            {latitude && longitude ? (
+              <>
+                <p className="text-sm font-medium text-[#221C35]">Localização definida</p>
+                <p className="text-xs text-[#6F6A8A] font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-[#221C35]">Marcar localização no mapa</p>
+                <p className="text-xs text-[#6F6A8A]">Toque para abrir o mapa e marcar o ponto exacto</p>
+              </>
+            )}
+          </div>
+          <Navigation size={16} className={latitude && longitude ? "text-[#7C3AED]" : "text-[#6F6A8A]"} />
+        </button>
+        
+        {latitude && longitude && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => locationMutation.mutate()}
+              disabled={locationMutation.isPending}
+              className="bg-[#7C3AED] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0D47A1] transition-colors disabled:opacity-50"
+            >
+              {locationMutation.isPending ? "A guardar..." : "Guardar localização"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLatitude(null); setLongitude(null); }}
+              className="text-sm text-red-500 hover:text-red-600"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Map Picker Modal */}
+        {showMapPicker && (
+          <MapPicker
+            initialLatitude={latitude || undefined}
+            initialLongitude={longitude || undefined}
+            province={form.province || store.province}
+            municipality={form.municipality || store.municipality}
+            onLocationSelect={(lat, lng) => {
+              setLatitude(lat);
+              setLongitude(lng);
+              setShowMapPicker(false);
+              setDirty(true);
+            }}
+            onClose={() => setShowMapPicker(false)}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProdutosSection({ store }: { store: any }) {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
+  const [editProduct, setEditProduct] = useState<any>(null);
+  const [form, setForm] = useState({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" });
+  const [productImages, setProductImages] = useState<string[]>([]);
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+
+  const createMut = useMutation({
+    mutationFn: async () => {
+      if (editProduct) {
+        await updateProduct(editProduct.id, { ...form, price: Number(form.price) || 0, imageUrl: productImages[0] || "", imageUrls: productImages });
+        return;
+      }
+      const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const selectedCat = ENTRETENIMENTO_CATEGORIES.find((g) => g.title === form.category);
+      await createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
+    },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => deleteProduct(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myStore"] }),
+  });
+
+  const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const remaining = 5 - productImages.length;
+    if (remaining <= 0) { alert("Máximo de 5 imagens por serviço."); return; }
+    const toUpload = Array.from(files).slice(0, remaining);
+    setUploadingImg(true);
+    try {
+      for (const file of toUpload) {
+        const res = await new Promise<{ imageUrl: string }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async () => { try { const imgRes = await uploadImage(reader.result as string, `product-${Date.now()}-${Math.random().toString(36).slice(2)}`); resolve(imgRes); } catch (err) { reject(err); } };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        setProductImages((prev) => [...prev, res.imageUrl]);
+      }
+      setUploadingImg(false);
+    } catch (err) { setUploadingImg(false); }
+    e.target.value = "";
+  };
+
+  const removeProductImage = (index: number) => { setProductImages((prev) => prev.filter((_, i) => i !== index)); };
+
+  const products = store.products || [];
+  // Casa com o titulo do grupo OU a chave curta (igual ao Explorar).
+  // Produtos sem categoria caem em orphanProducts (sempre visiveis p/ editar/eliminar).
+  const groupMatchesProduct = (group: { title: string; category: string }, p: any) => {
+    const cats = [p.category, p.subcategory].filter(Boolean).map((c: string) => c.toLowerCase());
+    if (!cats.length) return false;
+    const title = group.title.toLowerCase();
+    const key = group.category.toLowerCase().replace(/-/g, " ");
+    return cats.some((cat) => cat.includes(title) || title.includes(cat) || cat.includes(key));
+  };
+  const getProductsForGroup = (category: string) => {
+    const group = ENTRETENIMENTO_CATEGORIES.find((g) => g.category === category);
+    if (!group) return [];
+    return products.filter((p: any) => groupMatchesProduct(group, p));
+  };
+  const orphanProducts = products.filter((p: any) => !ENTRETENIMENTO_CATEGORIES.some((g) => groupMatchesProduct(g, p)));
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="font-['Playfair_Display'] text-3xl text-[#221C35]">Serviços</h2>
+        <button onClick={() => { setShowForm(!showForm); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="flex items-center gap-2 bg-[#7C3AED] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#221C35] transition-colors"><Plus size={15} /> Novo serviço</button>
+      </div>
+
+      <AnimatePresence>
+        {showForm && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-8">
+            <div className="bg-white rounded-2xl border border-[#DED2F8] p-6 space-y-4 max-w-2xl">
+              <div className="flex items-center justify-between">
+                <h3 className="font-['Playfair_Display'] text-lg text-[#221C35]">{editProduct ? "Editar serviço" : "Novo serviço"}</h3>
+                <button onClick={() => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); }} className="text-[#6F6A8A] hover:text-[#221C35]"><X size={18} /></button>
+              </div>
+              <div>
+                <label className={labelCls}>Imagens do serviço (até 5)</label>
+                <div className="flex flex-wrap gap-3 mb-3">
+                  {productImages.map((img, i) => (
+                    <div key={i} className="relative group">
+                      <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#DED2F8]" />
+                      <button onClick={() => removeProductImage(i)} type="button" title="Remover imagem" aria-label="Remover imagem" className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
+                    </div>
+                  ))}
+                  {productImages.length < 5 && (
+                    <label className="w-20 h-20 border border-dashed border-[#DED2F8] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6F6A8A] hover:border-[#7C3AED] hover:text-[#221C35] cursor-pointer transition-colors">
+                      <Camera size={16} className="mb-1" />{uploadingImg ? "..." : "Adicionar"}
+                      <input type="file" accept="image/*" multiple className="hidden" onChange={handleProductImageUpload} disabled={uploadingImg} />
+                    </label>
+                  )}
+                </div>
+                <p className="text-[10px] text-[#6F6A8A]">{productImages.length}/5 imagens</p>
+              </div>
+              <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Decoração Temática" /></div>
+              <div className="grid grid-cols-3 gap-4">
+                <div><label className={labelCls}>Preço</label><input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className={inputCls} /></div>
+                <div>
+                  <label className={labelCls}>Moeda</label>
+                  <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })} className={inputCls}>
+                    <option value="AOA">AOA (Kz)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className={labelCls}>Categoria</label>
+                  <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls}>
+                    <option value="">Selecionar...</option>
+                    {ENTRETENIMENTO_CATEGORIES.map((group) => <option key={group.category} value={group.title}>{group.number} — {group.title.split(",")[0]}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className={labelCls}>Subcategoria</label>
+                <select value={form.subcategory} onChange={(e) => setForm({ ...form, subcategory: e.target.value })} className={inputCls} disabled={!form.category}>
+                  <option value="">Selecionar...</option>
+                  {ENTRETENIMENTO_CATEGORIES.find((g) => g.title === form.category)?.items.map((item) => <option key={item} value={item}>{item}</option>)}
+                </select>
+              </div>
+              <div><label className={labelCls}>Descrição</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className={inputCls} /></div>
+              <button onClick={() => createMut.mutate()} disabled={createMut.isPending || !form.name || (!editProduct && !form.category)} className="bg-[#7C3AED] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-[#221C35] transition-colors disabled:opacity-50">
+                {createMut.isPending ? "A guardar..." : editProduct ? "Atualizar" : "Guardar"}
+              </button>
+              {!editProduct && !form.category && <p className="text-[11px] text-[#7C3AED]">Seleciona uma categoria para poderes guardar.</p>}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="space-y-6">
+        {ENTRETENIMENTO_CATEGORIES.filter((group) => getProductsForGroup(group.category).length > 0).map((group) => {
+          const groupProducts = getProductsForGroup(group.category);
+          const isExpanded = selectedGroup === group.category;
+          return (
+            <div key={group.category} className="bg-white rounded-2xl border border-[#DED2F8] overflow-hidden">
+              <button onClick={() => setSelectedGroup(isExpanded ? null : group.category)} className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-4">
+                  <span className="font-mono text-xs tracking-[0.2em] text-[#6F6A8A]">{group.number}</span>
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#221C35]">{group.title}</h4>
+                    <p className="text-xs text-[#6F6A8A] mt-0.5">{groupProducts.length} serviço(s)</p>
+                  </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-[#6F6A8A] transition-transform ${isExpanded ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              {isExpanded && (
+                <div className="border-t border-[#DED2F8] p-5">
+                  <p className="text-xs text-[#6F6A8A] mb-4">{group.intro}</p>
+                  <div className="mb-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F6A8A] mb-2">Subcategorias</p>
+                    <div className="flex flex-wrap gap-2">{group.items.map((item) => <span key={item} className="px-3 py-1.5 bg-[#F5F0FF] text-xs text-[#565d66] rounded-full">{item}</span>)}</div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6F6A8A] mb-2">Serviços desta categoria</p>
+                    {groupProducts.length === 0 ? (
+                      <p className="text-xs text-[#6F6A8A] text-center py-6 bg-[#F5F0FF] rounded-xl">Nenhum serviço nesta categoria.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {groupProducts.map((p: any) => (
+                          <div key={p.id} className="flex items-center gap-3 p-3 bg-[#F5F0FF] rounded-xl">
+                            {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
+                            <div className="flex-1">
+                              <h5 className="text-xs font-medium text-[#221C35]">{p.name}</h5>
+                              <p className="text-[10px] text-[#6F6A8A]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                            </div>
+                            <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#6F6A8A] hover:text-[#7C3AED] transition-colors p-1"><Edit2 size={13} /></button>
+                            <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#6F6A8A] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {orphanProducts.length > 0 && (
+          <div className="bg-white rounded-2xl border border-dashed border-[#7C3AED]/40 overflow-hidden">
+            <div className="w-full flex items-center gap-4 p-5 text-left">
+              <span className="font-mono text-xs tracking-[0.2em] text-[#7C3AED]">!</span>
+              <div>
+                <h4 className="text-sm font-semibold text-[#221C35]">Sem categoria</h4>
+                <p className="text-xs text-[#6F6A8A] mt-0.5">{orphanProducts.length} serviço(s) por classificar — edita para atribuir categoria ou elimina.</p>
+              </div>
+            </div>
+            <div className="border-t border-[#DED2F8] p-5">
+              <div className="space-y-2">
+                {orphanProducts.map((p: any) => (
+                  <div key={p.id} className="flex items-center gap-3 p-3 bg-[#F5F0FF] rounded-xl">
+                    {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
+                    <div className="flex-1">
+                      <h5 className="text-xs font-medium text-[#221C35]">{p.name}</h5>
+                      <p className="text-[10px] text-[#6F6A8A]">Sem categoria {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                    </div>
+                    <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-[#6F6A8A] hover:text-[#7C3AED] transition-colors p-1"><Edit2 size={13} /></button>
+                    <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-[#6F6A8A] hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ContactosSection({ store }: { store: any }) {
+  return (
+    <div>
+      <h2 className="font-['Playfair_Display'] text-3xl text-[#221C35] mb-8">Contactos</h2>
+      <div className="bg-white rounded-2xl border border-[#DED2F8] p-8 max-w-2xl space-y-6">
+        <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
+        <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#221C35]">{store.phone}</p></div>
+        <div><label className={labelCls}>Endere�o</label><p className="text-sm text-[#221C35]">{store.address || "N�o definido"}</p></div>
+      </div>
+    </div>
+  );
+}

@@ -41,6 +41,22 @@ const THEME_MAPPINGS: ThemeMapping[] = [
     ],
   },
   {
+    theme: "Entretenimento",
+    route: "/explorar-entretenimento",
+    keywords: [
+      "entretenimento", "cinema", "filme", "música", "musica", "concerto", "teatro", "espetáculo",
+      "animação", "festa", "gaming", "game", "e-sports", "desporto", "diversão", "show"
+    ],
+    categories: [
+      { name: "Cinema & Filmes", subcategories: ["Salas de Cinema", "Cinema ao Ar Livre", "Clubes de Cinema"] },
+      { name: "Música & Concertos", subcategories: ["Concertos & Festivais", "Bandas & Artistas", "Estúdios de Música"] },
+      { name: "Teatro & Espetáculos", subcategories: ["Peças de Teatro", "Stand-Up Comedy", "Dança & Espetáculos"] },
+      { name: "Animação de Festas", subcategories: ["Animadores de Festas", "DJs & Pistas", "Insufláveis & Brinquedos"] },
+      { name: "Gaming & E-Sports", subcategories: ["Arenas Gaming", "Torneios & E-Sports", "Realidade Virtual"] },
+      { name: "Espetáculos Desportivos", subcategories: ["Jogos & Campeonatos", "Bilhetes & Acessos", "Fan Zones"] },
+    ],
+  },
+  {
     theme: "Serviços de Amor",
     route: "/explorar-love",
     keywords: [
@@ -262,6 +278,7 @@ const ROUTE_TO_STORE: Record<string, string> = {
   "/explorar-infantil": "infantil",
   "/explorar-imoveis": "imoveis",
   "/explorar-eventos": "eventos",
+  "/explorar-entretenimento": "entretenimento",
   "/explorar-love": "love-services",
   "/explorar-business": "business",
 };
@@ -453,6 +470,7 @@ const GlobalSearch = () => {
       "Infantil & Maternidade": "👶",
       "Imóveis & Alojamento": "🏘️",
       "Eventos & Celebrações": "🎉",
+      Entretenimento: "🎭",
       "Serviços de Amor": "❤️",
       "Negócios & Finanças": "💰",
     };

@@ -201,6 +201,14 @@ export const AREA_CATEGORIES: Record<string, string[]> = {
     "Design & Serviços Criativos",
     "Cerimonial & Protocolo",
   ],
+  entretenimento: [
+    "Cinema & Filmes",
+    "Música & Concertos",
+    "Teatro & Espetáculos",
+    "Animação de Festas",
+    "Gaming & E-Sports",
+    "Espetáculos Desportivos",
+  ],
 };
 
 export function getAreaCategories(storeType?: string | null): string[] {

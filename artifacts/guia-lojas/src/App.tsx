@@ -18,6 +18,8 @@ import ExploreWeddings from "@/pages/ExploreWeddings";
 import LoginWeddings from "@/pages/LoginWeddings";
 import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
+import LugaresHome from "@/pages/LugaresHome";
+import AdminLugares from "@/pages/AdminLugares";
 import MimoHome from "@/pages/MimoHome";
 import LoginLove from "@/pages/LoginLove";
 import DashboardLove from "@/pages/DashboardLove";
@@ -34,6 +36,10 @@ import EventosHome from "@/pages/EventosHome";
 import ExploreEventos from "@/pages/ExploreEventos";
 import LoginEventos from "@/pages/LoginEventos";
 import DashboardEventos from "@/pages/DashboardEventos";
+import EntretenimentoHome from "@/pages/EntretenimentoHome";
+import ExploreEntretenimento from "@/pages/ExploreEntretenimento";
+import LoginEntretenimento from "@/pages/LoginEntretenimento";
+import DashboardEntretenimento from "@/pages/DashboardEntretenimento";
 import ImoveisHome from "@/pages/ImoveisHome";
 import ExploreImoveis from "@/pages/ExploreImoveis";
 import LoginImoveis from "@/pages/LoginImoveis";
@@ -100,7 +106,7 @@ import Proposito from "@/pages/Proposito";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "entretenimento" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -138,6 +144,7 @@ function inferStoreFromUrl(): StoreType {
       business: "business",
       formacoes: "formacoes",
       eventos: "eventos",
+      entretenimento: "entretenimento",
       imoveis: "imoveis",
       infantil: "infantil",
       automoveis: "automoveis",
@@ -210,7 +217,20 @@ function Router() {
     if (location === "/proposito") {
       return <Proposito />;
     }
+    if (location === "/lugares") {
+      return <LugaresHome />;
+    }
+    if (location === "/admin-lugares") {
+      return <AdminLugares />;
+    }
     return <StoreSelector onSelect={handleStoreSelect} />;
+  }
+
+  if (location === "/lugares") {
+    return <LugaresHome />;
+  }
+  if (location === "/admin-lugares") {
+    return <AdminLugares />;
   }
 
   if (selectedStore === "weddings") {
@@ -299,6 +319,24 @@ function Router() {
           <Route path="/dashboard-eventos" component={DashboardEventos} />
           <Route>
             <EventosHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "entretenimento") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-entretenimento" component={ExploreEntretenimento} />
+          <Route path="/login-entretenimento" component={LoginEntretenimento} />
+          <Route path="/dashboard-entretenimento" component={DashboardEntretenimento} />
+          <Route>
+            <EntretenimentoHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
 

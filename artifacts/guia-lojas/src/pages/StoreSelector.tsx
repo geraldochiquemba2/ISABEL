@@ -7,7 +7,7 @@ import {
   Crown, Building2, Baby, Car, ChevronRight, ChevronDown, Search, Stethoscope, Sparkles,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Home,
   Smartphone, UtensilsCrossed, Plane, Dumbbell, Briefcase, Sprout,
-  Users, Truck, Palette,
+  Users, Truck, Palette, MapPin,
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
 
@@ -73,6 +73,16 @@ const areas = [
     gradient: "from-[#ad696b]/80 to-[#3c2731]/80",
     icon: <Crown size={24} className="text-white" />,
     accent: "#ad696b",
+  },
+  {
+    id: "entretenimento",
+    name: "Entretenimento",
+    subtitle: "Diversão para todos",
+    description: "Cinema, música, teatro, gaming e espetáculos em Angola e além. A diversão começa aqui.",
+    image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#7C3AED]/80 to-[#4C1D95]/80",
+    icon: <Sparkles size={24} className="text-white" />,
+    accent: "#7C3AED",
   },
   {
     id: "imoveis",
@@ -392,6 +402,12 @@ const categoryIcons: Record<string, React.ReactNode> = {
       <path d="M12 24h12" />
     </svg>
   ),
+  entretenimento: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+      <path d="M8 28l20-10-20-10v20z" />
+      <circle cx="18" cy="18" r="13" />
+    </svg>
+  ),
 };
 
 const PURPOSE_SLIDES = [
@@ -598,6 +614,23 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             </motion.button>
           ))}
         </div>
+      </section>
+
+      {/* Lugares: igrejas e serviços públicos */}
+      <section className="px-5 py-3">
+        <button
+          onClick={() => (window.location.href = "/lugares")}
+          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8CC91] hover:border-[#C99432] transition-colors text-left"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#FFF8EC] border border-[#E8CC91] flex items-center justify-center shrink-0">
+            <MapPin size={18} className="text-[#A96F12]" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[14px] font-semibold text-[#111111]">Serviços Públicos & Igrejas</p>
+            <p className="text-[11px] text-[#6F6F6F]">Encontre no mapa — sem conta, sem pagamento.</p>
+          </div>
+          <ChevronRight size={18} className="text-[#A96F12]" />
+        </button>
       </section>
 
       {/* Trust Badges */}

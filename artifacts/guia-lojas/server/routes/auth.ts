@@ -139,7 +139,7 @@ authRouter.post("/register", async (req, res) => {
   try {
     const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
     const { primary: normalizedCategory, all: normalizedCategories } = normalizeStoreCategories(req.body);
-    const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection");
+    const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection");
     
     // Verificar se número já existe NESTE store_type
     const exists = await pool.query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
@@ -154,6 +154,7 @@ authRouter.post("/register", async (req, res) => {
     const isBusiness = storeType === "business";
     const isFormacoes = storeType === "formacoes";
     const isEventos = storeType === "eventos";
+    const isEntretenimento = storeType === "entretenimento";
     const isImoveis = storeType === "imoveis";
     const isInfantil = storeType === "infantil";
     const isAutomoveis = storeType === "automoveis";
@@ -179,6 +180,8 @@ authRouter.post("/register", async (req, res) => {
       ? 'A minha loja na YESOLA Formações & Cursos.'
       : isEventos
       ? 'A minha loja na YESOLA Eventos & Celebrações.'
+      : isEntretenimento
+      ? 'A minha loja na YESOLA Entretenimento.'
       : isImoveis
       ? 'A minha loja na YESOLA Imóveis & Alojamento.'
       : isInfantil
@@ -210,7 +213,7 @@ authRouter.post("/register", async (req, res) => {
       : isServicosProf
       ? 'A minha loja na YESOLA Serviços Profissionais.'
       : 'A minha loja na YESOLA Collection.';
-    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : '#B89A78';
+    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isEntretenimento ? '#7C3AED' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : '#B89A78';
     const coverImage = isLove
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
@@ -221,6 +224,8 @@ authRouter.post("/register", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1524178232363-6fb168ff49fe?w=800&h=500&fit=crop&auto=format&q=80'
       : isEventos
       ? 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=500&fit=crop&auto=format&q=80'
+      : isEntretenimento
+      ? 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&h=500&fit=crop&auto=format&q=80'
       : isImoveis
       ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
       : isInfantil
@@ -410,7 +415,7 @@ authRouter.post("/link-store", async (req, res) => {
     // Se userId não fornecido, procurar por phone + store_type
     let userIdToUse = userId;
     if (!userIdToUse && phone) {
-      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection";
+      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection";
       const userResult = await pool.query("SELECT id FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
       if (!userResult.rows.length) {
         return res.status(404).json({ error: "Utilizador não encontrado." });
@@ -426,12 +431,13 @@ authRouter.post("/link-store", async (req, res) => {
     const storeId = `loja-${Date.now()}`;
     
     // Criar nova loja vinculada ao utilizador
-    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
+    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
     const isW = storeType === "weddings";
     const isL = storeType === "love-services";
     const isB = storeType === "business";
     const isF = storeType === "formacoes";
     const isE = storeType === "eventos";
+    const isEnt = storeType === "entretenimento";
     const isI = storeType === "imoveis";
     const isInf = storeType === "infantil";
     const isA = storeType === "automoveis";
@@ -447,7 +453,7 @@ authRouter.post("/link-store", async (req, res) => {
     const isInf2 = storeType === "influenciadores-criadores";
     const isTra = storeType === "transportes-logistica";
     const isSer = storeType === "servicos-profissionais";
-    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : '#B89A78';
+    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isEnt ? '#7C3AED' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : '#B89A78';
     const linkCoverImage = isL
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isW
@@ -458,6 +464,8 @@ authRouter.post("/link-store", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1524178232363-6fb168ff49fe?w=800&h=500&fit=crop&auto=format&q=80'
       : isE
       ? 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=500&fit=crop&auto=format&q=80'
+      : isEnt
+      ? 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&h=500&fit=crop&auto=format&q=80'
       : isI
       ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
       : isInf
@@ -499,7 +507,7 @@ authRouter.post("/link-store", async (req, res) => {
         normalizedCategories,
         address || '',
         phone || '',
-        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : 'A minha loja na YESOLA Collection.',
+        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isEnt ? 'A minha loja na YESOLA Entretenimento.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : 'A minha loja na YESOLA Collection.',
         linkCoverColor,
         linkCoverImage,
         province || '',

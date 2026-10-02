@@ -401,6 +401,65 @@ export async function rejectPasswordReset(requestId: number): Promise<void> {
   if (!res.ok) throw new Error("Erro ao rejeitar pedido");
 }
 
+// ── Lugares (igrejas e serviços públicos, sem assinatura) ──
+export interface Place {
+  id: number; name: string; kind: string; category?: string; address?: string;
+  province?: string; municipality?: string; locality?: string;
+  latitude?: number | null; longitude?: number | null;
+  phone?: string; source?: string; osmId?: string;
+}
+
+export async function fetchPlaces(filters?: {
+  kind?: string; province?: string; municipality?: string; q?: string;
+}): Promise<Place[]> {
+  const params = new URLSearchParams();
+  if (filters?.kind) params.append("kind", filters.kind);
+  if (filters?.province) params.append("province", filters.province);
+  if (filters?.municipality) params.append("municipality", filters.municipality);
+  if (filters?.q) params.append("q", filters.q);
+  const res = await fetch(`/api/places?${params.toString()}`);
+  if (!res.ok) throw new Error("Erro ao buscar lugares");
+  return res.json();
+}
+
+export async function createPlace(data: Partial<Place>): Promise<{ success: boolean; id: number }> {
+  const res = await fetch("/api/places", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro ao criar lugar");
+  return json;
+}
+
+export async function updatePlace(id: number, data: Partial<Place>): Promise<void> {
+  const res = await fetch(`/api/places/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Erro ao atualizar lugar");
+}
+
+export async function deletePlace(id: number): Promise<void> {
+  const res = await fetch(`/api/places/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Erro ao remover lugar");
+}
+
+export async function importPlaces(bbox: {
+  minLat: number; minLon: number; maxLat: number; maxLon: number; amenities?: string[];
+}): Promise<{ success: boolean; imported: number; skipped: number; total: number }> {
+  const res = await fetch("/api/places/import", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bbox),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Erro na importação");
+  return json;
+}
+
 // ── WhatsApp Click Tracking ────────────────────────────────
 export async function trackWhatsAppClick(storeId: string): Promise<void> {
   await fetch(`/api/stores/${storeId}/whatsapp-click`, { method: "PATCH" });

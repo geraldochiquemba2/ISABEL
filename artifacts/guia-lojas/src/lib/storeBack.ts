@@ -21,6 +21,7 @@ const FROM_MAP: Record<string, string> = {
   business: "business",
   formacoes: "formacoes",
   eventos: "eventos",
+  entretenimento: "entretenimento",
   imoveis: "imoveis",
   infantil: "infantil",
   automoveis: "automoveis",
