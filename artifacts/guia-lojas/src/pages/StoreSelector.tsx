@@ -524,7 +524,8 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
           <h1 className="text-[32px] leading-[1.1] font-semibold text-[#111111]" style={{ fontFamily: "'Playfair Display', serif" }}>
             Tudo o que<br />
             procuras,<br />
-            <span className="text-[#C99432]">encontras aqui.</span>
+            encontras<br />
+            <span className="text-[#C99432]">aqui.</span>
           </h1>
           <p className="text-[13px] text-[#6F6F6F] mt-4 leading-relaxed">
             Soluções completas<br />
