@@ -246,12 +246,14 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
             </div>
 
             {selectedProvince && (
+              <div className="sticky bottom-0 z-10 bg-white/95 backdrop-blur-sm pt-3 pb-1">
               <button
                 onClick={handleProvinceSelect}
-                className="w-full mt-6 bg-[#0B2D56] text-white py-3 rounded-xl font-medium hover:bg-[#091E3A] transition-colors"
+                className="w-full bg-[#0B2D56] text-white py-3 rounded-xl font-medium hover:bg-[#091E3A] transition-colors"
               >
                 {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
+              </div>
             )}
           </div>
         </div>

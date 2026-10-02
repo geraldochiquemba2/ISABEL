@@ -250,12 +250,14 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
               )}
             </div>
             {selectedProvince && (
+              <div className="sticky bottom-0 z-10 bg-white/95 backdrop-blur-sm pt-3 pb-1">
               <button
                 onClick={handleProvinceSelect}
-                className="w-full mt-6 bg-[#D8B532] text-white py-3 rounded-xl font-medium hover:bg-[#B8962A] transition-colors"
+                className="w-full bg-[#D8B532] text-white py-3 rounded-xl font-medium hover:bg-[#B8962A] transition-colors"
               >
                 {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
+              </div>
             )}
           </div>
         </div>

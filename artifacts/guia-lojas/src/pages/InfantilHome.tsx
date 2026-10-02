@@ -246,12 +246,14 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
             </div>
 
             {selectedProvince && (
+              <div className="sticky bottom-0 z-10 bg-white/95 backdrop-blur-sm pt-3 pb-1">
               <button
                 onClick={handleProvinceSelect}
-                className="w-full mt-6 bg-[#F7C948] text-white py-3 rounded-xl font-medium hover:bg-[#C89B62] transition-colors"
+                className="w-full bg-[#F7C948] text-white py-3 rounded-xl font-medium hover:bg-[#C89B62] transition-colors"
               >
                 {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
+              </div>
             )}
           </div>
         </div>

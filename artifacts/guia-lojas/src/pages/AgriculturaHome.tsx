@@ -238,12 +238,14 @@ export default function AgriculturaHome({ onBackToSelector }: { onBackToSelector
               )}
             </div>
             {selectedProvince && (
+              <div className="sticky bottom-0 z-10 bg-white/95 backdrop-blur-sm pt-3 pb-1">
               <button
                 onClick={handleProvinceSelect}
-                className="w-full mt-6 bg-[#2E7D32] text-white py-3 rounded-xl font-medium hover:bg-[#1B5E20] transition-colors"
+                className="w-full bg-[#2E7D32] text-white py-3 rounded-xl font-medium hover:bg-[#1B5E20] transition-colors"
               >
                 {selectedMunicipality ? `Explorar em ${selectedMunicipality}` : `Explorar em ${selectedProvince}`}
               </button>
+              </div>
             )}
           </div>
         </div>
