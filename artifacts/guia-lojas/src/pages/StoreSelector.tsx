@@ -470,8 +470,8 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
         </div>
         <div className="absolute right-0 top-0 w-[55%] h-full">
           <img
-            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&h=400&fit=crop&auto=format&q=80"
-            alt="Mulher feliz"
+            src="/tudo-que-procura.jpg"
+            alt="Tudo o que procuras, encontras aqui"
             className="w-full h-full object-cover object-top"
             style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }}
           />
