@@ -234,16 +234,6 @@ const areas = [
     icon: <Users size={24} className="text-white" />,
     accent: "#C2185B",
   },
-  {
-    id: "empregos-oportunidades",
-    name: "Empregos & Oportunidades",
-    subtitle: "O seu próximo passo",
-    description: "Vagas de emprego, estágios, trabalho freelancer e recrutamento. Encontre a oportunidade certa em Angola.",
-    image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=600&fit=crop&auto=format&q=80",
-    gradient: "from-[#4527A0]/80 to-[#311B92]/80",
-    icon: <Briefcase size={24} className="text-white" />,
-    accent: "#4527A0",
-  },
 ];
 
 
