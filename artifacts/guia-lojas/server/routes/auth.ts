@@ -388,6 +388,23 @@ authRouter.put("/change-password", async (req, res) => {
   }
 });
 
+// POST /api/auth/admin-login — Entrar na administração (ex: lugares)
+authRouter.post("/admin-login", async (req, res) => {
+  try {
+    const { phone, password } = req.body;
+    if (!phone || !password) return res.status(400).json({ error: "Dados inválidos." });
+    const result = await pool.query(
+      "SELECT id FROM users WHERE phone=$1 AND password=$2 AND phone='999999999' LIMIT 1",
+      [phone, password]
+    );
+    if (!result.rows.length) return res.status(400).json({ error: "Credenciais de administrador inválidas." });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao entrar." });
+  }
+});
+
 // GET /api/auth/status/:id — Obter status atual do utilizador
 authRouter.get("/status/:id", async (req, res) => {
   try {

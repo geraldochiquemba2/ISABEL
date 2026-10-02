@@ -20,6 +20,8 @@ import DashboardWeddings from "@/pages/DashboardWeddings";
 import StoreSelector from "@/pages/StoreSelector";
 import LugaresHome from "@/pages/LugaresHome";
 import AdminLugares from "@/pages/AdminLugares";
+import ExploreLugares from "@/pages/ExploreLugares";
+import LoginLugares from "@/pages/LoginLugares";
 import MimoHome from "@/pages/MimoHome";
 import LoginLove from "@/pages/LoginLove";
 import DashboardLove from "@/pages/DashboardLove";
@@ -220,6 +222,12 @@ function Router() {
     if (location === "/lugares") {
       return <LugaresHome />;
     }
+    if (location === "/explorar-lugares") {
+      return <ExploreLugares />;
+    }
+    if (location === "/login-lugares") {
+      return <LoginLugares />;
+    }
     if (location === "/admin-lugares") {
       return <AdminLugares />;
     }
@@ -228,6 +236,12 @@ function Router() {
 
   if (location === "/lugares") {
     return <LugaresHome />;
+  }
+  if (location === "/explorar-lugares") {
+    return <ExploreLugares />;
+  }
+  if (location === "/login-lugares") {
+    return <LoginLugares />;
   }
   if (location === "/admin-lugares") {
     return <AdminLugares />;

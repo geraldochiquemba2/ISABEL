@@ -234,6 +234,16 @@ const areas = [
     icon: <Palette size={24} className="text-white" />,
     accent: "#1A237E",
   },
+  {
+    id: "lugares",
+    name: "Serviços Públicos & Igrejas",
+    subtitle: "Perto de si",
+    description: "Encontre igrejas e serviços públicos no mapa — sem conta, sem pagamento.",
+    image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#A96F12]/80 to-[#6F4E0B]/80",
+    icon: <MapPin size={24} className="text-white" />,
+    accent: "#A96F12",
+  },
 ];
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -406,6 +416,12 @@ const categoryIcons: Record<string, React.ReactNode> = {
     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
       <path d="M8 28l20-10-20-10v20z" />
       <circle cx="18" cy="18" r="13" />
+    </svg>
+  ),
+  lugares: (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+      <path d="M18 30s-8-6.5-8-13a8 8 0 0 1 16 0c0 6.5-8 13-8 13z" />
+      <circle cx="18" cy="17" r="3" />
     </svg>
   ),
 };
@@ -610,7 +626,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
               key={area.id}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => onSelect(area.id)}
+              onClick={() => area.id === "lugares" ? (window.location.href = "/lugares") : onSelect(area.id)}
               className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border bg-white border-[#E8CC91] hover:border-[#B89A78]/30 hover:bg-[#FFFFFF] transition-all cursor-pointer"
             >
               <div className="flex items-center justify-center w-12 h-12">{categoryIcons[area.id]}</div>
@@ -618,23 +634,6 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             </motion.button>
           ))}
         </div>
-      </section>
-
-      {/* Lugares: igrejas e serviços públicos */}
-      <section className="px-5 py-3">
-        <button
-          onClick={() => (window.location.href = "/lugares")}
-          className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E8CC91] hover:border-[#C99432] transition-colors text-left"
-        >
-          <div className="w-10 h-10 rounded-full bg-[#FFF8EC] border border-[#E8CC91] flex items-center justify-center shrink-0">
-            <MapPin size={18} className="text-[#A96F12]" />
-          </div>
-          <div className="flex-1">
-            <p className="text-[14px] font-semibold text-[#111111]">Serviços Públicos & Igrejas</p>
-            <p className="text-[11px] text-[#6F6F6F]">Encontre no mapa — sem conta, sem pagamento.</p>
-          </div>
-          <ChevronRight size={18} className="text-[#A96F12]" />
-        </button>
       </section>
 
       {/* Trust Badges */}

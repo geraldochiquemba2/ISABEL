@@ -23,7 +23,7 @@ const TRUST_BADGES = [
   { icon: <HeadphonesIcon size={18} />, label: "Apoio dedicado" },
 ];
 
-function mapLink(p: Place) {
+export function mapLink(p: Place) {
   if (p.latitude != null && p.longitude != null) {
     return `https://www.google.com/maps?q=${p.latitude},${p.longitude}`;
   }
@@ -37,7 +37,7 @@ const KIND_IMG: Record<string, string> = {
 };
 
 // Mesmo cartão das lojas (StoreCard): foto, nome, categoria, localização.
-function PlaceCard({ p }: { p: Place }) {
+export function PlaceCard({ p }: { p: Place }) {
   return (
     <div
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
@@ -46,7 +46,7 @@ function PlaceCard({ p }: { p: Place }) {
       <div className="relative h-28 overflow-hidden">
         <img src={KIND_IMG[p.kind] || KIND_IMG["servico-publico"]} alt={p.name} className="w-full h-full object-cover object-top" />
         <span className="absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 bg-white/90 text-[#A96F12]">
-          {p.source === "osm" ? "Do mapa" : "YESOLA"}
+          {p.source === "osm" ? "Do mapa" : p.source === "comunidade" ? "Comunidade" : "YESOLA"}
         </span>
         {p.phone && (
           <a
@@ -129,22 +129,21 @@ export default function LugaresHome() {
 
         {/* Header */}
         <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-md border-b border-[#E8CC91]/60">
-          <div className="flex items-center gap-3 px-5 py-4">
-            <button onClick={() => (window.location.href = "/")} className="p-1" aria-label="Voltar">
-              <ArrowLeft size={22} />
-            </button>
-            <div className="flex-1 text-center">
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", fontWeight: 600 }}>YESOLA</span>
-              <span className="block text-[9px] tracking-[0.25em] text-[#A96F12] font-semibold uppercase">Lugares</span>
-            </div>
+          <div className="flex items-center justify-between px-5 py-4">
             <button onClick={() => setMenuOpen(!menuOpen)} className="p-1" aria-label="Menu">
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
+            <div className="flex flex-col items-center">
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", fontWeight: 600 }}>YESOLA</span>
+              <span className="text-[9px] tracking-[0.25em] text-[#A96F12] font-semibold uppercase mt-0.5">Lugares</span>
+            </div>
+            <span className="w-[30px]" />
           </div>
           {menuOpen && (
             <div className="bg-[#FFFDF8] border-t border-[#E8CC91]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+              <button onClick={() => (window.location.href = "/login-lugares")} className="py-2 text-left">Entrar</button>
+              <button onClick={() => (window.location.href = "/explorar-lugares")} className="py-2 text-left">Explorar</button>
               <button onClick={() => (window.location.href = "/")} className="py-2 text-left">Início</button>
-              <button onClick={() => (window.location.href = "/admin-lugares")} className="py-2 text-left">Administração</button>
             </div>
           )}
         </header>
@@ -281,10 +280,15 @@ export default function LugaresHome() {
 
         {/* Lugares por categoria */}
         <div id="lugares-lista" className="px-5 py-4 space-y-6">
-          <p className="text-xs text-[#6F6F6F]">
-            {isLoading ? "A carregar..." : `${places.length} resultado(s)`}
-            <span className="ml-2">toque no cartão para abrir no mapa</span>
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-[#6F6F6F]">
+              {isLoading ? "A carregar..." : `${places.length} resultado(s)`}
+            </p>
+            <button onClick={() => (window.location.href = "/explorar-lugares")} className="text-xs font-semibold text-[#A96F12] flex items-center gap-1">
+              Ver todas <ChevronRight size={14} />
+            </button>
+          </div>
+          <p className="text-[11px] text-[#9CA3AF] -mt-4">toque no cartão para abrir no mapa</p>
           {catsToShow.map((c) => {
             const list = forCat(c);
             const Icon = c === "Igrejas" ? Church : Landmark;

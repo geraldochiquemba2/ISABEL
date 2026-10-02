@@ -401,6 +401,17 @@ export async function rejectPasswordReset(requestId: number): Promise<void> {
   if (!res.ok) throw new Error("Erro ao rejeitar pedido");
 }
 
+// POST /api/auth/admin-login — Entrar na administração (lugares)
+export async function adminLogin(phone: string, password: string): Promise<void> {
+  const res = await fetch("/api/auth/admin-login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, password }),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error || "Credenciais inválidas");
+}
+
 // ── Lugares (igrejas e serviços públicos, sem assinatura) ──
 export interface Place {
   id: number; name: string; kind: string; category?: string; address?: string;

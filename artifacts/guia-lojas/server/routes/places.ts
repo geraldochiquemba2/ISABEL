@@ -51,10 +51,11 @@ placesRouter.post("/", async (req, res) => {
     const { name, kind, category, address, province, municipality, locality, latitude, longitude, phone } = req.body;
     if (!name || !String(name).trim()) return res.status(400).json({ error: "Nome é obrigatório." });
     if (kind && !["igreja", "servico-publico"].includes(kind)) return res.status(400).json({ error: "Tipo inválido." });
+    const source = req.body.source === "comunidade" ? "comunidade" : "manual";
     const result = await pool.query(
       `INSERT INTO places (name, kind, category, address, province, municipality, locality, latitude, longitude, phone, source)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'manual') RETURNING id`,
-      [String(name).trim(), kind || "igreja", category || "", address || "", province || "", municipality || "", locality || "", latitude || null, longitude || null, phone || ""]
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id`,
+      [String(name).trim(), kind || "igreja", category || "", address || "", province || "", municipality || "", locality || "", latitude || null, longitude || null, phone || "", source]
     );
     res.json({ success: true, id: result.rows[0].id });
   } catch (err) {
