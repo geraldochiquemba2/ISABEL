@@ -1,131 +1,296 @@
 import { useState } from "react";
-import { Eye, EyeOff, ArrowLeft, MapPin } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { adminLogin, createPlace } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { PageTransition } from "@/components/PageTransition";
+import MapPicker from "@/components/MapPicker";
+import CategoryMultiSelect from "@/components/CategoryMultiSelect";
+import LocationCombobox from "@/components/LocationCombobox";
+import { getLocalities } from "@/lib/locationIndex";
 
-const inputCls = "w-full border border-[#E8CC91] bg-white py-3 px-4 text-sm outline-none focus:border-[#C99432] transition-all rounded-xl";
+const LUGARES_CATEGORIES = [
+  "Igreja",
+  "Saúde",
+  "Segurança",
+  "Educação",
+  "Correios",
+  "Administração",
+  "Lazer & Cultura",
+];
+
+const loginSchema = z.object({
+  phone: z.string().regex(/^\d{9}$/, "Número deve ter exatamente 9 dígitos"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
+});
+
+const registerSchema = z.object({
+  storeName: z.string().min(2, "Nome muito curto").regex(/[a-zA-ZáàâãéèêíïóôõúüçÁÀÂÃÉÈÊÍÏÓÔÕÚÜÇ]/, "O nome deve conter pelo menos uma letra"),
+  phone: z.string().regex(/^\d{9}$/, "Número deve ter exatamente 9 dígitos"),
+  category: z.string().min(1, "Selecione a categoria"),
+  categories: z.array(z.string()).min(1, "Selecione pelo menos 1 categoria").max(4, "Máximo 4 categorias"),
+  locality: z.string().optional(),
+  province: z.string().min(1, "Selecione a província"),
+  municipality: z.string().min(1, "Selecione o município"),
+  address: z.string().min(2, "Endereço muito curto"),
+});
+
+type LoginValues = z.infer<typeof loginSchema>;
+type RegisterValues = z.infer<typeof registerSchema>;
+
+const inputCls =
+  "w-full border border-[#E8CC91] bg-white py-3 px-4 text-sm text-[#111111] placeholder:text-[#6F6F6F] outline-none focus:border-[#A96F12] focus:ring-2 focus:ring-[#A96F12]/10 transition-all rounded-xl";
+const labelCls = "block text-xs text-[#6F6F6F] font-semibold uppercase tracking-wider mb-1.5";
+
+function FieldError({ msg }: { msg?: string }) {
+  return msg ? <p className="text-xs text-red-500 mt-1">{msg}</p> : null;
+}
 
 export default function LoginLugares() {
-  const [mode, setMode] = useState<"login" | "sugerir">("login");
+  const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");
-  const [ok, setOk] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
 
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register: loginReg,
+    handleSubmit: loginSubmit,
+    formState: { errors: loginErr },
+  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
-  const [form, setForm] = useState<any>({
-    name: "", kind: "igreja", category: "", address: "",
-    province: "", municipality: "", latitude: "", longitude: "", phone: "",
-  });
-  const set = (k: string, v: string) => setForm((f: any) => ({ ...f, [k]: v }));
+  const {
+    register: regReg,
+    handleSubmit: regSubmit,
+    watch,
+    setValue,
+    formState: { errors: regErr },
+  } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema), defaultValues: { categories: [] as string[], locality: "" } });
 
-  async function onLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setError(""); setLoading(true);
+  const selectedProvinceName = watch("province");
+  const selectedProvince = ANGOLA_PROVINCES.find((p) => p.name === selectedProvinceName);
+  const municipalities = selectedProvince ? selectedProvince.municipalities : [];
+
+  const onLoginSubmit = async (values: LoginValues) => {
+    setError("");
     try {
-      await adminLogin(phone, password);
-      localStorage.setItem("lugares-admin", JSON.stringify({ phone, at: Date.now() }));
-      window.location.href = "/admin-lugares";
+      await adminLogin(values.phone, values.password);
+      localStorage.setItem("lugares-admin", JSON.stringify({ phone: values.phone, at: Date.now() }));
+      setSubmitted(true);
+      setTimeout(() => (window.location.href = "/admin-lugares"), 1000);
     } catch (err: any) {
       setError(err.message || "Não foi possível entrar.");
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
-  async function onSuggest(e: React.FormEvent) {
-    e.preventDefault();
-    setError(""); setOk(""); setLoading(true);
+  const onRegisterSubmit = async (values: RegisterValues) => {
+    setError("");
     try {
-      if (!form.name.trim()) throw new Error("Indique o nome do lugar.");
+      const cats = values.categories ?? [];
       await createPlace({
-        ...form,
+        name: values.storeName,
+        kind: cats.some((c) => c.toLowerCase().includes("igreja")) ? "igreja" : "servico-publico",
+        category: cats[0] || "",
+        address: values.address,
+        province: values.province,
+        municipality: values.municipality,
+        locality: values.locality || "",
+        latitude: latitude || undefined,
+        longitude: longitude || undefined,
+        phone: values.phone,
         source: "comunidade",
-        latitude: form.latitude ? Number(form.latitude) : null,
-        longitude: form.longitude ? Number(form.longitude) : null,
-      });
-      setOk("Obrigado! A sugestão foi registada e ficará visível após verificação.");
-      setForm({ name: "", kind: "igreja", category: "", address: "", province: "", municipality: "", latitude: "", longitude: "", phone: "" });
+      } as any);
+      setSubmitted(true);
+      setTimeout(() => (window.location.href = "/lugares"), 1500);
     } catch (err: any) {
       setError(err.message || "Não foi possível registar.");
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
   return (
-    <PageTransition>
-      <div className="min-h-[100dvh] bg-[#FFFDF8] pb-10" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-        <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 border-b border-[#E8CC91]/60">
-          <div className="flex items-center gap-3 px-5 py-4">
-            <button onClick={() => (window.location.href = "/lugares")} className="p-1" aria-label="Voltar">
-              <ArrowLeft size={22} />
-            </button>
-            <h1 className="text-[18px] font-bold">Lugares — acesso</h1>
+    <main className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
+        <button
+          onClick={() => (window.location.href = "/lugares")}
+          className="flex items-center gap-2 text-sm text-[#A96F12] hover:text-[#111111] transition-colors mb-12"
+        >
+          <ArrowLeft size={16} />
+          Voltar
+        </button>
+
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center gap-3 mb-10">
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#111111" }}>YESOLA<small style={{ display: "block", color: "#A96F12", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Lugares</small></span>
           </div>
-          <div className="flex gap-2 px-5 pb-3">
-            {(["login", "sugerir"] as const).map((m) => (
+
+          <div className="flex gap-6 mb-8 border-b border-[#E8CC91]">
+            {(["login", "register"] as const).map((m) => (
               <button
                 key={m}
-                onClick={() => { setMode(m); setError(""); setOk(""); }}
-                className={`px-4 py-2 rounded-full text-xs font-semibold ${mode === m ? "bg-black text-white" : "bg-white border border-gray-200"}`}
+                onClick={() => { setMode(m); setSubmitted(false); setError(""); }}
+                className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                  mode === m
+                    ? "border-[#A96F12] text-[#A96F12]"
+                    : "border-transparent text-[#6F6F6F] hover:text-[#A96F12]"
+                }`}
               >
-                {m === "login" ? "Entrar" : "Sugerir lugar"}
+                {m === "login" ? "Entrar" : "Criar conta"}
               </button>
             ))}
           </div>
-        </header>
 
-        <section className="px-5 pt-4 max-w-md mx-auto">
-          {error && <p className="text-xs bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 mb-3">{error}</p>}
-          {ok && <p className="text-xs bg-green-50 border border-green-200 text-green-700 rounded-xl p-3 mb-3">{ok}</p>}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 text-xs mb-6 font-medium">
+              {error}
+            </div>
+          )}
 
-          {mode === "login" ? (
-            <form onSubmit={onLogin} className="space-y-3 bg-white border border-[#E8CC91] rounded-2xl p-4">
-              <h2 className="text-sm font-bold">Administração de lugares</h2>
-              <p className="text-[11px] text-gray-500">Acesso reservado ao administrador YESOLA.</p>
-              <input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 9))} placeholder="Telemóvel (9 dígitos)" inputMode="numeric" className={inputCls} />
-              <div className="relative">
-                <input type={showPwd ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Palavra-passe" className={`${inputCls} pr-10`} />
-                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+          {submitted ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
+              <p className="text-sm font-medium text-[#A96F12] mb-1">
+                {mode === "login" ? "Login realizado com sucesso!" : "Lugar registado com sucesso!"}
+              </p>
+              <p className="text-xs text-[#6F6F6F] mb-6">Redirecionando...</p>
+            </motion.div>
+          ) : mode === "login" ? (
+            <form onSubmit={loginSubmit(onLoginSubmit)} className="space-y-6">
+              <div>
+                <label className={labelCls}>Número de Telefone</label>
+                <input type="tel" placeholder="Ex: 922001778" className={inputCls} {...loginReg("phone")} />
+                <FieldError msg={loginErr.phone?.message} />
               </div>
-              <button disabled={loading} className="w-full bg-black text-white py-3 rounded-full text-sm font-semibold disabled:opacity-50">
-                {loading ? "A entrar..." : "Entrar"}
+
+              <div>
+                <label className={labelCls}>Senha</label>
+                <div className="relative">
+                  <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F6F6F]">
+                    {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                <FieldError msg={loginErr.password?.message} />
+              </div>
+
+              <p className="text-[11px] text-[#6F6F6F]">Acesso reservado à administração de lugares.</p>
+
+              <button type="submit" className="w-full bg-[#A96F12] text-white py-3 text-sm font-medium rounded-full hover:bg-[#111111] transition-colors">
+                Entrar
               </button>
             </form>
           ) : (
-            <form onSubmit={onSuggest} className="space-y-3 bg-white border border-[#E8CC91] rounded-2xl p-4">
-              <h2 className="text-sm font-bold">Sugerir igreja ou serviço público</h2>
-              <p className="text-[11px] text-gray-500">Conhece um lugar em falta? Sugira aqui — é grátis.</p>
-              <input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Nome do lugar *" className={inputCls} />
-              <div className="grid grid-cols-2 gap-3">
-                <select value={form.kind} onChange={(e) => set("kind", e.target.value)} className={inputCls}>
-                  <option value="igreja">Igreja</option>
-                  <option value="servico-publico">Serviço Público</option>
-                </select>
-                <input value={form.category} onChange={(e) => set("category", e.target.value)} placeholder="Categoria" className={inputCls} />
+            <form onSubmit={regSubmit(onRegisterSubmit)} className="space-y-5">
+              <div>
+                <label className={labelCls}>Nome do Lugar</label>
+                <input type="text" placeholder="Nome da igreja ou serviço" className={inputCls} {...regReg("storeName")} />
+                <FieldError msg={regErr.storeName?.message} />
               </div>
-              <input value={form.address} onChange={(e) => set("address", e.target.value)} placeholder="Endereço / referência" className={inputCls} />
-              <div className="grid grid-cols-2 gap-3">
-                <select value={form.province} onChange={(e) => set("province", e.target.value)} className={inputCls}>
-                  <option value="">Província</option>
-                  {ANGOLA_PROVINCES.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}
-                </select>
-                <input value={form.municipality} onChange={(e) => set("municipality", e.target.value)} placeholder="Município" className={inputCls} />
+
+              <div>
+                <label className={labelCls}>Número de Telefone</label>
+                <input type="tel" placeholder="Ex: 999999999" className={inputCls} {...regReg("phone")} />
+                <FieldError msg={regErr.phone?.message} />
               </div>
-              <button disabled={loading} className="w-full bg-[#A96F12] text-white py-3 rounded-full text-sm font-semibold disabled:opacity-50">
-                {loading ? "A registar..." : "Sugerir lugar"}
+
+              <div>
+                <label className={labelCls}>Categorias (até 4)</label>
+                <CategoryMultiSelect options={LUGARES_CATEGORIES} value={watch("categories") ?? []} onChange={(next)=>{setValue("categories", next, {shouldValidate:true}); setValue("category", next[0] || "", {shouldValidate:true});}} accent="#A96F12" />
+                <FieldError msg={regErr.categories?.message} />
+              </div>
+
+              <div>
+                <label className={labelCls}>Província (Angola)</label>
+                <LocationCombobox value={watch("province") ?? ""} options={ANGOLA_PROVINCES.map(p=>p.name)} onChange={(v)=>{setValue("province", v, {shouldValidate:true}); setValue("municipality","",{shouldValidate:true}); setValue("locality","",{shouldValidate:true});}} placeholder="Selecione a Província" accent="#A96F12" />
+                <FieldError msg={regErr.province?.message} />
+              </div>
+
+              <div>
+                <label className={labelCls}>Município</label>
+                <LocationCombobox value={watch("municipality") ?? ""} options={municipalities} onChange={(v)=>{setValue("municipality", v, {shouldValidate:true}); setValue("locality","",{shouldValidate:true});}} placeholder={selectedProvinceName ? "Selecione o Município" : "Selecione a província primeiro"} disabled={!selectedProvinceName} accent="#A96F12" />
+                <FieldError msg={regErr.municipality?.message} />
+              </div>
+
+              <div>
+                <label className={labelCls}>Localidade exacta (opcional)</label>
+                <LocationCombobox value={watch("locality") ?? ""} options={getLocalities(watch("province") ?? "", watch("municipality") ?? "")} onChange={(v)=>setValue("locality", v, {shouldValidate:true})} placeholder="Ex: Benfica, Cazenga..." disabled={!watch("municipality")} accent="#A96F12" />
+              </div>
+
+              <div>
+                <label className={labelCls}>Endereço detalhado</label>
+                <input type="text" placeholder="Rua, Bairro, ponto de referência" className={inputCls} {...regReg("address")} />
+                <FieldError msg={regErr.address?.message} />
+              </div>
+
+              {/* Mapa de Localização */}
+              <div>
+                <label className={labelCls}>Localização no Mapa (Opcional)</label>
+                <button
+                  type="button"
+                  onClick={() => setShowMapPicker(true)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 border rounded-xl transition-colors ${
+                    latitude && longitude
+                      ? "border-[#1565C0] bg-blue-50"
+                      : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    latitude && longitude ? "bg-[#1565C0]" : "bg-gray-200"
+                  }`}>
+                    <MapPin size={16} className={latitude && longitude ? "text-white" : "text-gray-500"} />
+                  </div>
+                  <div className="text-left flex-1">
+                    {latitude && longitude ? (
+                      <>
+                        <p className="text-sm font-medium text-gray-900">Localização definida</p>
+                        <p className="text-xs text-gray-500 font-mono">{latitude.toFixed(6)}, {longitude.toFixed(6)}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-medium text-gray-700">Marcar localização no mapa</p>
+                        <p className="text-xs text-gray-400">Toque para abrir o mapa e marcar o ponto exacto</p>
+                      </>
+                    )}
+                  </div>
+                  <Navigation size={16} className={latitude && longitude ? "text-[#1565C0]" : "text-gray-400"} />
+                </button>
+                {latitude && longitude && (
+                  <button
+                    type="button"
+                    onClick={() => { setLatitude(null); setLongitude(null); }}
+                    className="text-xs text-red-500 hover:text-red-600 mt-1 ml-1"
+                  >
+                    Remover localização
+                  </button>
+                )}
+              </div>
+
+              {/* Map Picker Modal */}
+              {showMapPicker && (
+                <MapPicker
+                  initialLatitude={latitude || undefined}
+                  initialLongitude={longitude || undefined}
+                  province={watch("province")}
+                  municipality={watch("municipality")}
+                  onLocationSelect={(lat, lng) => {
+                    setLatitude(lat);
+                    setLongitude(lng);
+                    setShowMapPicker(false);
+                  }}
+                  onClose={() => setShowMapPicker(false)}
+                />
+              )}
+
+              <button type="submit" className="w-full bg-[#A96F12] text-white py-3 text-sm font-medium rounded-full hover:bg-[#111111] transition-colors">
+                Criar conta
               </button>
-              <p className="text-[11px] text-gray-500 flex items-center gap-1"><MapPin size={11} /> Se souber as coordenadas, a equipa YESOLA completa depois.</p>
             </form>
           )}
-        </section>
+        </div>
       </div>
-    </PageTransition>
+    </main>
   );
 }
