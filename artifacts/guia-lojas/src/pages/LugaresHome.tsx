@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin, Search, Phone, Navigation, Church, Landmark, ArrowLeft } from "lucide-react";
+import { MapPin, Search, Phone, ArrowLeft, Church, Landmark } from "lucide-react";
 import { fetchPlaces, type Place } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { PageTransition } from "@/components/PageTransition";
@@ -19,6 +19,50 @@ function mapLink(p: Place) {
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
+const KIND_IMG: Record<string, string> = {
+  igreja: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=400&h=300&fit=crop&auto=format&q=75",
+  "servico-publico": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop&auto=format&q=75",
+};
+
+// Mesmo cartão das lojas (StoreCard): foto, nome, categoria, localização.
+function PlaceCard({ p }: { p: Place }) {
+  return (
+    <div
+      className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
+      onClick={() => window.open(mapLink(p), "_blank", "noopener")}
+    >
+      <div className="relative h-28 overflow-hidden">
+        <img src={KIND_IMG[p.kind] || KIND_IMG["servico-publico"]} alt={p.name} className="w-full h-full object-cover object-top" />
+        <span className="absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 bg-white/90 text-[#A96F12]">
+          {p.source === "osm" ? "Do mapa" : "YESOLA"}
+        </span>
+        {p.phone && (
+          <a
+            href={`tel:${p.phone}`}
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Ligar"
+            className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center backdrop-blur-sm z-30 transition-transform hover:scale-110"
+          >
+            <Phone size={12} />
+          </a>
+        )}
+      </div>
+      <div className="p-3">
+        <h4 className="text-sm font-semibold text-[#2D2C2B] truncate">{p.name}</h4>
+        <p className="text-[10px] text-[#87909a] mt-1 truncate">
+          {p.category || (p.kind === "igreja" ? "Igreja" : "Serviço Público")}
+        </p>
+        <div className="flex items-center gap-1 mt-1">
+          <MapPin size={10} className="text-[#9CA3AF]" />
+          <span className="text-[10px] text-[#9CA3AF] truncate">
+            {[p.municipality, p.province].filter(Boolean).join(" · ") || "Angola"}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LugaresHome() {
   const [q, setQ] = useState("");
   const [kind, setKind] = useState("");
@@ -33,6 +77,9 @@ export default function LugaresHome() {
     }),
     staleTime: 60_000,
   });
+
+  const igrejas = places.filter((p: Place) => p.kind === "igreja");
+  const servicos = places.filter((p: Place) => p.kind !== "igreja");
 
   return (
     <PageTransition>
@@ -84,58 +131,58 @@ export default function LugaresHome() {
           </select>
         </section>
 
-        <section className="px-5 pt-4">
-          <p className="text-xs text-[#6F6F6F] mb-3">{isLoading ? "A carregar..." : `${places.length} resultado(s)`}</p>
-          <div className="space-y-3">
-            {places.map((p: Place) => (
-              <div key={p.id} className="bg-white border border-[#E8CC91] rounded-2xl p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFF8EC] border border-[#E8CC91] flex items-center justify-center shrink-0">
-                    {p.kind === "igreja"
-                      ? <Church size={18} className="text-[#A96F12]" />
-                      : <Landmark size={18} className="text-[#A96F12]" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-bold truncate">{p.name}</h3>
-                    <p className="text-[11px] text-[#A96F12] font-medium">
-                      {p.category || (p.kind === "igreja" ? "Igreja" : "Serviço Público")}
-                    </p>
-                    {(p.address || p.municipality || p.province) && (
-                      <p className="text-[11px] text-[#6F6F6F] mt-1 flex items-center gap-1">
-                        <MapPin size={11} className="shrink-0" />
-                        <span className="truncate">{[p.address, p.municipality, p.province].filter(Boolean).join(" · ")}</span>
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 mt-2 flex-wrap">
-                      <a
-                        href={mapLink(p)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 bg-[#111111] text-white text-[11px] font-semibold px-3.5 py-2 rounded-full"
-                      >
-                        <Navigation size={12} /> Ver no mapa
-                      </a>
-                      {p.phone && (
-                        <a
-                          href={`tel:${p.phone}`}
-                          className="inline-flex items-center gap-1.5 border border-[#E8CC91] text-[11px] font-semibold px-3.5 py-2 rounded-full"
-                        >
-                          <Phone size={12} /> Ligar
-                        </a>
-                      )}
-                      <span className="text-[10px] text-[#9CA3AF]">
-                        {p.source === "osm" ? "Do mapa" : "YESOLA"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        <div className="px-5 py-4 space-y-6">
+          <p className="text-xs text-[#6F6F6F]">
+            {isLoading ? "A carregar..." : `${places.length} resultado(s)`}
+            <span className="ml-2 inline-flex items-center gap-1 align-middle">
+              <Church size={11} className="text-[#A96F12]" /> toque no cartão para abrir no mapa
+            </span>
+          </p>
+
+          {(kind === "" || kind === "igreja") && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Church size={16} className="text-[#A96F12]" />
+                <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Igrejas</h3>
               </div>
-            ))}
-            {!isLoading && places.length === 0 && (
-              <p className="text-sm text-[#6F6F6F] text-center py-10">Nenhum lugar encontrado. Tente outra pesquisa.</p>
-            )}
-          </div>
-        </section>
+              {igrejas.length > 0 ? (
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                  {igrejas.map((p: Place) => (
+                    <PlaceCard key={p.id} p={p} />
+                  ))}
+                </div>
+              ) : (
+                !isLoading && (
+                  <div className="rounded-2xl border border-dashed border-[#EDE8DE] p-6 text-center bg-white">
+                    <p className="text-[12px] text-[#9CA3AF]">Em breve novas igrejas</p>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+
+          {(kind === "" || kind === "servico-publico") && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Landmark size={16} className="text-[#A96F12]" />
+                <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Serviços Públicos</h3>
+              </div>
+              {servicos.length > 0 ? (
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                  {servicos.map((p: Place) => (
+                    <PlaceCard key={p.id} p={p} />
+                  ))}
+                </div>
+              ) : (
+                !isLoading && (
+                  <div className="rounded-2xl border border-dashed border-[#EDE8DE] p-6 text-center bg-white">
+                    <p className="text-[12px] text-[#9CA3AF]">Em breve novos serviços</p>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </PageTransition>
   );

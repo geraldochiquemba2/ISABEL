@@ -9,6 +9,8 @@ import { getStoreCategories } from "@/lib/storeCategories";
 // Audiências confinam ao grupo próprio; marcas generalistas abrangem a moda.
 const WORD_ALIASES: Record<string, string[]> = {
   mulher: ["feminina"],
+  menina: ["feminina", "infantil"],
+  meninas: ["feminina", "infantil"],
   senhoras: ["feminina"],
   homem: ["masculina"],
   senhores: ["masculina"],
