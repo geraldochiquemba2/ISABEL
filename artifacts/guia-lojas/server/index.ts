@@ -20,6 +20,9 @@ import fs from "fs";
 dotenv.config();
 
 const app = express();
+// Atrás do proxy do Render (e da Cloudflare): sem isto o req.ip seria o IP
+// do proxy e o rate limit abaixo contava toda a gente como um só cliente.
+app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ limit: "15mb", extended: true }));
@@ -72,6 +75,33 @@ process.on('uncaughtException', (error) => {
 
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection:', reason);
+});
+
+// Travão de emergência anti-bots: rajadas (scrapers a sacar o catálogo) são
+// o que está a comer a quota. Humanos fazem dezenas de pedidos/min; bots,
+// centenas. 600/min por IP com janela deslizante de 60s + 429 com Retry-After
+// (os bots decentes recuam; o Google não é penalizado por 429 ocasional).
+// O /api/ping (keep-alive) nunca é limitado.
+const RATE_WINDOW = 60 * 1000;
+const RATE_MAX = 600;
+const rateHits = new Map<string, number[]>();
+app.use("/api/", (req: any, res: any, next: any) => {
+  if (req.path === "/ping" || req.method === "OPTIONS") return next();
+  const ip = String(req.ip || req.headers["x-forwarded-for"] || "unknown").split(",")[0].trim();
+  const now = Date.now();
+  let arr = rateHits.get(ip);
+  if (!arr) { arr = []; rateHits.set(ip, arr); }
+  while (arr.length && arr[0] <= now - RATE_WINDOW) arr.shift();
+  if (arr.length >= RATE_MAX) {
+    res.setHeader("Retry-After", "60");
+    return res.status(429).json({ error: "Muitos pedidos, tente de novo em 1 minuto" });
+  }
+  arr.push(now);
+  if (rateHits.size > 10000) {
+    const first = rateHits.keys().next();
+    if (!first.done) rateHits.delete(first.value);
+  }
+  next();
 });
 
 // Corta-banda urgente: cache em memória das listas públicas. Bots e crawlers
