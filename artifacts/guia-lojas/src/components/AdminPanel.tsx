@@ -439,6 +439,9 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [newSub, setNewSub] = useState("");
+  const [editingSubCat, setEditingSubCat] = useState<string | null>(null);
+  const [editingSub, setEditingSub] = useState<string | null>(null);
+  const [editSubValue, setEditSubValue] = useState("");
   async function addSub(cat: any) {
     const v = newSub.trim();
     if (!v) return;
@@ -451,6 +454,18 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
     try {
       await updateCategory(cat.id, { subcategories: (cat.subcategories || []).filter((s: string) => s !== sub) });
       loadCategories();
+    } catch (e: any) { alert("Erro: " + e.message); }
+  }
+  function startEditSub(cat: any, sub: string) {
+    setEditingSubCat(cat.id); setEditingSub(sub); setEditSubValue(sub);
+  }
+  async function saveEditSub(cat: any) {
+    const v = editSubValue.trim();
+    if (!v || editingSub === null) { setEditingSubCat(null); setEditingSub(null); return; }
+    if (v !== editingSub && (cat.subcategories || []).includes(v)) { alert("Essa subcategoria já existe."); return; }
+    try {
+      await updateCategory(cat.id, { subcategories: (cat.subcategories || []).map((s: string) => (s === editingSub ? v : s)) });
+      setEditingSubCat(null); setEditingSub(null); setEditSubValue(""); loadCategories();
     } catch (e: any) { alert("Erro: " + e.message); }
   }
 
@@ -531,12 +546,33 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
               <div className="mt-3 pt-3 border-t border-[#EDE8DE]">
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {(cat.subcategories || []).map((s: string) => (
-                    <span key={s} className="inline-flex items-center gap-1 text-xs bg-[#FBF7F2] border border-[#EDE8DE] rounded-full pl-3 pr-1.5 py-1 text-[#2D2C2B]">
-                      {s}
-                      <button onClick={() => delSub(cat, s)} className="p-0.5 rounded-full text-[#87909a] hover:text-red-500 hover:bg-red-50" title="Remover">
-                        <X size={12} />
-                      </button>
-                    </span>
+                    editingSubCat === cat.id && editingSub === s ? (
+                      <span key={s} className="inline-flex items-center gap-1 text-xs bg-white border border-[#D4A843] rounded-full pl-2 pr-1 py-0.5">
+                        <input
+                          value={editSubValue}
+                          autoFocus
+                          onChange={(e) => setEditSubValue(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter") saveEditSub(cat); if (e.key === "Escape") { setEditingSubCat(null); setEditingSub(null); } }}
+                          className="w-28 bg-transparent outline-none text-[#2D2C2B]"
+                        />
+                        <button onClick={() => saveEditSub(cat)} className="p-0.5 rounded-full text-emerald-600 hover:bg-emerald-50" title="Guardar">
+                          <Check size={12} />
+                        </button>
+                        <button onClick={() => { setEditingSubCat(null); setEditingSub(null); }} className="p-0.5 rounded-full text-[#87909a] hover:bg-gray-100" title="Cancelar">
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ) : (
+                      <span key={s} className="inline-flex items-center gap-1 text-xs bg-[#FBF7F2] border border-[#EDE8DE] rounded-full pl-3 pr-1.5 py-1 text-[#2D2C2B]">
+                        {s}
+                        <button onClick={() => startEditSub(cat, s)} className="p-0.5 rounded-full text-[#87909a] hover:text-[#D4A843] hover:bg-amber-50" title="Renomear">
+                          <Edit2 size={12} />
+                        </button>
+                        <button onClick={() => delSub(cat, s)} className="p-0.5 rounded-full text-[#87909a] hover:text-red-500 hover:bg-red-50" title="Remover">
+                          <X size={12} />
+                        </button>
+                      </span>
+                    )
                   ))}
                   {(cat.subcategories || []).length === 0 && <p className="text-xs text-[#87909a]">Sem subcategorias.</p>}
                 </div>
