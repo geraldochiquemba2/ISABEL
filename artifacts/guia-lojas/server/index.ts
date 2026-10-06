@@ -14,6 +14,7 @@ import { styleTipsRouter } from "./routes/style-tips";
 import { weddingGroupsRouter } from "./routes/wedding-groups";
 import { weddingsPageContentRouter } from "./routes/weddings-page-content";
 import { placesRouter } from "./routes/places";
+import fs from "fs";
 
 dotenv.config();
 
@@ -32,6 +33,35 @@ app.use((err: any, req: any, res: any, next: any) => {
   }
 
   return next(err);
+});
+
+// Corta-banda: o bundle tem 2.5 MB e saía inteiro sem compressão. Gzip nativo
+// (sem deps novas) para JSON/texto > 1 KB. Imagens/vídeos passam ao lado
+// (já comprimidos). Colocado antes de tudo para apanhar também o cache.
+import zlib from "zlib";
+app.use((req: any, res: any, next: any) => {
+  const origSend = res.send.bind(res);
+  res.send = ((body: any) => {
+    try {
+      const ae = String(req.headers["accept-encoding"] || "");
+      const ct = String(res.getHeader("Content-Type") || "");
+      const buf = Buffer.isBuffer(body) ? body : typeof body === "string" ? Buffer.from(body) : null;
+      const okType = /json|text|javascript|xml|svg/i.test(ct) && !/image|video|audio|zip|octet-stream/i.test(ct);
+      if (
+        buf && buf.length > 1024 && buf.length < 8 * 1024 * 1024 &&
+        (req.method === "GET" || req.method === "POST") &&
+        !res.getHeader("Content-Encoding") && ae.includes("gzip") && okType
+      ) {
+        const gz = zlib.gzipSync(buf);
+        res.setHeader("Content-Encoding", "gzip");
+        res.setHeader("Vary", "Accept-Encoding");
+        res.setHeader("Content-Length", String(gz.length));
+        return origSend(gz);
+      }
+    } catch { /* cai no envio normal */ }
+    return origSend(body);
+  }) as any;
+  next();
 });
 
 // Global handlers to log uncaught exceptions/rejections without crashing silently
@@ -199,6 +229,40 @@ async function start() {
   // imutável de 1 ano (corta-banda em visitas repetidas). O index.html fica
   // de fora (index: false) e sai pelo fallback abaixo sem cache.
   const distPath = path.resolve(__dirname, "../dist/public");
+  // Pré-comprime os assets de texto (o bundle tem 2.5 MB e o express.static
+  // não comprime sozinho). Guarda em RAM uma vez no arranque (~0.8 MB).
+  const gzCache = new Map<string, Buffer>();
+  try {
+    const walk = (dir: string): void => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) { walk(p); continue; }
+        if (!/\.(js|css|html|json|map|txt|xml|svg)$/i.test(e.name)) continue;
+        try { gzCache.set(p, zlib.gzipSync(fs.readFileSync(p))); } catch { /* ignora */ }
+      }
+    };
+    if (fs.existsSync(distPath)) walk(distPath);
+  } catch { /* sem dist (dev), segue sem pré-compressão */ }
+  const GZ_TYPES: Record<string, string> = {
+    ".js": "application/javascript", ".css": "text/css", ".html": "text/html",
+    ".json": "application/json", ".map": "application/json", ".txt": "text/plain",
+    ".xml": "application/xml", ".svg": "image/svg+xml",
+  };
+  app.use((req: any, res: any, next: any) => {
+    if (req.method !== "GET") return next();
+    if (!String(req.headers["accept-encoding"] || "").includes("gzip")) return next();
+    let file = "";
+    try { file = path.normalize(path.join(distPath, decodeURIComponent(req.path))); } catch { return next(); }
+    if (!file.startsWith(distPath)) return next();
+    const gz = gzCache.get(file);
+    if (!gz) return next();
+    res.setHeader("Content-Type", GZ_TYPES[path.extname(file).toLowerCase()] || "application/octet-stream");
+    res.setHeader("Content-Encoding", "gzip");
+    res.setHeader("Vary", "Accept-Encoding");
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    res.setHeader("Content-Length", String(gz.length));
+    return res.send(gz);
+  });
   app.use(express.static(distPath, { maxAge: "1y", immutable: true, index: false }));
 
   // Qualquer outra rota que não seja /api/... vai para o index.html (SPA)
