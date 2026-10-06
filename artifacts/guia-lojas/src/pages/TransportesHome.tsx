@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "transporte-interprovincial", name: "Transporte Interprovincial", icon: <Truck size={28} className="text-[#F57F17]" /> },
   { id: "mudancas-transporte", name: "Mudanças & Transporte de Bens", icon: <Package size={28} className="text-[#F57F17]" /> },
   { id: "transporte-passageiros", name: "Transporte de Passageiros", icon: <Car size={28} className="text-[#F57F17]" /> },
@@ -33,6 +34,7 @@ const TRUST_BADGES = [
 ];
 
 export default function TransportesHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "transportes-logistica");
   useThemeColor("#fffde7");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

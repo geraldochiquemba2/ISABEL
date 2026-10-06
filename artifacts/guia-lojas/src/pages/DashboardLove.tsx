@@ -11,6 +11,7 @@ import {
   changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword, updateStoreLocation,
 } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import { PageTransition } from "@/components/PageTransition";
 import MapPicker from "@/components/MapPicker";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -48,7 +49,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const LOVE_SERVICE_GROUPS = [
+const LOVE_SERVICE_GROUPS_META = [
   {
     number: "01",
     title: "Actos de Amor, Homenagens e Experiências",
@@ -99,6 +100,7 @@ const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text
 const inputCls = "w-full border border-[#F7E9EB] bg-white py-2.5 px-4 text-sm text-[#171416] placeholder:text-[#6F696B] outline-none focus:border-[#A71936] focus:ring-2 focus:ring-[#A71936]/10 transition-all rounded-xl";
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => Promise<void>) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("love-services"), "love-services");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     name: store.name || "",
@@ -331,7 +333,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div><label className={labelCls}>Endereço</label><input value={form.address} onChange={(e) => handleChange("address", e.target.value)} className={inputCls} /></div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("love-services")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#A71936" />
+          <CategoryMultiSelect options={areaTitles} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#A71936" />
         </div>
         <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#A71936" testId="select-store-province" />
         <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#A71936" testId="select-store-municipality" />
@@ -383,6 +385,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const LOVE_SERVICE_GROUPS = useVerticalGroups(LOVE_SERVICE_GROUPS_META, "love-services");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, cancelApplication, changePassword } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
@@ -602,6 +603,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, isDirty: boolean, setDirty: (d: boolean) => void, saveFnRef?: React.MutableRefObject<any> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("collection"), "collection");
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -971,7 +973,7 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
       <div>
         <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground block mb-1.5">Categorias da Loja (até 4)</label>
         <CategoryMultiSelect
-          options={getAreaCategories("collection")}
+          options={areaTitles}
           value={categories}
           onChange={(next) => {
             setCategories(next);

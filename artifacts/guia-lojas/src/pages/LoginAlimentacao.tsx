@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -14,7 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const ALIMENTACAO_CATEGORIES = [
+const ALIMENTACAO_CATEGORIES_META = [
   "Restaurantes",
   "Pastelarias & Cafés",
   "Fast Food & Take-away",
@@ -64,6 +65,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginAlimentacao() {
+  const ALIMENTACAO_CATEGORIES = useGroupTitles(ALIMENTACAO_CATEGORIES_META, "alimentacao-restauracao");
   useThemeColor("#FFF3E0");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");

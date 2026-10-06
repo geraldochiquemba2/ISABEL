@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "ginasios", name: "Ginásios & Academias", icon: <Dumbbell size={28} className="text-[#E65100]" /> },
   { id: "personal-trainers", name: "Personal Trainers", icon: <UserCheck size={28} className="text-[#E65100]" /> },
   { id: "clubes-escolas", name: "Clubes & Escolas Desportivas", icon: <Trophy size={28} className="text-[#E65100]" /> },
@@ -34,6 +35,7 @@ const TRUST_BADGES = [
 ];
 
 export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "desporto-fitness");
   useThemeColor("#fff3e0");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

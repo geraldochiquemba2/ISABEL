@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
@@ -54,7 +55,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const WEDDING_SERVICE_GROUPS = [
+const WEDDING_SERVICE_GROUPS_META = [
   {
     number: "01",
     title: "Planeamento & Organização de Casamentos",
@@ -436,6 +437,7 @@ function OverviewSection({ store }: { store: any }) {
 
 /* ── Loja ──────────────────────────────────────────────── */
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("weddings"), "weddings");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -645,7 +647,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("weddings")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#D8B532" />
+          <CategoryMultiSelect options={areaTitles} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#D8B532" />
         </div>
         <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#D8B532" testId="select-store-province" />
         <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#D8B532" testId="select-store-municipality" />
@@ -771,6 +773,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 
 /* ── Produtos / Serviços ───────────────────────────────── */
 function ProdutosSection({ store }: { store: any }) {
+  const WEDDING_SERVICE_GROUPS = useVerticalGroups(WEDDING_SERVICE_GROUPS_META, "weddings");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

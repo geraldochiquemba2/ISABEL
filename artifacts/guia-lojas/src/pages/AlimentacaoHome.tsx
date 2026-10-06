@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "restaurantes", name: "Restaurantes", icon: <UtensilsCrossed size={28} className="text-[#D84315]" /> },
   { id: "pastelarias-cafes", name: "Pastelarias & Cafés", icon: <Cake size={28} className="text-[#D84315]" /> },
   { id: "fast-food", name: "Fast Food & Take-away", icon: <Zap size={28} className="text-[#D84315]" /> },
@@ -36,6 +37,7 @@ const TRUST_BADGES = [
 ];
 
 export default function AlimentacaoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "alimentacao-restauracao");
   useThemeColor("#fbe9e7");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

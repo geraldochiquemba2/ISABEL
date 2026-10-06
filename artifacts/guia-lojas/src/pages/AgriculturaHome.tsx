@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "agricultura-producao", name: "Agricultura & Produção Agrícola", icon: <Sprout size={28} className="text-[#2E7D32]" /> },
   { id: "pecuaria-criacao", name: "Pecuária & Criação Animal", icon: <Egg size={28} className="text-[#2E7D32]" /> },
   { id: "produtores-fazendas", name: "Produtores & Fazendas", icon: <Wheat size={28} className="text-[#2E7D32]" /> },
@@ -35,6 +36,7 @@ const TRUST_BADGES = [
 ];
 
 export default function AgriculturaHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "agricultura-agronegocio");
   useThemeColor("#e8f5e9");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

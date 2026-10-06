@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -14,7 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const SERVICOS_CATEGORIES = [
+const SERVICOS_CATEGORIES_META = [
   "Documentação & Tramitação",
   "Consultoria Especializada",
   "Secretariado & Assistência Profissional",
@@ -62,6 +63,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginServicosProf() {
+  const SERVICOS_CATEGORIES = useGroupTitles(SERVICOS_CATEGORIES_META, "servicos-profissionais");
   useThemeColor("#E8EAF6");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -13,7 +14,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const IMOVEIS_CATEGORIES = [
+const IMOVEIS_CATEGORIES_META = [
   "Hotéis & Resorts",
   "Alojamento & Estadias",
   "Imobiliária & Compras",
@@ -52,6 +53,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginImoveis() {
+  const IMOVEIS_CATEGORIES = useGroupTitles(IMOVEIS_CATEGORIES_META, "imoveis");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const SAUDE_CATEGORIES = [
+const SAUDE_CATEGORIES_META = [
   { number: "01", title: "Clínicas & Hospitais", intro: "Atendimento médico de excelência para toda a família.", items: ["Clínicas Gerais & Multiespecialidades", "Hospitais & Centros de Saúde", "Laboratórios & Clínicas de Análises"], category: "clinicas" },
   { number: "02", title: "Médicos Particulares", intro: "Profissionais dedicados ao seu bem-estar.", items: ["Clínica Geral & Especialidades", "Dermatologia & Estética", "Cardiologia & Neurologia"], category: "medicos" },
   { number: "03", title: "Medicina Dentária & Ortodontia", intro: "Sorrisos saudáveis e tratamentos de qualidade.", items: ["Clareamento & Estética Dental", "Ortodontia & Aparelhos", "Implantes & Próteses"], category: "dentaria" },
@@ -359,6 +360,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("saude"), "saude");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -478,7 +480,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("saude")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#2E7D32" />
+          <CategoryMultiSelect options={areaTitles} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#2E7D32" />
         </div>
         <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#2E7D32" testId="select-store-province" />
         <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#2E7D32" testId="select-store-municipality" />
@@ -586,6 +588,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const SAUDE_CATEGORIES = useVerticalGroups(SAUDE_CATEGORIES_META, "saude");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

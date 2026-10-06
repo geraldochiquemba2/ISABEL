@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "moda", name: "Moda & Enxoval", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#F7C948" strokeWidth="1.5"><rect x="6" y="12" width="20" height="14" rx="3" /><path d="M10 12V8c0-2 2-4 6-4s6 2 6 4v4" /><circle cx="16" cy="19" r="3" /></svg> },
   { id: "brinquedos", name: "Brinquedos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#F7C948" strokeWidth="1.5"><rect x="8" y="8" width="16" height="16" rx="2" /><path d="M12 12h8M12 16h8M12 20h4" /><circle cx="24" cy="8" r="4" /><path d="M24 4v8" /><path d="M20 8h8" /></svg> },
   { id: "cuidados", name: "Cuidados & Saúde", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#F7C948" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
@@ -29,6 +30,7 @@ const TRUST_BADGES = [
 ];
 
 export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "infantil");
   useThemeColor("#FFF7E6");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

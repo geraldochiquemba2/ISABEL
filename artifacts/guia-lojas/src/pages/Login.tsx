@@ -9,6 +9,7 @@ import { useLocation as useWouterLocation } from "wouter";
 import { PageTransition } from "@/components/PageTransition";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { registerLojista, loginLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { getAreaCategories } from "@/data/areaCategories";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -55,6 +56,7 @@ function FieldError({ msg }: { msg?: string }) {
 
 /* ── component ───────────────────────────────────────────── */
 export default function Login() {
+  const areaTitles = useGroupTitles(getAreaCategories("collection"), "collection");
   const [mode, setMode] = useState<"login" | "register">(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get("tab") === "register" ? "register" : "login";
@@ -69,7 +71,7 @@ export default function Login() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [, setLoc] = useWouterLocation();
 
-  const CATEGORIES = getAreaCategories("collection");
+  const CATEGORIES = areaTitles;
 
   /* login form */
   const {

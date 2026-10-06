@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "clinicas", name: "Clínicas & Hospitais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><rect x="6" y="8" width="20" height="20" rx="2" /><path d="M16 14v8M12 18h8" /><rect x="10" y="4" width="12" height="6" rx="1" /></svg> },
   { id: "medicos", name: "Médicos Particulares", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><circle cx="16" cy="10" r="6" /><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" /><path d="M16 14v4M14 16h4" /></svg> },
   { id: "dentaria", name: "Medicina Dentária", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><path d="M10 8c-2 0-4 2-4 4 0 4 2 6 4 10 1 2 2 4 6 4s5-2 6-4c2-4 4-6 4-10 0-2-2-4-4-4-2 0-3 1-4 3-1-2-2-3-4-3-2 0-4 2-4 4 0 4 2 6 4 10" /></svg> },
@@ -37,6 +38,7 @@ const TRUST_BADGES = [
 ];
 
 export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "saude");
   useThemeColor("#f0f7f0");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

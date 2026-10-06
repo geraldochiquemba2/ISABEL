@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "cinema", name: "Cinema", icon: <Clapperboard size={24} className="text-[#7C3AED]" /> },
   { id: "musica", name: "Música", icon: <Music size={24} className="text-[#7C3AED]" /> },
   { id: "teatro", name: "Teatro", icon: <Drama size={24} className="text-[#7C3AED]" /> },
@@ -32,6 +33,7 @@ const TRUST_BADGES = [
 ];
 
 export default function EntretenimentoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "entretenimento");
   useThemeColor("#F5F0FF");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

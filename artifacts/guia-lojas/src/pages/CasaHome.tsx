@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "limpeza", name: "Limpeza Residencial", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
   { id: "canalizacao", name: "Canalização", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M16 4v12M12 16h8M10 28h12" /><circle cx="16" cy="28" r="2" /></svg> },
   { id: "eletricistas", name: "Eletricistas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#68635D" strokeWidth="1.5"><path d="M18 4L10 18h6l-2 10 8-14h-6l2-10z" /></svg> },
@@ -36,6 +37,7 @@ const TRUST_BADGES = [
 ];
 
 export default function CasaHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "casa");
   useThemeColor("#F8F5F0");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

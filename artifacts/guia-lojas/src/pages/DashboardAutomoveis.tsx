@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const AUTOMOVEIS_CATEGORIES = [
+const AUTOMOVEIS_CATEGORIES_META = [
   { number: "01", title: "Venda de Carros Novos & Usados", intro: "Os melhores carros novos e seminovos, verificados e garantidos.", items: ["Carros Novos", "Carros Usados", "Seminovos & Kilometragem Certificada"], category: "venda-carros" },
   { number: "02", title: "Aluguer de Viaturas", intro: "Aluguer de curta e longa duração para quem precisa de mobilidade.", items: ["Aluguer Diário", "Aluguer Mensal", "Aluguer com Motorista"], category: "aluguer-viaturas" },
   { number: "03", title: "Oficinas & Mecânicos", intro: "Profissionais qualificados para manutenção e reparação do seu veículo.", items: ["Mecânica Geral", "Electricidade Automóvel", "Diagnóstico Computorizado"], category: "oficinas-mecanicos" },
@@ -353,6 +354,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("automoveis"), "automoveis");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", categories: getStoreCategories(store), locality: store.locality || "" });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -545,7 +547,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("automoveis")} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#0f1d32" />
+          <CategoryMultiSelect options={areaTitles} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#0f1d32" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { handleChange("province", v); handleChange("municipality", ""); handleChange("locality", ""); }} placeholder="Selecione a Província" accent="#0f1d32" />
@@ -655,6 +657,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const AUTOMOVEIS_CATEGORIES = useVerticalGroups(AUTOMOVEIS_CATEGORIES_META, "automoveis");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

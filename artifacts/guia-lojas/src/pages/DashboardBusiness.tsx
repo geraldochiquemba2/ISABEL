@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const BUSINESS_CATEGORIES = [
+const BUSINESS_CATEGORIES_META = [
   { number: "01", title: "Consultoria, Estratégia e Gestão Empresarial", intro: "Decisões mais claras para negócios prontos para avançar.", items: ["Consultoria de Negócios e Gestão Estratégica", "Elaboração de Planos de Negócio e Viabilidade Económica", "Mapeamento, Reestruturação e Otimização de Processos", "Mentoria para Empreendedores, Startups e Founders"], category: "consultoria" },
   { number: "02", title: "Gestão Financeira, Contabilidade e Fiscalidade", intro: "O rigor financeiro que transforma números em confiança.", items: ["Contabilidade Certificada, Auditoria e Declarações", "Consultoria Fiscal, Planeamento Tributário e Impostos", "Gestão do Fluxo de Caixa e Finanças Empresariais", "Avaliação de Empresas (Valuation) e Análise de Risco"], category: "financas" },
   { number: "03", title: "Marketing, Vendas e Posicionamento de Marca", intro: "Uma presença que diz o que vale, para quem importa.", items: ["Gestão de Redes Sociais, Conteúdo e Tráfego Pago", "Criação de Identidade Visual, Branding e Design", "Estratégias de Vendas, Prospecção e Treino Comercial", "Assessoria de Imprensa, Relações Públicas e Comunicação"], category: "marketing" },
@@ -349,6 +350,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("business"), "business");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -468,7 +470,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("business")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#075342" />
+          <CategoryMultiSelect options={areaTitles} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#075342" />
         </div>
         <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#075342" testId="select-store-province" />
         <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#075342" testId="select-store-municipality" />
@@ -576,6 +578,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const BUSINESS_CATEGORIES = useVerticalGroups(BUSINESS_CATEGORIES_META, "business");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

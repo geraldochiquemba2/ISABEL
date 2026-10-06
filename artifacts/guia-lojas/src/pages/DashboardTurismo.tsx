@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const TURISMO_CATEGORIES = [
+const TURISMO_CATEGORIES_META = [
   { number: "01", title: "Hotéis & Hospedagens", intro: "Alojamento de qualidade para toda a necessidade.", items: ["Hotéis 5 Estrelas", "Hotéis Económicos", "Pousadas", "Alojamento Local"], category: "hotels" },
   { number: "02", title: "Agências de Viagem", intro: "Planejamento e organização de viagens.", items: ["Agências de Viagem", "Operadoras de Turismo", "Bilhetes de Avião", "Pacotes Turísticos"], category: "agencias" },
   { number: "03", title: "Turismo de Aventura", intro: "Experiências emocionantes e memoráveis.", items: ["Safari & Observação de Animais", "Mergulho & Desportos Aquáticos", "Caminhadas & Trekking", "Escalada & Aventura"], category: "aventura" },
@@ -356,6 +357,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("turismo-lazer"), "turismo-lazer");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", locality: store.locality || "", categories: getStoreCategories(store) });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -475,7 +477,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("turismo-lazer")} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#00796B" />
+          <CategoryMultiSelect options={areaTitles} value={(form as any).categories ?? []} onChange={(next) => handleChange("categories", next)} accent="#00796B" />
         </div>
         <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { setForm((prev) => ({ ...prev, province: v, municipality: "", locality: "" })); setDirty(true); }} placeholder="Selecione a província" accent="#00796B" testId="select-store-province" />
         <LocationCombobox label="Município" value={form.municipality} options={ANGOLA_PROVINCES.find((p) => p.name === form.province)?.municipalities || []} onChange={(v) => { setForm((prev) => ({ ...prev, municipality: v, locality: "" })); setDirty(true); }} placeholder={form.province ? "Selecione o município" : "Selecione a província primeiro"} disabled={!form.province} accent="#00796B" testId="select-store-municipality" />
@@ -583,6 +585,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const TURISMO_CATEGORIES = useVerticalGroups(TURISMO_CATEGORIES_META, "turismo-lazer");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "agencias-viagens", name: "Agências de Viagens & Turismo", icon: <Plane size={28} className="text-[#00796B]" /> },
   { id: "passeios-excursões", name: "Passeios & Excursões", icon: <Map size={28} className="text-[#00796B]" /> },
   { id: "experiencias-turisticas", name: "Experiências Turísticas", icon: <Compass size={28} className="text-[#00796B]" /> },
@@ -33,6 +34,7 @@ const TRUST_BADGES = [
 ];
 
 export default function TurismoHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "turismo-lazer");
   useThemeColor("#e0f2f1");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

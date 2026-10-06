@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const EMPREGOS_CATEGORIES = [
+const EMPREGOS_CATEGORIES_META = [
   { number: "01", title: "Ofertas de Emprego", intro: "Vagas de emprego disponíveis em diversas áreas.", items: ["Emprego Full-Time", "Emprego Part-Time", "Estágios", "Teletrabalho"], category: "ofertas" },
   { number: "02", title: "Recrutamento & Seleção", intro: "Serviços profissionais de recrutamento.", items: ["Agências de Recrutamento", "Headhunting", "Seleção de Pessoal", "Avaliação Psicológica"], category: "recrutamento" },
   { number: "03", title: "Formação & Capacitação", intro: "Cursos e programas de capacitação profissional.", items: ["Cursos Técnicos", "Formação Profissional", "Workshops", "Seminários"], category: "formacao" },
@@ -356,6 +357,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("empregos-oportunidades"), "empregos-oportunidades");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", categories: getStoreCategories(store), locality: store.locality || "" });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -475,7 +477,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("empregos-oportunidades")} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#4527A0" />
+          <CategoryMultiSelect options={areaTitles} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#4527A0" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { handleChange("province", v); handleChange("municipality", ""); handleChange("locality", ""); }} placeholder="Selecione a Província" accent="#4527A0" />
@@ -585,6 +587,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const EMPREGOS_CATEGORIES = useVerticalGroups(EMPREGOS_CATEGORIES_META, "empregos-oportunidades");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

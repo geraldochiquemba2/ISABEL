@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -14,7 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const TURISMO_CATEGORIES = [
+const TURISMO_CATEGORIES_META = [
   "Agências de Viagens & Turismo",
   "Passeios & Excursões",
   "Experiências Turísticas",
@@ -61,6 +62,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginTurismo() {
+  const TURISMO_CATEGORIES = useGroupTitles(TURISMO_CATEGORIES_META, "turismo-lazer");
   useThemeColor("#E0F2F1");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");

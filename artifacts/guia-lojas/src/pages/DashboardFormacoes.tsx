@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const FORMACOES_CATEGORIES = [
+const FORMACOES_CATEGORIES_META = [
   { number: "01", title: "Idiomas e Comunicação", intro: "Fale com confiança.", items: ["Aulas de Inglês, Francês e Outros Idiomas (Geral e Negócios)", "Comunicação de Alto Impacto, Oratória e Expressão Pública", "Escrita Corporativa, Redação Académica e Preparação de Apresentações"], category: "idiomas" },
   { number: "02", title: "Tecnologia, Programação e Ferramentas Digitais", intro: "Crie o que imagina.", items: ["Programação, Desenvolvimento Web e Criação de Apps", "Informática Básica/Avançada, Pacote Office e Excel", "Ferramentas de Design (Canva, Photoshop) e Edição de Vídeo", "Marketing Digital, Tráfego Pago e Gestão de Redes Sociais"], category: "tecnologia" },
   { number: "03", title: "Gestão, Negócios & Empreendedorismo", intro: "De quem quer crescer com estratégia e visão.", items: ["Gestão Empresarial", "Empreendedorismo", "Vendas", "Marketing", "Finanças", "Liderança", "Atendimento ao Cliente"], category: "gestao-negocios" },
@@ -485,6 +486,7 @@ function StoreOverview({ store }: { store: any }) {
 }
 
 function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; isDirty: boolean; setIsDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("formacoes"), "formacoes");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", categories: getStoreCategories(store), locality: store.locality || "" });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -607,7 +609,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("formacoes")} value={form.categories ?? []} onChange={(next) => { setForm((f) => ({ ...f, categories: next })); setIsDirty(true); }} max={4} accent="#1E737B" />
+          <CategoryMultiSelect options={areaTitles} value={form.categories ?? []} onChange={(next) => { setForm((f) => ({ ...f, categories: next })); setIsDirty(true); }} max={4} accent="#1E737B" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { handleChange("province", v); handleChange("municipality", ""); handleChange("locality", ""); }} placeholder="Selecione a Província" accent="#1E737B" />
@@ -721,6 +723,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
 }
 
 function ProductsManager({ store }: { store: any }) {
+  const FORMACOES_CATEGORIES = useVerticalGroups(FORMACOES_CATEGORIES_META, "formacoes");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

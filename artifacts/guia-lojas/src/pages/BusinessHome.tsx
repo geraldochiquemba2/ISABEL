@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "consultoria", name: "Consultoria", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C69A3A" strokeWidth="1.5"><path d="M8 28h16M10 28V16l6-8 6 8v12" /><rect x="13" y="20" width="6" height="8" /></svg> },
   { id: "financas", name: "Finanças", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C69A3A" strokeWidth="1.5"><circle cx="16" cy="16" r="10" /><path d="M14 12h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4" /></svg> },
   { id: "marketing", name: "Marketing", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C69A3A" strokeWidth="1.5"><path d="M6 16l8-4v8l-8-4z" /><path d="M14 12l8-4v12l-8-4" /><path d="M26 10v8" /></svg> },
@@ -32,6 +33,7 @@ const TRUST_BADGES = [
 ];
 
 export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "business");
   useThemeColor("#FAF8F3");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

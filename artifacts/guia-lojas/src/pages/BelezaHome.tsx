@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "cabelo", name: "Cabelo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#7A4549" strokeWidth="1.5"><path d="M16 4c-4 0-8 4-8 10s4 10 8 10 8-4 8-10-4-10-8-10z" /><path d="M16 4v24" /><path d="M8 12c4 2 12 2 16 0" /><path d="M8 20c4-2 12-2 16 0" /></svg> },
   { id: "unhas", name: "Unhas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#7A4549" strokeWidth="1.5"><rect x="12" y="4" width="8" height="20" rx="4" /><path d="M12 24v4M20 24v4" /><path d="M16 8v4" /></svg> },
   { id: "maquiagem", name: "Maquiagem", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#7A4549" strokeWidth="1.5"><path d="M8 28l4-16 8 4-4 16z" /><circle cx="24" cy="8" r="4" /><path d="M20 12l-4 4" /></svg> },
@@ -33,6 +34,7 @@ const TRUST_BADGES = [
 ];
 
 export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "beleza");
   useThemeColor("#FBF7F2");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

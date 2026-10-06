@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -13,7 +14,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const AUTOMOVEIS_CATEGORIES = [
+const AUTOMOVEIS_CATEGORIES_META = [
   "Venda de Carros Novos & Usados",
   "Aluguer de Viaturas",
   "Oficinas & Mecânicos",
@@ -59,6 +60,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginAutomoveis() {
+  const AUTOMOVEIS_CATEGORIES = useGroupTitles(AUTOMOVEIS_CATEGORIES_META, "automoveis");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);

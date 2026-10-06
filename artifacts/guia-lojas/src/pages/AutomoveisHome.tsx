@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "venda-carros", name: "Venda de Carros", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#c9913a" strokeWidth="1.5"><path d="M5 20h22l-2-8H7L5 20z"/><circle cx="10" cy="22" r="2"/><circle cx="22" cy="22" r="2"/><path d="M7 12l1-4h16l1 4"/></svg> },
   { id: "aluguer-viaturas", name: "Aluguer de Viaturas", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#c9913a" strokeWidth="1.5"><rect x="4" y="12" width="24" height="10" rx="2"/><path d="M8 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/><circle cx="10" cy="24" r="2"/><circle cx="22" cy="24" r="2"/><path d="M14 17h4"/></svg> },
   { id: "oficinas-mecanicos", name: "Oficinas & Mecânicos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#c9913a" strokeWidth="1.5"><circle cx="16" cy="16" r="10"/><path d="M16 10v6l4 4"/><path d="M16 6v2M16 24v2M6 16h2M24 16h2"/></svg> },
@@ -35,6 +36,7 @@ const TRUST_BADGES = [
 ];
 
 export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "automoveis");
   useThemeColor("#0f1d32");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

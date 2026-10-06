@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -14,7 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const AGRICULTURA_CATEGORIES = [
+const AGRICULTURA_CATEGORIES_META = [
   "Agricultura & Produção Agrícola",
   "Pecuária & Criação Animal",
   "Produtores & Fazendas",
@@ -63,6 +64,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginAgricultura() {
+  const AGRICULTURA_CATEGORIES = useGroupTitles(AGRICULTURA_CATEGORIES_META, "agricultura-agronegocio");
   useThemeColor("#E8F5E9");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");

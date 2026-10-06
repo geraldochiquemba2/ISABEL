@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -13,7 +14,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const WEDDING_CATEGORIES = [
+const WEDDING_CATEGORIES_META = [
   "Planeamento & Organização de Casamentos",
   "Pedidos de Casamento, Noivados & Momentos Românticos",
   "Fotografia, Vídeo & Produção Audiovisual",
@@ -54,6 +55,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginWeddings() {
+  const WEDDING_CATEGORIES = useGroupTitles(WEDDING_CATEGORIES_META, "weddings");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);

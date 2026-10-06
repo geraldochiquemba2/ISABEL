@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
 import type { Scope } from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "telemoveis-tablets", name: "Telemóveis & Tablets", icon: <Smartphone size={28} className="text-[#1565C0]" /> },
   { id: "computadores-informatica", name: "Computadores & Informática", icon: <Monitor size={28} className="text-[#1565C0]" /> },
   { id: "electronica-acessorios", name: "Electrónica & Acessórios", icon: <Headphones size={28} className="text-[#1565C0]" /> },
@@ -34,6 +35,7 @@ const TRUST_BADGES = [
 ];
 
 export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "tecnologia-electronicos");
   useThemeColor("#e3f2fd");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "hoteis", name: "Hotéis & Resorts", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0B2D56" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
   { id: "alojamento", name: "Alojamento", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0B2D56" strokeWidth="1.5"><path d="M4 16l12-10 12 10" /><path d="M7 14v12h18V14" /><rect x="12" y="20" width="8" height="6" /></svg> },
   { id: "imobiliaria", name: "Imobiliária", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0B2D56" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M10 8V6c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v2" /><path d="M16 18v-4M14 16h4" /></svg> },
@@ -29,6 +30,7 @@ const TRUST_BADGES = [
 ];
 
 export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "imoveis");
   useThemeColor("#FAFAFA");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

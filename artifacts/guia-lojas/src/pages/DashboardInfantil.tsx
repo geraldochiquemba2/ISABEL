@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
+import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -47,7 +48,7 @@ function TimeSelect({ value, onChange, disabled }: { value: string; onChange: (v
   );
 }
 
-const INFANTIL_CATEGORIES = [
+const INFANTIL_CATEGORIES_META = [
   { number: "01", title: "Moda & Enxoval Infantil", intro: "Vestuário e enxoval com carinho para os pequenos.", items: ["Roupas para Bebés & Recém-Nascidos", "Vestuário Infantil (Calçado, Acessórios e Fardas)", "Kits de Enxoval & Maternidade"], category: "moda" },
   { number: "02", title: "Brinquedos & Aprendizagem", intro: "Diversão e aprendizagem para todas as idades.", items: ["Brinquedos Educativos & Didáticos", "Jogos, Livros & Material Escolar", "Mobília & Decoração de Quartos Infantis"], category: "brinquedos" },
   { number: "03", title: "Cuidados, Saúde & Bem-Estar", intro: "Tudo para a saúde e bem-estar do bebé e da mãe.", items: ["Produtos de Higiene & Maternidade", "Creches, Jardim de Infância & Explicações", "Festas Infantis & Animação"], category: "cuidados" },
@@ -346,6 +347,7 @@ function OverviewSection({ store }: { store: any }) {
 }
 
 function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDirty: boolean; setDirty: (v: boolean) => void; saveFnRef: React.MutableRefObject<(() => void) | null> }) {
+  const areaTitles = useGroupTitles(getAreaCategories("infantil"), "infantil");
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: store.name || "", description: store.description || "", phone: store.phone || "", address: store.address || "", province: store.province || "", municipality: store.municipality || "", categories: getStoreCategories(store), locality: store.locality || "" });
   const [schedule, setSchedule] = useState<DaySchedule[]>(store.schedule || DEFAULT_SCHEDULE);
@@ -465,7 +467,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         </div>
         <div>
           <label className={labelCls}>Categorias da Loja (até 4)</label>
-          <CategoryMultiSelect options={getAreaCategories("infantil")} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#F7C948" />
+          <CategoryMultiSelect options={areaTitles} value={form.categories ?? []} onChange={(next) => { setForm((prev) => ({ ...prev, categories: next })); setDirty(true); }} max={4} accent="#F7C948" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <LocationCombobox label="Província" value={form.province} options={ANGOLA_PROVINCES.map((p) => p.name)} onChange={(v) => { handleChange("province", v); handleChange("municipality", ""); handleChange("locality", ""); }} placeholder="Selecione a Província" accent="#F7C948" />
@@ -575,6 +577,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 }
 
 function ProdutosSection({ store }: { store: any }) {
+  const INFANTIL_CATEGORIES = useVerticalGroups(INFANTIL_CATEGORIES_META, "infantil");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);

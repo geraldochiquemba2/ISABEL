@@ -3,6 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
+import { useHomeCategories } from "@/lib/useVerticalGroups";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import WhereSearch from "@/components/WhereSearch";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
 
-const CATEGORIES = [
+const CATEGORIES_META = [
   { id: "decoracao", name: "Decoração & Design", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C45125" strokeWidth="1.5"><circle cx="16" cy="14" r="5" /><path d="M16 19v8" /><path d="M12 27h8" /><path d="M11 14c-3-2-3-6 0-7s6 1 5 4" /><path d="M21 14c3-2 3-6 0-7s-6 1-5 4" /></svg> },
   { id: "equipamentos", name: "Equipamentos", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C45125" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
   { id: "gastronomia", name: "Gastronomia", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C45125" strokeWidth="1.5"><path d="M6 20c0-6 5-10 10-10s10 4 10 10" /><path d="M4 20h24" /><circle cx="16" cy="24" r="2" /><path d="M16 14v-4" /><path d="M13 10l3-4 3 4" /></svg> },
@@ -32,6 +33,7 @@ const TRUST_BADGES = [
 ];
 
 export default function EventosHome({ onBackToSelector }: { onBackToSelector?: () => void }) {
+  const CATEGORIES = useHomeCategories(CATEGORIES_META, "eventos");
   useThemeColor("#FBF8F4");
   const [, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);

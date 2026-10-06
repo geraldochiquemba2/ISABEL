@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loginLojista, registerLojista } from "@/lib/api";
+import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import MapPicker from "@/components/MapPicker";
@@ -14,7 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getLocalities } from "@/lib/locationIndex";
 
-const TECNOLOGIA_CATEGORIES = [
+const TECNOLOGIA_CATEGORIES_META = [
   "Telemóveis & Tablets",
   "Computadores & Informática",
   "Electrónicos & Acessórios",
@@ -62,6 +63,7 @@ function FieldError({ msg }: { msg?: string }) {
 }
 
 export default function LoginTecnologia() {
+  const TECNOLOGIA_CATEGORIES = useGroupTitles(TECNOLOGIA_CATEGORIES_META, "tecnologia-electronicos");
   useThemeColor("#EBF5FF");
   const [mode, setMode] = useState<"login" | "register">("login");
   const [error, setError] = useState("");
