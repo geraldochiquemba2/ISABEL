@@ -179,11 +179,61 @@ function inferStoreFromUrl(): StoreType {
   }
 }
 
+function slugToVertical(slug: string): StoreType {
+  const map: Record<string, StoreType> = {
+    weddings: "weddings",
+    love: "love-services",
+    "love-services": "love-services",
+    collection: "collection",
+    business: "business",
+    formacoes: "formacoes",
+    eventos: "eventos",
+    entretenimento: "entretenimento",
+    imoveis: "imoveis",
+    infantil: "infantil",
+    automoveis: "automoveis",
+    saude: "saude",
+    beleza: "beleza",
+    casa: "casa",
+    tecnologia: "tecnologia-electronicos",
+    "tecnologia-electronicos": "tecnologia-electronicos",
+    alimentacao: "alimentacao-restauracao",
+    "alimentacao-restauracao": "alimentacao-restauracao",
+    turismo: "turismo-lazer",
+    "turismo-lazer": "turismo-lazer",
+    desporto: "desporto-fitness",
+    "desporto-fitness": "desporto-fitness",
+    empregos: "empregos-oportunidades",
+    "empregos-oportunidades": "empregos-oportunidades",
+    agricultura: "agricultura-agronegocio",
+    "agricultura-agronegocio": "agricultura-agronegocio",
+    influenciadores: "influenciadores-criadores",
+    "influenciadores-criadores": "influenciadores-criadores",
+    transportes: "transportes-logistica",
+    "transportes-logistica": "transportes-logistica",
+    servicos: "servicos-profissionais",
+    "servicos-profissionais": "servicos-profissionais",
+    "servicos-prof": "servicos-profissionais",
+  };
+  return map[slug.toLowerCase()] ?? null;
+}
+
 function Router() {
   const [selectedStore, setSelectedStore] = useState<StoreType>(
     () => (localStorage.getItem("eliora-selected-store") as StoreType) ?? inferStoreFromUrl()
   );
   const [location] = useLocation();
+  const basePath = location.split("?")[0];
+
+  // Rotas globais: funcionam em qualquer vertical. Antes, /login, /busca etc.
+  // só existiam na collection e, com outra vertical ativa, o "Entrar" caía
+  // na página inicial em vez de ir para o login.
+  if (basePath === "/login") return <Login />;
+  if (basePath === "/busca") return <SearchPage />;
+  if (basePath === "/dashboard") return <Dashboard />;
+  if (basePath === "/carrinhos") return <VerCarrinhos />;
+  if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
+  if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
 
   useEffect(() => {
     history.scrollRestoration = "manual";
@@ -201,6 +251,19 @@ function Router() {
       }
     }
   }, [selectedStore]);
+  // Deep-link entre verticais: /login-beleza, /dashboard-casa,
+  // /explorar-turismo ou /beleza ativam a vertical certa em vez de
+  // cair na home errada (links partilhados, favoritos, voltar do login).
+  useEffect(() => {
+    const path = location.split("?")[0].toLowerCase();
+    const m = path.match(/^\/(login|dashboard|explorar)-([a-z-]+)$/) || path.match(/^\/([a-z-]+)$/);
+    const slug = m ? (m[2] ?? m[1]) : null;
+    const v = slug ? slugToVertical(slug) : null;
+    if (v && v !== selectedStore) {
+      localStorage.setItem("eliora-selected-store", v);
+      setSelectedStore(v);
+    }
+  }, [location, selectedStore]);
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
