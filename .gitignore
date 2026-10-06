@@ -55,6 +55,9 @@ Thumbs.db
 # App cache
 artifacts/guia-lojas/cache/
 
-# Capacitor native projects
-artifacts/guia-lojas/ios/
+# Capacitor: a plataforma iOS entra no git (o Codemagic compila a partir dela).
+# Ficam de fora os regeneráveis: public volta com `cap sync`, Pods com `pod install`.
+artifacts/guia-lojas/ios/App/public/
+artifacts/guia-lojas/ios/App/Pods/
+artifacts/guia-lojas/ios/App/build/
 artifacts/guia-lojas/android/
