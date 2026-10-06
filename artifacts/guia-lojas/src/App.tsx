@@ -107,6 +107,7 @@ import ExploreCollection from "@/pages/ExploreCollection";
 import Proposito from "@/pages/Proposito";
 import Privacidade from "@/pages/Privacidade";
 import OfflineBanner from "@/components/OfflineBanner";
+import { initPush } from "@/lib/push";
 
 const queryClient = new QueryClient();
 
@@ -715,6 +716,9 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    initPush();
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

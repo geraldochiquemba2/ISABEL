@@ -133,6 +133,7 @@ export async function initDB() {
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS subcategories TEXT[] DEFAULT '{}'`,
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS store_type TEXT`,
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS intro TEXT`,
+      `CREATE TABLE IF NOT EXISTS push_tokens (token TEXT PRIMARY KEY, platform TEXT, created_at TIMESTAMPTZ DEFAULT NOW())`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'NAO_SOLICITADO'`,
       `UPDATE stores SET carrinho_access = 'NAO_SOLICITADO' WHERE carrinho_access IS NULL OR carrinho_access = 'PENDENTE'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_carrinho BOOLEAN DEFAULT FALSE`,

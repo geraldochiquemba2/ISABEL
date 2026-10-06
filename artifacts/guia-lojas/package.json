@@ -85,6 +85,7 @@
     "@capacitor/haptics": "^7.0.0",
     "@capacitor/ios": "^7.0.0",
     "@capacitor/network": "^7.0.0",
+    "@capacitor/push-notifications": "^7.0.0",
     "@capacitor/share": "^7.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
