@@ -30,15 +30,23 @@ categoriesRouter.get("/", async (req, res) => {
   }
 });
 
-// POST /api/categories — criar
+// POST /api/categories — criar (gera id se não vier; antes o id NULL
+// rebentava o INSERT e nada se conseguia criar)
 categoriesRouter.post("/", async (req, res) => {
   try {
     const { id, name, icon, coverImage, subcategories } = req.body;
+    if (!name || !String(name).trim()) {
+      return res.status(400).json({ error: "Nome é obrigatório" });
+    }
     const subs = Array.isArray(subcategories) ? subcategories : [];
+    const newId = (id && String(id).trim()) || String(name).toLowerCase().trim()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+      .slice(0, 60) + "-" + Math.random().toString(36).slice(2, 7);
     const result = await pool.query(
-      `INSERT INTO categories (id, name, icon, cover_image, subcategories) 
+      `INSERT INTO categories (id, name, icon, cover_image, subcategories)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [id, name, icon, coverImage, subs]
+      [newId, String(name).trim(), icon || null, coverImage || null, subs]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -47,12 +55,19 @@ categoriesRouter.post("/", async (req, res) => {
   }
 });
 
-// PUT /api/categories/:id — atualizar
+// PUT /api/categories/:id — atualizar (merge: só toca nos campos enviados;
+// antes, editar limpava subcategorias/capa/ícone por os pôr a vazio)
 categoriesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, icon, coverImage, subcategories } = req.body;
-    const subs = Array.isArray(subcategories) ? subcategories : [];
+    const current = await pool.query("SELECT * FROM categories WHERE id=$1", [id]);
+    if (!current.rows.length) return res.status(404).json({ error: "Categoria não encontrada" });
+    const old = current.rows[0];
+    const has = (k: string) => Object.prototype.hasOwnProperty.call(req.body, k);
+    const name = has("name") ? String(req.body.name || "").trim() || old.name : old.name;
+    const icon = has("icon") ? (req.body.icon || null) : old.icon;
+    const coverImage = has("coverImage") ? (req.body.coverImage || null) : old.cover_image;
+    const subs = Array.isArray(req.body.subcategories) ? req.body.subcategories : old.subcategories;
     await pool.query(
       `UPDATE categories SET name=$2, icon=$3, cover_image=$4, subcategories=$5 WHERE id=$1`,
       [id, name, icon, coverImage, subs]

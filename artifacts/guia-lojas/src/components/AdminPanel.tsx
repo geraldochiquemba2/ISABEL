@@ -13,6 +13,7 @@ import {
   RotateCcw, ShoppingCart, Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import CategoryIconPicker, { CategoryIcon } from "./CategoryIconPicker";
 
 const inputCls = "w-full border border-[#EDE8DE] bg-white py-3 px-4 text-sm text-[#2D2C2B] placeholder:text-[#87909a] outline-none focus:border-[#D4A843] focus:ring-2 focus:ring-[#D4A843]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
@@ -363,7 +364,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", icon: "", coverImage: "" });
+  const [form, setForm] = useState({ name: "", icon: "" });
 
   useEffect(() => { loadCategories(); }, []);
 
@@ -376,9 +377,11 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   async function handleSave() {
     if (!form.name.trim()) return;
     try {
-      if (editId) { await updateCategory(editId, form); }
-      else { await createCategory(form); }
-      setShowForm(false); setEditId(null); setForm({ name: "", icon: "", coverImage: "" }); loadCategories();
+      // Sem coverImage: a capa antiga mantém-se (merge no servidor).
+      const payload = { name: form.name.trim(), icon: form.icon || null };
+      if (editId) { await updateCategory(editId, payload); }
+      else { await createCategory(payload); }
+      setShowForm(false); setEditId(null); setForm({ name: "", icon: "" }); loadCategories();
     } catch (e: any) { alert("Erro: " + e.message); }
   }
 
@@ -388,7 +391,24 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   }
 
   function startEdit(cat: any) {
-    setEditId(cat.id); setForm({ name: cat.name, icon: cat.icon || "", coverImage: cat.coverImage || "" }); setShowForm(true);
+    setEditId(cat.id); setForm({ name: cat.name, icon: cat.icon || "" }); setShowForm(true);
+  }
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [newSub, setNewSub] = useState("");
+  async function addSub(cat: any) {
+    const v = newSub.trim();
+    if (!v) return;
+    try {
+      await updateCategory(cat.id, { subcategories: [...(cat.subcategories || []), v] });
+      setNewSub(""); loadCategories();
+    } catch (e: any) { alert("Erro: " + e.message); }
+  }
+  async function delSub(cat: any, sub: string) {
+    try {
+      await updateCategory(cat.id, { subcategories: (cat.subcategories || []).filter((s: string) => s !== sub) });
+      loadCategories();
+    } catch (e: any) { alert("Erro: " + e.message); }
   }
 
   if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
@@ -397,7 +417,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-[#87909a]">{categories.length} categorias</p>
-        <button onClick={() => { setShowForm(!showForm); setEditId(null); setForm({ name: "", icon: "", coverImage: "" }); }}
+        <button onClick={() => { setShowForm(!showForm); setEditId(null); setForm({ name: "", icon: "" }); }}
           className="flex items-center gap-2 text-white px-4 py-2 rounded-full text-xs font-semibold transition-colors"
           style={{ backgroundColor: accentColor }}>
           <FolderPlus size={13} /> Nova Categoria
@@ -410,8 +430,10 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
             <div className="bg-white rounded-2xl border border-[#EDE8DE] p-5 space-y-3">
               <h3 className="text-sm font-semibold">{editId ? "Editar Categoria" : "Nova Categoria"}</h3>
               <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Moda" /></div>
-              <div><label className={labelCls}>Ícone (nome lucide)</label><input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className={inputCls} placeholder="Ex: shirt" /></div>
-              <div><label className={labelCls}>Imagem de capa (URL)</label><input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} className={inputCls} placeholder="https://..." /></div>
+              <div>
+                <label className={labelCls}>Ícone (tocar para escolher)</label>
+                <CategoryIconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} accentColor={accentColor} />
+              </div>
               <div className="flex gap-2">
                 <button onClick={handleSave} disabled={!form.name.trim()} className="text-white px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-50" style={{ backgroundColor: accentColor }}>
                   {editId ? "Atualizar" : "Criar"}
@@ -425,18 +447,54 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
 
       <div className="space-y-2">
         {categories.map((cat) => (
-          <div key={cat.id} className="flex items-center justify-between bg-white border border-[#EDE8DE] rounded-xl px-4 py-3">
-            <div className="flex items-center gap-3">
-              {cat.coverImage && <img src={cat.coverImage} alt="" className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
-              <div>
-                <p className="text-sm font-medium text-[#2D2C2B]">{cat.name}</p>
-                <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias</p>
+          <div key={cat.id} className="bg-white border border-[#EDE8DE] rounded-xl px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-lg bg-[#FBF7F2] border border-[#EDE8DE] grid place-items-center text-[#5A3335] shrink-0 overflow-hidden">
+                  {cat.coverImage
+                    ? <img src={cat.coverImage} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    : <CategoryIcon name={cat.icon} size={18} />}
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-[#2D2C2B]">{cat.name}</p>
+                  <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias</p>
+                </div>
+              </div>
+              <div className="flex gap-1.5">
+                <button onClick={() => { setExpandedId(expandedId === cat.id ? null : cat.id); setNewSub(""); }} className="p-1.5 text-[#87909a] hover:text-[#D4A843] transition-colors" title="Subcategorias">
+                  {expandedId === cat.id ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                </button>
+                <button onClick={() => startEdit(cat)} className="p-1.5 text-[#87909a] hover:text-[#D4A843] transition-colors"><Edit2 size={13} /></button>
+                <button onClick={() => handleDelete(cat.id)} className="p-1.5 text-[#87909a] hover:text-red-500 transition-colors"><Trash2 size={13} /></button>
               </div>
             </div>
-            <div className="flex gap-1.5">
-              <button onClick={() => startEdit(cat)} className="p-1.5 text-[#87909a] hover:text-[#D4A843] transition-colors"><Edit2 size={13} /></button>
-              <button onClick={() => handleDelete(cat.id)} className="p-1.5 text-[#87909a] hover:text-red-500 transition-colors"><Trash2 size={13} /></button>
-            </div>
+            {expandedId === cat.id && (
+              <div className="mt-3 pt-3 border-t border-[#EDE8DE]">
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {(cat.subcategories || []).map((s: string) => (
+                    <span key={s} className="inline-flex items-center gap-1 text-xs bg-[#FBF7F2] border border-[#EDE8DE] rounded-full pl-3 pr-1.5 py-1 text-[#2D2C2B]">
+                      {s}
+                      <button onClick={() => delSub(cat, s)} className="p-0.5 rounded-full text-[#87909a] hover:text-red-500 hover:bg-red-50" title="Remover">
+                        <X size={12} />
+                      </button>
+                    </span>
+                  ))}
+                  {(cat.subcategories || []).length === 0 && <p className="text-xs text-[#87909a]">Sem subcategorias.</p>}
+                </div>
+                <div className="flex gap-1.5">
+                  <input
+                    value={newSub}
+                    onChange={(e) => setNewSub(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") addSub(cat); }}
+                    placeholder="Nova subcategoria (ex: Bebé menina)"
+                    className="flex-1 border border-[#EDE8DE] bg-white py-2 px-3 text-xs text-[#2D2C2B] placeholder:text-[#87909a] outline-none focus:border-[#D4A843] rounded-xl"
+                  />
+                  <button onClick={() => addSub(cat)} disabled={!newSub.trim()} className="text-white px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-50" style={{ backgroundColor: accentColor }}>
+                    Adicionar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
         {categories.length === 0 && <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhuma categoria.</p>}

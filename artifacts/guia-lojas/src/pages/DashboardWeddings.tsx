@@ -1052,7 +1052,7 @@ function ContactosSection({ store }: { store: any }) {
       <div className="bg-white rounded-2xl border border-[#E9D9B6] p-8 max-w-2xl space-y-6">
         <div><label className={labelCls}>WhatsApp</label><a href={`https://wa.me/244${store.whatsapp || store.phone}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm hover:underline"><MessageCircle size={16} /> {store.whatsapp || store.phone}</a></div>
         <div><label className={labelCls}>Telefone</label><p className="text-sm text-[#171717]">{store.phone}</p></div>
-        <div><label className={labelCls}>Endere�o</label><p className="text-sm text-[#171717]">{store.address || "N�o definido"}</p></div>
+        <div><label className={labelCls}>Endereço</label><p className="text-sm text-[#171717]">{store.address || "Não definido"}</p></div>
       </div>
     </div>
   );
