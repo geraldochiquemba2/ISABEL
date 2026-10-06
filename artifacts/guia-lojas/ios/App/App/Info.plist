@@ -45,5 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Tirar fotografias dos produtos e da loja diretamente na app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Escolher fotografias da galeria para os produtos e a loja.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Guardar fotografias na galeria.</string>
 </dict>
 </plist>

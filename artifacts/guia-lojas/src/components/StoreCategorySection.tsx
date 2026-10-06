@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
 import { getStoreCategories } from "@/lib/storeCategories";
+import { nativeShare, nativeTap } from "@/lib/nativePhoto";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
 // das secções, para lojas registadas com categorias livres não ficarem invisíveis.
@@ -53,7 +54,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   return (
     <div
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
-      onClick={() => { window.location.href = `/loja/${store.id}?from=${from}`; }}
+      onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
     >
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
@@ -61,24 +62,17 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
           <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
         )}
         
-        {/* Botão de Partilha no Card */}
+        {/* Botão de Partilha no Card (folha nativa no iPhone, Web Share senão) */}
         <button
           onClick={async (e) => {
             e.stopPropagation();
             const url = `${window.location.origin}/loja/${store.id}?from=${from}`;
-            const shareData = {
-              title: store.name,
-              text: `Conheça a loja ${store.name} no Guia de Lojas!`,
-              url: url,
-            };
-            if (navigator.share) {
-              try {
-                await navigator.share(shareData);
-              } catch (err) {}
-            } else {
-              navigator.clipboard.writeText(url);
-              alert("Link da loja copiado!");
-            }
+            const r = await nativeShare(
+              store.name,
+              `Conheça a loja ${store.name} no Guia de Lojas!`,
+              url
+            );
+            if (r === "copied") alert("Link da loja copiado!");
           }}
           className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center backdrop-blur-sm z-30 transition-transform hover:scale-110"
           title="Partilhar loja"

@@ -105,6 +105,8 @@ import DashboardServicosProf from "@/pages/DashboardServicosProf";
 import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
 import Proposito from "@/pages/Proposito";
+import Privacidade from "@/pages/Privacidade";
+import OfflineBanner from "@/components/OfflineBanner";
 
 const queryClient = new QueryClient();
 
@@ -234,6 +236,7 @@ function Router() {
   if (basePath === "/carrinhos") return <VerCarrinhos />;
   if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
   if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
+  if (basePath === "/privacidade") return <Privacidade />;
 
   useEffect(() => {
     history.scrollRestoration = "manual";
@@ -718,6 +721,7 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
         </WouterRouter>
+        <OfflineBanner />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage } from "@/lib/api";
+import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
@@ -459,6 +460,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
                 <button type="button" title="Remover imagem" aria-label="Remover imagem da galeria" onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             ))}
+            <NativeCameraButton storeId={store.id} />
             <label className="w-24 h-24 border border-dashed border-[#d4e8d4] rounded-xl flex flex-col items-center justify-center text-[10px] text-[#6B7280] hover:border-[#1565C0] hover:text-[#1a3a1a] cursor-pointer transition-colors">
               <Camera size={16} className="mb-1" />{uploading === "coverImages" ? "..." : "Adicionar"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "coverImages")} disabled={uploading !== null} />

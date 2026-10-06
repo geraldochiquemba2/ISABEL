@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Store } from "@/data/mock";
 import { MapPin } from "lucide-react";
+import { nativeTap } from "@/lib/nativePhoto";
 
 interface StoreCardProps {
   store: Store;
@@ -34,7 +35,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
       className="group cursor-pointer rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
       data-testid={`card-store-${store.id}`}
     >
-      <Link href={`/loja/${store.id}`} className="block flex-1 flex flex-col">
+      <Link href={`/loja/${store.id}`} onClick={() => nativeTap()} className="block flex-1 flex flex-col">
         {/* Image */}
         <div className={`${imgHeight} w-full relative overflow-hidden bg-gray-100 flex-shrink-0`}>
           {!imgError && currentImage ? (
