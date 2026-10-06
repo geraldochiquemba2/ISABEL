@@ -43,6 +43,69 @@ process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection:', reason);
 });
 
+// Corta-banda urgente: cache em memória das listas públicas. Bots e crawlers
+// pedem /api/products e /api/stores em rajada; sem isto cada hit ia à BD e
+// gerava JSON completo à conta da banda. 30s + invalidação nas escritas:
+// o dono edita e a lista atualiza logo a seguir.
+const LIST_CACHE_TTL = 30 * 1000;
+const listCache = new Map<string, { status: number; body: unknown; ts: number; headers: Record<string, string> }>();
+function listCacheKey(req: any): string {
+  return `${req.path}?${new URLSearchParams(req.query as any).toString()}`;
+}
+function sweepListCache(prefix: string): void {
+  for (const k of listCache.keys()) {
+    if (k.startsWith(prefix)) listCache.delete(k);
+  }
+  if (listCache.size > 500) {
+    const drop = listCache.size - 500;
+    let i = 0;
+    for (const k of listCache.keys()) {
+      if (i++ >= drop) break;
+      listCache.delete(k);
+    }
+  }
+}
+app.use("/api/products", (req: any, res: any, next: any) => {
+  if (req.method !== "GET" || req.headers.authorization || String(req.originalUrl || "").includes("/admin/")) {
+    if (req.method !== "GET") sweepListCache("/api/products");
+    return next();
+  }
+  const key = "/api/products" + listCacheKey(req);
+  const hit = listCache.get(key);
+  if (hit && Date.now() - hit.ts < LIST_CACHE_TTL) {
+    res.setHeader("Cache-Control", "public, max-age=30");
+    for (const [hk, hv] of Object.entries(hit.headers)) res.setHeader(hk, hv);
+    return res.status(hit.status).json(hit.body);
+  }
+  const origJson = res.json.bind(res);
+  res.json = ((body: unknown) => {
+    if (res.statusCode === 200) listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+    res.setHeader("Cache-Control", "public, max-age=30");
+    return origJson(body);
+  }) as any;
+  next();
+});
+app.use("/api/stores", (req: any, res: any, next: any) => {
+  if (req.method !== "GET" || req.headers.authorization || String(req.originalUrl || "").includes("/admin/")) {
+    if (req.method !== "GET") sweepListCache("/api/stores");
+    return next();
+  }
+  const key = "/api/stores" + listCacheKey(req);
+  const hit = listCache.get(key);
+  if (hit && Date.now() - hit.ts < LIST_CACHE_TTL) {
+    res.setHeader("Cache-Control", "public, max-age=30");
+    for (const [hk, hv] of Object.entries(hit.headers)) res.setHeader(hk, hv);
+    return res.status(hit.status).json(hit.body);
+  }
+  const origJson = res.json.bind(res);
+  res.json = ((body: unknown) => {
+    if (res.statusCode === 200) listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+    res.setHeader("Cache-Control", "public, max-age=30");
+    return origJson(body);
+  }) as any;
+  next();
+});
+
 // Rotas da API
 app.use("/api/stores", storesRouter);
 app.use("/api/products", productsRouter);

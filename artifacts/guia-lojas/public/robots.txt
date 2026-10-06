@@ -1,2 +1,9 @@
 User-agent: *
 Allow: /
+Crawl-delay: 5
+
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+Disallow: /
