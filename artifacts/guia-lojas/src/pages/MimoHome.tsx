@@ -137,7 +137,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
       {/* Hero */}
       <section className="px-5 py-4">
         <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "240px" }}>
-          <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=800&h=500&fit=crop&auto=format&q=80" alt="Amor" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=800&h=500&fit=crop&auto=format&q=80" alt="Amor" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
           <div className="relative z-10 p-6 max-w-[60%]">
             <p className="text-[10px] tracking-[0.2em] text-[#A71936] font-semibold uppercase">O amor em cada detalhe.</p>
@@ -271,7 +271,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#F7E9EB] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=love`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171416] truncate">{store.name}</h4>

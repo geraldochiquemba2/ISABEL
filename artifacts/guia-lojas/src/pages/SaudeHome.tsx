@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -144,7 +144,7 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
       {/* Hero */}
       <section className="px-5 py-4">
         <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "240px" }}>
-          <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=500&fit=crop&auto=format&q=80" alt="Saúde" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=500&fit=crop&auto=format&q=80" alt="Saúde" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
           <div className="relative z-10 p-6 max-w-[60%]">
             <p className="text-[10px] tracking-[0.2em] text-[#2E7D32] font-semibold uppercase">Cuide do seu maior tesouro.</p>
@@ -266,7 +266,7 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#c8e6c9] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=saude`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#1a3a1a] truncate">{store.name}</h4>

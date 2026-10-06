@@ -131,7 +131,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
       {/* Hero */}
       <section className="px-5 py-4">
         <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "280px" }}>
-          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=500&fit=crop&auto=format&q=80" alt="Beleza" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=500&fit=crop&auto=format&q=80" alt="Beleza" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#FBF7F2]/95 via-[#FBF7F2]/70 to-transparent" />
           <div className="relative z-10 p-6 max-w-[55%]">
             <h1 className="text-[28px] leading-[1.1] font-semibold" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -185,7 +185,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {trending.map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>
@@ -211,7 +211,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {featured.map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>

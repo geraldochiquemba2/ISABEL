@@ -841,7 +841,7 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
               src={logoUrl}
               alt="Logo da Loja"
               className="w-16 h-16 rounded-2xl object-cover bg-muted border border-black/10 shadow-sm"
-            />
+            loading="lazy" decoding="async" />
           ) : (
             <div className="w-16 h-16 rounded-2xl bg-muted border border-dashed border-black/25 flex items-center justify-center text-xs text-muted-foreground font-medium">
               Sem Foto
@@ -887,7 +887,7 @@ function LojaSection({ myStore, isDirty, setDirty, saveFnRef }: { myStore: any, 
                     src={img}
                     alt={`Capa ${idx + 1}`}
                     className="w-full h-full object-contain relative z-10"
-                  />
+                  loading="lazy" decoding="async" />
                   <button
                     type="button"
                     title="Remover imagem"
@@ -1256,7 +1256,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
               <div className="flex flex-wrap gap-2 items-center">
                 {newImageUrls.map((url, i) => (
                   <div key={i} className="relative w-16 h-16 rounded-xl border border-border overflow-hidden bg-muted flex-shrink-0 group">
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                     <button
                       type="button"
                       title="Remover imagem"
@@ -1719,7 +1719,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
               <div className="flex gap-2 mt-2 flex-wrap">
                 {formData.imageUrls.map((url, i) => (
                   <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                     <button
                       type="button"
                       title="Remover imagem"
@@ -1750,7 +1750,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
         {products.map((product) => (
           <div key={product.id} className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-4">
             {product.imageUrl ? (
-              <img src={product.imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover" />
+              <img src={product.imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover" loading="lazy" decoding="async" />
             ) : (
               <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center">
                 <ShoppingCart size={20} className="text-gray-400" />
@@ -1992,7 +1992,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
             <div className="flex flex-wrap gap-2 items-center">
               {editImageUrls.map((url, i) => (
                 <div key={i} className="relative w-14 h-14 rounded-xl border border-border overflow-hidden bg-muted flex-shrink-0">
-                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                   <button type="button" title="Remover imagem" aria-label="Remover imagem" onClick={() => setEditImageUrls(prev => prev.filter((_, idx) => idx !== i))}
                     className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10">
                     <X size={12} />
@@ -2058,7 +2058,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
         <div className="flex items-center gap-4 py-3.5" data-testid={`row-product-${product.id}`}>
           {product.imageUrl ? (
             <img src={product.imageUrl} alt={product.name}
-              className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+              className="w-10 h-10 rounded-xl object-cover flex-shrink-0" loading="lazy" decoding="async" />
           ) : (
             <div className="w-10 h-10 rounded-xl flex-shrink-0" style={{ backgroundColor: product.imageColor }} />
           )}

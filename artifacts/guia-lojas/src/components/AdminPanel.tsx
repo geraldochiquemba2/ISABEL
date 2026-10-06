@@ -427,7 +427,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
         {categories.map((cat) => (
           <div key={cat.id} className="flex items-center justify-between bg-white border border-[#EDE8DE] rounded-xl px-4 py-3">
             <div className="flex items-center gap-3">
-              {cat.coverImage && <img src={cat.coverImage} alt="" className="w-10 h-10 rounded-lg object-cover" />}
+              {cat.coverImage && <img src={cat.coverImage} alt="" className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
               <div>
                 <p className="text-sm font-medium text-[#2D2C2B]">{cat.name}</p>
                 <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias</p>
@@ -505,7 +505,7 @@ function LojasTab({ storeType, accentColor }: { storeType: string; accentColor: 
           <div key={store.id} className="border border-[#EDE8DE] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div className="flex items-start gap-3 flex-1">
               <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#f0f0f0] flex-shrink-0">
-                <img src={store.coverImage || store.logoUrl || "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=100&h=100&fit=crop"} alt="" className="w-full h-full object-cover" />
+                <img src={store.coverImage || store.logoUrl || "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=100&h=100&fit=crop"} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-semibold">{store.name}</h3>

@@ -172,7 +172,7 @@ function ContasSection() {
           <div key={user.id} className="border border-[#d1d4d8] rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div className="flex items-start gap-3 flex-1">
               <div className="w-14 h-14 rounded-full overflow-hidden bg-[#f0f7f7] flex-shrink-0">
-                <img src={user.logoUrl || user.coverImage || "https://via.placeholder.com/150?text=Loja"} alt="" className="w-full h-full object-cover" />
+                <img src={user.logoUrl || user.coverImage || "https://via.placeholder.com/150?text=Loja"} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">

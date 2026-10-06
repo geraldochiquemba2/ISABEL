@@ -38,9 +38,9 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
       onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" />
+        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
         {store.logoUrl && (
-          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" />
+          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
         )}
         {images.length > 1 && (
           <div className="absolute bottom-2 right-2 z-20 flex gap-1">

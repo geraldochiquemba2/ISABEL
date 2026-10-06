@@ -125,7 +125,7 @@ export default function LoginWeddings() {
 
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <img src="/logo-yesola-icon-dark.png" alt="YESOLA Weddings" className="w-10 h-10" />
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA Weddings" className="w-10 h-10" loading="lazy" decoding="async" />
             <span className="font-serif text-xl tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal">Weddings</i></span>
           </div>
 

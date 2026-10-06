@@ -93,7 +93,7 @@ export default function DescobrirEstilo() {
                       src={dica.imagem}
                       alt={dica.titulo}
                       className="w-full h-64 md:h-full object-cover"
-                    />
+                    loading="lazy" decoding="async" />
                   </div>
                   <div className="md:w-3/5 p-6 md:p-8">
                     <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{dica.titulo}</h2>

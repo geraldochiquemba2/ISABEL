@@ -14,6 +14,11 @@ export const productsRouter = Router();
 productsRouter.get("/", async (req, res) => {
   try {
     const { store_id, is_carrinho, store_type } = req.query;
+    // Paginação (corta-banda): a montra pública puxava o catálogo inteiro de
+    // cada vez. Default generoso para não partir as páginas Explore actuais.
+    const page = Math.max(1, parseInt(String(req.query.page || "1"), 10) || 1);
+    const limit = Math.min(200, Math.max(1, parseInt(String(req.query.limit || "100"), 10) || 100));
+    const offset = (page - 1) * limit;
     let query = `
       SELECT p.*, s.name as store_name, s.logo_url as store_logo
       FROM products p
@@ -37,8 +42,17 @@ productsRouter.get("/", async (req, res) => {
     // Montra pública: esconde produtos de lojas com conta pendente/recusada/suspensa
     conditions.push(`NOT EXISTS (SELECT 1 FROM users u WHERE u.store_id = p.store_id AND u.status <> 'APROVADO')`);
     if (conditions.length) query += " WHERE " + conditions.join(" AND ");
+    // Total para o cliente saber se há mais páginas (header, sem mudar o corpo array)
+    const countRes = await pool.query(
+      `SELECT COUNT(*)::int AS total FROM products p LEFT JOIN stores s ON s.id = p.store_id${conditions.length ? " WHERE " + conditions.join(" AND ") : ""}`,
+      params
+    );
+    res.setHeader("X-Total-Count", String(countRes.rows[0]?.total ?? 0));
+    res.setHeader("X-Page", String(page));
+    res.setHeader("X-Limit", String(limit));
     query += " ORDER BY p.created_at DESC";
-    const result = await pool.query(query, params);
+    query += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    const result = await pool.query(query, [...params, limit, offset]);
     res.json(result.rows.map((p) => ({
       id: p.id,
       storeId: p.store_id,

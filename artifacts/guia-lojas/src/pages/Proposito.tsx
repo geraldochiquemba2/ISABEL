@@ -173,7 +173,7 @@ export default function Proposito() {
           {photos.map((photo) => (
             <div key={photo.id} className="rounded-2xl overflow-hidden bg-white border border-[#E8DDD0] relative">
               <div className="aspect-[4/3] overflow-hidden">
-                <img src={photo.image} alt={photo.caption} className="w-full h-full object-cover" />
+                <img src={photo.image} alt={photo.caption} className="w-full h-full object-cover" loading="lazy" decoding="async" />
               </div>
               <div className="p-3">
                 {isAdmin && editingId === photo.id ? (

@@ -129,7 +129,7 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
 
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ minHeight: "320px" }}>
-        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=900&h=500&fit=crop&auto=format&q=80" alt="Automóveis" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=900&h=500&fit=crop&auto=format&q=80" alt="Automóveis" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f1d32]/95 via-[#0f1d32]/70 to-transparent" />
         <div className="relative z-10 p-6 max-w-[65%] pt-10">
           <p className="text-[10px] tracking-[0.2em] text-[#c9913a] font-semibold uppercase">O caminho certo para chegar mais longe.</p>
@@ -266,7 +266,7 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#e2e8f0] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=automoveis`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#1a2744] truncate">{store.name}</h4>

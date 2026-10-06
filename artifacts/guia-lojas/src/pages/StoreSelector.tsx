@@ -794,7 +794,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
               className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_8px_rgba(201,148,50,0.2)]"
 
-            />
+            loading="lazy" decoding="async" />
 
           </a>
 
@@ -860,7 +860,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             style={{ maskImage: "linear-gradient(to left, black 60%, transparent 100%)", WebkitMaskImage: "linear-gradient(to left, black 60%, transparent 100%)" }}
 
-          />
+          loading="lazy" decoding="async" />
 
         </div>
 
@@ -876,7 +876,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
           <div className="absolute right-0 top-0 w-[50%] h-full">
 
-            <img src={PURPOSE_SLIDES[0].image} alt={PURPOSE_SLIDES[0].title} className="w-full h-full object-cover" />
+            <img src={PURPOSE_SLIDES[0].image} alt={PURPOSE_SLIDES[0].title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
 
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/30 to-transparent" />
 

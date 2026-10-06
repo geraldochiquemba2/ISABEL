@@ -122,7 +122,7 @@ export default function LoginEntretenimento() {
 
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-3 mb-10">
-            <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" />
+            <img src="/logo-yesola-icon-dark.png" alt="YESOLA" className="w-10 h-10" loading="lazy" decoding="async" />
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", letterSpacing: "-.02em", color: "#221C35" }}>YESOLA<small style={{ display: "block", color: "#7C3AED", fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".23em", fontSize: "8px", marginTop: "2px" }}>Entretenimento</small></span>
           </div>
 

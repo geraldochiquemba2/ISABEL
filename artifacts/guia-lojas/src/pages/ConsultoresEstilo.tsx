@@ -48,6 +48,7 @@ function StoreCard({ store }: { store: Store }) {
           alt={store.name}
           className="w-full h-full object-cover"
           onError={(e) => { (e.target as HTMLImageElement).src = fallbackImage; }}
+          loading="lazy" decoding="async"
         />
         {displayImages.length > 1 && (
           <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">

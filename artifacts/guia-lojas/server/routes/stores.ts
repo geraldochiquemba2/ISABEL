@@ -98,14 +98,18 @@ storesRouter.get("/carrinho-access/pending", async (req, res) => {
 storesRouter.get("/", async (req, res) => {
   try {
     const { province, municipality, category, q, store_type } = req.query;
+    // Paginação (corta-banda): default alto para não partir os filtros
+    // client-side das páginas Explore; limita o crescimento futuro.
+    const page = Math.max(1, parseInt(String(req.query.page || "1"), 10) || 1);
+    const limit = Math.min(500, Math.max(1, parseInt(String(req.query.limit || "200"), 10) || 200));
+    const offset = (page - 1) * limit;
     let query = `
-      SELECT s.*, 
+      SELECT s.*,
         json_agg(
           json_build_object(
             'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
             'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
-            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho,
-            'description', p.description
+            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho
           )
         ) FILTER (WHERE p.id IS NOT NULL) AS products
       FROM stores s
@@ -142,9 +146,17 @@ storesRouter.get("/", async (req, res) => {
     }
 
     if (conditions.length) query += " WHERE " + conditions.join(" AND ");
+    const storeCountRes = await pool.query(
+      `SELECT COUNT(*)::int AS total FROM stores s JOIN users u ON u.store_id = s.id AND u.status = 'APROVADO'${conditions.length ? " WHERE " + conditions.join(" AND ") : ""}`,
+      params
+    );
+    res.setHeader("X-Total-Count", String(storeCountRes.rows[0]?.total ?? 0));
+    res.setHeader("X-Page", String(page));
+    res.setHeader("X-Limit", String(limit));
     query += " GROUP BY s.id ORDER BY s.created_at DESC";
+    query += ` LIMIT $${(params as unknown[]).length + 1} OFFSET $${(params as unknown[]).length + 2}`;
 
-    const result = await pool.query(query, params);
+    const result = await pool.query(query, [...(params as unknown[]), limit, offset]);
     const rows = result.rows.map((r) => ({
       id: r.id,
       name: r.name,

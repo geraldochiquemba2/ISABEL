@@ -126,7 +126,7 @@ export default function Login() {
                 src="/logo-yesola-icon-dark.png"
                 alt="YESOLA — Moda & Acessórios"
                 className="w-10 h-10"
-              />
+              loading="lazy" decoding="async" />
               <span className="text-sm font-medium text-foreground">
                 YESOLA<span className="font-light"> — Moda & Acessórios</span>
               </span>
@@ -144,7 +144,7 @@ export default function Login() {
                 src="/logo-yesola-icon-dark.png"
                 alt="YESOLA — Moda & Acessórios"
                 className="w-6 h-6"
-              />
+              loading="lazy" decoding="async" />
               <p className="text-xs text-muted-foreground">© 2024 YESOLA — Moda & Acessórios</p>
           </div>
         </div>

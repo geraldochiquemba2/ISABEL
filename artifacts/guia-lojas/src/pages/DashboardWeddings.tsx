@@ -290,7 +290,7 @@ export default function DashboardWeddings() {
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#D8B532] text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" />
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-7 h-7" loading="lazy" decoding="async" />
             <span className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Casamentos</i></span>
           </div>
           <div className="flex items-center gap-2">
@@ -309,7 +309,7 @@ export default function DashboardWeddings() {
         {/* Sidebar */}
         <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-30 w-64 bg-[#D8B532] text-white h-screen p-4 flex flex-col overflow-y-auto transition-transform duration-300`}>
           <div className="flex items-center gap-3 mb-5">
-            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" />
+            <img src="/logo-yesola-icon.png" alt="YESOLA" className="w-8 h-8" loading="lazy" decoding="async" />
             <div>
               <p className="font-serif text-sm tracking-[0.08em]">YESOLA <i className="font-normal">Casamentos</i></p>
               <p className="text-[10px] text-white/50">Painel da loja</p>
@@ -588,7 +588,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div>
           <label className={labelCls}>Logo da loja</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#E9D9B6]" />}
+            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#E9D9B6]" loading="lazy" decoding="async" />}
             <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#E9D9B6] rounded-xl text-xs text-[#77736D] hover:border-[#D8B532] hover:text-[#171717] cursor-pointer transition-colors">
               <Camera size={14} />
               {uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
@@ -603,7 +603,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div className="flex items-center gap-4">
             {store.coverImage && (
               <div className="relative group shrink-0">
-                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#E9D9B6]" />
+                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#E9D9B6]" loading="lazy" decoding="async" />
                 <button type="button" title="Remover capa" aria-label="Remover imagem de capa" onClick={handleRemoveCover} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             )}
@@ -621,7 +621,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div className="flex flex-wrap gap-3 mb-3">
             {(store.coverImages || []).map((img: string, i: number) => (
               <div key={i} className="relative group">
-                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#E9D9B6]" />
+                <img src={img} alt={`Galeria ${i + 1}`} className="w-24 h-24 rounded-xl object-cover border border-[#E9D9B6]" loading="lazy" decoding="async" />
                 <button type="button" title="Remover imagem" aria-label="Remover imagem da galeria" onClick={() => handleRemoveCoverImage(i)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             ))}
@@ -886,7 +886,7 @@ function ProdutosSection({ store }: { store: any }) {
                 <div className="flex flex-wrap gap-3 mb-3">
                   {productImages.map((img, i) => (
                     <div key={i} className="relative group">
-                      <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#E9D9B6]" />
+                      <img src={img} alt={`Imagem ${i + 1}`} className="w-20 h-20 rounded-xl object-cover border border-[#E9D9B6]" loading="lazy" decoding="async" />
                       <button
                         type="button"
                         title="Remover imagem"
@@ -997,7 +997,7 @@ function ProdutosSection({ store }: { store: any }) {
                       <div className="space-y-2">
                         {groupProducts.map((p: any) => (
                           <div key={p.id} className="flex items-center gap-3 p-3 bg-[#FBF7EC] rounded-xl">
-                            {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
+                            {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
                             <div className="flex-1">
                               <h5 className="text-xs font-medium text-[#171717]">{p.name}</h5>
                               <p className="text-[10px] text-[#77736D]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
@@ -1027,7 +1027,7 @@ function ProdutosSection({ store }: { store: any }) {
               <div className="space-y-2">
                 {orphanProducts.map((p: any) => (
                   <div key={p.id} className="flex items-center gap-3 p-3 bg-[#FBF7EC] rounded-xl">
-                    {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" />}
+                    {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
                     <div className="flex-1">
                       <h5 className="text-xs font-medium text-[#171717]">{p.name}</h5>
                       <p className="text-[10px] text-[#77736D]">Sem categoria {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>

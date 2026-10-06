@@ -56,9 +56,9 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
       onClick={() => { window.location.href = `/loja/${store.id}?from=${from}`; }}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" />
+        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
         {store.logoUrl && (
-          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" />
+          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
         )}
         
         {/* Botão de Partilha no Card */}

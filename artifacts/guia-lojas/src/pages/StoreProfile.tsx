@@ -180,6 +180,7 @@ export default function StoreProfile() {
                     alt={store.name}
                     draggable={false}
                     onDragStart={(e) => e.preventDefault()}
+                    loading="lazy" decoding="async"
                     className="relative z-0 h-full w-full object-contain"
                     onError={() => setCoverError(true)}
                   />
@@ -254,7 +255,7 @@ export default function StoreProfile() {
             src={store.logoUrl}
             alt={`${store.name} Logo`}
             className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover bg-white border border-[#E9D9B6] shadow-sm flex-shrink-0"
-          />
+          loading="lazy" decoding="async" />
         ) : (
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#E9D9B6] border border-[#E9D9B6] flex items-center justify-center flex-shrink-0 text-lg font-bold text-[#171717]">
             {store.name.substring(0, 2).toUpperCase()}
@@ -435,7 +436,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
                     style={{ backgroundColor: "#4285F4" }}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="Google Maps" className="w-6 h-6" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="Google Maps" className="w-6 h-6" loading="lazy" decoding="async" />
                     <span>Google Maps</span>
                   </button>
 
@@ -450,7 +451,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
                     style={{ backgroundColor: "#33CCFF" }}
                   >
-                    <img src="https://img.icons8.com/color/96/waze.png" alt="Waze" className="w-6 h-6" />
+                    <img src="https://img.icons8.com/color/96/waze.png" alt="Waze" className="w-6 h-6" loading="lazy" decoding="async" />
                     <span>Waze</span>
                   </button>
 
@@ -465,7 +466,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium shadow-sm"
                     style={{ backgroundColor: "#e8e8e8", color: "#333" }}
                   >
-                    <img src="https://i.pinimg.com/originals/8a/61/01/8a6101fe4a7acc2ce31fad7336966c60.png" alt="Apple Maps" className="w-6 h-6" />
+                    <img src="https://i.pinimg.com/originals/8a/61/01/8a6101fe4a7acc2ce31fad7336966c60.png" alt="Apple Maps" className="w-6 h-6" loading="lazy" decoding="async" />
                     <span>Apple Maps</span>
                   </button>
                 </div>
@@ -794,7 +795,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                           src={currentImg}
                           alt={p.name}
                           className="max-w-full max-h-[85%] object-contain rounded-xl select-none shadow-2xl border border-white/5"
-                        />
+                        loading="lazy" decoding="async" />
                         {pImages.length > 1 && (
                           <div className="flex gap-1.5 mt-4">
                             {pImages.map((_, i) => (
@@ -909,6 +910,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
                 draggable={false}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={() => setImgError(true)}
+                loading="lazy" decoding="async"
               />
               {pImgs.length > 1 && (
                 <div className="absolute bottom-1.5 right-1.5 z-10 flex gap-1">
@@ -1050,7 +1052,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
                 onClick={() => { setLightboxIndex(i); setLightboxPhotoIndex(0); }}
               >
                 {pImages.length > 0 ? (
-                  <img src={pImages[0]} alt={product.name} className="w-full h-full object-cover" />
+                  <img src={pImages[0]} alt={product.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.imageColor }}>
                     <ShoppingCart size={28} className="text-gray-300" />
@@ -1136,7 +1138,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
                           src={currentImg}
                           alt={p.name}
                           className="max-w-full max-h-[85%] object-contain rounded-xl select-none shadow-2xl border border-white/5"
-                        />
+                        loading="lazy" decoding="async" />
                         {pImages.length > 1 && (
                           <div className="flex gap-1.5 mt-4">
                             {pImages.map((_: any, idx: number) => (

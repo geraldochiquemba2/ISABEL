@@ -19,8 +19,8 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "15mb" }));
+app.use(express.urlencoded({ limit: "15mb", extended: true }));
 // Return JSON for malformed JSON body errors (catch body-parser errors)
 app.use((err: any, req: any, res: any, next: any) => {
   if (!err) return next();
@@ -132,14 +132,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function start() {
-  // Servir o frontend estático
+  // Servir o frontend estático. Os assets do Vite têm hash no nome → cache
+  // imutável de 1 ano (corta-banda em visitas repetidas). O index.html fica
+  // de fora (index: false) e sai pelo fallback abaixo sem cache.
   const distPath = path.resolve(__dirname, "../dist/public");
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, { maxAge: "1y", immutable: true, index: false }));
 
   // Qualquer outra rota que não seja /api/... vai para o index.html (SPA)
   // No Express 5, o wildcard '*' não é suportado da mesma forma, usamos Regex
   app.get(/.*/, (req, res) => {
     if (!req.path.startsWith("/api/")) {
+      res.setHeader("Cache-Control", "no-cache");
       res.sendFile(path.resolve(distPath, "index.html"));
     } else {
       res.status(404).json({ message: "API route not found" });

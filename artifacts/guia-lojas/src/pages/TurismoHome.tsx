@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -140,7 +140,7 @@ export default function TurismoHome({ onBackToSelector }: { onBackToSelector?: (
       {/* Hero */}
       <section className="px-5 py-4">
         <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "240px" }}>
-          <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=500&fit=crop&auto=format&q=80" alt="Turismo" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=500&fit=crop&auto=format&q=80" alt="Turismo" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
           <div className="relative z-10 p-6 max-w-[60%]">
             <p className="text-[10px] tracking-[0.2em] text-[#00796B] font-semibold uppercase">Explore e descubra.</p>
@@ -262,7 +262,7 @@ export default function TurismoHome({ onBackToSelector }: { onBackToSelector?: (
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#B2EBF2] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=turismo`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" />
+                  <img src={store.coverImage || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171717] truncate">{store.name}</h4>

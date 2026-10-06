@@ -97,13 +97,13 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
           className="w-full h-full object-cover object-top"
-        />
+        loading="lazy" decoding="async" />
         {store.logoUrl && (
           <img
             src={store.logoUrl}
             alt={`Logo ${store.name}`}
             className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
-          />
+          loading="lazy" decoding="async" />
         )}
         {images.length > 1 && (
           <div className="absolute bottom-2 right-2 z-20 flex gap-1">
@@ -497,7 +497,7 @@ export default function ExploreCollection() {
 
       <footer className="mx-auto flex max-w-[1380px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-12 bg-[#FBF7EC]">
         <div className="flex items-center gap-3">
-          <img src="/logo-yesola-icon-dark.png" alt="YESOLA — Moda & Acessórios" className="w-8 h-8" />
+          <img src="/logo-yesola-icon-dark.png" alt="YESOLA — Moda & Acessórios" className="w-8 h-8" loading="lazy" decoding="async" />
           <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-lg tracking-[0.08em] text-[#171717]">YESOLA <i className="font-normal" style={{ fontFamily: "'DM Sans', sans-serif", textTransform: "uppercase", letterSpacing: ".15em", fontSize: "9px" }}>MODA & ACESSÓRIOS</i></span>
         </div>
         <p className="text-xs text-[#77736D]">Tudo o que procurais, encontrais aqui.</p>

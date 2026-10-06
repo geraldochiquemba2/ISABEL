@@ -44,7 +44,7 @@ export function PlaceCard({ p }: { p: Place }) {
       onClick={() => window.open(mapLink(p), "_blank", "noopener")}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={KIND_IMG[p.kind] || KIND_IMG["servico-publico"]} alt={p.name} className="w-full h-full object-cover object-top" />
+        <img src={KIND_IMG[p.kind] || KIND_IMG["servico-publico"]} alt={p.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
         <span className="absolute top-2 right-2 text-[9px] font-semibold px-2 py-0.5 rounded-full z-20 bg-white/90 text-[#A96F12]">
           {p.source === "osm" ? "Do mapa" : p.source === "comunidade" ? "Comunidade" : "YESOLA"}
         </span>
@@ -176,7 +176,7 @@ export default function LugaresHome() {
         {/* Hero */}
         <section className="px-5 py-4">
           <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "240px" }}>
-            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=500&fit=crop&auto=format&q=80" alt="Mapa" className="absolute inset-0 w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=500&fit=crop&auto=format&q=80" alt="Mapa" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
             <div className="relative z-10 p-6 max-w-[60%]">
               <p className="text-[10px] tracking-[0.2em] text-[#A96F12] font-semibold uppercase">Perto de si.</p>

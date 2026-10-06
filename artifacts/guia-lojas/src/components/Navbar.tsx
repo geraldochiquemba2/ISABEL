@@ -53,7 +53,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
                     src="/logo-yesola-dark.png" 
                     alt="YESOLA" 
                     className="w-10 h-10 transition-transform group-hover:scale-110"
-                  />
+                  loading="lazy" decoding="async" />
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-white">
