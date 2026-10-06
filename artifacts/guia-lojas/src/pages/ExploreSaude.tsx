@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Heart, Stethoscope, Brain, Smile, Baby, Pill, Eye, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const SAUDE_CATEGORIES = [
+const SAUDE_CATEGORIES_META = [
   { number: "01", title: "Clínicas & Hospitais", intro: "Atendimento médico de excelência para toda a família.", category: "clinicas", icon: Stethoscope, items: ["Clínicas Gerais & Multiespecialidades", "Hospitais & Centros de Saúde", "Laboratórios & Clínicas de Análises"] },
   { number: "02", title: "Médicos Particulares", intro: "Profissionais dedicados ao seu bem-estar.", category: "medicos", icon: Heart, items: ["Clínica Geral & Especialidades", "Dermatologia & Estética", "Cardiologia & Neurologia"] },
   { number: "03", title: "Medicina Dentária & Ortodontia", intro: "Sorrisos saudáveis e tratamentos de qualidade.", category: "dentaria", icon: Smile, items: ["Clareamento & Estética Dental", "Ortodontia & Aparelhos", "Implantes & Próteses"] },
@@ -95,6 +96,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreSaude() {
+  const SAUDE_CATEGORIES = useVerticalGroups(SAUDE_CATEGORIES_META, "saude");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

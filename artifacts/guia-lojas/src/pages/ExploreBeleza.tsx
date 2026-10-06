@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Scissors, Sparkles, Palette, Heart, Flower2, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const BELEZA_CATEGORIES = [
+const BELEZA_CATEGORIES_META = [
   { number: "01", title: "Cabelo", intro: "Cuidado e estilo para todos os tipos de cabelo.", category: "cabelo", icon: Scissors, items: ["Corte & Penteado", "Tranças & Dreadlocks", "Alisamento & Tratamentos", "Coloração & Mechas"] },
   { number: "02", title: "Unhas", intro: "Unhas impecáveis para todas as ocasiões.", category: "unhas", icon: Sparkles, items: ["Manicure & Pedicure", "Gel & Acrílico", "Decoração & Nail Art", "Alongamento"] },
   { number: "03", title: "Maquiagem", intro: "Realce a sua beleza natural com profissionais.", category: "maquiagem", icon: Palette, items: ["Maquiagem Social", "Maquiagem de Noiva", "Maquiagem Artística", "Aulas de Maquiagem"] },
@@ -90,6 +91,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreBeleza() {
+  const BELEZA_CATEGORIES = useVerticalGroups(BELEZA_CATEGORIES_META, "beleza");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

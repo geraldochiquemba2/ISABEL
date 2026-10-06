@@ -6,12 +6,13 @@ import {
   MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
 
-const WEDDING_SERVICE_GROUPS = [
+const WEDDING_SERVICE_GROUPS_META = [
   { number: "01", title: "Planeamento & Organização de Casamentos", intro: "Do primeiro sim ao último brinde, guardamos o fio invisível de tudo.", category: "planeamento", icon: HeartHandshake, items: ["Wedding Planner & Assessoria", "Assistente Pessoal dos Noivos", "Mestre de Cerimónias", "Hostesses e Acolhimento VIP"] },
   { number: "02", title: "Pedidos de Casamento, Noivados & Momentos Românticos", intro: "Gestos íntimos, pensados para a vossa história.", category: "noivados", icon: Heart, items: ["Pedidos de Casamento", "Aniversários de Namoro/Casamento", "Jantares Íntimos", "Serenatas e Músicos"] },
   { number: "03", title: "Fotografia, Vídeo & Produção Audiovisual", intro: "A memória viva de cada detalhe.", category: "fotografia", icon: Camera, items: ["Fotógrafo de Casamento", "Videógrafo & Cinematografia", "Drone & Cobertura Aérea", "Álbuns & Livros de Fotos"] },
@@ -65,6 +66,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreWeddings() {
+  const WEDDING_SERVICE_GROUPS = useVerticalGroups(WEDDING_SERVICE_GROUPS_META, "weddings");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria") || params.get("servico");

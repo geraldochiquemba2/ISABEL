@@ -6,6 +6,7 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 
 type CollectionGroup = {
   number: string;
@@ -29,7 +30,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const groups: CollectionGroup[] = [
+const groupsMeta: CollectionGroup[] = [
   {
     number: "01",
     title: "Moda Feminina",
@@ -133,6 +134,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
 }
 
 export default function ExploreCollection() {
+  const groups = useVerticalGroups(groupsMeta, "collection");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get("categoria");

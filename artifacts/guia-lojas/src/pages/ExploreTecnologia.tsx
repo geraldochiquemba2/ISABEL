@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Smartphone, Monitor, Headphones, Refrigerator, Wrench, Wifi, Code, Shield, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const TECNOLOGIA_CATEGORIES = [
+const TECNOLOGIA_CATEGORIES_META = [
   { number: "01", title: "Telemóveis & Tablets", intro: "Os melhores smartphones e tablets das principais marcas mundiais.", category: "telemoveis-tablets", icon: Smartphone, items: ["iPhone", "Samsung", "Xiaomi", "Tecno", "Infinix", "Huawei", "Outros Smartphones", "Tablets", "Acessórios"] },
   { number: "02", title: "Computadores & Informática", intro: "Computadores, periféricos e acessórios para trabalho e lazer.", category: "computadores-informatica", icon: Monitor, items: ["Portáteis", "Computadores de Mesa", "Monitores", "Impressoras", "Teclados", "Ratos", "Armazenamento", "Acessórios"] },
   { number: "03", title: "Electrónicos & Acessórios", intro: "Electrónica de consumo, áudio, vídeo e acessórios de qualidade.", category: "electronica-acessorios", icon: Headphones, items: ["Televisores", "Colunas", "Auscultadores", "Câmaras", "Consolas", "Acessórios Electrónicos"] },
@@ -91,6 +92,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreTecnologia() {
+  const TECNOLOGIA_CATEGORIES = useVerticalGroups(TECNOLOGIA_CATEGORIES_META, "tecnologia-electronicos");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

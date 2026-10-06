@@ -1,4 +1,5 @@
 import { pool } from "./db";
+import { EXPLORE_GROUP_SEED } from "./seed-explore-groups";
 
 export async function initDB() {
   const client = await pool.connect();
@@ -11,6 +12,8 @@ export async function initDB() {
         icon        TEXT,
         cover_image TEXT,
         subcategories TEXT[] DEFAULT '{}',
+        store_type  TEXT,
+        intro       TEXT,
         created_at  TIMESTAMPTZ DEFAULT NOW()
       );
 
@@ -128,6 +131,8 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS is_trending BOOLEAN DEFAULT FALSE`,
       `ALTER TABLE categories ADD COLUMN IF NOT EXISTS subcategories TEXT[] DEFAULT '{}'`,
+      `ALTER TABLE categories ADD COLUMN IF NOT EXISTS store_type TEXT`,
+      `ALTER TABLE categories ADD COLUMN IF NOT EXISTS intro TEXT`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS carrinho_access TEXT DEFAULT 'NAO_SOLICITADO'`,
       `UPDATE stores SET carrinho_access = 'NAO_SOLICITADO' WHERE carrinho_access IS NULL OR carrinho_access = 'PENDENTE'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS is_carrinho BOOLEAN DEFAULT FALSE`,
@@ -277,6 +282,16 @@ export async function initDB() {
           [cat.id, cat.name, cat.icon, cat.coverImage]
         );
       }
+    }
+
+    // Grupos do Explorar: espelho inicial do que estava fixo no código.
+    // Corre uma vez por linha (ON CONFLICT DO NOTHING): daqui para a frente
+    // o Admin manda — criar/renomear/apagar aqui reflete no Explorar.
+    for (const g of EXPLORE_GROUP_SEED) {
+      await client.query(
+        "INSERT INTO categories (id, name, icon, subcategories, store_type, intro) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING",
+        [g.id, g.name, g.icon, g.items, g.vertical, g.intro || null]
+      );
     }
 
     // Normalizar categorias antigas e erradas

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Clapperboard, Music, Drama, PartyPopper, Gamepad2, Trophy, Camera, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const ENTRETENIMENTO_CATEGORIES = [
+const ENTRETENIMENTO_CATEGORIES_META = [
   { number: "01", title: "Cinema & Filmes", intro: "Salas escuras, grandes histórias.", category: "cinema", icon: Clapperboard, items: ["Salas de Cinema", "Cinema ao Ar Livre", "Clubes de Cinema", "Aluguer de Filmes"] },
   { number: "02", title: "Música & Concertos", intro: "Palcos, vozes e noites que ficam.", category: "musica", icon: Music, items: ["Concertos & Festivais", "Bandas & Artistas", "Estúdios de Música", "Aulas de Música"] },
   { number: "03", title: "Teatro & Espetáculos", intro: "Histórias contadas ao vivo.", category: "teatro", icon: Drama, items: ["Peças de Teatro", "Stand-Up Comedy", "Dança & Espetáculos", "Grupos Teatrais"] },
@@ -88,6 +89,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreEntretenimento() {
+  const ENTRETENIMENTO_CATEGORIES = useVerticalGroups(ENTRETENIMENTO_CATEGORIES_META, "entretenimento");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

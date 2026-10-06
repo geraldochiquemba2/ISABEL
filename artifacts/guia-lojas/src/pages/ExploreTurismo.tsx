@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Plane, Map, Compass, TreePine, Gamepad2, Landmark, Users, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const TURISMO_CATEGORIES = [
+const TURISMO_CATEGORIES_META = [
   { number: "01", title: "Agências de Viagens & Turismo", intro: "Reservas; viagens nacionais; internacionais; pacotes turísticos.", category: "agencias-viagens", icon: Plane, items: ["Reservas de Viagens", "Viagens Nacionais", "Viagens Internacionais", "Pacotes Turísticos"] },
   { number: "02", title: "Passeios & Excursões", intro: "Excursões; passeios de grupo; visitas guiadas; passeios privados.", category: "passeios-excursões", icon: Map, items: ["Excursões", "Passeios de Grupo", "Visitas Guiadas", "Passeios Privados"] },
   { number: "03", title: "Experiências Turísticas", intro: "Cultura; gastronomia; natureza; aventura.", category: "experiencias-turisticas", icon: Compass, items: ["Cultura Local", "Gastronomia Regional", "Natureza & Ecoturismo", "Aventura & Emoções"] },
@@ -90,6 +91,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreTurismo() {
+  const TURISMO_CATEGORIES = useVerticalGroups(TURISMO_CATEGORIES_META, "turismo-lazer");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

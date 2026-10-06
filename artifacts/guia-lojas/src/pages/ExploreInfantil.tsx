@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Baby, Blocks, Heart, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const INFANTIL_CATEGORIES = [
+const INFANTIL_CATEGORIES_META = [
   { number: "01", title: "Moda & Enxoval Infantil", intro: "Vestuário e enxoval com carinho para os pequenos.", category: "moda", icon: Baby, items: ["Roupas para Bebés & Recém-Nascidos", "Vestuário Infantil (Calçado, Acessórios e Fardas)", "Kits de Enxoval & Maternidade"] },
   { number: "02", title: "Brinquedos & Aprendizagem", intro: "Diversão e aprendizagem para todas as idades.", category: "brinquedos", icon: Blocks, items: ["Brinquedos Educativos & Didáticos", "Jogos, Livros & Material Escolar", "Mobília & Decoração de Quartos Infantis"] },
   { number: "03", title: "Cuidados, Saúde & Bem-Estar", intro: "Tudo para a saúde e bem-estar do bebé e da mãe.", category: "cuidados", icon: Heart, items: ["Produtos de Higiene & Maternidade", "Creches, Jardim de Infância & Explicações", "Festas Infantis & Animação"] },
@@ -86,6 +87,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreInfantil() {
+  const INFANTIL_CATEGORIES = useVerticalGroups(INFANTIL_CATEGORIES_META, "infantil");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

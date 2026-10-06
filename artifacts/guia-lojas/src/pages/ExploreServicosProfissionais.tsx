@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FileText, Lightbulb, Keyboard, Building2, Languages, Palette, Crown, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const SERVICOS_CATEGORIES = [
+const SERVICOS_CATEGORIES_META = [
   { number: "01", title: "Documentação & Tramitação", intro: "Serviços completos para a formalização e gestão documental da sua empresa.", category: "documentacao-tramitacao", icon: FileText, items: ["Documentação Empresarial", "Apoio na Constituição de Empresas", "Licenciamento de Actividades", "Registos & Actualizações Empresariais", "Preenchimento de Formulários & Requerimentos", "Organização de Processos Documentais", "Tramitação & Acompanhamento de Processos", "Serviços de Despachante", "Apoio Administrativo a Empresas"] },
   { number: "02", title: "Consultoria Especializada", intro: "Orientação profissional para impulsionar o seu crescimento.", category: "consultoria-especializada", icon: Lightbulb, items: ["Consultoria de Imagem", "Consultoria de Carreira", "Consultoria Educacional", "Consultoria Técnica", "Consultoria de Projectos", "Outras Consultorias Especializadas"] },
   { number: "03", title: "Secretariado & Assistência Profissional", intro: "Suporte administrativo remoto e presencial para otimizar o seu tempo.", category: "secretariado", icon: Keyboard, items: ["Assistentes Virtuais", "Secretariado Remoto", "Assistência Administrativa", "Gestão de Agenda", "Organização de Documentos", "Atendimento ao Cliente", "Apoio Administrativo Remoto"] },
@@ -91,6 +92,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreServicosProfissionais() {
+  const SERVICOS_CATEGORIES = useVerticalGroups(SERVICOS_CATEGORIES_META, "servicos-profissionais");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

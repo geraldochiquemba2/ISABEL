@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Compass, CircleDollarSign, Target, Scale, UsersRound, Landmark, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const BUSINESS_CATEGORIES = [
+const BUSINESS_CATEGORIES_META = [
   { number: "01", title: "Consultoria, Estratégia e Gestão Empresarial", intro: "Decisões mais claras para negócios prontos para avançar.", category: "consultoria", icon: Compass, items: ["Consultoria de Negócios e Gestão Estratégica", "Elaboração de Planos de Negócio e Viabilidade Económica", "Mapeamento, Reestruturação e Otimização de Processos", "Mentoria para Empreendedores, Startups e Founders"] },
   { number: "02", title: "Gestão Financeira, Contabilidade e Fiscalidade", intro: "O rigor financeiro que transforma números em confiança.", category: "financas", icon: CircleDollarSign, items: ["Contabilidade Certificada, Auditoria e Declarações", "Consultoria Fiscal, Planeamento Tributário e Impostos", "Gestão do Fluxo de Caixa e Finanças Empresariais", "Avaliação de Empresas (Valuation) e Análise de Risco"] },
   { number: "03", title: "Marketing, Vendas e Posicionamento de Marca", intro: "Uma presença que diz o que vale, para quem importa.", category: "marketing", icon: Target, items: ["Gestão de Redes Sociais, Conteúdo e Tráfego Pago", "Criação de Identidade Visual, Branding e Design", "Estratégias de Vendas, Prospecção e Treino Comercial", "Assessoria de Imprensa, Relações Públicas e Comunicação"] },
@@ -90,6 +91,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreBusiness() {
+  const BUSINESS_CATEGORIES = useVerticalGroups(BUSINESS_CATEGORIES_META, "business");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

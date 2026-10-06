@@ -6,12 +6,13 @@ import {
   Home, Clock3, MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
 
-const LOVE_SERVICE_GROUPS = [
+const LOVE_SERVICE_GROUPS_META = [
   { number: "01", title: "Actos de Amor, Homenagens e Experiências", intro: "Faça-se presente nos dias que mais importam.", category: "actos-de-amor", icon: HeartHandshake, items: ["Cartas escritas à mão", "Serenatas e músicos", "Festas íntimas"] },
   { number: "02", title: "Presentes, Flores & Surpresas", intro: "Gestos que falam mais alto que as palavras.", category: "presentes-flores-surpresas", icon: HeartHandshake, items: ["Flores e buquês", "Cabazes", "Presentes personalizados", "Caixas-surpresa", "Cestas", "Presentes românticos"] },
   { number: "03", title: "Apoio & Companhia a Idosos", intro: "Presença, cuidado e respeito para quem tanto deu.", category: "apoio-companhia-idosos", icon: HeartHandshake, items: ["Companhia", "Acompanhamento", "Apoio em deslocações", "Assistência não clínica"] },
@@ -66,6 +67,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreLove() {
+  const LOVE_SERVICE_GROUPS = useVerticalGroups(LOVE_SERVICE_GROUPS_META, "love-services");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria") || params.get("servico");

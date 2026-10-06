@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Truck, Package, Car, MapPin, Boxes, Warehouse, Forklift, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const TRANSPORTES_CATEGORIES = [
+const TRANSPORTES_CATEGORIES_META = [
   { number: "01", title: "Transporte Interprovincial", intro: "Conectamos províncias com segurança e pontualidade.", category: "transporte-interprovincial", icon: Truck, items: ["Transporte Interprovincial de Passageiros", "Encomendas entre Províncias", "Mercadorias entre Províncias", "Cargas Interprovinciais", "Transporte Regular entre Províncias", "Recolha & Entrega Interprovincial"] },
   { number: "02", title: "Mudanças & Transporte de Bens", intro: "Mudanças com cuidado profissional e pontualidade.", category: "mudancas-transporte", icon: Package, items: ["Mudanças Residenciais", "Mudanças de Escritórios", "Transporte de Móveis", "Transporte de Electrodomésticos", "Transporte de Equipamentos", "Transporte de Outros Bens"] },
   { number: "03", title: "Transporte de Passageiros", intro: "Conforto e segurança para cada viagem.", category: "transporte-passageiros", icon: Car, items: ["Táxi", "Transporte Particular", "Transporte Executivo", "Transfers", "Transporte para Grupos", "Transporte para Empresas"] },
@@ -90,6 +91,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreTransportes() {
+  const TRANSPORTES_CATEGORIES = useVerticalGroups(TRANSPORTES_CATEGORIES_META, "transportes-logistica");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

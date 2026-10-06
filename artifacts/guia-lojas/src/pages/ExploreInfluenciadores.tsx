@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Users, Video, Mic, Camera, Tv, Music, Globe, Smile, Heart, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -21,7 +22,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const INFLUENCIADORES_CATEGORIES = [
+const INFLUENCIADORES_CATEGORIES_META = [
   { number: "01", title: "Influenciadores Digitais", intro: "Conexões autênticas que movem marcas e pessoas.", category: "influenciadores-digitais", icon: Users, items: ["Moda", "Beleza", "Gastronomia", "Lifestyle", "Humor & Entretenimento", "Cristão", "Negócios & Empreendedorismo", "Maternidade & Família", "Saúde & Bem-Estar", "Desporto & Fitness", "Viagens & Turismo", "Tecnologia", "Educação", "Cultura & Arte", "Música", "Generalistas"] },
   { number: "02", title: "Criadores de Conteúdo", intro: "Conteúdo criativo que engaja e converte.", category: "criadores-conteudo", icon: Video, items: ["Conteúdo para Redes Sociais", "Reels & Vídeos Curtos", "Conteúdo para Marcas", "Conteúdo Comercial", "Conteúdo Institucional", "Conteúdo de Produtos & Serviços"] },
   { number: "03", title: "Criadores UGC", intro: "Conteúdo gerado por utilizadores que gera confiança.", category: "criadores-ugc", icon: Globe, items: ["Demonstração de Produtos", "Reviews", "Unboxing", "Testemunhos", "Tutoriais de Produtos", "Conteúdo Publicitário", "Experiência com Produtos & Serviços"] },
@@ -92,6 +93,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreInfluenciadores() {
+  const INFLUENCIADORES_CATEGORIES = useVerticalGroups(INFLUENCIADORES_CATEGORIES_META, "influenciadores-criadores");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

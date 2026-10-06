@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Building2, Home, Hotel, Key, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const IMOVEIS_CATEGORIES = [
+const IMOVEIS_CATEGORIES_META = [
   { number: "01", title: "Hotéis & Resorts", intro: "Acolhimento e conforto de excelência para estadias inesquecíveis.", category: "hoteis", icon: Hotel, items: ["Hotéis Executivos", "Lodges e Resorts", "Aparthotéis & Suítes"] },
   { number: "02", title: "Alojamento & Estadias", intro: "Espaços pensados para quem busca conforto e praticidade.", category: "alojamento", icon: Home, items: ["Casas de Férias & Vilas", "Apartamentos Temporários (Short Stay)", "Quarto & Suíte de Passagem"] },
   { number: "03", title: "Imobiliária & Compras", intro: "Oportunidades reais para investir, comprar ou arrendar.", category: "imobiliaria", icon: Building2, items: ["Venda de Casas & Apartamentos", "Terrenos & Lotes Urbanizados", "Arrendamento & Aluguer"] },
@@ -87,6 +88,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreImoveis() {
+  const IMOVEIS_CATEGORIES = useVerticalGroups(IMOVEIS_CATEGORIES_META, "imoveis");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

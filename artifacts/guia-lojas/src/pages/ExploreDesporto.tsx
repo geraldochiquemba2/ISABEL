@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Dumbbell, UserCheck, Trophy, Volleyball, Waves, Swords, Shirt, Music, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const DESPORTO_CATEGORIES = [
+const DESPORTO_CATEGORIES_META = [
   { number: "01", title: "Ginásios & Academias", intro: "Musculação; cardio; fitness; aulas colectivas.", category: "ginasios", icon: Dumbbell, items: ["Musculação & Força", "Cardio & Resistência", "Aulas Colectivas & Fitness"] },
   { number: "02", title: "Personal Trainers", intro: "Treino individual; funcional; preparação física; acompanhamento.", category: "personal-trainers", icon: UserCheck, items: ["Treino Individual", "Treino Funcional", "Preparação Física & Acompanhamento"] },
   { number: "03", title: "Clubes & Escolas Desportivas", intro: "Clubes; academias; escolas de formação desportiva.", category: "clubes-escolas", icon: Trophy, items: ["Clubes Desportivos", "Academias de Formação", "Escolas Desportivas"] },
@@ -92,6 +93,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreDesporto() {
+  const DESPORTO_CATEGORIES = useVerticalGroups(DESPORTO_CATEGORIES_META, "desporto-fitness");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

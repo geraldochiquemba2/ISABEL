@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Sparkles, TentTree, Utensils, Music2, ShieldCheck, Camera, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const EVENTOS_CATEGORIES = [
+const EVENTOS_CATEGORIES_META = [
   { number: "01", title: "Planeamento, Design e Assessoria de Eventos", intro: "Momentos que ficam na memória.", category: "decoracao", icon: Sparkles, items: ["Decoração Temática", "Organização e Assessoria de Festas Infantis e Batizados", "Planeamento de Aniversários, Chás de Bebé e Chás de Panela", "Organização de Eventos Corporativos, Jantares e Galas"] },
   { number: "02", title: "Estrutura, Mobilia e Aluguer de Equipamentos", intro: "Tudo o que precisa para montar o cenário perfeito.", category: "equipamentos", icon: TentTree, items: ["Aluguer de Som", "Iluminação Profissional", "Palcos", "Aluguer de Tendas", "Mesas e Cadeiras", "Louça para Festas", "Aluguer de Geradores e Equipamentos Elétricos de Apoio", "Telões de LED, Projetores e Fotomatões (360º / Photobooth)"] },
   { number: "03", title: "Gastronomia, Bar e Restauração para Eventos", intro: "Sabores que fazem a diferença.", category: "gastronomia", icon: Utensils, items: ["Serviços de Catering e Buffets Temáticos", "Bolos Artísticos, Doces Finos e Salgados", "Bar de Cócteis e Baristas"] },
@@ -88,6 +89,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreEventos() {
+  const EVENTOS_CATEGORIES = useVerticalGroups(EVENTOS_CATEGORIES_META, "eventos");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Sprout, Egg, Tractor, Leaf, Scissors, Fish, Wheat, Handshake, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const AGRICULTURA_CATEGORIES = [
+const AGRICULTURA_CATEGORIES_META = [
   { number: "01", title: "Agricultura & Produção Agrícola", intro: "Cultivos diversos para alimentação e abastecimento.", category: "agricultura-producao", icon: Sprout, items: ["Cereais", "Hortícolas", "Frutas", "Tubérculos", "Outras culturas"] },
   { number: "02", title: "Pecuária & Criação Animal", intro: "Criação e maneio de animais para produção pecuária.", category: "pecuaria-criacao", icon: Egg, items: ["Bovinos", "Caprinos", "Suínos", "Outras criações"] },
   { number: "03", title: "Produtores & Fazendas", intro: "Unidades produtivas e organizações agrícolas.", category: "produtores-fazendas", icon: Wheat, items: ["Fazendas", "Cooperativas", "Produtores individuais", "Fornecedores agrícolas"] },
@@ -93,6 +94,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreAgricultura() {
+  const AGRICULTURA_CATEGORIES = useVerticalGroups(AGRICULTURA_CATEGORIES_META, "agricultura-agronegocio");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Car, Wrench, Key, Shield, Droplets, Truck, MapPin, FileCheck, ParkingSquare, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const AUTOMOVEIS_CATEGORIES = [
+const AUTOMOVEIS_CATEGORIES_META = [
   { number: "01", title: "Venda de Carros Novos & Usados", intro: "Os melhores carros novos e seminovos, verificados e garantidos.", category: "venda-carros", icon: Car, items: ["Carros Novos", "Carros Usados", "Seminovos & Kilometragem Certificada"] },
   { number: "02", title: "Aluguer de Viaturas", intro: "Aluguer de curta e longa duração para quem precisa de mobilidade.", category: "aluguer-viaturas", icon: Key, items: ["Aluguer Diário", "Aluguer Mensal", "Aluguer com Motorista"] },
   { number: "03", title: "Oficinas & Mecânicos", intro: "Profissionais qualificados para manutenção e reparação do seu veículo.", category: "oficinas-mecanicos", icon: Wrench, items: ["Mecânica Geral", "Electricidade Automóvel", "Diagnóstico Computorizado"] },
@@ -94,6 +95,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreAutomoveis() {
+  const AUTOMOVEIS_CATEGORIES = useVerticalGroups(AUTOMOVEIS_CATEGORIES_META, "automoveis");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

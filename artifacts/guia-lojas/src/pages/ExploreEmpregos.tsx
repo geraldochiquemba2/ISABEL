@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Briefcase, GraduationCap, Star, Clock, PenTool, Users, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const EMPREGOS_CATEGORIES = [
+const EMPREGOS_CATEGORIES_META = [
   { number: "01", title: "Vagas de Emprego", intro: "Encontre a oportunidade ideal para a sua carreira.", category: "vagas-emprego", icon: Briefcase, items: ["Tempo Inteiro", "Tempo Parcial", "Presencial", "Remoto", "Híbrido"] },
   { number: "02", title: "Estágios Profissionais", intro: "Dê o primeiro passo na sua carreira profissional.", category: "estagios", icon: GraduationCap, items: ["Estágio Curricular", "Estágio Profissional", "Programas para Recém-Formados"] },
   { number: "03", title: "Primeiro Emprego", intro: "Oportunidades para quem está a começar.", category: "primeiro-emprego", icon: Star, items: ["Sem Experiência", "Programas para Jovens", "Vagas de Entrada"] },
@@ -90,6 +91,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreEmpregos() {
+  const EMPREGOS_CATEGORIES = useVerticalGroups(EMPREGOS_CATEGORIES_META, "empregos-oportunidades");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

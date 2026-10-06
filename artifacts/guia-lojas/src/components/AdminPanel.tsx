@@ -18,6 +18,36 @@ import CategoryIconPicker, { CategoryIcon } from "./CategoryIconPicker";
 const inputCls = "w-full border border-[#EDE8DE] bg-white py-3 px-4 text-sm text-[#2D2C2B] placeholder:text-[#87909a] outline-none focus:border-[#D4A843] focus:ring-2 focus:ring-[#D4A843]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#87909a] mb-1.5";
 
+// Verticais do Explorar (value = store_type). A categoria só aparece no
+// Explorar da vertical escolhida.
+const STORE_TYPE_OPTIONS = [
+  ["agricultura-agronegocio", "Agricultura"],
+  ["alimentacao-restauracao", "Alimentação"],
+  ["automoveis", "Automóveis"],
+  ["beleza", "Beleza"],
+  ["business", "Negócios"],
+  ["casa", "Casa"],
+  ["collection", "Collection"],
+  ["desporto-fitness", "Desporto"],
+  ["empregos-oportunidades", "Empregos"],
+  ["entretenimento", "Entretenimento"],
+  ["eventos", "Eventos"],
+  ["formacoes", "Formações"],
+  ["imoveis", "Imóveis"],
+  ["infantil", "Infantil"],
+  ["influenciadores-criadores", "Influenciadores"],
+  ["love-services", "Love"],
+  ["saude", "Saúde"],
+  ["servicos-profissionais", "Serviços Prof."],
+  ["tecnologia-electronicos", "Tecnologia"],
+  ["transportes-logistica", "Transportes"],
+  ["turismo-lazer", "Turismo"],
+  ["weddings", "Weddings"],
+  ["weddings-services", "Wedding Services"],
+];
+const storeTypeLabel = (v?: string | null) =>
+  STORE_TYPE_OPTIONS.find(([val]) => val === v)?.[1] || "—";
+
 type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets" | "carrinhos";
 
 interface AdminPanelProps {
@@ -364,7 +394,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", icon: "" });
+  const [form, setForm] = useState({ name: "", icon: "", store_type: "", intro: "" });
 
   useEffect(() => { loadCategories(); }, []);
 
@@ -378,10 +408,10 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
     if (!form.name.trim()) return;
     try {
       // Sem coverImage: a capa antiga mantém-se (merge no servidor).
-      const payload = { name: form.name.trim(), icon: form.icon || null };
+      const payload = { name: form.name.trim(), icon: form.icon || null, store_type: form.store_type || null, intro: form.intro.trim() || null };
       if (editId) { await updateCategory(editId, payload); }
       else { await createCategory(payload); }
-      setShowForm(false); setEditId(null); setForm({ name: "", icon: "" }); loadCategories();
+      setShowForm(false); setEditId(null); setForm({ name: "", icon: "", store_type: "", intro: "" }); loadCategories();
     } catch (e: any) { alert("Erro: " + e.message); }
   }
 
@@ -391,7 +421,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   }
 
   function startEdit(cat: any) {
-    setEditId(cat.id); setForm({ name: cat.name, icon: cat.icon || "" }); setShowForm(true);
+    setEditId(cat.id); setForm({ name: cat.name, icon: cat.icon || "", store_type: cat.store_type || "", intro: cat.intro || "" }); setShowForm(true);
   }
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -417,7 +447,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-[#87909a]">{categories.length} categorias</p>
-        <button onClick={() => { setShowForm(!showForm); setEditId(null); setForm({ name: "", icon: "" }); }}
+        <button onClick={() => { setShowForm(!showForm); setEditId(null); setForm({ name: "", icon: "", store_type: "", intro: "" }); }}
           className="flex items-center gap-2 text-white px-4 py-2 rounded-full text-xs font-semibold transition-colors"
           style={{ backgroundColor: accentColor }}>
           <FolderPlus size={13} /> Nova Categoria
@@ -429,7 +459,15 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
             <div className="bg-white rounded-2xl border border-[#EDE8DE] p-5 space-y-3">
               <h3 className="text-sm font-semibold">{editId ? "Editar Categoria" : "Nova Categoria"}</h3>
-              <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Moda" /></div>
+              <div><label className={labelCls}>Nome</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} placeholder="Ex: Cabelo" /></div>
+              <div>
+                <label className={labelCls}>Vertical do Explorar</label>
+                <select value={form.store_type} onChange={(e) => setForm({ ...form, store_type: e.target.value })} className={inputCls}>
+                  <option value="">Sem vertical (não aparece no Explorar)</option>
+                  {STORE_TYPE_OPTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                </select>
+              </div>
+              <div><label className={labelCls}>Texto de apresentação (intro no Explorar)</label><input value={form.intro} onChange={(e) => setForm({ ...form, intro: e.target.value })} className={inputCls} placeholder="Ex: Cuidado e estilo para todos os tipos de cabelo." /></div>
               <div>
                 <label className={labelCls}>Ícone (tocar para escolher)</label>
                 <CategoryIconPicker value={form.icon} onChange={(v) => setForm({ ...form, icon: v })} accentColor={accentColor} />
@@ -457,7 +495,7 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
                 </span>
                 <div>
                   <p className="text-sm font-medium text-[#2D2C2B]">{cat.name}</p>
-                  <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias</p>
+                  <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias · {storeTypeLabel(cat.store_type)}</p>
                 </div>
               </div>
               <div className="flex gap-1.5">

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, UtensilsCrossed, Cake, Zap, ChefHat, ShoppingCart, Beef, Croissant, Droplets, Package, Truck, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const ALIMENTACAO_CATEGORIES = [
+const ALIMENTACAO_CATEGORIES_META = [
   { number: "01", title: "Restaurantes", intro: "Cozinha angolana, africana, internacional, familiar e especializada.", category: "restaurantes", icon: UtensilsCrossed, items: ["Cozinha Angolana", "Cozinha Africana", "Cozinha Internacional", "Restaurante Familiar", "Cozinha Especializada"] },
   { number: "02", title: "Pastelarias & Cafés", intro: "Cafés, pastelarias, casas de chá, geladarias e sobremesas.", category: "pastelarias-cafes", icon: Cake, items: ["Cafés & Pastelarias", "Casas de Chá", "Geladarias", "Sobremesas & Confeitaria"] },
   { number: "03", title: "Fast Food & Take-away", intro: "Hambúrgueres, pizzas, frango, refeições rápidas e take-away.", category: "fast-food", icon: Zap, items: ["Hambúrgueres", "Pizzas", "Frango Frito", "Refeições Rápidas", "Take-away"] },
@@ -94,6 +95,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreAlimentacao() {
+  const ALIMENTACAO_CATEGORIES = useVerticalGroups(ALIMENTACAO_CATEGORIES_META, "alimentacao-restauracao");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

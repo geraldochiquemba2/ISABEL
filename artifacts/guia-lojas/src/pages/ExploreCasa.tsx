@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Home, Wrench, PaintBucket, TreePine, Truck, ShieldCheck, Zap, Hammer, Lock, ChevronRight, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -22,7 +23,7 @@ interface Store {
   products?: { imageUrl?: string; imageUrls?: string | string[] }[];
 }
 
-const CASA_CATEGORIES = [
+const CASA_CATEGORIES_META = [
   { number: "01", title: "Limpeza Residencial", intro: "Ambientes limpos e organizados para o seu conforto.", category: "limpeza", icon: Home, items: ["Limpeza Geral", "Limpeza Profunda", "Limpeza de Fim de Obra", "Limpeza de Escritórios"] },
   { number: "02", title: "Canalização", intro: "Reparações e instalações hidráulicas com profissionais.", category: "canalizacao", icon: Wrench, items: ["Reparação de Fugas", "Instalação de Canos", "Desentupimento", "Aquecimento de Água"] },
   { number: "03", title: "Eletricistas", intro: "Serviços elétricos seguros e certificados.", category: "eletricistas", icon: Zap, items: ["Instalação Elétrica", "Reparações", "Quadros Elétricos", "Iluminação"] },
@@ -95,6 +96,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
 }
 
 export default function ExploreCasa() {
+  const CASA_CATEGORIES = useVerticalGroups(CASA_CATEGORIES_META, "casa");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("categoria");

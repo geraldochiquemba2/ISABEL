@@ -3,10 +3,18 @@ import { pool } from "../db";
 
 export const categoriesRouter = Router();
 
-// GET /api/categories — listar todas
+// GET /api/categories — listar todas (?store_type= filtra por vertical)
 categoriesRouter.get("/", async (req, res) => {
   try {
-    const result = await pool.query(`
+    const { store_type } = req.query;
+    const params: unknown[] = [];
+    let where = "";
+    if (store_type) {
+      params.push(store_type);
+      where = `WHERE c.store_type = $1`;
+    }
+    const result = await pool.query(
+      `
       SELECT c.*,
         EXISTS(SELECT 1 FROM stores s WHERE s.category = c.name OR c.name = ANY(s.categories)) as is_used,
         ARRAY(
@@ -15,9 +23,12 @@ categoriesRouter.get("/", async (req, res) => {
           JOIN stores s ON p.store_id = s.id
           WHERE (s.category = c.name OR c.name = ANY(s.categories)) AND p.subcategory IS NOT NULL
         ) as used_subcategories
-      FROM categories c 
-      ORDER BY c.name ASC
-    `);
+      FROM categories c
+      ${where}
+      ORDER BY c.created_at ASC
+    `,
+      params
+    );
     res.json(result.rows.map(r => ({
       ...r,
       isUsed: r.is_used,
@@ -34,7 +45,7 @@ categoriesRouter.get("/", async (req, res) => {
 // rebentava o INSERT e nada se conseguia criar)
 categoriesRouter.post("/", async (req, res) => {
   try {
-    const { id, name, icon, coverImage, subcategories } = req.body;
+    const { id, name, icon, coverImage, subcategories, store_type, intro } = req.body;
     if (!name || !String(name).trim()) {
       return res.status(400).json({ error: "Nome é obrigatório" });
     }
@@ -44,9 +55,9 @@ categoriesRouter.post("/", async (req, res) => {
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
       .slice(0, 60) + "-" + Math.random().toString(36).slice(2, 7);
     const result = await pool.query(
-      `INSERT INTO categories (id, name, icon, cover_image, subcategories)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [newId, String(name).trim(), icon || null, coverImage || null, subs]
+      `INSERT INTO categories (id, name, icon, cover_image, subcategories, store_type, intro)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [newId, String(name).trim(), icon || null, coverImage || null, subs, store_type || null, intro || null]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -68,9 +79,11 @@ categoriesRouter.put("/:id", async (req, res) => {
     const icon = has("icon") ? (req.body.icon || null) : old.icon;
     const coverImage = has("coverImage") ? (req.body.coverImage || null) : old.cover_image;
     const subs = Array.isArray(req.body.subcategories) ? req.body.subcategories : old.subcategories;
+    const storeType = has("store_type") ? (req.body.store_type || null) : old.store_type;
+    const intro = has("intro") ? (req.body.intro || null) : old.intro;
     await pool.query(
-      `UPDATE categories SET name=$2, icon=$3, cover_image=$4, subcategories=$5 WHERE id=$1`,
-      [id, name, icon, coverImage, subs]
+      `UPDATE categories SET name=$2, icon=$3, cover_image=$4, subcategories=$5, store_type=$6, intro=$7 WHERE id=$1`,
+      [id, name, icon, coverImage, subs, storeType, intro]
     );
     res.json({ success: true });
   } catch (err) {
