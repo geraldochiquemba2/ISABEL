@@ -98,7 +98,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
       {tab === "utilizadores" && <UtilizadoresTab storeType={storeType} accentColor={accentColor} />}
       {tab === "password-resets" && <PasswordResetsTab storeType={storeType} accentColor={accentColor} />}
       {tab === "carrinhos" && <CarrinhosTab storeType={storeType} accentColor={accentColor} />}
-      {tab === "categorias" && <CategoriasTab accentColor={accentColor} />}
+      {tab === "categorias" && <CategoriasTab accentColor={accentColor} storeType={storeType} />}
       {tab === "lojas" && <LojasTab storeType={storeType} accentColor={accentColor} />}
     </div>
   );
@@ -388,21 +388,34 @@ function PasswordResetsTab({ storeType, accentColor }: { storeType: string; acce
 }
 
 // ── TAB: CATEGORIAS ──────────────────────────────────────
-function CategoriasTab({ accentColor }: { accentColor: string }) {
+// storeType = vertical desta loja: por defeito mostra só as dela ("nada a ver"
+// fica escondido); o alternador "Todas" mostra tudo para o super-admin.
+function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeType?: string }) {
   const queryClient = useQueryClient();
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", icon: "", store_type: "", intro: "" });
+  const [onlyMine, setOnlyMine] = useState(!!storeType);
 
-  useEffect(() => { loadCategories(); }, []);
+  useEffect(() => { loadCategories(!!storeType); }, []);
 
-  async function loadCategories() {
+  async function loadCategories(mine?: boolean) {
+    const scoped = mine ?? onlyMine;
     setLoading(true);
-    try { const cats = await getCategories(); setCategories(cats); } catch (e) { console.error(e); }
+    try { const cats = await getCategories(scoped && storeType ? storeType : undefined); setCategories(cats); } catch (e) { console.error(e); }
     finally { setLoading(false); }
   }
+  const flipScope = () => {
+    const next = !onlyMine;
+    setOnlyMine(next);
+    loadCategories(next);
+  };
+  const openNew = () => {
+    setShowForm(!showForm); setEditId(null);
+    setForm({ name: "", icon: "", store_type: onlyMine && storeType ? storeType : "", intro: "" });
+  };
 
   async function handleSave() {
     if (!form.name.trim()) return;
@@ -446,8 +459,16 @@ function CategoriasTab({ accentColor }: { accentColor: string }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-[#87909a]">{categories.length} categorias</p>
-        <button onClick={() => { setShowForm(!showForm); setEditId(null); setForm({ name: "", icon: "", store_type: "", intro: "" }); }}
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-[#87909a]">{categories.length} categorias</p>
+          {storeType && (
+            <button onClick={flipScope} className="text-[10px] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full border transition-colors"
+              style={onlyMine ? { backgroundColor: accentColor, borderColor: accentColor, color: "#fff" } : { borderColor: "#EDE8DE", color: "#87909a" }}>
+              {onlyMine ? `Só ${storeTypeLabel(storeType)}` : "Todas"}
+            </button>
+          )}
+        </div>
+        <button onClick={openNew}
           className="flex items-center gap-2 text-white px-4 py-2 rounded-full text-xs font-semibold transition-colors"
           style={{ backgroundColor: accentColor }}>
           <FolderPlus size={13} /> Nova Categoria

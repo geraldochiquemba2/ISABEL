@@ -1,8 +1,8 @@
 import { Store, Product } from "@/data/mock";
 
 // CATEGORIES
-export async function getCategories() {
-  const res = await fetch(`/api/categories`);
+export async function getCategories(storeType?: string) {
+  const res = await fetch(`/api/categories${storeType ? `?store_type=${encodeURIComponent(storeType)}` : ""}`);
   if (!res.ok) throw new Error("Failed to fetch categories");
   return res.json();
 }
