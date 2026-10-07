@@ -59,6 +59,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         <img
           src={images[currentIdx] || fallbackImage}
           alt={store.name}
+          onError={(e) => { if (e.currentTarget.src !== fallbackImage) e.currentTarget.src = fallbackImage; }}
           className="w-full h-full object-cover object-top"
         loading="lazy" decoding="async" />
         {store.logoUrl && (

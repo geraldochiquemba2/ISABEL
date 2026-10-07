@@ -40,7 +40,9 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
       onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+        <img           src={images[currentIdx] || fallbackImage}
+          alt={store.name}
+          onError={(e) => { if (e.currentTarget.src !== fallbackImage) e.currentTarget.src = fallbackImage; }} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
         {store.logoUrl && (
           <img src={thumbUrl(store.logoUrl)} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
         )}

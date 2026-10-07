@@ -64,7 +64,13 @@ productsRouter.get("/", async (req, res) => {
       currency: p.currency,
       imageUrl: p.image_url,
       imageColor: p.image_color,
-      imageUrls: p.image_urls || [],
+      // image_urls chega como TEXT[] mas há linhas antigas com string;
+      // normalizar para array para os cards não partirem (ver StoreCategorySection).
+      imageUrls: Array.isArray(p.image_urls)
+        ? p.image_urls
+        : (typeof p.image_urls === "string" && p.image_urls
+          ? p.image_urls.split(/\s+/).filter(Boolean)
+          : []),
       category: p.category,
       subcategory: p.subcategory,
       isCarrinho: p.is_carrinho,
