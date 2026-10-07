@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { Store } from "@/data/mock";
 import { MapPin } from "lucide-react";
 import { nativeTap } from "@/lib/nativePhoto";
 import { thumbUrl, thumbList } from "@/lib/img";
+import { fetchStoreById } from "@/lib/api";
 
 interface StoreCardProps {
   store: Store;
@@ -15,6 +17,7 @@ interface StoreCardProps {
 }
 
 export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size = "md" }: StoreCardProps) {
+  const queryClient = useQueryClient();
   const [imgError, setImgError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
@@ -35,6 +38,19 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
 
   const currentImage = images[currentImageIndex];
 
+  const prefetchStore = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["store", store.id],
+      queryFn: () => fetchStoreById(store.id),
+      staleTime: 5 * 60_000,
+    });
+    if (currentImage) {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = currentImage;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -43,6 +59,9 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
       transition={{ duration: 0.4, delay: index * 0.08 }}
       className="group cursor-pointer rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
       data-testid={`card-store-${store.id}`}
+      onMouseEnter={prefetchStore}
+      onTouchStart={prefetchStore}
+      onFocus={prefetchStore}
     >
       <Link href={`/loja/${store.id}`} onClick={() => nativeTap()} className="block flex-1 flex flex-col">
         {/* Image */}

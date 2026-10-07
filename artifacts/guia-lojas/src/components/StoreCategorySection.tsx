@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { thumbUrl, thumbList } from "@/lib/img";
 import { nativeShare, nativeTap } from "@/lib/nativePhoto";
+import { fetchStoreById } from "@/lib/api";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
 // das secções, para lojas registadas com categorias livres não ficarem invisíveis.
@@ -39,6 +41,7 @@ const expandWords = (n: string): string[] => {
 };
 
 export function StoreCard({ store, from }: { store: Store; from: string }) {
+  const queryClient = useQueryClient();
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   // Ordem: 1) capas da loja 2) fotos dos produtos (muitas lojas têm produtos
   // com foto mas nunca definiram capa — eram estas que caíam sempre na padrão)
@@ -56,6 +59,20 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   }
   const images = coverList.length > 0 ? coverList : productImages.length > 0 ? productImages : [fallbackImage];
   const [imgError, setImgError] = useState(false);
+  // Prefetch da loja + 1ª capa ao aproximar o dedo/mouse: o clique abre instantâneo.
+  const prefetchStore = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["store", store.id],
+      queryFn: () => fetchStoreById(store.id),
+      staleTime: 5 * 60_000,
+    });
+    const first = images[0];
+    if (first) {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = first;
+    }
+  };
   // Rotação automática: cards com +1 foto trocam a cada 3 segundos.
   const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -71,6 +88,9 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
     <div
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
       onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
+      onMouseEnter={prefetchStore}
+      onTouchStart={prefetchStore}
+      onFocus={prefetchStore}
     >
       <div className="relative h-28 overflow-hidden bg-[#F1ECE3]">
         <img src={imgError ? fallbackImage : (images[currentIdx] || fallbackImage)} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" onError={() => setImgError(true)} />

@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
+import { thumbUrl, thumbList } from "@/lib/img";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -70,12 +71,17 @@ export default function StoreProfile() {
     queryKey: ["store", id],
     queryFn: () => fetchStoreById(id!),
     enabled: !!id,
+    staleTime: 5 * 60_000,
+    gcTime: 10 * 60_000,
   });
 
   // Calcular imagens e carrossel ANTES dos early returns (regra dos hooks React)
-  const images = store?.coverImages && store.coverImages.length > 0
+  // Thumbs (480px) no carrossel: a cheia (1600px/original de MBs) demorava
+  // segundos a aparecer ao clicar no card. Full só no lightbox/modal.
+  const fullCoverImages = store?.coverImages && store.coverImages.length > 0
     ? store.coverImages
     : (store?.coverImage ? [store.coverImage] : []);
+  const images = useMemo(() => thumbList(fullCoverImages), [store?.coverImages, store?.coverImage]);
 
   // Swipe lateral (toque e rato) para navegar nas fotos da capa
   const swipeCover = (dx: number) => {
@@ -92,6 +98,26 @@ export default function StoreProfile() {
     }, 3500);
     return () => clearInterval(interval);
   }, [images.length]);
+
+  // Pré-carrega as restantes thumbs + a 1ª cheia em idle para o swipe/lightbox
+  // abrir instantâneo depois do clique no card.
+  useEffect(() => {
+    if (fullCoverImages.length === 0) return;
+    const preload = (src: string) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = src;
+    };
+    // thumbs seguintes imediato
+    images.slice(1, 4).forEach(preload);
+    // cheia da 1ª foto em idle (para zoom futuro sem esperar)
+    const idle = (window as any).requestIdleCallback as ((cb: () => void) => void) | undefined;
+    const firstFull = fullCoverImages[0];
+    if (firstFull) {
+      if (idle) idle(() => preload(firstFull));
+      else setTimeout(() => preload(firstFull), 1500);
+    }
+  }, [images, fullCoverImages]);
 
   if (isLoading) {
     return (
@@ -180,7 +206,9 @@ export default function StoreProfile() {
                     alt={store.name}
                     draggable={false}
                     onDragStart={(e) => e.preventDefault()}
-                    loading="lazy" decoding="async"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    decoding="async"
                     className="relative z-0 h-full w-full object-contain"
                     onError={() => setCoverError(true)}
                   />
@@ -252,10 +280,10 @@ export default function StoreProfile() {
       <div className={`max-w-4xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4 border-b bg-white ${isFromWeddings ? weddingsBorder : "border-[#E9D9B6]"}`}>
         {store.logoUrl ? (
           <img
-            src={store.logoUrl}
+            src={thumbUrl(store.logoUrl)}
             alt={`${store.name} Logo`}
             className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover bg-white border border-[#E9D9B6] shadow-sm flex-shrink-0"
-          loading="lazy" decoding="async" />
+          loading="eager" decoding="async" />
         ) : (
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#E9D9B6] border border-[#E9D9B6] flex items-center justify-center flex-shrink-0 text-lg font-bold text-[#171717]">
             {store.name.substring(0, 2).toUpperCase()}
@@ -871,7 +899,9 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
   const [imgError, setImgError] = useState(false);
 
   // Roda as fotos do produto (1s) quando há mais de uma imagem
-  const pImgs = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+  // Grelha usa thumbs (480px); a cheia só abre no lightbox.
+  const fullPImgs = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+  const pImgs = useMemo(() => thumbList(fullPImgs), [product.imageUrls, product.imageUrl]);
   const [pImgIdx, setPImgIdx] = useState(0);
 
   useEffect(() => {
@@ -905,12 +935,12 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
           {product.imageUrls?.length || product.imageUrl ? (
             <>
               <img
-                src={product.imageUrls?.length ? product.imageUrls[pImgIdx % product.imageUrls.length] : product.imageUrl}
+                src={pImgs.length ? pImgs[pImgIdx % pImgs.length] : product.imageUrl}
                 alt={product.name}
                 draggable={false}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={() => setImgError(true)}
-                loading="lazy" decoding="async"
+                loading={index < 4 ? "eager" : "lazy"} decoding="async"
               />
               {pImgs.length > 1 && (
                 <div className="absolute bottom-1.5 right-1.5 z-10 flex gap-1">
@@ -1039,7 +1069,8 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {products.map((product: any, i: number) => {
           const isSelected = selected.includes(product.id);
-          const pImages = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+          const fullImgs = product.imageUrls?.length ? product.imageUrls : (product.imageUrl ? [product.imageUrl] : []);
+          const pImages = thumbList(fullImgs);
           return (
             <div
               key={product.id}
