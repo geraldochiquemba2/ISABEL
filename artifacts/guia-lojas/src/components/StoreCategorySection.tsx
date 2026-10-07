@@ -20,6 +20,8 @@ const WORD_ALIASES: Record<string, string[]> = {
   kids: ["infantil"],
   shein: ["moda"],
   zara: ["moda"],
+  peruca: ["cabelo"],
+  perucas: ["cabelo"],
 };
 
 const normWords = (s: string) =>
@@ -168,6 +170,13 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
   const sortedCategories = [...categories].sort(
     (a, b) => getStoresForCategory(b.name).length - getStoresForCategory(a.name).length
   );
+  // Rede de segurança: lojas que não casam com nenhuma secção (categorias
+  // antigas de texto livre) aparecem em "Outras lojas" em vez de invisíveis.
+  const matchedIds = new Set<string>();
+  for (const cat of sortedCategories) {
+    for (const s of getStoresForCategory(cat.name)) matchedIds.add(s.id);
+  }
+  const orphanStores = nonAdmin.filter((s: Store) => !matchedIds.has(s.id));
 
   return (
     <div className="px-5 py-4 space-y-6">
@@ -217,6 +226,23 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
           </div>
         );
       })}
+
+      {/* Rede de segurança: lojas sem secção (categorias por classificar) */}
+      {orphanStores.length > 0 && (
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2">
+              <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Outras lojas</h3>
+            </div>
+          </div>
+          <p className="text-[11px] text-[#9CA3AF] mb-3">Lojas com categorias ainda por classificar.</p>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+            {orphanStores.map((store: Store) => (
+              <StoreCard key={store.id} store={store} from={storeType} />
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
   );

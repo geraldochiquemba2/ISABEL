@@ -90,6 +90,23 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   );
 }
 
+// Aliases loja→grupo (ex: "perucas" conta como cabelo) + expansão de palavras,
+// igual à lógica das Homes para não haver lojas invisíveis.
+const BEAUTY_ALIASES: Record<string, string[]> = {
+  peruca: ["cabelo"],
+  perucas: ["cabelo"],
+};
+
+function expStoreWords(norm: string): string[] {
+  const words = norm.split(" ").filter((w) => w.length > 2);
+  const out = [...words];
+  for (const w of words) {
+    const als = BEAUTY_ALIASES[w];
+    if (als) for (const a of als) if (!out.includes(a)) out.push(a);
+  }
+  return out;
+}
+
 export default function ExploreBeleza() {
   const BELEZA_CATEGORIES = useVerticalGroups(BELEZA_CATEGORIES_META, "beleza");
   const [activeFilter, setActiveFilter] = useState<string | null>(() => {
@@ -174,10 +191,25 @@ export default function ExploreBeleza() {
 
   const getStoresForGroup = (category: string) => {
     const group = BELEZA_CATEGORIES.find((g) => g.category === category);
+    // Normaliza acentos (ex: "Depilação" == "depilacao") e expande aliases
+    // (ex: "perucas" → cabelo), como na Home — o includes direto falhava
+    // estes casos e a loja ficava invisível.
+    const normW = (s: string) =>
+      s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[&\-_]/g, " ").replace(/\s+/g, " ").trim();
+    const slug = normW(category);
+    const title = group ? normW(group.title) : "";
+    const groupWords = [...slug.split(" "), ...title.split(" ")].filter((w) => w.length > 2);
     const filtered = stores.filter((s: any) => {
       if (s.phone === "999999999") return false;
-      const cats = getStoreCategories(s).map((c) => c.toLowerCase());
-      const matchesCategory = cats.some((cat) => ((group && cat.includes(group.title.toLowerCase())) || cat.includes(category.replace(/-/g, " "))));
+      const cats = getStoreCategories(s);
+      const matchesCategory = cats.some((raw: string) => {
+        const cat = normW(raw);
+        if (!cat) return false;
+        if (cat.includes(slug) || slug.includes(cat)) return true;
+        if (title && (cat.includes(title) || title.includes(cat))) return true;
+        const words = expStoreWords(cat);
+        return words.some((w) => groupWords.includes(w));
+      });
       const matchesProvince = !activeProvince || s.province === activeProvince;
       const matchesMunicipality = !activeMunicipality || s.municipality === activeMunicipality;
       if (locationScope && !storeMatchesScope(s, locationScope)) return false;
@@ -193,6 +225,25 @@ export default function ExploreBeleza() {
   const filteredGroups = activeFilter
     ? BELEZA_CATEGORIES.filter((g) => g.title.toLowerCase().includes(activeFilter.toLowerCase()) || g.category === activeFilter)
     : [...BELEZA_CATEGORIES].sort((a, b) => getStoresForGroup(b.category).length - getStoresForGroup(a.category).length);
+
+  // Rede de segurança: lojas que não casam com nenhum grupo (categorias
+  // antigas de texto livre). Sem filtro de categoria ativo, aparecem em
+  // "Outras lojas" em vez de invisíveis; respeitam os filtros de localização.
+  const orphanStores = (() => {
+    if (activeFilter) return [];
+    const matched = new Set<string>();
+    for (const g of BELEZA_CATEGORIES) {
+      for (const s of getStoresForGroup(g.category)) matched.add(s.id);
+    }
+    return stores.filter(
+      (s: any) =>
+        s.phone !== "999999999" &&
+        !matched.has(s.id) &&
+        (!activeProvince || s.province === activeProvince) &&
+        (!activeMunicipality || s.municipality === activeMunicipality) &&
+        (!locationScope || storeMatchesScope(s, locationScope))
+    );
+  })();
 
   return (
     <main className="min-h-[100dvh] bg-[#FBF7F2] text-[#292727]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -352,6 +403,25 @@ export default function ExploreBeleza() {
               </article>
             );
           })}
+          {orphanStores.length > 0 && (
+            <article className="group border-t border-[#7A4549]/20 py-8 md:py-12">
+              <div className="grid gap-7 md:grid-cols-[100px_minmax(0,1fr)_minmax(260px,370px)] md:items-start">
+                <span className="font-['DM_Sans'] text-xs font-bold tracking-[0.2em] text-[#5A3335]">••</span>
+                <div className="min-w-0">
+                  <h3 className="max-w-xl font-['Playfair_Display'] text-3xl leading-[1.08] text-[#7A4549] md:text-[2.8rem]">Outras lojas</h3>
+                  <p className="mt-4 max-w-md text-sm leading-7 text-[#7A4549]/60">Lojas com categorias ainda por classificar.</p>
+                </div>
+                <div className="min-w-0 mt-4 md:mt-0">
+                  <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#697482] mb-3">Lojas/Serviços disponíveis</p>
+                  <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                    {orphanStores.map((store: any) => (
+                      <StoreCard key={store.id} store={store} productImages={getProductsForStore(store.id)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          )}
         </div>
       </div>
 
