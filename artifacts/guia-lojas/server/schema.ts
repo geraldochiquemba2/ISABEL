@@ -408,6 +408,11 @@ export async function initDB() {
       `CREATE INDEX IF NOT EXISTS idx_users_store_type ON users(store_type)`,
       `CREATE INDEX IF NOT EXISTS idx_style_tips_ordem ON style_tips(ordem)`,
       `CREATE INDEX IF NOT EXISTS idx_wedding_groups_category ON wedding_groups(category)`,
+      // Filtros quentes das listagens: ANY(categories), store_type + ORDER BY
+      // created_at DESC, e produtos da loja ordenados. Tabelas pequenas, custo ~0.
+      `CREATE INDEX IF NOT EXISTS idx_stores_categories_gin ON stores USING GIN (categories)`,
+      `CREATE INDEX IF NOT EXISTS idx_stores_type_created ON stores(store_type, created_at DESC)`,
+      `CREATE INDEX IF NOT EXISTS idx_products_store_created ON products(store_id, created_at DESC)`,
     ];
     for (const idx of indexes) {
       await client.query(idx);
