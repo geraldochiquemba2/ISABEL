@@ -93,11 +93,99 @@ async function compressVariants(input: Buffer): Promise<{ full: Buffer; thumb: B
   }
 }
 
+const fullCachePath = (fileId: string) => path.join(CACHE_DIR, `${fileId}.jpg`);
+const thumbCachePath = (fileId: string) => path.join(CACHE_DIR, `${fileId}.thumb.jpg`);
+
+// Validação mínima de imagem (magic bytes). Ficheiros parciais/vazios ou
+// respostas de erro gravadas por engano chumbam aqui e nunca entram no cache.
+function looksLikeImage(buf: Buffer): boolean {
+  if (!buf || buf.length < 64) return false;
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return true; // JPEG
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return true; // PNG
+  if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) return true; // GIF
+  if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
+      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) return true; // WEBP
+  return false;
+}
+
+// Lê do cache só se for imagem válida; ficheiro corrupto é apagado para se
+// regenerar a seguir (auto-cura sem precisar de restart).
+function readValidCache(p: string): Buffer | null {
+  try {
+    if (!fs.existsSync(p)) return null;
+    const buf = fs.readFileSync(p);
+    if (!looksLikeImage(buf)) {
+      try { fs.unlinkSync(p); } catch { /* ignora */ }
+      return null;
+    }
+    return buf;
+  } catch {
+    return null;
+  }
+}
+
+// Escrita atómica (tmp + rename): leitores nunca apanham ficheiro a meio.
+function writeAtomic(p: string, buf: Buffer): void {
+  const tmp = `${p}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, buf);
+  fs.renameSync(tmp, p);
+}
+
+async function fetchWithRetry(url: string, attempts = 3): Promise<Response> {
+  let lastErr: unknown = null;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+      if (res.status === 429 || (res.status >= 500 && res.status < 600)) {
+        lastErr = new Error(`Telegram ${res.status}`); // transitório → repete
+      } else {
+        throw new Error(`Telegram ${res.status}`); // 4xx → definitivo
+      }
+    } catch (e) {
+      lastErr = e;
+    }
+    if (i < attempts) await new Promise((r) => setTimeout(r, 500 * i));
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Falha ao contactar o Telegram");
+}
+
+// Deduplica fetches concorrentes do mesmo fileId: N pedidos simultâneos
+// partilham 1 só ida ao Telegram em vez de N (era isto que corrompia o cache).
+const inflight = new Map<string, Promise<{ full: Buffer; thumb: Buffer }>>();
+function fetchVariants(fileId: string, token: string): Promise<{ full: Buffer; thumb: Buffer }> {
+  const existing = inflight.get(fileId);
+  if (existing) return existing;
+  const p = (async () => {
+    const fileUrlRes = await fetchWithRetry(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
+    const fileUrlResult = await fileUrlRes.json();
+    if (!fileUrlResult.ok) throw new Error("NOT_FOUND");
+    const filePath = fileUrlResult.result.file_path;
+    const imageRes = await fetchWithRetry(`https://api.telegram.org/file/bot${token}/${filePath}`);
+    const buffer = Buffer.from(await imageRes.arrayBuffer());
+    if (!looksLikeImage(buffer)) throw new Error("BAD_IMAGE");
+    const { full, thumb } = await compressVariants(buffer);
+    if (!looksLikeImage(full) || !looksLikeImage(thumb)) throw new Error("BAD_IMAGE");
+    writeAtomic(fullCachePath(fileId), full);
+    writeAtomic(thumbCachePath(fileId), thumb);
+    return { full, thumb };
+  })();
+  inflight.set(fileId, p);
+  p.then(
+    () => { if (inflight.get(fileId) === p) inflight.delete(fileId); },
+    () => { if (inflight.get(fileId) === p) inflight.delete(fileId); }
+  );
+  return p;
+}
+
 // Endpoint para servir a imagem proxyando pelo Telegram
 // ?size=thumb → versão leve para grelhas/cartões (poupa ~80–90% por imagem)
 mediaRouter.get("/image/:fileId", async (req, res) => {
   try {
     const fileId = req.params.fileId;
+    // fileIds do Telegram são base64url ([A-Za-z0-9-_]); rejeitar o resto
+    // também bloqueia path traversal no CACHE_DIR.
+    if (!/^[\w-]{5,200}$/.test(fileId)) return res.status(400).send("fileId inválido.");
     const wantThumb = String(req.query.size || "") === "thumb";
     const token = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -105,55 +193,40 @@ mediaRouter.get("/image/:fileId", async (req, res) => {
       return res.status(500).send("Bot token não configurado.");
     }
 
-    const cachedFilePath = path.join(CACHE_DIR, `${fileId}.jpg`);
-    const cachedThumbPath = path.join(CACHE_DIR, `${fileId}.thumb.jpg`);
-
-    const serveFile = (p: string) => {
+    const sendBuf = (buf: Buffer) => {
       res.setHeader("Content-Type", "image/jpeg");
-      res.setHeader("Cache-Control", "public, max-age=31536000, immutable"); // 1 ano
-      return res.sendFile(p);
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable"); // 1 ano (só chega aqui imagem validada)
+      res.setHeader("Content-Length", String(buf.length));
+      return res.send(buf);
     };
 
-    // Thumb pedida e já existe → direto do disco
-    if (wantThumb && fs.existsSync(cachedThumbPath)) return serveFile(cachedThumbPath);
-    // Cheia pedida e já existe → direto do disco
-    if (!wantThumb && fs.existsSync(cachedFilePath)) return serveFile(cachedFilePath);
-    // Thumb pedida mas só a cheia existe → deriva a thumb da cheia (sem ir ao Telegram)
-    if (wantThumb && fs.existsSync(cachedFilePath)) {
-      const { thumb } = await compressVariants(fs.readFileSync(cachedFilePath));
-      fs.writeFileSync(cachedThumbPath, thumb);
-      return serveFile(cachedThumbPath);
+    // 1. Cache válido → direto da memória (sem condição de corrida com
+    //    escritas, que agora são atómicas).
+    const cached = readValidCache(wantThumb ? thumbCachePath(fileId) : fullCachePath(fileId));
+    if (cached) return sendBuf(cached);
+
+    // 2. Thumb pedida mas só a cheia existe e é válida → deriva da cheia
+    //    sem ir ao Telegram.
+    if (wantThumb) {
+      const fullBuf = readValidCache(fullCachePath(fileId));
+      if (fullBuf) {
+        const { thumb } = await compressVariants(fullBuf);
+        if (looksLikeImage(thumb)) {
+          try { writeAtomic(thumbCachePath(fileId), thumb); } catch { /* serve na mesma */ }
+          return sendBuf(thumb);
+        }
+      }
     }
 
-    // 1. Pede um file_path fresco (que dura apenas 1 hora na API do Telegram)
-    const fileUrlRes = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
-    const fileUrlResult = await fileUrlRes.json();
-
-    if (!fileUrlResult.ok) {
-      return res.status(404).send("Arquivo não encontrado no Telegram.");
+    // 3. Vai ao Telegram (pedidos concorrentes partilham o mesmo fetch,
+    //    com retry em 429/5xx). Só entra no cache o que for imagem válida.
+    try {
+      const { full, thumb } = await fetchVariants(fileId, token);
+      return sendBuf(wantThumb ? thumb : full);
+    } catch (e: any) {
+      if (e?.message === "NOT_FOUND") return res.status(404).send("Arquivo não encontrado no Telegram.");
+      throw e;
     }
-
-    const filePath = fileUrlResult.result.file_path;
-    const finalImageUrl = `https://api.telegram.org/file/bot${token}/${filePath}`;
-
-    // 2. Faz o fetch da imagem real
-    const imageRes = await fetch(finalImageUrl);
-    if (!imageRes.ok) {
-      throw new Error("Falha ao transferir imagem do Telegram");
-    }
-
-    // 3. Comprime (cheia + thumb), guarda em cache no disco e devolve ao cliente
-    const arrayBuffer = await imageRes.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const { full, thumb } = await compressVariants(buffer);
-
-    // Grava no disco de forma síncrona/assíncrona simples
-    fs.writeFileSync(cachedFilePath, full);
-    fs.writeFileSync(cachedThumbPath, thumb);
-
-    res.setHeader("Content-Type", "image/jpeg");
-    res.setHeader("Cache-Control", "public, max-age=31536000, immutable"); // Cache longo
-    res.send(wantThumb ? thumb : full);
   } catch (err) {
     console.error("Proxy image error:", err);
     res.status(500).send("Erro ao carregar a imagem proxy");
