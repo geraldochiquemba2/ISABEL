@@ -66,3 +66,91 @@ workflows:
         app_id:
           from_variable: APP_STORE_APP_ID
       submit_to_app_store: false
+
+  # ------------------------------------------------------------------
+  # YESOLA Android: gera o .aab assinado para a Play Store.
+  # 1) Corre UMA VEZ o workflow yesola-android-keystore (manual no painel
+  #    do Codemagic). Ele gera o upload-keystore e exporta como artifact.
+  # 2) Faz download desse .jks e GUARDA-O (perder = nova app na Play).
+  # 3) No Codemagic cria o grupo de env `android_signing` com:
+  #      CM_KEYSTORE_PATH      -> caminho do keystore (upload do ficheiro
+  #                               em Code signing > Android keystores, ou
+  #                               CM_KEYSTORE_PATH custom com o ficheiro em S3/URL)
+  #      CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD
+  #    Forma mais simples: Code signing > Android keystores (faz upload do
+  #    .jks) + grupo `android_signing` só com as 3 passwords/alias.
+  # 4) A partir daí cada push a main gera o .aab assinado (artifact).
+  #    Upload manual em Play Console > Teste interno. versionCode sobe +1
+  #    a cada release (android/app/build.gradle).
+  # ------------------------------------------------------------------
+  yesola-android-keystore:
+    name: YESOLA Android — gerar upload keystore (CORRER 1 VEZ)
+    max_build_duration: 20
+    environment:
+      groups:
+        - android_signing
+      vars:
+        KEY_ALIAS: "yesola-upload"
+    scripts:
+      - name: Gerar upload keystore
+        script: |
+          : "${CM_KEYSTORE_PASSWORD:?Define CM_KEYSTORE_PASSWORD no grupo android_signing}"
+          : "${CM_KEY_PASSWORD:?Define CM_KEY_PASSWORD no grupo android_signing}"
+          : "${KEY_ALIAS:?Define KEY_ALIAS}"
+          keytool -genkeypair -v \
+            -keystore "$PWD/yesola-upload-keystore.jks" \
+            -alias "$KEY_ALIAS" \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$CM_KEYSTORE_PASSWORD" \
+            -keypass "$CM_KEY_PASSWORD" \
+            -dname "CN=YESOLA, OU=Mobile, O=YESOLA, L=Luanda, C=AO"
+          keytool -list -v -keystore "$PWD/yesola-upload-keystore.jks" \
+            -storepass "$CM_KEYSTORE_PASSWORD" | head -20
+          echo "SHA-256 para registar na Play Console (integridade da app):"
+          keytool -list -v -keystore "$PWD/yesola-upload-keystore.jks" \
+            -storepass "$CM_KEYSTORE_PASSWORD" | grep -A1 "SHA256"
+    artifacts:
+      - yesola-upload-keystore.jks
+
+  yesola-android:
+    name: YESOLA Android Build (AAB)
+    max_build_duration: 60
+    environment:
+      groups:
+        - android_signing
+      vars:
+        PORT: "3000"
+        BASE_PATH: "/"
+        NODE_ENV: production
+        JAVA_HOME: /usr/lib/jvm/default-jvm
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: Install pnpm
+        script: |
+          npm install -g pnpm@9
+          node --version
+          pnpm --version
+      - name: Install dependencies
+        script: |
+          cd artifacts/guia-lojas
+          pnpm install
+      - name: Build web assets
+        script: |
+          cd artifacts/guia-lojas
+          pnpm run build
+      - name: Sync Capacitor
+        script: |
+          cd artifacts/guia-lojas
+          npx cap sync android
+      - name: Build signed AAB
+        script: |
+          cd artifacts/guia-lojas/android
+          chmod +x gradlew
+          ./gradlew :app:bundleRelease --no-daemon
+    artifacts:
+      - artifacts/guia-lojas/android/app/build/outputs/bundle/release/app-release.aab

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YESOLA</string>
+    <string name="title_activity_main">YESOLA</string>
+    <string name="package_name">pt.yesola.app</string>
+    <string name="custom_url_scheme">pt.yesola.app</string>
+</resources>
