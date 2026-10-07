@@ -184,7 +184,14 @@ app.use("/api/push", pushRouter);
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 
 // Endpoint para ping (evitar hibernação)
-app.get("/api/ping", (req, res) => {
+// Toca na BD (SELECT 1) para manter o Neon acordado também — o ping
+// anterior só respondia "pong" sem query, por isso a BD continuava
+// a hibernar aos 5 min mesmo com o self-ping ativo. Se a BD estiver
+// a dormir/falhar, responde 200 na mesma (o Render só precisa disso).
+app.get("/api/ping", async (req, res) => {
+  try {
+    await pool.query("SELECT 1");
+  } catch { /* ignora: serviço continua saudável para o Render */ }
   res.status(200).send("pong");
 });
 
@@ -205,20 +212,28 @@ async function initWithRetry(retries = 5, delayMs = 3000): Promise<void> {
   console.error("❌ Não foi possível ligar à base de dados após várias tentativas. O servidor continua a correr sem persistência.");
 }
 
-// Previne a hibernação no Render (pinga o próprio serviço a cada 14 min se a variável RENDER_EXTERNAL_URL existir)
+// Previne a hibernação no Render (pinga o próprio serviço a cada 10 min).
+// Resolve o URL público via RENDER_EXTERNAL_URL (preferida) ou
+// RENDER_EXTERNAL_HOSTNAME (injetada pelo Render em runtime, sem esquema).
+// NOTA: no render.yaml esta var tem de ter valor — com `sync: false` e sem
+// valor ela ficava vazia e este bloco nunca arrancava (sem a linha
+// "Configurado keep-alive" nos logs). Agora há aviso explícito se faltar.
 function startKeepAlive() {
-  const renderUrl = process.env.RENDER_EXTERNAL_URL;
-  if (renderUrl) {
-    console.log(`⏱️  Configurado keep-alive para ${renderUrl}/api/ping a cada 14 minutos.`);
-    setInterval(async () => {
-      try {
-        await fetch(`${renderUrl}/api/ping`);
-        console.log(`⏱️  Keep-alive ping enviado com sucesso para ${renderUrl}/api/ping`);
-      } catch (err: any) {
-        console.error(`⚠️  Erro ao enviar keep-alive ping: ${err?.message || err}`);
-      }
-    }, 14 * 60 * 1000); // 14 minutos
+  const raw = (process.env.RENDER_EXTERNAL_URL || process.env.RENDER_EXTERNAL_HOSTNAME || "").trim();
+  if (!raw) {
+    console.warn("⚠️  RENDER_EXTERNAL_URL não definida — self-ping anti-sleep DESATIVADO. Define-a no Render (Environment) ou usa ping externo (ex: UptimeRobot → /api/ping).");
+    return;
   }
+  const base = raw.startsWith("http") ? raw.replace(/\/+$/, "") : `https://${raw.replace(/\/+$/, "")}`;
+  console.log(`⏱️  Configurado keep-alive para ${base}/api/ping a cada 10 minutos.`);
+  setInterval(async () => {
+    try {
+      await fetch(`${base}/api/ping`);
+      console.log(`⏱️  Keep-alive ping enviado com sucesso para ${base}/api/ping`);
+    } catch (err: any) {
+      console.error(`⚠️  Erro ao enviar keep-alive ping: ${err?.message || err}`);
+    }
+  }, 10 * 60 * 1000); // 10 minutos (margem antes dos 15 min do plano free)
 }
 
 // Verificar assinaturas vencidas a cada 1 hora e suspender automaticamente

@@ -10,9 +10,16 @@ if (!DATABASE_URL) {
 export const pool = new Pool({
   connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  // Plano free (Render + Neon): poucas ligações e tolerância ao cold start.
+  // O Neon hiberna aos ~5 min e acordar leva 5-10s — com connectionTimeout de
+  // 5s os primeiros pedidos após idle falhavam sempre (ver api-output.log:
+  // "Connection terminated due to connection timeout"). O keepAlive TCP evita
+  // que o Neon feche ligações idle sem o pool saber.
+  max: 5,
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 15000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10000,
 });
 
 pool.on("error", (err) => {

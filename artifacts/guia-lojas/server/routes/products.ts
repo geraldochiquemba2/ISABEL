@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { randomUUID } from "crypto";
 import { pool } from "../db";
 
 export const productsRouter = Router();
@@ -79,10 +80,13 @@ productsRouter.get("/", async (req, res) => {
 productsRouter.post("/", async (req, res) => {
   try {
     const { id, storeId, name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho, description } = req.body;
+    // Alguns dashboards não enviam id (ver api-output.log: "null value in
+    // column id") — gerar server-side em vez de 500.
+    const finalId = id || randomUUID();
     const result = await pool.query(
       `INSERT INTO products (id, store_id, name, price, currency, image_url, image_urls, image_color, category, subcategory, is_carrinho, description)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
-      [id, storeId, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false, description || ""]
+      [finalId, storeId, name, price || 0, currency || 'AOA', imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false, description || ""]
     );
     const p = result.rows[0];
     res.json({

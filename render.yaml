@@ -4,8 +4,9 @@ services:
     name: isabel-loja-api
     env: node
     rootDir: artifacts/guia-lojas
-    buildCommand: pnpm install
+    buildCommand: pnpm install && pnpm run build # build gera dist/public (o servidor serve o frontend a partir daí; sem isto o fallback SPA falha)
     startCommand: pnpm exec tsx server/index.ts
+    healthCheckPath: /api/ping # o Render reinicia deploys que deixem de responder aqui
     envVars:
       - key: NODE_VERSION
         value: 20
@@ -16,15 +17,19 @@ services:
       - key: TELEGRAM_CHAT_ID
         sync: false
       - key: RENDER_EXTERNAL_URL
-        sync: false # O Render preenche isto automaticamente. O nosso script usa para o self-ping.
+        value: https://isabel-loja-api.onrender.com # URL pública da API. O self-ping anti-sleep (server/index.ts) precisa disto com valor — NÃO deixar vazia nem com sync: false.
 
   # 2. Frontend (Static Site)
-  - type: web # Ou static, dependendo de como preferes, mas web permite rotas SPA facilmente se necessário. Static é mais rápido se o Render suportar nativamente (como Static Site).
+  - type: web # type web + runtime static = Static Site (com CDN global, mais rápido que servir pelo Node)
     name: isabel-loja-frontend
-    env: static
+    runtime: static # (antes: env: static — campo antigo, mesma função)
     rootDir: artifacts/guia-lojas
     buildCommand: pnpm install && pnpm run build
     staticPublishPath: dist
+    routes:
+      - type: rewrite # SPA: deep-links (/loja/xxx, /explorar...) caem no index.html em vez de 404
+        source: /*
+        destination: /index.html
     envVars:
       - key: NODE_VERSION
         value: 20
