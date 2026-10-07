@@ -52,7 +52,7 @@ app.use((req: any, res: any, next: any) => {
       const buf = Buffer.isBuffer(body) ? body : typeof body === "string" ? Buffer.from(body) : null;
       const okType = /json|text|javascript|xml|svg/i.test(ct) && !/image|video|audio|zip|octet-stream/i.test(ct);
       if (
-        buf && buf.length > 1024 && buf.length < 8 * 1024 * 1024 &&
+        buf && buf.length > 1024 && buf.length < 2 * 1024 * 1024 &&
         (req.method === "GET" || req.method === "POST") &&
         !res.getHeader("Content-Encoding") && ae.includes("gzip") && okType
       ) {
@@ -97,19 +97,46 @@ app.use("/api/", (req: any, res: any, next: any) => {
     return res.status(429).json({ error: "Muitos pedidos, tente de novo em 1 minuto" });
   }
   arr.push(now);
-  if (rateHits.size > 10000) {
+  if (rateHits.size > 2000) {
     const first = rateHits.keys().next();
     if (!first.done) rateHits.delete(first.value);
   }
   next();
 });
 
+// Higiene periódica anti-OOM: IPs que nunca mais voltam ficavam no Map para
+// sempre (era o que enchia a RAM no plano free de 512 MB). A cada 5 min
+// remove janelas expiradas e corta o Map para 2000 IPs.
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, arr] of rateHits) {
+    while (arr.length && arr[0] <= now - RATE_WINDOW) arr.shift();
+    if (!arr.length) rateHits.delete(ip);
+  }
+  while (rateHits.size > 2000) {
+    const first = rateHits.keys().next();
+    if (first.done) break;
+    rateHits.delete(first.value);
+  }
+}, 5 * 60 * 1000);
+
 // Corta-banda urgente: cache em memória das listas públicas. Bots e crawlers
 // pedem /api/products e /api/stores em rajada; sem isto cada hit ia à BD e
 // gerava JSON completo à conta da banda. 30s + invalidação nas escritas:
 // o dono edita e a lista atualiza logo a seguir.
 const LIST_CACHE_TTL = 30 * 1000;
+const LIST_CACHE_MAX = 100; // (era 500: 500 corpos gigantes = OOM certa em 512 MB)
+const LIST_CACHE_MAX_BODY = 512 * 1024; // não guarda respostas > 512 KB (listas de 200 lojas com produtos passam disto)
 const listCache = new Map<string, { status: number; body: unknown; ts: number; headers: Record<string, string> }>();
+// Higiene periódica anti-OOM: entradas expiradas ficavam no Map para sempre
+// (só saíam acima de 500) e bots com querystrings únicas enchiam-no de corpos
+// de MBs que nunca mais eram pedidos.
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of listCache) {
+    if (now - v.ts >= LIST_CACHE_TTL) listCache.delete(k);
+  }
+}, 60 * 1000);
 function listCacheKey(req: any): string {
   return `${req.path}?${new URLSearchParams(req.query as any).toString()}`;
 }
@@ -117,8 +144,8 @@ function sweepListCache(prefix: string): void {
   for (const k of listCache.keys()) {
     if (k.startsWith(prefix)) listCache.delete(k);
   }
-  if (listCache.size > 500) {
-    const drop = listCache.size - 500;
+  if (listCache.size > LIST_CACHE_MAX) {
+    const drop = listCache.size - LIST_CACHE_MAX;
     let i = 0;
     for (const k of listCache.keys()) {
       if (i++ >= drop) break;
@@ -140,7 +167,19 @@ app.use("/api/products", (req: any, res: any, next: any) => {
   }
   const origJson = res.json.bind(res);
   res.json = ((body: unknown) => {
-    if (res.statusCode === 200) listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+    // Só entra no cache o que for pequeno: listas gigantes (200 lojas com
+    // produtos) são servidas sem guardar cópia em RAM.
+    if (res.statusCode === 200) {
+      let size = 0;
+      try { size = Buffer.byteLength(JSON.stringify(body)); } catch { size = 0; }
+      if (size > 0 && size <= LIST_CACHE_MAX_BODY) {
+        if (listCache.size >= LIST_CACHE_MAX) {
+          const first = listCache.keys().next();
+          if (!first.done) listCache.delete(first.value);
+        }
+        listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+      }
+    }
     res.setHeader("Cache-Control", "public, max-age=30");
     return origJson(body);
   }) as any;
@@ -160,7 +199,19 @@ app.use("/api/stores", (req: any, res: any, next: any) => {
   }
   const origJson = res.json.bind(res);
   res.json = ((body: unknown) => {
-    if (res.statusCode === 200) listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+    // Só entra no cache o que for pequeno: listas gigantes (200 lojas com
+    // produtos) são servidas sem guardar cópia em RAM.
+    if (res.statusCode === 200) {
+      let size = 0;
+      try { size = Buffer.byteLength(JSON.stringify(body)); } catch { size = 0; }
+      if (size > 0 && size <= LIST_CACHE_MAX_BODY) {
+        if (listCache.size >= LIST_CACHE_MAX) {
+          const first = listCache.keys().next();
+          if (!first.done) listCache.delete(first.value);
+        }
+        listCache.set(key, { status: 200, body, ts: Date.now(), headers: { "X-Total-Count": String(res.getHeader("X-Total-Count") ?? ""), "X-Page": String(res.getHeader("X-Page") ?? ""), "X-Limit": String(res.getHeader("X-Limit") ?? "") } });
+      }
+    }
     res.setHeader("Cache-Control", "public, max-age=30");
     return origJson(body);
   }) as any;

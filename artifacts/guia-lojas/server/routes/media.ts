@@ -153,22 +153,42 @@ async function fetchWithRetry(url: string, attempts = 3): Promise<Response> {
 // Deduplica fetches concorrentes do mesmo fileId: N pedidos simultâneos
 // partilham 1 só ida ao Telegram em vez de N (era isto que corrompia o cache).
 const inflight = new Map<string, Promise<{ full: Buffer; thumb: Buffer }>>();
+
+// Semáforo anti-OOM: as páginas disparam dezenas de /api/media/image de uma
+// vez e cada um segura buffer do download + 2 buffers do sharp em RAM.
+// Máx 4 processamentos simultâneos; o resto espera em fila.
+let mediaSlots = 4;
+const mediaQueue: Array<() => void> = [];
+async function withMediaSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (mediaSlots <= 0) await new Promise<void>((res) => mediaQueue.push(res));
+  mediaSlots--;
+  try {
+    return await fn();
+  } finally {
+    mediaSlots++;
+    const next = mediaQueue.shift();
+    if (next) next();
+  }
+}
 function fetchVariants(fileId: string, token: string): Promise<{ full: Buffer; thumb: Buffer }> {
   const existing = inflight.get(fileId);
   if (existing) return existing;
   const p = (async () => {
-    const fileUrlRes = await fetchWithRetry(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
-    const fileUrlResult = await fileUrlRes.json();
-    if (!fileUrlResult.ok) throw new Error("NOT_FOUND");
-    const filePath = fileUrlResult.result.file_path;
-    const imageRes = await fetchWithRetry(`https://api.telegram.org/file/bot${token}/${filePath}`);
-    const buffer = Buffer.from(await imageRes.arrayBuffer());
-    if (!looksLikeImage(buffer)) throw new Error("BAD_IMAGE");
-    const { full, thumb } = await compressVariants(buffer);
-    if (!looksLikeImage(full) || !looksLikeImage(thumb)) throw new Error("BAD_IMAGE");
-    writeAtomic(fullCachePath(fileId), full);
-    writeAtomic(thumbCachePath(fileId), thumb);
-    return { full, thumb };
+    return withMediaSlot(async () => {
+      const fileUrlRes = await fetchWithRetry(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
+      const fileUrlResult = await fileUrlRes.json();
+      if (!fileUrlResult.ok) throw new Error("NOT_FOUND");
+      const filePath = fileUrlResult.result.file_path;
+      const imageRes = await fetchWithRetry(`https://api.telegram.org/file/bot${token}/${filePath}`);
+      const buffer = Buffer.from(await imageRes.arrayBuffer());
+      if (buffer.length > 20 * 1024 * 1024) throw new Error("TOO_LARGE");
+      if (!looksLikeImage(buffer)) throw new Error("BAD_IMAGE");
+      const { full, thumb } = await compressVariants(buffer);
+      if (!looksLikeImage(full) || !looksLikeImage(thumb)) throw new Error("BAD_IMAGE");
+      writeAtomic(fullCachePath(fileId), full);
+      writeAtomic(thumbCachePath(fileId), thumb);
+      return { full, thumb };
+    });
   })();
   inflight.set(fileId, p);
   p.then(
@@ -210,7 +230,7 @@ mediaRouter.get("/image/:fileId", async (req, res) => {
     if (wantThumb) {
       const fullBuf = readValidCache(fullCachePath(fileId));
       if (fullBuf) {
-        const { thumb } = await compressVariants(fullBuf);
+        const { thumb } = await withMediaSlot(() => compressVariants(fullBuf));
         if (looksLikeImage(thumb)) {
           try { writeAtomic(thumbCachePath(fileId), thumb); } catch { /* serve na mesma */ }
           return sendBuf(thumb);
