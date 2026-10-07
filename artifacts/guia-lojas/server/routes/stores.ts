@@ -103,18 +103,26 @@ storesRouter.get("/", async (req, res) => {
     const page = Math.max(1, parseInt(String(req.query.page || "1"), 10) || 1);
     const limit = Math.min(500, Math.max(1, parseInt(String(req.query.limit || "200"), 10) || 200));
     const offset = (page - 1) * limit;
+    // Produtos embutidos limitados aos 8 mais recentes: os cards só usam as
+    // fotos como fallback e o detalhe (/api/stores/:id) busca tudo à parte.
+    // Sem limite, lojas com dezenas de produtos inchavam o JSON e atrasavam
+    // a primeira pintura das grelhas.
     let query = `
       SELECT s.*,
-        json_agg(
-          json_build_object(
-            'id', p.id, 'name', p.name, 'price', p.price, 'currency', p.currency,
-            'imageUrl', p.image_url, 'imageUrls', p.image_urls, 'imageColor', p.image_color,
-            'category', p.category, 'subcategory', p.subcategory, 'isCarrinho', p.is_carrinho
-          )
-        ) FILTER (WHERE p.id IS NOT NULL) AS products
+        COALESCE((
+          SELECT json_agg(t) FROM (
+            SELECT p.id, p.name, p.price, p.currency,
+              p.image_url AS "imageUrl", p.image_urls AS "imageUrls",
+              p.image_color AS "imageColor", p.category, p.subcategory,
+              p.is_carrinho AS "isCarrinho"
+            FROM products p
+            WHERE p.store_id = s.id
+            ORDER BY p.created_at DESC
+            LIMIT 8
+          ) t
+        ), '[]') AS products
       FROM stores s
       JOIN users u ON u.store_id = s.id AND u.status = 'APROVADO'
-      LEFT JOIN products p ON p.store_id = s.id
     `;
     const conditions: string[] = [];
     const params: unknown[] = [];
@@ -153,7 +161,7 @@ storesRouter.get("/", async (req, res) => {
     res.setHeader("X-Total-Count", String(storeCountRes.rows[0]?.total ?? 0));
     res.setHeader("X-Page", String(page));
     res.setHeader("X-Limit", String(limit));
-    query += " GROUP BY s.id ORDER BY s.created_at DESC";
+    query += " ORDER BY s.created_at DESC";
     query += ` LIMIT $${(params as unknown[]).length + 1} OFFSET $${(params as unknown[]).length + 2}`;
 
     const result = await pool.query(query, [...(params as unknown[]), limit, offset]);

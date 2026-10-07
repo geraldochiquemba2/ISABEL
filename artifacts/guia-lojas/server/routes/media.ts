@@ -198,6 +198,48 @@ function fetchVariants(fileId: string, token: string): Promise<{ full: Buffer; t
   return p;
 }
 
+// Thumbs para grelhas/cartões: na primeira visita (cache frio após sleep ou
+// deploy) cada imagem pagava download + sharp 1600px + sharp 480px, e era
+// isso que entupia a fila de 4 e fazia os cards demorar. Aqui gera-se SÓ o
+// thumb; a cheia fica para quando a página de detalhe a pedir.
+const inflightThumb = new Map<string, Promise<Buffer>>();
+function fetchThumbOnly(fileId: string, token: string): Promise<Buffer> {
+  const existing = inflightThumb.get(fileId);
+  if (existing) return existing;
+  const p = (async () => {
+    return withMediaSlot(async () => {
+      const fileUrlRes = await fetchWithRetry(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
+      const fileUrlResult = await fileUrlRes.json();
+      if (!fileUrlResult.ok) throw new Error("NOT_FOUND");
+      const filePath = fileUrlResult.result.file_path;
+      const imageRes = await fetchWithRetry(`https://api.telegram.org/file/bot${token}/${filePath}`);
+      const buffer = Buffer.from(await imageRes.arrayBuffer());
+      if (buffer.length > 20 * 1024 * 1024) throw new Error("TOO_LARGE");
+      if (!looksLikeImage(buffer)) throw new Error("BAD_IMAGE");
+      const sharp = await loadSharp();
+      let thumb: Buffer;
+      if (sharp) {
+        try {
+          thumb = await sharp(buffer).rotate().resize({ width: 480, withoutEnlargement: true }).jpeg({ quality: 60, mozjpeg: true }).toBuffer();
+        } catch {
+          thumb = buffer;
+        }
+      } else {
+        thumb = buffer;
+      }
+      if (!looksLikeImage(thumb)) throw new Error("BAD_IMAGE");
+      writeAtomic(thumbCachePath(fileId), thumb);
+      return thumb;
+    });
+  })();
+  inflightThumb.set(fileId, p);
+  p.then(
+    () => { if (inflightThumb.get(fileId) === p) inflightThumb.delete(fileId); },
+    () => { if (inflightThumb.get(fileId) === p) inflightThumb.delete(fileId); }
+  );
+  return p;
+}
+
 // Endpoint para servir a imagem proxyando pelo Telegram
 // ?size=thumb → versão leve para grelhas/cartões (poupa ~80–90% por imagem)
 mediaRouter.get("/image/:fileId", async (req, res) => {
@@ -240,9 +282,14 @@ mediaRouter.get("/image/:fileId", async (req, res) => {
 
     // 3. Vai ao Telegram (pedidos concorrentes partilham o mesmo fetch,
     //    com retry em 429/5xx). Só entra no cache o que for imagem válida.
+    //    Thumbs geram SÓ o thumb (metade do CPU na primeira visita).
     try {
-      const { full, thumb } = await fetchVariants(fileId, token);
-      return sendBuf(wantThumb ? thumb : full);
+      if (wantThumb) {
+        const only = await fetchThumbOnly(fileId, token);
+        return sendBuf(only);
+      }
+      const { full } = await fetchVariants(fileId, token);
+      return sendBuf(full);
     } catch (e: any) {
       if (e?.message === "NOT_FOUND") return res.status(404).send("Arquivo não encontrado no Telegram.");
       throw e;
