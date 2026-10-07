@@ -48,3 +48,43 @@ export function storeMatchesCategory(
 ): boolean {
   return getStoreCategories(store).some((c) => test(normCat(c), c));
 }
+
+type PhotoStoreLike = {
+  coverImage?: string | null;
+  coverImages?: string[] | null;
+  products?: Array<{ imageUrl?: string | null; imageUrls?: string | string[] | null }> | null;
+};
+
+/** Conta as fotos reais da loja (capas + produtos), como os cards mostram. */
+export function countStorePhotos(store: PhotoStoreLike | null | undefined): number {
+  if (!store) return 0;
+  let n = 0;
+  if (Array.isArray(store.coverImages)) {
+    n += store.coverImages.filter((u) => typeof u === "string" && u.trim()).length;
+  }
+  if (typeof store.coverImage === "string" && store.coverImage.trim()) n += 1;
+  if (Array.isArray(store.products)) {
+    for (const p of store.products) {
+      if (!p) continue;
+      if (typeof p.imageUrls === "string") n += p.imageUrls.split(" ").filter(Boolean).length;
+      else if (Array.isArray(p.imageUrls)) n += p.imageUrls.filter((u) => typeof u === "string" && u.trim()).length;
+      else if (typeof p.imageUrl === "string" && p.imageUrl.trim()) n += 1;
+    }
+  }
+  return n;
+}
+
+/**
+ * Ordenação dos cards (Homes e Explorar): lojas com mais de 1 foto primeiro
+ * e, dentro de cada grupo, as mais recentes primeiro.
+ */
+export function sortStoresForCards<T extends PhotoStoreLike & { createdAt?: string | null }>(stores: T[]): T[] {
+  return [...stores].sort((a, b) => {
+    const am = countStorePhotos(a) > 1 ? 0 : 1;
+    const bm = countStorePhotos(b) > 1 ? 0 : 1;
+    if (am !== bm) return am - bm;
+    const ta = (a && a.createdAt && Date.parse(a.createdAt)) || 0;
+    const tb = (b && b.createdAt && Date.parse(b.createdAt)) || 0;
+    return tb - ta;
+  });
+}

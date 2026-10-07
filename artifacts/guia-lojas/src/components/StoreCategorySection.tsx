@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { nativeShare, nativeTap } from "@/lib/nativePhoto";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
@@ -153,7 +153,8 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
   const getStoresForCategory = (categoryName: string) => {
     const target = normWords(categoryName);
     const targetWords = expandWords(target);
-    return stores.filter((s: Store) => {
+    // Ordenação dos cards: lojas com +1 foto primeiro, recentes primeiro.
+    return sortStoresForCards(stores.filter((s: Store) => {
       const cats = getStoreCategories(s as any).map(normWords);
       return cats.some((cat) => {
         if (!cat) return false;
@@ -161,7 +162,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
         const storeWords = expandWords(cat);
         return storeWords.some((w) => targetWords.includes(w));
       });
-    });
+    }));
   };
 
   const nonAdmin = stores.filter((s: Store) => s.phone !== "999999999");

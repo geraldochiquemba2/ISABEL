@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Scissors, Sparkles, Palette, Heart, Flower2, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 import { useVerticalGroups } from "@/lib/useVerticalGroups";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
@@ -218,8 +218,10 @@ export default function ExploreBeleza() {
     const scope = locationScope;
     if (scope && scope.kind === "nearby") {
       filtered.sort((a: any, b: any) => scopeRank(a, scope) - scopeRank(b, scope));
+      return filtered;
     }
-    return filtered;
+    // Ordenação dos cards: lojas com +1 foto primeiro, recentes primeiro.
+    return sortStoresForCards(filtered);
   };
 
   const filteredGroups = activeFilter

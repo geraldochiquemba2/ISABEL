@@ -179,6 +179,7 @@ storesRouter.get("/", async (req, res) => {
       locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
       schedule: r.schedule || null,
+      createdAt: r.created_at,
       products: r.products || [],
     }));
     res.json(rows);

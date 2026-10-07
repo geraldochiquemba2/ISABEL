@@ -39,6 +39,8 @@ export interface Store {
   subcategory?: string;
   isFeatured?: boolean;
   isTrending?: boolean;
+  /** Data de criação (vem da API como ISO). Usada para ordenar: recentes primeiro. */
+  createdAt?: string;
 }
 
 export interface Category {
