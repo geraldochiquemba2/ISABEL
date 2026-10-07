@@ -225,7 +225,7 @@ function Router() {
   const [selectedStore, setSelectedStore] = useState<StoreType>(
     () => (localStorage.getItem("eliora-selected-store") as StoreType) ?? inferStoreFromUrl()
   );
-  const [location] = useLocation();
+  const [location, setLoc] = useLocation();
   const basePath = location.split("?")[0];
 
   // Rotas globais: funcionam em qualquer vertical. Antes, /login, /busca etc.
@@ -277,8 +277,12 @@ function Router() {
   };
 
   const handleBackToSelector = () => {
+    // Limpa a seleção E sai do URL da vertical: sem navegar para "/",
+    // o efeito deep-link voltava a inferir a vertical do URL e a home
+    // reaparecia (parecia um simples refresh).
     localStorage.removeItem("eliora-selected-store");
     setSelectedStore(null);
+    setLoc("/");
     window.scrollTo(0, 0);
   };
 
