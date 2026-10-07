@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Baby, Blocks, Heart, MapPin, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { thumbList, thumbUrl } from "@/lib/img";
 import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -30,7 +31,7 @@ const INFANTIL_CATEGORIES_META = [
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
   const fallbackImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const images = thumbList(productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage]);
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         loading="lazy" decoding="async" />
         {store.logoUrl && (
           <img
-            src={store.logoUrl}
+            src={thumbUrl(store.logoUrl)}
             alt={`Logo ${store.name}`}
             className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
           loading="lazy" decoding="async" />

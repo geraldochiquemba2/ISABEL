@@ -6,6 +6,7 @@ import {
   MapPin, ArrowLeft,
 } from "lucide-react";
 import { fetchStores } from "@/lib/api";
+import { thumbList, thumbUrl } from "@/lib/img";
 import { useVerticalGroups } from "@/lib/useVerticalGroups";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -22,7 +23,7 @@ const WEDDING_SERVICE_GROUPS_META = [
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
   const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = (productImages && productImages.length > 0 ? productImages : (store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage])).filter(Boolean);
+  const images = thumbList(productImages && productImages.length > 0 ? productImages : (store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage]));
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
       <div className="relative h-28 overflow-hidden">
         <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
         {store.logoUrl && (
-          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
+          <img src={thumbUrl(store.logoUrl)} alt="" className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
         )}
         {images.length > 1 && (
           <div className="absolute bottom-2 right-2 z-20 flex gap-1">

@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
+import { thumbUrl, thumbList } from "@/lib/img";
 import { nativeShare, nativeTap } from "@/lib/nativePhoto";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
@@ -42,14 +43,16 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   // Ordem: 1) capas da loja 2) fotos dos produtos (muitas lojas têm produtos
   // com foto mas nunca definiram capa — eram estas que caíam sempre na padrão)
   // 3) imagem padrão. Strings vazias são descartadas (davam <img src=""> partido).
-  const coverList = [...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])].filter(Boolean);
+  // Usa a variante thumb (480px) do proxy: os cards são pequenos (w-44/h-28)
+  // e a cheia (1600px ou original de MBs) demorava segundos a aparecer.
+  const coverList = thumbList([...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])]);
   const productImages: string[] = [];
   for (const p of ((store as any).products || [])) {
     const urls = typeof p.imageUrls === "string"
       ? p.imageUrls.split(" ").filter(Boolean)
       : Array.isArray(p.imageUrls) ? p.imageUrls.filter(Boolean) : [];
-    if (urls.length > 0) productImages.push(...urls);
-    else if (p.imageUrl) productImages.push(p.imageUrl);
+    if (urls.length > 0) productImages.push(...thumbList(urls));
+    else if (p.imageUrl) productImages.push(thumbUrl(p.imageUrl));
   }
   const images = coverList.length > 0 ? coverList : productImages.length > 0 ? productImages : [fallbackImage];
   const [imgError, setImgError] = useState(false);
@@ -69,10 +72,10 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
       onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
     >
-      <div className="relative h-28 overflow-hidden">
+      <div className="relative h-28 overflow-hidden bg-[#F1ECE3]">
         <img src={imgError ? fallbackImage : (images[currentIdx] || fallbackImage)} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" onError={() => setImgError(true)} />
         {store.logoUrl && (
-          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={thumbUrl(store.logoUrl)} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}
         
         {/* Botão de Partilha no Card (folha nativa no iPhone, Web Share senão) */}

@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Store } from "@/data/mock";
 import { MapPin } from "lucide-react";
 import { nativeTap } from "@/lib/nativePhoto";
+import { thumbUrl, thumbList } from "@/lib/img";
 
 interface StoreCardProps {
   store: Store;
@@ -18,14 +19,15 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
 
-  const coverList = [...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])].filter(Boolean);
+  // Thumbs (480px) nos cards: a cheia demorava segundos a aparecer.
+  const coverList = thumbList([...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])]);
   const productImages: string[] = [];
   for (const p of ((store as any).products || [])) {
     const urls = typeof p.imageUrls === "string"
       ? p.imageUrls.split(" ").filter(Boolean)
       : Array.isArray(p.imageUrls) ? p.imageUrls.filter(Boolean) : [];
-    if (urls.length > 0) productImages.push(...urls);
-    else if (p.imageUrl) productImages.push(p.imageUrl);
+    if (urls.length > 0) productImages.push(...thumbList(urls));
+    else if (p.imageUrl) productImages.push(thumbUrl(p.imageUrl));
   }
   const images = coverList.length > 0 ? coverList : productImages;
 
@@ -89,7 +91,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
         <div className="px-4 pt-3 flex items-center gap-2">
           {store.logoUrl ? (
             <img
-              src={store.logoUrl}
+              src={thumbUrl(store.logoUrl)}
               alt={`${store.name} Logo`}
               className="w-6 h-6 rounded-md object-cover flex-shrink-0"
               loading="lazy"

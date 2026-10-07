@@ -6,6 +6,7 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
 import { fetchStores } from "@/lib/api";
+import { thumbList, thumbUrl } from "@/lib/img";
 import { useVerticalGroups } from "@/lib/useVerticalGroups";
 
 type CollectionGroup = {
@@ -77,7 +78,7 @@ const groupsMeta: CollectionGroup[] = [
 
 function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage];
+  const images = thumbList(productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage]);
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -101,7 +102,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
         loading="lazy" decoding="async" />
         {store.logoUrl && (
           <img
-            src={store.logoUrl}
+            src={thumbUrl(store.logoUrl)}
             alt={`Logo ${store.name}`}
             className="absolute top-2 left-2 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm z-20"
           loading="lazy" decoding="async" />
