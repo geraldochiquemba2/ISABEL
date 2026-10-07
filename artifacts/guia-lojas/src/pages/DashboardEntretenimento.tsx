@@ -218,7 +218,7 @@ export default function DashboardEntretenimento() {
   const { data: store, isLoading } = useQuery({
     queryKey: ["myStore", localUser?.storeId],
     queryFn: () => fetchStoreById(localUser.storeId),
-    enabled: !!localUser?.storeId,
+    enabled: !!localUser?.storeId && !isAdmin,
   });
 
   const handleLogout = () => {
