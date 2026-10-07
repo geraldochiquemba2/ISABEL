@@ -499,12 +499,12 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, schedule, categories: form.categories ?? [], category: form.categories?.[0] || store.category, locality: form.locality }),
-    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const locationMutation = useMutation({
     mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
-    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   useEffect(() => { saveFnRef.current = () => mutation.mutate(); }, [mutation]);
@@ -755,13 +755,13 @@ function ProductsManager({ store }: { store: any }) {
       const selectedCat = storeGroups.find((g) => g.title === form.category);
       await createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
     },
-    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["products"] }); },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["products"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
     onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["products"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleImgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -885,7 +885,7 @@ function ContactEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; 
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, form),
-    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setIsDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   useEffect(() => { saveFnRef.current = () => mutation.mutate(); }, [mutation]);

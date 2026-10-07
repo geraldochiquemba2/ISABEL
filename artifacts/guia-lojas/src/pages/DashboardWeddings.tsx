@@ -450,12 +450,12 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, categories: (form as any).categories ?? [], category: ((form as any).categories?.[0] as string) || store.category, locality: (form as any).locality || "", schedule }),
-    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const locationMutation = useMutation({
     mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
-    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleChange = (field: string, value: string | string[]) => { setForm((prev) => ({ ...prev, [field]: value as any })); setDirty(true); };
@@ -808,13 +808,13 @@ function ProdutosSection({ store }: { store: any }) {
         imageUrls: productImages,
       });
     },
-    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
     onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myStore"] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

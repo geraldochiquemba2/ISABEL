@@ -125,7 +125,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 
   const locationMutation = useMutation({
     mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
-    onSuccess: () => { setDirty(false); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setDirty(false); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleChange = (key: string, value: string | string[]) => {
@@ -420,13 +420,13 @@ function ProdutosSection({ store }: { store: any }) {
         imageUrls: productImages,
       });
     },
-    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
     onError: (error: Error) => { console.error("Erro ao guardar serviço:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myStore"] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

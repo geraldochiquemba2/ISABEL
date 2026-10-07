@@ -286,7 +286,14 @@ storesRouter.post("/", async (req, res) => {
 storesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality, isOpen, schedule, latitude, longitude } = req.body;
+    const { name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality, schedule, latitude, longitude } = req.body;
+    // NUNCA persistir is_open vindo do cliente: o objeto da loja que circula
+    // no frontend já traz o status CALCULADO (horário do dia); guardá-lo
+    // fechava a loja para sempre (foi o que aconteceu a N lojas: dono gravou
+    // fora de horas e ficou is_open=false permanente). Preserva o valor da BD.
+    // Fecho manual futuro deve usar endpoint dedicado (estilo featured/trending).
+    const curFlag = await pool.query("SELECT is_open FROM stores WHERE id=$1", [id]);
+    const effectiveIsOpen = curFlag.rows[0]?.is_open ?? true;
     // Guardas independentes: só escreve categorias/localidade se foram enviadas
     // (array vazio ou ausência = preserva o que está na BD, nunca apaga)
     const providedCats = Array.isArray(req.body.categories)
@@ -318,7 +325,7 @@ storesRouter.put("/:id", async (req, res) => {
       `UPDATE stores SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7,
        description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, is_open=$16, schedule=$17, latitude=$18, longitude=$19
        WHERE id=$1`,
-      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, localityVal, isOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
+      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, localityVal, effectiveIsOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
     );
     res.json({ success: true });
   } catch (err) {

@@ -360,12 +360,12 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 
   const mutation = useMutation({
     mutationFn: () => updateStore(store.id, { ...store, ...form, schedule, categories: form.categories ?? [], category: form.categories?.[0] || store.category, locality: form.locality }),
-    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const locationMutation = useMutation({
     mutationFn: () => updateStoreLocation(store.id, latitude, longitude),
-    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setDirty(false); setSaved(true); setTimeout(() => setSaved(false), 2000); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleChange = (field: string, value: string) => { setForm((prev) => ({ ...prev, [field]: value })); setDirty(true); };
@@ -599,13 +599,13 @@ function ProdutosSection({ store }: { store: any }) {
       const selectedCat = storeGroups.find((g) => g.title === form.category);
       await createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
     },
-    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); },
+    onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
     onError: (error: Error) => { console.error("Erro ao guardar infantil:", error.message); alert("Erro ao guardar: " + error.message); },
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["myStore"] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["myStore"] }); queryClient.invalidateQueries({ queryKey: ["stores"] }); },
   });
 
   const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

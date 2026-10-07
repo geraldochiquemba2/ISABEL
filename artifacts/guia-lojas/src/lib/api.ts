@@ -129,12 +129,16 @@ export async function saveStore(store: Store): Promise<void> {
   if (!res.ok) throw new Error("Erro ao salvar loja");
 }
 
-// PUT /api/stores/:id — Atualizar dados e status da loja
+// PUT /api/stores/:id — Atualizar dados e status da loja.
+// NUNCA envia isOpen: o objeto da loja no frontend já traz o status
+// CALCULADO (horário); persisti-lo fechava a loja para sempre. O servidor
+// preserva o flag da BD.
 export async function updateStore(id: string, store: Partial<Store>): Promise<void> {
+  const { isOpen: _computedIsOpen, ...rest } = store;
   const res = await fetch(`/api/stores/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(store),
+    body: JSON.stringify(rest),
   });
   if (!res.ok) throw new Error("Erro ao atualizar loja");
 }
