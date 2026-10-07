@@ -124,7 +124,7 @@ export default function Dashboard() {
   // logout handler
   const handleLogout = () => {
     localStorage.removeItem("guialocal_user");
-    setLoc("/");
+    window.location.href = "/";
   };
 
   const handleRefreshStatus = async () => {

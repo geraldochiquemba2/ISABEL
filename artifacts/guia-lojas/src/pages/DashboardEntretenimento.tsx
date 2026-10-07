@@ -141,7 +141,7 @@ export default function DashboardEntretenimento() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#7C3AED] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#221C35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/entretenimento"); }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.href = "/entretenimento"; }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function DashboardEntretenimento() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#7C3AED] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#221C35] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/entretenimento"); }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); window.location.href = "/entretenimento"; }} className="w-full text-xs text-[#6F6A8A] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
