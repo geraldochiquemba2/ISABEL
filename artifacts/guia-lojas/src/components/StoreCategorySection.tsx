@@ -37,9 +37,20 @@ const expandWords = (n: string): string[] => {
 
 export function StoreCard({ store, from }: { store: Store; from: string }) {
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
-  const images = store.coverImages && store.coverImages.length > 0
-    ? store.coverImages
-    : [store.coverImage || fallbackImage];
+  // Ordem: 1) capas da loja 2) fotos dos produtos (muitas lojas têm produtos
+  // com foto mas nunca definiram capa — eram estas que caíam sempre na padrão)
+  // 3) imagem padrão. Strings vazias são descartadas (davam <img src=""> partido).
+  const coverList = [...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])].filter(Boolean);
+  const productImages: string[] = [];
+  for (const p of ((store as any).products || [])) {
+    const urls = typeof p.imageUrls === "string"
+      ? p.imageUrls.split(" ").filter(Boolean)
+      : Array.isArray(p.imageUrls) ? p.imageUrls.filter(Boolean) : [];
+    if (urls.length > 0) productImages.push(...urls);
+    else if (p.imageUrl) productImages.push(p.imageUrl);
+  }
+  const images = coverList.length > 0 ? coverList : productImages.length > 0 ? productImages : [fallbackImage];
+  const [imgError, setImgError] = useState(false);
   // Rotação automática: cards com +1 foto trocam a cada 3 segundos.
   const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -57,9 +68,9 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
       onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
     >
       <div className="relative h-28 overflow-hidden">
-        <img src={images[currentIdx] || fallbackImage} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+        <img src={imgError ? fallbackImage : (images[currentIdx] || fallbackImage)} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" onError={() => setImgError(true)} />
         {store.logoUrl && (
-          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" />
+          <img src={store.logoUrl} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}
         
         {/* Botão de Partilha no Card (folha nativa no iPhone, Web Share senão) */}

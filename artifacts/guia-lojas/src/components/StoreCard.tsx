@@ -18,9 +18,16 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
 
-  const images = store.coverImages && store.coverImages.length > 0
-    ? store.coverImages
-    : (store.coverImage ? [store.coverImage] : []);
+  const coverList = [...(store.coverImages || []), ...(store.coverImage ? [store.coverImage] : [])].filter(Boolean);
+  const productImages: string[] = [];
+  for (const p of ((store as any).products || [])) {
+    const urls = typeof p.imageUrls === "string"
+      ? p.imageUrls.split(" ").filter(Boolean)
+      : Array.isArray(p.imageUrls) ? p.imageUrls.filter(Boolean) : [];
+    if (urls.length > 0) productImages.push(...urls);
+    else if (p.imageUrl) productImages.push(p.imageUrl);
+  }
+  const images = coverList.length > 0 ? coverList : productImages;
 
   // Sem rotação automática: a foto só muda por toque manual nos pontos.
 
