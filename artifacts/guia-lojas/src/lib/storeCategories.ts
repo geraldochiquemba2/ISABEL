@@ -88,3 +88,33 @@ export function sortStoresForCards<T extends PhotoStoreLike & { createdAt?: stri
     return tb - ta;
   });
 }
+
+export interface StoreGroupLike {
+  category: string;
+  title: string;
+}
+
+/**
+ * Filtra os grupos da vertical aos da loja: o formulário de produto mostra
+ * só as categorias da loja (e as suas subcategorias), não as de todas as
+ * lojas. Se nenhuma categoria da loja casar (categorias antigas de texto
+ * livre), devolve todos os grupos (fallback = comportamento atual).
+ */
+export function filterGroupsForStore<G extends StoreGroupLike>(
+  groups: G[],
+  store: StoreLike | null | undefined
+): G[] {
+  const cats = getStoreCategories(store).map(normCat).filter(Boolean);
+  if (!cats.length) return groups;
+  const matched = groups.filter((g) => {
+    const slug = normCat(String((g as any).category || "")).replace(/-/g, " ");
+    const title = normCat(String((g as any).title || ""));
+    return cats.some((c) => {
+      if (!c) return false;
+      if (slug && (c.includes(slug) || slug.includes(c))) return true;
+      if (title && (c.includes(title) || title.includes(c))) return true;
+      return false;
+    });
+  });
+  return matched.length > 0 ? matched : groups;
+}

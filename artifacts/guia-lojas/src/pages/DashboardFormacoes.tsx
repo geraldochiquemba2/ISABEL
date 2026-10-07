@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword } from "@/lib/api";
@@ -10,7 +10,7 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
 import { getLocalities } from "@/lib/locationIndex";
 import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
@@ -139,7 +139,7 @@ export default function DashboardFormacoes() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#1E737B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#175A61] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-formacoes"); }} className="w-full text-xs text-[#68757C] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/formacoes"); }} className="w-full text-xs text-[#68757C] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function DashboardFormacoes() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#1E737B] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#175A61] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-formacoes"); }} className="w-full text-xs text-[#68757C] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/formacoes"); }} className="w-full text-xs text-[#68757C] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
@@ -726,6 +726,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
 
 function ProductsManager({ store }: { store: any }) {
   const FORMACOES_CATEGORIES = useVerticalGroups(FORMACOES_CATEGORIES_META, "formacoes");
+  const storeGroups = useMemo(() => filterGroupsForStore(FORMACOES_CATEGORIES, store), [FORMACOES_CATEGORIES, store]);
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);
@@ -751,7 +752,7 @@ function ProductsManager({ store }: { store: any }) {
         return;
       }
       const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      const selectedCat = FORMACOES_CATEGORIES.find((g) => g.title === form.category);
+      const selectedCat = storeGroups.find((g) => g.title === form.category);
       await createProduct({ id, ...form, category: selectedCat ? selectedCat.title : form.category, price: Number(form.price) || 0, storeId: store.id, imageUrl: productImages[0] || "", imageUrls: productImages });
     },
     onSuccess: () => { setShowForm(false); setEditProduct(null); setForm({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" }); setProductImages([]); queryClient.invalidateQueries({ queryKey: ["products"] }); },
@@ -822,7 +823,7 @@ function ProductsManager({ store }: { store: any }) {
               <label className={labelCls}>Categoria</label>
               <select value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className={inputCls}>
                 <option value="">Selecione</option>
-                {FORMACOES_CATEGORIES.map((c) => <option key={c.category} value={c.title}>{c.title}</option>)}
+                {storeGroups.map((c) => <option key={c.category} value={c.title}>{c.title}</option>)}
               </select>
             </div>
             <div>

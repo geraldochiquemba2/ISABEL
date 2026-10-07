@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowUpRight, Mail, Phone, Instagram, X } from "lucide-react";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
 import WhereSearch from "@/components/WhereSearch";
@@ -230,11 +230,7 @@ export default function ExploreFormacoes() {
       if (locationScope && !storeMatchesScope(s, locationScope)) return false;
       return matchesCategory && matchesProvince && matchesMunicipality;
     });
-    const scope = locationScope;
-    if (scope && scope.kind === "nearby") {
-      matched.sort((a: Store, b: Store) => scopeRank(a, scope) - scopeRank(b, scope));
-    }
-    return matched.map((store: any) => {
+    const __mapped = matched.map((store: any) => {
       const productImages: string[] = [];
       (store.products || []).forEach((p: any) => {
         const urls = typeof p.imageUrls === "string"
@@ -245,6 +241,17 @@ export default function ExploreFormacoes() {
       });
       return { store, productImages };
     });
+    const scope = locationScope;
+    if (scope && scope.kind === "nearby") {
+      __mapped.sort((a: any, b: any) => scopeRank(a.store, scope) - scopeRank(b.store, scope));
+      return __mapped;
+    }
+    // Ordenação dos cards: lojas com +1 foto primeiro, recentes primeiro.
+    const rankedIds = new Map(
+      sortStoresForCards(__mapped.map((m: any) => m.store)).map((s: any, i: number) => [s.id, i] as const)
+    );
+    __mapped.sort((a: any, b: any) => (rankedIds.get(a.store.id) ?? 0) - (rankedIds.get(b.store.id) ?? 0));
+    return __mapped;
   };
 
   const filteredGroups = activeFilter

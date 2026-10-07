@@ -14,7 +14,7 @@ import { CATEGORIES, type Product } from "@/data/mock";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
 import { getLocalities } from "@/lib/locationIndex";
 
 type Section = "overview" | "loja" | "produtos" | "carrinhos" | "admin";
@@ -124,7 +124,7 @@ export default function Dashboard() {
   // logout handler
   const handleLogout = () => {
     localStorage.removeItem("guialocal_user");
-    setLoc("/login");
+    setLoc("/");
   };
 
   const handleRefreshStatus = async () => {
@@ -1098,6 +1098,10 @@ function ProdutosSection({ myStore }: { myStore: any }) {
       name: typeof sub === 'string' ? sub : sub.name,
     })),
   }));
+  const storeProductCategories = filterGroupsForStore(
+    PRODUCT_CATEGORIES.map((c: any) => ({ ...c, category: c.id, title: c.name })),
+    myStore
+  );
 
   const [adding, setAdding] = useState(false);
 
@@ -1112,7 +1116,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
   const [newUploading, setNewUploading] = useState(false);
   const [error, setError] = useState("");
 
-  const selectedCategory = PRODUCT_CATEGORIES.find((c) => c.id === newCategoryId);
+  const selectedCategory = storeProductCategories.find((c) => c.id === newCategoryId);
 
   function resetForm() {
     setNewName("");
@@ -1154,7 +1158,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
     if (!newName.trim()) return;
     setError("");
     try {
-      const cat = PRODUCT_CATEGORIES.find((c) => c.id === newCategoryId);
+      const cat = storeProductCategories.find((c) => c.id === newCategoryId);
       const sub = cat?.subcategories.find((s: any) => s.id === newSubcategoryId);
 
       const { createProduct } = await import("@/lib/api");
@@ -1306,7 +1310,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
                 Categoria
               </label>
               <div className="flex flex-wrap gap-2">
-                {PRODUCT_CATEGORIES.map((cat) => (
+                {storeProductCategories.map((cat) => (
                   <button
                     key={cat.id}
                     data-testid={`button-cat-${cat.id}`}
@@ -1431,6 +1435,7 @@ function ProdutosSection({ myStore }: { myStore: any }) {
                   product={p}
                   onDelete={(id) => refetch()}
                   onUpdate={() => refetch()}
+                  store={myStore}
                 />
               ))}
             </div>
@@ -1461,6 +1466,10 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
     imageColor: "#f0f0f0",
   });
   const [uploading, setUploading] = useState(false);
+  const storeGroups = filterGroupsForStore(
+    categories.map((cat: any) => ({ ...cat, category: cat.id ?? cat.name, title: cat.name ?? cat.id })),
+    myStore
+  );
 
   const carrinhoAccess = myStore?.carrinhoAccess || "NAO_SOLICITADO";
 
@@ -1690,7 +1699,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
               className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
             >
               <option value="">Categoria</option>
-              {categories.map((cat: any) => (
+              {storeGroups.map((cat: any) => (
                 <option key={cat.id} value={cat.name}>{cat.name}</option>
               ))}
             </select>
@@ -1701,7 +1710,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
                 className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm"
               >
                 <option value="">Subcategoria</option>
-                {categories.find((c: any) => c.name === formData.category)?.subcategories?.map((sub: string) => (
+                {storeGroups.find((c: any) => c.name === formData.category)?.subcategories?.map((sub: string) => (
                   <option key={sub} value={sub}>{sub}</option>
                 ))}
               </select>
@@ -1837,7 +1846,7 @@ function ConfirmDeleteModal({ productName, onConfirm, onCancel }: {
   );
 }
 
-function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelete: (id: string) => void; onUpdate: (p: Product) => void }) {
+function ProductRow({ product, onDelete, onUpdate, store }: { product: Product; onDelete: (id: string) => void; onUpdate: (p: Product) => void; store?: any }) {
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -1861,6 +1870,10 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
       name: typeof sub === 'string' ? sub : sub.name,
     })),
   }));
+  const storeProductCategories = filterGroupsForStore(
+    PRODUCT_CATEGORIES.map((c: any) => ({ ...c, category: c.id, title: c.name })),
+    store
+  );
 
   const [editName, setEditName] = useState(product.name);
   const [editPrice, setEditPrice] = useState(product.price.toString());
@@ -1869,16 +1882,16 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
     (product as any).imageUrls?.length ? (product as any).imageUrls : (product.imageUrl ? [product.imageUrl] : [])
   );
   const [editCategoryId, setEditCategoryId] = useState(() => {
-    const cat = PRODUCT_CATEGORIES.find(c => c.name === product.category);
+    const cat = storeProductCategories.find(c => c.name === product.category);
     return cat?.id || "";
   });
   const [editSubcategoryId, setEditSubcategoryId] = useState(() => {
-    const cat = PRODUCT_CATEGORIES.find(c => c.name === product.category);
+    const cat = storeProductCategories.find(c => c.name === product.category);
     const sub = cat?.subcategories.find((s: any) => s.name === product.subcategory);
     return sub?.id || "";
   });
 
-  const editSelectedCategory = PRODUCT_CATEGORIES.find(c => c.id === editCategoryId);
+  const editSelectedCategory = storeProductCategories.find(c => c.id === editCategoryId);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -1906,7 +1919,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
     setSaving(true);
     try {
       const { updateProduct } = await import("@/lib/api");
-      const cat = PRODUCT_CATEGORIES.find(c => c.id === editCategoryId);
+      const cat = storeProductCategories.find(c => c.id === editCategoryId);
       const sub = cat?.subcategories.find((s: any) => s.id === editSubcategoryId);
       const updated = {
         ...product,
@@ -2017,7 +2030,7 @@ function ProductRow({ product, onDelete, onUpdate }: { product: Product; onDelet
           <div>
             <label className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground block mb-2">Categoria *</label>
             <div className="flex flex-wrap gap-1.5">
-              {PRODUCT_CATEGORIES.map(cat => (
+              {storeProductCategories.map(cat => (
                 <button key={cat.id} type="button"
                   onClick={() => { setEditCategoryId(cat.id === editCategoryId ? "" : cat.id); setEditSubcategoryId(""); }}
                   className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${editCategoryId === cat.id ? "bg-foreground text-background border-black" : "border-border text-muted-foreground hover:border-black hover:text-foreground"}`}>

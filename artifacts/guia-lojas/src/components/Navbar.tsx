@@ -31,7 +31,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
   const handleLogout = () => {
     localStorage.removeItem("guialocal_user");
     setUser(null);
-    setLoc("/login");
+    setLoc("/");
   };
 
   const isActive = (href: string) =>

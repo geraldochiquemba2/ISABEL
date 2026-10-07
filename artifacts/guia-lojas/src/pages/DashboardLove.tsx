@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,7 +18,7 @@ import MapPicker from "@/components/MapPicker";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
-import { getStoreCategories } from "@/lib/storeCategories";
+import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getLocalities } from "@/lib/locationIndex";
 
@@ -388,6 +388,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
 
 function ProdutosSection({ store }: { store: any }) {
   const LOVE_SERVICE_GROUPS = useVerticalGroups(LOVE_SERVICE_GROUPS_META, "love-services");
+  const storeGroups = useMemo(() => filterGroupsForStore(LOVE_SERVICE_GROUPS, store), [LOVE_SERVICE_GROUPS, store]);
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);
@@ -408,7 +409,7 @@ function ProdutosSection({ store }: { store: any }) {
         return;
       }
       const id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      const selectedGroup = LOVE_SERVICE_GROUPS.find((g) => g.title === form.category);
+      const selectedGroup = storeGroups.find((g) => g.title === form.category);
       await createProduct({
         id,
         ...form,
@@ -519,7 +520,7 @@ function ProdutosSection({ store }: { store: any }) {
                   <label className={labelCls}>Categoria</label>
                   <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls}>
                     <option value="">Selecionar...</option>
-                    {LOVE_SERVICE_GROUPS.map((group) => (
+                    {storeGroups.map((group) => (
                       <option key={group.category} value={group.title}>{group.number} — {group.title}</option>
                     ))}
                   </select>
@@ -529,7 +530,7 @@ function ProdutosSection({ store }: { store: any }) {
                 <label className={labelCls}>Subcategoria</label>
                 <select value={form.subcategory} onChange={(e) => setForm({ ...form, subcategory: e.target.value })} className={inputCls} disabled={!form.category}>
                   <option value="">Selecionar...</option>
-                  {LOVE_SERVICE_GROUPS.find((g) => g.title === form.category)?.items.map((item) => (
+                  {storeGroups.find((g) => g.title === form.category)?.items.map((item) => (
                     <option key={item} value={item}>{item}</option>
                   ))}
                 </select>
@@ -687,7 +688,7 @@ export default function DashboardLove() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20o%20meu%20pedido%20de%20loja%20na%20YESOLA%20foi%20recusado%20e%20gostaria%20de%20reavaliar." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#A71936] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#791226] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-love"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/love-services"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
@@ -714,7 +715,7 @@ export default function DashboardLove() {
             <div className="flex flex-col gap-2 pt-2">
               <a href="https://wa.me/244922001778?text=Ol%C3%A1%2C%20a%20minha%20conta%20na%20YESOLA%20foi%20suspensa%20e%20gostaria%20de%20esclarecimentos." target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] hover:bg-[#22c35f] text-white py-2.5 rounded-full text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">Entrar em Contato via WhatsApp</a>
               <button onClick={handleRefreshStatus} className="w-full bg-[#A71936] text-white py-2.5 rounded-full text-xs font-semibold hover:bg-[#791226] transition-colors flex items-center justify-center gap-1.5"><RefreshCw size={13} /> Atualizar Status</button>
-              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/login-love"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
+              <button onClick={() => { localStorage.removeItem("guialocal_user"); setLoc("/love-services"); }} className="w-full text-xs text-[#6F696B] hover:opacity-80 py-2 transition-colors flex items-center justify-center gap-1.5"><LogOut size={13} /> Sair da conta</button>
             </div>
           </div>
         </div>
