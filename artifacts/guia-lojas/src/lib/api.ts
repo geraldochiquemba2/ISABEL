@@ -7,13 +7,21 @@ export async function getCategories(storeType?: string) {
   return res.json();
 }
 
+async function categoryError(res: Response, fallback: string): Promise<Error> {
+  try {
+    const j = await res.json();
+    if (j?.error) return new Error(j.error);
+  } catch { /* ignora */ }
+  return new Error(fallback);
+}
+
 export async function createCategory(data: any) {
   const res = await fetch(`/api/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error("Failed to create category");
+  if (!res.ok) throw await categoryError(res, "Failed to create category");
   return res.json();
 }
 
@@ -23,7 +31,7 @@ export async function updateCategory(id: string, data: any) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error("Failed to update category");
+  if (!res.ok) throw await categoryError(res, "Failed to update category");
   return res.json();
 }
 
@@ -31,7 +39,7 @@ export async function deleteCategory(id: string) {
   const res = await fetch(`/api/categories/${id}`, {
     method: "DELETE",
   });
-  if (!res.ok) throw new Error("Failed to delete category");
+  if (!res.ok) throw await categoryError(res, "Failed to delete category");
   return res.json();
 }
 

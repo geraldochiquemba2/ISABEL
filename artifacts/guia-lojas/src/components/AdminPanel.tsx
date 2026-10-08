@@ -429,6 +429,11 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
   }
 
   async function handleDelete(id: string) {
+    const cat = categories.find((c: any) => c.id === id);
+    if (cat?.isUsed) {
+      alert("Categoria em uso por lojas/produtos — não pode ser apagada, só editada.");
+      return;
+    }
     if (!confirm("Eliminar esta categoria?")) return;
     try { await deleteCategory(id); loadCategories(); } catch (e: any) { alert("Erro: " + e.message); }
   }
@@ -531,7 +536,7 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
                 </span>
                 <div>
                   <p className="text-sm font-medium text-[#2D2C2B]">{cat.name}</p>
-                  <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias · {storeTypeLabel(cat.store_type)}</p>
+                  <p className="text-[10px] text-[#87909a]">{cat.subcategories?.length || 0} subcategorias · {storeTypeLabel(cat.store_type)}{cat.isUsed ? " · em uso" : ""}</p>
                 </div>
               </div>
               <div className="flex gap-1.5">
@@ -539,7 +544,11 @@ function CategoriasTab({ accentColor, storeType }: { accentColor: string; storeT
                   {expandedId === cat.id ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
                 </button>
                 <button onClick={() => startEdit(cat)} className="p-1.5 text-[#87909a] hover:text-[#D4A843] transition-colors"><Edit2 size={13} /></button>
-                <button onClick={() => handleDelete(cat.id)} className="p-1.5 text-[#87909a] hover:text-red-500 transition-colors"><Trash2 size={13} /></button>
+                {cat.isUsed ? (
+                  <span className="p-1.5 text-gray-300 cursor-not-allowed" title="Em uso por lojas/produtos — só pode ser editada"><Trash2 size={13} /></span>
+                ) : (
+                  <button onClick={() => handleDelete(cat.id)} className="p-1.5 text-[#87909a] hover:text-red-500 transition-colors"><Trash2 size={13} /></button>
+                )}
               </div>
             </div>
             {expandedId === cat.id && (
