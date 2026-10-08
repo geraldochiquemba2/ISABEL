@@ -584,6 +584,8 @@ function formatPrice(price: number): string {
 }
 
 function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
+  // Categoria virtual para produtos sem categoria (não existe na BD).
+  const OUTROS_CAT = "__outros__";
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -602,10 +604,15 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
     return map;
   }, [products]);
 
-  const subcategories = activeCategory ? Array.from(categories.get(activeCategory) || []) : [];
+  const subcategories = activeCategory && activeCategory !== OUTROS_CAT ? Array.from(categories.get(activeCategory) || []) : [];
+
+  // Produtos sem categoria (71 em 40 lojas): apareciam em "Todos" mas sumiam
+  // ao tocar em qualquer chip. Chip "Outros" para nunca ficarem invisíveis.
+  const hasUncategorized = useMemo(() => products.some((p) => !p.category), [products]);
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
+      if (activeCategory === OUTROS_CAT) return !p.category;
       if (activeCategory && p.category !== activeCategory) return false;
       if (activeSubcategory && p.subcategory !== activeSubcategory) return false;
       return true;
@@ -708,6 +715,26 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                 </span>
               </button>
             ))}
+            {hasUncategorized && (
+              <button
+                onClick={() => {
+                  if (activeCategory === OUTROS_CAT) {
+                    setActiveCategory(null);
+                    setActiveSubcategory(null);
+                  } else {
+                    setActiveCategory(OUTROS_CAT);
+                    setActiveSubcategory(null);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                  activeCategory === OUTROS_CAT
+                    ? "bg-[#D8B532] text-white border-[#D8B532]"
+                    : "border-[#E9D9B6] text-[#77736D] hover:border-[#D8B532] hover:text-[#171717]"
+                }`}
+              >
+                Outros
+              </button>
+            )}
           </div>
 
           {/* Subcategory row */}

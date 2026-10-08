@@ -764,6 +764,12 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
         @media (max-width: 400px) { .category-grid { grid-template-columns: repeat(2, 1fr); } }
 
+        /* Cards de área no mesmo estilo dos cards de categoria
+           das Homes de cada vertical (cat-item). */
+        .area-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; background: white; border-radius: 14px; border: 1px solid #E8CC91; cursor: pointer; transition: all 0.2s; }
+
+        .area-item:hover { border-color: #C99432; background: #FFF8EC; }
+
         .slide-dot { width: 8px; height: 8px; border-radius: 50%; background: #C99432; transition: all 0.3s; }
 
         .slide-dot-inactive { width: 8px; height: 8px; border-radius: 50%; background: #E5DDD0; }
@@ -1000,13 +1006,13 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
               onClick={() => area.id === "lugares" ? (window.location.href = "/lugares") : onSelect(area.id)}
 
-              className="flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border bg-white border-[#E8CC91] hover:border-[#B89A78]/30 hover:bg-[#FFFFFF] transition-all cursor-pointer"
+              className="area-item"
 
             >
 
-              <div className="flex items-center justify-center w-12 h-12">{categoryIcons[area.id]}</div>
+              <div className="flex items-center justify-center w-10 h-10">{categoryIcons[area.id]}</div>
 
-              <span className="text-[11px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
+              <span className="text-[10px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
 
             </motion.button>
 
