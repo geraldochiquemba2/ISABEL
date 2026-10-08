@@ -69,3 +69,8 @@ artifacts/guia-lojas/android/app/src/main/assets/public/
 
 # wrangler dry-run
 .dry
+
+# wrangler/logs locais
+wrangler-login.log
+wrangler-login.err
+tail.log
