@@ -139,11 +139,14 @@ function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
     // Restaura onde parou (guardado pela memória de rolagem) ou vai ao topo.
+    // Usa window.location (igual à chave de gravação) para nunca falhar a
+    // correspondência, incluindo ?from= e reloads completos.
     // Corre ANTES dos efeitos do Router (filho antes do pai) e o reforço de
     // 700ms do Router só atua se ninguém mexeu — sem lutas de scroll.
     let saved = 0;
     try {
-      saved = parseInt(sessionStorage.getItem("scroll:" + location) || "0", 10) || 0;
+      const key = "scroll:" + window.location.pathname + window.location.search;
+      saved = parseInt(sessionStorage.getItem(key) || "0", 10) || 0;
     } catch {
       /* sem storage */
     }
@@ -274,7 +277,12 @@ function Router() {
     let cancelled = false;
     let saved = 0;
     try {
-      saved = parseInt(sessionStorage.getItem("scroll:" + location) || "0", 10) || 0;
+      // Lê do URL real (igual à chave de gravação).
+      saved =
+        parseInt(
+          sessionStorage.getItem("scroll:" + window.location.pathname + window.location.search) || "0",
+          10
+        ) || 0;
     } catch {
       /* sem storage */
     }
@@ -285,30 +293,34 @@ function Router() {
     };
     window.addEventListener("wheel", cancel, { passive: true });
     window.addEventListener("touchmove", cancel, { passive: true });
-    const t1 = requestAnimationFrame(() => {
+    const go = () => {
       if (!cancelled && saved > 0) window.scrollTo(0, saved);
-    });
-    // Reforço após conteúdo assíncrono (imagens/listas) assentar. Se o
-    // utilizador já mexeu, não puxa de volta (cancel acima).
-    const t2 = setTimeout(() => {
-      if (!cancelled && saved > 0 && Math.abs(window.scrollY - saved) > 8) window.scrollTo(0, saved);
-    }, 700);
+    };
+    const t1 = requestAnimationFrame(go);
+    // Escada de reforço após conteúdo assíncrono (API fria, imagens) assentar.
+    // Se o utilizador já mexeu, não puxa de volta (cancel acima).
+    const timers = [300, 900, 1700].map(
+      (ms) =>
+        setTimeout(() => {
+          if (!cancelled && saved > 0 && Math.abs(window.scrollY - saved) > 8) window.scrollTo(0, saved);
+        }, ms)
+    );
     return () => {
       cancel();
       cancelAnimationFrame(t1);
-      clearTimeout(t2);
+      timers.forEach(clearTimeout);
     };
   }, [location]);
 
-  // Grava a posição continuamente + ao sair da página.
+  // Grava a posição continuamente, ao clicar (síncrono, antes de navegar) e
+  // ao sair da página. O clique em captura elimina qualquer corrida com o
+  // throttle do scroll.
   useEffect(() => {
     let raf = 0;
+    const key = () => "scroll:" + window.location.pathname + window.location.search;
     const save = () => {
       try {
-        sessionStorage.setItem(
-          "scroll:" + window.location.pathname + window.location.search,
-          String(window.scrollY)
-        );
+        sessionStorage.setItem(key(), String(window.scrollY));
       } catch {
         /* sem storage */
       }
@@ -317,11 +329,14 @@ function Router() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(save);
     };
+    const onClick = () => save();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("click", onClick, true);
     window.addEventListener("pagehide", save);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("click", onClick, true);
       window.removeEventListener("pagehide", save);
     };
   }, []);
