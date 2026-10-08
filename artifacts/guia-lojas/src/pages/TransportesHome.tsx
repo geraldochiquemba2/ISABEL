@@ -123,6 +123,7 @@ export default function TransportesHome({ onBackToSelector }: { onBackToSelector
         {menuOpen && (
           <div className="bg-[#fffde7] border-t border-[#fff9c4]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <button onClick={() => navigate("/login-transportes")} className="py-2 text-left">Entrar</button>
+            <button onClick={() => navigate("/explorar-transportes")} className="py-2 text-left">Explorar</button>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

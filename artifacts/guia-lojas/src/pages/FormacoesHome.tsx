@@ -126,6 +126,7 @@ export default function FormacoesHome({ onBackToSelector }: { onBackToSelector?:
         {menuOpen && (
           <div className="bg-[#FAFAF8] border-t border-[#EEF3F4]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-formacoes" className="py-2">Entrar</a>
+            <a href="/explorar-formacoes" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

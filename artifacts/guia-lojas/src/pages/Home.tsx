@@ -130,6 +130,7 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         {menuOpen && (
           <div className="bg-[#FBF7EC] border-t border-[#E9D9B6]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
             <a href="/login" className="py-2">Entrar</a>
+            <a href="/explorar" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

@@ -120,6 +120,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
         {menuOpen && (
           <div className="bg-[#FCFAF8] border-t border-[#F7E9EB]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-love" className="py-2">Entrar</a>
+            <a href="/explorar-love" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

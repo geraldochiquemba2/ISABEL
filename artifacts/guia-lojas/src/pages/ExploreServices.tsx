@@ -435,7 +435,7 @@ export default function ExploreServices() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#87909a] mb-3">Lojas/Serviços disponíveis</p>
                   {getStoresForGroup(group.category).length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                   {getStoresForGroup(group.category).length > 0 ? (
-                    <div className={activeFilter === group.category ? "store-grid" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
+                    <div className={activeFilter === group.category ? "store-grid" : getStoresForGroup(group.category).length > 3 ? "grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
                       {getStoresForGroup(group.category).map(({ store, productImages }: any) => (
                         <StoreCard key={store.id} store={store} productImages={productImages} />
                       ))}

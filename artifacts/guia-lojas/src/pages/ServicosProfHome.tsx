@@ -124,6 +124,7 @@ export default function ServicosProfHome({ onBackToSelector }: { onBackToSelecto
         {menuOpen && (
           <div className="bg-[#e8eaf6] border-t border-[#c5cae9]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <button onClick={() => navigate("/login-servicos-prof")} className="py-2 text-left">Entrar</button>
+            <button onClick={() => navigate("/explorar-servicos-prof")} className="py-2 text-left">Explorar</button>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

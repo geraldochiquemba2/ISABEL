@@ -86,6 +86,7 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
         {menuOpen && (
           <div className="bg-[#FBF7EC] border-t border-[#E9D9B6]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-weddings" className="py-2">Entrar</a>
+            <a href="/explorar-weddings" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

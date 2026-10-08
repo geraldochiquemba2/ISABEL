@@ -124,6 +124,7 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
         {menuOpen && (
           <div className="bg-[#FBF8F4] border-t border-[#E8DDD0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-eventos" className="py-2">Entrar</a>
+            <a href="/explorar-eventos" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

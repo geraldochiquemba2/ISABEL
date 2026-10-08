@@ -345,7 +345,7 @@ export default function ExploreEmpregos() {
                     <p className="font-['DM_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#6B7280] mb-3">Lojas/Serviços disponíveis</p>
                     {groupStores.length > 2 && activeFilter !== group.category && (<span className="swipe-hint mb-2">Desliza para ver mais →</span>)}
                     {groupStores.length > 0 ? (
-                      <div className={activeFilter === group.category ? "store-grid" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
+                      <div className={activeFilter === group.category ? "store-grid" : groupStores.length > 3 ? "grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2" : "flex gap-3 overflow-x-auto scrollbar-hide pb-2"}>
                         {groupStores.map((store: any) => (
                           <StoreCard key={store.id} store={store} productImages={getProductsForStore(store.id)} />
                         ))}

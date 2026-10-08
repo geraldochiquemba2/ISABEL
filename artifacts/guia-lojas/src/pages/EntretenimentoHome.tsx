@@ -124,6 +124,7 @@ export default function EntretenimentoHome({ onBackToSelector }: { onBackToSelec
         {menuOpen && (
           <div className="bg-[#F5F0FF] border-t border-[#DED2F8]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-entretenimento" className="py-2">Entrar</a>
+            <a href="/explorar-entretenimento" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

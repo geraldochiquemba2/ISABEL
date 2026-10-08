@@ -125,6 +125,7 @@ export default function InfluenciadoresHome({ onBackToSelector }: { onBackToSele
         {menuOpen && (
           <div className="bg-[#fce4ec] border-t border-[#f8bbd0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <button onClick={() => navigate("/login-influenciadores")} className="py-2 text-left">Entrar</button>
+            <button onClick={() => navigate("/explorar-influenciadores")} className="py-2 text-left">Explorar</button>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

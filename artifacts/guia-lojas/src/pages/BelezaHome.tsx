@@ -126,6 +126,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
         {menuOpen && (
           <div className="bg-[#FBF7F2] border-t border-[#EAD9D5]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-beleza" className="py-2">Entrar</a>
+            <a href="/explorar-beleza" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}
