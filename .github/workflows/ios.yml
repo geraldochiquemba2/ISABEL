@@ -61,7 +61,7 @@ jobs:
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
           CERTIFICATE_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
-          pip3 install codemagic-cli-tools
+          pip3 install --break-system-packages codemagic-cli-tools
           app-store-connect fetch-signing-files "pt.yesola.app" \
             --platform IOS \
             --type IOS_APP_STORE \
