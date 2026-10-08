@@ -103,3 +103,20 @@ jobs:
           name: YESOLA-ios-ipa
           path: ${{ runner.temp }}/ipa/*.ipa
           retention-days: 14
+
+      # Subida automática para TestFlight: ativa quando a app YESOLA
+      # existir no App Store Connect (diz-me o Apple ID numérico e
+      # preencho APP_STORE_APP_ID nos secrets).
+      - name: Publish to TestFlight
+        if: ${{ secrets.APP_STORE_APP_ID != '' }}
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          pip3 install --break-system-packages codemagic-cli-tools
+          app-store-connect publish \
+            --path "${{ runner.temp }}/ipa" \
+            --app-id "${{ secrets.APP_STORE_APP_ID }}" \
+            --testflight \
+            --max-build-processing-wait 20
