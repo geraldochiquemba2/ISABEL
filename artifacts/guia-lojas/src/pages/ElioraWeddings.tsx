@@ -6,6 +6,7 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 import {
   Heart, ChevronRight, MapPin, Menu, X,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
@@ -220,7 +221,7 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#E9D9B6] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171717] truncate">{store.name}</h4>

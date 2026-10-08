@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "clinicas", name: "Clínicas & Hospitais", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#2E7D32" strokeWidth="1.5"><rect x="6" y="8" width="20" height="20" rx="2" /><path d="M16 14v8M12 18h8" /><rect x="10" y="4" width="12" height="6" rx="1" /></svg> },
@@ -268,7 +269,7 @@ export default function SaudeHome({ onBackToSelector }: { onBackToSelector?: () 
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#c8e6c9] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=saude`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#1a3a1a] truncate">{store.name}</h4>

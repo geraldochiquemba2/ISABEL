@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct, cancelApplication, changePassword } from "@/lib/api";
 import { useGroupTitles } from "@/lib/useVerticalGroups";
+import { thumbUrl } from "@/lib/img";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
@@ -1761,7 +1762,7 @@ function CarrinhosSection({ myStore }: { myStore: any }) {
         {products.map((product) => (
           <div key={product.id} className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-4">
             {product.imageUrl ? (
-              <img src={product.imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover" loading="lazy" decoding="async" />
+              <img src={thumbUrl(product.imageUrl)} alt="" className="w-16 h-16 rounded-xl object-cover" loading="lazy" decoding="async" />
             ) : (
               <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center">
                 <ShoppingCart size={20} className="text-gray-400" />
@@ -2072,7 +2073,7 @@ function ProductRow({ product, onDelete, onUpdate, store }: { product: Product; 
       ) : (
         <div className="flex items-center gap-4 py-3.5" data-testid={`row-product-${product.id}`}>
           {product.imageUrl ? (
-            <img src={product.imageUrl} alt={product.name}
+            <img src={thumbUrl(product.imageUrl)} alt={product.name}
               className="w-10 h-10 rounded-xl object-cover flex-shrink-0" loading="lazy" decoding="async" />
           ) : (
             <div className="w-10 h-10 rounded-xl flex-shrink-0" style={{ backgroundColor: product.imageColor }} />

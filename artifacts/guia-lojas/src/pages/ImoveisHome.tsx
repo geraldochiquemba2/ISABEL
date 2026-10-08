@@ -15,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "hoteis", name: "Hotéis & Resorts", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0B2D56" strokeWidth="1.5"><rect x="4" y="8" width="24" height="20" rx="2" /><path d="M4 14h24" /><rect x="8" y="18" width="6" height="4" rx="1" /><rect x="18" y="18" width="6" height="4" rx="1" /><circle cx="16" cy="11" r="2" /></svg> },
@@ -274,7 +275,7 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#A7B3C5] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=imoveis`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171717] truncate">{store.name}</h4>

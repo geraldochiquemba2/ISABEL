@@ -15,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "restaurantes", name: "Restaurantes", icon: <UtensilsCrossed size={28} className="text-[#D84315]" /> },
@@ -267,7 +268,7 @@ export default function AlimentacaoHome({ onBackToSelector }: { onBackToSelector
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#ffccbc] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=alimentacao`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#3a1a1a] truncate">{store.name}</h4>

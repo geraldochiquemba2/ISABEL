@@ -15,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "actos-de-amor", name: "Actos de Amor", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#A71936" strokeWidth="1.5"><path d="M16 28s-10-6.5-10-14c0-4 3-7 6-7 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 3 6 7 0 7.5-10 14-10 14z" /></svg> },
@@ -273,7 +274,7 @@ export default function MimoHome({ onBackToSelector }: { onBackToSelector?: () =
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#F7E9EB] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=love`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171416] truncate">{store.name}</h4>

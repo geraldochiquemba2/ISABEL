@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "venda-carros", name: "Venda de Carros", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#c9913a" strokeWidth="1.5"><path d="M5 20h22l-2-8H7L5 20z"/><circle cx="10" cy="22" r="2"/><circle cx="22" cy="22" r="2"/><path d="M7 12l1-4h16l1 4"/></svg> },
@@ -268,7 +269,7 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#e2e8f0] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=automoveis`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#1a2744] truncate">{store.name}</h4>

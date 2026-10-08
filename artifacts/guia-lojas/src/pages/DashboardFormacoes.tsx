@@ -11,6 +11,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
 import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
+import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image, MapPin, Navigation } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
@@ -561,7 +562,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
         <div>
           <label className={labelCls}>Logo da loja</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#EEF3F4]" loading="lazy" decoding="async" />}
+            {store.logoUrl && <img src={thumbUrl(store.logoUrl)} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#EEF3F4]" loading="lazy" decoding="async" />}
             <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#EEF3F4] rounded-xl text-xs text-[#68757C] hover:border-[#1E737B] hover:text-[#175A61] cursor-pointer transition-colors">
               <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
@@ -573,7 +574,7 @@ function StoreEditor({ store, isDirty, setIsDirty, saveFnRef }: { store: any; is
           <div className="flex items-center gap-4">
             {store.coverImage && (
               <div className="relative group shrink-0">
-                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#EEF3F4]" loading="lazy" decoding="async" />
+                <img src={thumbUrl(store.coverImage)} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#EEF3F4]" loading="lazy" decoding="async" />
                 <button type="button" title="Remover capa" aria-label="Remover imagem de capa" onClick={handleRemoveCover} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             )}
@@ -859,7 +860,7 @@ function ProductsManager({ store }: { store: any }) {
         {products.map((p: any) => (
           <div key={p.id} className="bg-white rounded-xl border border-[#EEF3F4] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {p.imageUrls?.[0] && <img src={p.imageUrls[0]} alt="" className="w-12 h-12 rounded-lg object-cover" loading="lazy" decoding="async" />}
+              {p.imageUrls?.[0] && <img src={thumbUrl(p.imageUrls[0])} alt="" className="w-12 h-12 rounded-lg object-cover" loading="lazy" decoding="async" />}
               <div>
                 <p className="text-sm font-medium text-[#175A61]">{p.name}</p>
                 <p className="text-xs text-[#68757C]">{p.price} {p.currency}</p>

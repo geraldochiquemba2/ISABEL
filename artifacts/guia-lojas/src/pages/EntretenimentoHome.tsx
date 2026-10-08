@@ -15,6 +15,7 @@ import {
   Search, Clapperboard, Music, Drama, PartyPopper, Gamepad2, Trophy,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "cinema", name: "Cinema", icon: <Clapperboard size={24} className="text-[#7C3AED]" /> },
@@ -277,7 +278,7 @@ export default function EntretenimentoHome({ onBackToSelector }: { onBackToSelec
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#DED2F8] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=entretenimento`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#221C35] truncate">{store.name}</h4>

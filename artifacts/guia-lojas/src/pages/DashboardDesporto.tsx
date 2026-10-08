@@ -15,6 +15,7 @@ import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
 import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
+import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
@@ -429,7 +430,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
         <div>
           <label className={labelCls}>Logo da loja</label>
           <div className="flex items-center gap-4">
-            {store.logoUrl && <img src={store.logoUrl} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#d4e8d4]" loading="lazy" decoding="async" />}
+            {store.logoUrl && <img src={thumbUrl(store.logoUrl)} alt="Logo" className="w-16 h-16 rounded-xl object-cover border border-[#d4e8d4]" loading="lazy" decoding="async" />}
             <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-[#d4e8d4] rounded-xl text-xs text-[#6B7280] hover:border-[#E65100] hover:text-[#1a3a1a] cursor-pointer transition-colors">
               <Camera size={14} />{uploading === "logoUrl" ? "A enviar..." : store.logoUrl ? "Trocar logo" : "Adicionar logo"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "logoUrl")} disabled={uploading !== null} />
@@ -441,7 +442,7 @@ function LojaSection({ store, isDirty, setDirty, saveFnRef }: { store: any; isDi
           <div className="flex items-center gap-4">
             {store.coverImage && (
               <div className="relative group shrink-0">
-                <img src={store.coverImage} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#d4e8d4]" loading="lazy" decoding="async" />
+                <img src={thumbUrl(store.coverImage)} alt="Capa" className="w-32 h-20 rounded-xl object-cover border border-[#d4e8d4]" loading="lazy" decoding="async" />
                 <button type="button" title="Remover capa" aria-label="Remover imagem de capa" onClick={handleRemoveCover} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-100 shadow-md border border-white hover:bg-red-600 hover:scale-110 transition-all cursor-pointer z-10"><X size={12} /></button>
               </div>
             )}
@@ -743,7 +744,7 @@ function ProdutosSection({ store }: { store: any }) {
                       <div className="space-y-2">
                         {groupProducts.map((p: any) => (
                           <div key={p.id} className="flex items-center gap-3 p-3 bg-[#fafafa] rounded-xl">
-                            {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
+                            {p.imageUrl && <img src={thumbUrl(p.imageUrl)} alt={p.name} className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
                             <div className="flex-1">
                               <h5 className="text-xs font-medium text-[#1a3a1a]">{p.name}</h5>
                               <p className="text-[10px] text-[#6B7280]">{p.subcategory || p.category} {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>

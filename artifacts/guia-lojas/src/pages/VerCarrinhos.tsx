@@ -4,6 +4,7 @@ import { Search, ShoppingCart, MessageCircle, ArrowLeft, Store } from "lucide-re
 import { useQuery } from "@tanstack/react-query";
 import { PageTransition } from "@/components/PageTransition";
 import { Link } from "wouter";
+import { thumbUrl } from "@/lib/img";
 
 interface CarrinhoProduct {
   id: string;
@@ -216,7 +217,7 @@ export default function VerCarrinhos() {
                         <div className="relative aspect-square overflow-hidden">
                           {product.imageUrl ? (
                             <img
-                              src={product.imageUrl}
+                              src={thumbUrl(product.imageUrl)}
                               alt={product.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy" decoding="async" />
@@ -229,7 +230,7 @@ export default function VerCarrinhos() {
                         <div className="p-3">
                           <div className="flex items-center gap-2 mb-1">
                             {product.storeLogo && (
-                              <img src={product.storeLogo} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" decoding="async" />
+                              <img src={thumbUrl(product.storeLogo)} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" decoding="async" />
                             )}
                             <p className="text-[10px] text-[#D8B532] font-medium">{product.storeName}</p>
                           </div>
@@ -280,12 +281,12 @@ export default function VerCarrinhos() {
                     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
                       <div className="h-32 relative overflow-hidden" style={{ backgroundColor: store.coverColor }}>
                         {store.coverImages?.[0] ? (
-                          <img src={store.coverImages[0]} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                          <img src={thumbUrl(store.coverImages[0])} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                         ) : null}
                       </div>
                       <div className="p-4 flex items-center gap-3">
                         {store.logoUrl ? (
-                          <img src={store.logoUrl} alt="" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm -mt-8 relative" loading="lazy" decoding="async" />
+                          <img src={thumbUrl(store.logoUrl)} alt="" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm -mt-8 relative" loading="lazy" decoding="async" />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center -mt-8 relative border-2 border-white shadow-sm">
                             <Store size={20} className="text-[#D8B532]" />

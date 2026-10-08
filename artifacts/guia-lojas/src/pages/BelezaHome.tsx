@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
   { id: "cabelo", name: "Cabelo", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#7A4549" strokeWidth="1.5"><path d="M16 4c-4 0-8 4-8 10s4 10 8 10 8-4 8-10-4-10-8-10z" /><path d="M16 4v24" /><path d="M8 12c4 2 12 2 16 0" /><path d="M8 20c4-2 12-2 16 0" /></svg> },
@@ -187,7 +188,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {trending.map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>
@@ -213,7 +214,7 @@ export default function BelezaHome({ onBackToSelector }: { onBackToSelector?: ()
             {featured.map((store: any) => (
               <div key={store.id} className="service-card" onClick={() => window.location.href = `/loja/${store.id}?from=beleza`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={store.coverImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#292727] truncate">{store.name}</h4>
