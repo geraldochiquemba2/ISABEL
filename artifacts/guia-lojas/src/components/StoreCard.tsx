@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
@@ -38,7 +38,13 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
 
   const currentImage = images[currentImageIndex];
 
+  // Prefetch no hover/focus (desktop) com once-guard. Sem onTouchStart:
+  // no mobile o scroll dispara touch em dezenas de cards e gerava rajada
+  // de /api/stores/:id que derrubava a RAM no free 512MB.
+  const prefetchedRef = useRef(false);
   const prefetchStore = () => {
+    if (prefetchedRef.current) return;
+    prefetchedRef.current = true;
     queryClient.prefetchQuery({
       queryKey: ["store", store.id],
       queryFn: () => fetchStoreById(store.id),
@@ -60,7 +66,6 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
       className="group cursor-pointer rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
       data-testid={`card-store-${store.id}`}
       onMouseEnter={prefetchStore}
-      onTouchStart={prefetchStore}
       onFocus={prefetchStore}
     >
       <Link href={`/loja/${store.id}`} onClick={() => nativeTap()} className="block flex-1 flex flex-col">

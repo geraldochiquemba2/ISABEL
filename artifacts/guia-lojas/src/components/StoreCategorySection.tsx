@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
@@ -59,8 +59,14 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   }
   const images = coverList.length > 0 ? coverList : productImages.length > 0 ? productImages : [fallbackImage];
   const [imgError, setImgError] = useState(false);
-  // Prefetch da loja + 1ª capa ao aproximar o dedo/mouse: o clique abre instantâneo.
+  // Prefetch da loja + 1ª capa no hover/focus (desktop): o clique abre instantâneo.
+  // Sem onTouchStart: no mobile o scroll dispara touch em dezenas de cards e
+  // gerava rajada de /api/stores/:id que derrubava a RAM no free 512MB.
+  // Guarda once por loja para não repetir.
+  const prefetchedRef = useRef(false);
   const prefetchStore = () => {
+    if (prefetchedRef.current) return;
+    prefetchedRef.current = true;
     queryClient.prefetchQuery({
       queryKey: ["store", store.id],
       queryFn: () => fetchStoreById(store.id),
@@ -89,7 +95,6 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
       onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
       onMouseEnter={prefetchStore}
-      onTouchStart={prefetchStore}
       onFocus={prefetchStore}
     >
       <div className="relative h-28 overflow-hidden bg-[#F1ECE3]">

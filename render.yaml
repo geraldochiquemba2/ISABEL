@@ -10,6 +10,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=384 # free 512MB: GC antes do cgroup matar o container
       - key: DATABASE_URL
         sync: false # Configura o teu URL de base de dados no painel do Render
       - key: TELEGRAM_BOT_TOKEN

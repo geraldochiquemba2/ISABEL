@@ -76,7 +76,16 @@ if (!fs.existsSync(CACHE_DIR)) {
 let sharpLoader: Promise<any> | null = null;
 function loadSharp(): Promise<any> {
   if (!sharpLoader) {
-    sharpLoader = import("sharp").then((m: any) => m.default || m).catch(() => null);
+    sharpLoader = import("sharp").then((m: any) => {
+      const s = m.default || m;
+      // Free 512MB: o cache nativo do libvips (~100MB) + heap sem teto
+      // derrubava o container. Sem cache e 1 thread.
+      try {
+        if (s && typeof s.cache === "function") s.cache(false);
+        if (s && typeof s.concurrency === "function") s.concurrency(1);
+      } catch { /* ignora */ }
+      return s;
+    }).catch(() => null);
   }
   return sharpLoader;
 }
@@ -156,8 +165,8 @@ const inflight = new Map<string, Promise<{ full: Buffer; thumb: Buffer }>>();
 
 // Semáforo anti-OOM: as páginas disparam dezenas de /api/media/image de uma
 // vez e cada um segura buffer do download + 2 buffers do sharp em RAM.
-// Máx 4 processamentos simultâneos; o resto espera em fila.
-let mediaSlots = 4;
+// Free 512MB: máx 2 processamentos simultâneos; o resto espera em fila.
+let mediaSlots = 2;
 const mediaQueue: Array<() => void> = [];
 async function withMediaSlot<T>(fn: () => Promise<T>): Promise<T> {
   if (mediaSlots <= 0) await new Promise<void>((res) => mediaQueue.push(res));
