@@ -54,14 +54,17 @@ jobs:
           cd ios/App
           pod install --repo-update
 
-      - name: Fetch signing files (cria distribuição sozinho)
+      - name: Fetch signing files (perfil App Store)
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          CERTIFICATE_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          CERTIFICATE_PRIVATE_KEY: ${{ secrets.P12_PASSWORD }}
         run: |
           pip3 install --break-system-packages codemagic-cli-tools
+          echo "${{ secrets.DISTRIBUTION_P12 }}" | base64 -d > "$RUNNER_TEMP/dist.p12"
+          keychain initialize
+          keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-password "${{ secrets.P12_PASSWORD }}"
           app-store-connect fetch-signing-files "pt.yesola.app" \
             --platform IOS \
             --type IOS_APP_STORE \
