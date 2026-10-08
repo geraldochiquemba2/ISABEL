@@ -86,14 +86,18 @@ export function countStorePhotos(store: PhotoStoreLike | null | undefined): numb
 }
 
 /**
- * Ordenação dos cards (Homes e Explorar): lojas com mais de 1 foto primeiro
- * e, dentro de cada grupo, as mais recentes primeiro.
+ * Ordenação dos cards (Homes, destaques e Explorar): lojas com mais fotos
+ * primeiro (por nº de fotos desc), recentes desempatam; lojas com 0-1 foto
+ * ficam sempre em último (também por recência entre si).
  */
 export function sortStoresForCards<T extends PhotoStoreLike & { createdAt?: string | null }>(stores: T[]): T[] {
   return [...stores].sort((a, b) => {
-    const am = countStorePhotos(a) > 1 ? 0 : 1;
-    const bm = countStorePhotos(b) > 1 ? 0 : 1;
-    if (am !== bm) return am - bm;
+    const ca = countStorePhotos(a);
+    const cb = countStorePhotos(b);
+    const ga = ca <= 1 ? 1 : 0;
+    const gb = cb <= 1 ? 1 : 0;
+    if (ga !== gb) return ga - gb;
+    if (ca !== cb) return cb - ca;
     const ta = (a && a.createdAt && Date.parse(a.createdAt)) || 0;
     const tb = (b && b.createdAt && Date.parse(b.createdAt)) || 0;
     return tb - ta;
