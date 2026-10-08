@@ -59,15 +59,17 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          CERTIFICATE_PRIVATE_KEY: ${{ secrets.P12_PASSWORD }}
         run: |
           pip3 install --break-system-packages codemagic-cli-tools
           echo "${{ secrets.DISTRIBUTION_P12 }}" | base64 -d > "$RUNNER_TEMP/dist.p12"
+          echo "${{ secrets.YESOLA_KEY }}" > "$RUNNER_TEMP/yesola.key"
+          chmod 600 "$RUNNER_TEMP/dist.p12" "$RUNNER_TEMP/yesola.key"
           keychain initialize
-          keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-key "${{ secrets.P12_PASSWORD }}"
+          keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-password "${{ secrets.P12_PASSWORD }}"
           app-store-connect fetch-signing-files "pt.yesola.app" \
             --platform IOS \
             --type IOS_APP_STORE \
+            --certificate-key "$RUNNER_TEMP/yesola.key" \
             --create
 
       - name: Keychain + profiles
