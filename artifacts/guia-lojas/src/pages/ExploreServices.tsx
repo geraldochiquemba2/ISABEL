@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowUpRight, X, Mail, Phone, Instagram } from "lucide-react";
+import { ArrowLeft, MapPin, ArrowUpRight, X, Mail, Phone, Instagram } from "lucide-react";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { getMunicipalities, storeMatchesScope, scopeRank, type Scope } from "@/lib/locationIndex";
@@ -124,6 +124,10 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
         {store.description && (
           <p className="text-[10px] text-[#87909a] mt-1 line-clamp-2">{store.description}</p>
         )}
+        <div className="flex items-center gap-1 mt-1">
+          <MapPin size={10} className="text-[#9CA3AF]" />
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
+        </div>
       </div>
     </div>
   );

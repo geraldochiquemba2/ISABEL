@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, UtensilsCrossed, Cake, Zap, ChefHat, ShoppingCart, Beef, Croissant, Droplets, Package, Truck, X } from "lucide-react";
+import { ArrowLeft, MapPin, UtensilsCrossed, Cake, Zap, ChefHat, ShoppingCart, Beef, Croissant, Droplets, Package, Truck, X } from "lucide-react";
 import { fetchStores } from "@/lib/api";
 import { thumbList, thumbUrl } from "@/lib/img";
 import { useVerticalGroups } from "@/lib/useVerticalGroups";
@@ -91,6 +91,10 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         {store.description && (
           <p className="text-[10px] text-[#6D5843] mt-1 line-clamp-2">{store.description}</p>
         )}
+        <div className="flex items-center gap-1 mt-1">
+          <MapPin size={10} className="text-[#9CA3AF]" />
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
+        </div>
       </div>
     </div>
   );

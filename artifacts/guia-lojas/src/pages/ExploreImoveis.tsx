@@ -84,6 +84,10 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
         {store.description && (
           <p className="text-[10px] text-[#A7B3C5] mt-1 line-clamp-2">{store.description}</p>
         )}
+        <div className="flex items-center gap-1 mt-1">
+          <MapPin size={10} className="text-[#9CA3AF]" />
+          <span className="text-[10px] text-[#9CA3AF]">{store.municipality || store.province || "Angola"}</span>
+        </div>
       </div>
     </div>
   );
