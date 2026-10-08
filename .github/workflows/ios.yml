@@ -69,7 +69,7 @@ jobs:
           app-store-connect fetch-signing-files "pt.yesola.app" \
             --platform IOS \
             --type IOS_APP_STORE \
-            --certificate-key "$RUNNER_TEMP/yesola.key" \
+            --certificate-key "@file:$RUNNER_TEMP/yesola.key" \
             --create
 
       - name: Keychain + profiles
