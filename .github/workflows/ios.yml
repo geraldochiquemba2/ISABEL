@@ -120,6 +120,5 @@ jobs:
           pip3 install --break-system-packages codemagic-cli-tools
           app-store-connect publish \
             --path "${{ runner.temp }}/ipa" \
-            --app-id "${{ secrets.APP_STORE_APP_ID }}" \
             --testflight \
             --max-build-processing-wait 20
