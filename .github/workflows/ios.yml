@@ -18,6 +18,8 @@ jobs:
   ios:
     runs-on: macos-latest
     timeout-minutes: 60
+    env:
+      HAS_APP_STORE_ID: ${{ secrets.APP_STORE_APP_ID }}
     defaults:
       run:
         working-directory: artifacts/guia-lojas
@@ -109,7 +111,7 @@ jobs:
       # existir no App Store Connect (diz-me o Apple ID numérico e
       # preencho APP_STORE_APP_ID nos secrets).
       - name: Publish to TestFlight
-        if: ${{ secrets.APP_STORE_APP_ID != '' }}
+        if: env.HAS_APP_STORE_ID != ''
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
