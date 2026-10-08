@@ -5,9 +5,14 @@
 // Contas antigas com plaintext continuam a entrar: o login aceita o valor
 // legado e converte para hash nesse momento (upgrade transparente).
 
-const ITERATIONS = 100_000;
+const DEFAULT_ITERATIONS = 100_000;
 const SALT_LEN = 16;
 const KEY_LEN_BITS = 256;
+
+// Workers free só tem 10ms de CPU por pedido (erro 1101 acima disso):
+// 100k iterações ≈ 80ms. Plano pago/Node usa 100k; no free define
+// PASSWORD_ITERATIONS=5000 (~7ms). O hash guarda as iterações usadas, por
+// isso a BD pode misturar valores sem problema.
 
 // Declarações mínimas para não depender de @types/node nem lib DOM.
 interface SubtleLike {
@@ -84,10 +89,16 @@ async function pbkdf2(password: string, salt: Uint8Array, iterations: number): P
   return new Uint8Array(bits);
 }
 
-export async function hashPassword(password: string): Promise<string> {
+export function resolveIterations(raw?: string | null): number {
+  const n = parseInt(String(raw || ""), 10);
+  if (Number.isFinite(n) && n >= 1000 && n <= 1_000_000) return n;
+  return DEFAULT_ITERATIONS;
+}
+
+export async function hashPassword(password: string, iterations: number = DEFAULT_ITERATIONS): Promise<string> {
   const salt = crypto.getRandomValues(new Uint8Array(SALT_LEN));
-  const hash = await pbkdf2(password, salt, ITERATIONS);
-  return `pbkdf2$${ITERATIONS}$${toB64(salt)}$${toB64(hash)}`;
+  const hash = await pbkdf2(password, salt, iterations);
+  return `pbkdf2$${iterations}$${toB64(salt)}$${toB64(hash)}`;
 }
 
 export function isHashed(stored: string): boolean {

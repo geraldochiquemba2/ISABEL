@@ -12,6 +12,9 @@ workers_dev = true
 
 [vars]
 # RENDER_EXTERNAL_URL já não é preciso (sem sleep no Workers)
+# PASSWORD_ITERATIONS só no plano free (10ms CPU -> erro 1101 acima disso):
+#   wrangler secret put PASSWORD_ITERATIONS # valor 5000
+# No pago/Node, omite (default 100000).
 
 [triggers]
 # Verificação de assinaturas vencidas (era setInterval de 1h no Node)
