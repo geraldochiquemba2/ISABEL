@@ -142,7 +142,7 @@ export default function Proposito() {
               <LogOut size={18} />
             </button>
           ) : (
-            <button onClick={() => setShowLogin(true)} className="text-[11px] text-[#B89A78] font-medium">Admin</button>
+            <button onClick={() => setShowLogin(true)} className="text-[11px] text-[#B89A78] font-medium">Login</button>
           )}
         </div>
       </header>
