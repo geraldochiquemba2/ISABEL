@@ -3,14 +3,21 @@ workflows:
     name: YESOLA iOS Build
     max_build_duration: 60
     environment:
+      # Grupo app_store_credentials (criar no Codemagic, valores da MESMA
+      # conta da LadiesGo — chaves que já existem):
+      #   APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER,
+      #   APP_STORE_CONNECT_PRIVATE_KEY, CERTIFICATE_PRIVATE_KEY
+      # Com isto a assinatura é 100% automática: cria certificado + perfil
+      # sozinha. Nada manual no portal além do App ID (feito) e da chave
+      # push .p8.
       groups:
         - app_store_credentials
-        - certificate
       vars:
         # O vite.config exige PORT e BASE_PATH, senão o build rebenta.
         PORT: "3000"
         BASE_PATH: "/"
         NODE_ENV: production
+        BUNDLE_ID: "pt.yesola.app"
     triggering:
       events:
         - push
@@ -40,6 +47,16 @@ workflows:
         script: |
           cd artifacts/guia-lojas/ios/App
           pod install --repo-update
+      - name: Fetch signing files (automático via API key)
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --create
+      - name: Use profiles
+        script: |
+          cd artifacts/guia-lojas/ios/App
+          xcode-project use-profiles
       - name: Copy ExportOptions.plist
         script: |
           cp ExportOptions.plist artifacts/guia-lojas/ios/App/ExportOptions.plist
@@ -50,7 +67,6 @@ workflows:
             -scheme App \
             -configuration Release \
             -archivePath $PWD/build/App.xcarchive \
-            -allowProvisioningUpdates \
             archive
       - name: Export IPA
         script: |
@@ -63,9 +79,10 @@ workflows:
       - artifacts/guia-lojas/ios/App/build/output/**/*.ipa
     publishing:
       ios:
-        app_id:
-          from_variable: APP_STORE_APP_ID
-      submit_to_app_store: false
+        # Ligar depois de criar a app no App Store Connect:
+        # app_id com o Apple ID numérico + submit_to_app_store: true
+        # (sobe para TestFlight; o lançamento na loja é manual).
+        submit_to_app_store: false
 
   # ------------------------------------------------------------------
   # YESOLA Android: gera o .aab assinado para a Play Store.
