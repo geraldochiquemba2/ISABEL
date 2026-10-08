@@ -199,7 +199,11 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
 
   const nonAdmin = stores.filter((s: Store) => s.phone !== "999999999");
   const trending = nonAdmin.filter((s: Store) => s.isTrending).slice(0, 6);
-  // Ordenação dinâmica: categorias com mais lojas primeiro, vazias no fim
+  // Duas fileiras só compensa com 4+ lojas; com 3 ou menos, uma fila chega.
+  const rowCls = (n: number) =>
+    n > 3
+      ? "grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2"
+      : "flex gap-3 overflow-x-auto scrollbar-hide pb-2";  // Ordenação dinâmica: categorias com mais lojas primeiro, vazias no fim
   const sortedCategories = [...categories].sort(
     (a, b) => getStoresForCategory(b.name).length - getStoresForCategory(a.name).length
   );
@@ -220,7 +224,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             <TrendingUp size={16} className="text-[#D4A843]" />
             <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Em alta</h3>
           </div>
-          <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
+          <div className={rowCls(trending.length)}>
             {trending.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />
             ))}
@@ -244,7 +248,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             </div>
             {categoryStores.length > 0 ? (
               <>
-                <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
+                <div className={rowCls(categoryStores.length)}>
                   {categoryStores.map((store: Store) => (
                     <StoreCard key={store.id} store={store} from={storeType} />
                   ))}
@@ -269,7 +273,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             </div>
           </div>
           <p className="text-[11px] text-[#9CA3AF] mb-3">Lojas com categorias ainda por classificar.</p>
-          <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
+          <div className={rowCls(orphanStores.length)}>
             {orphanStores.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />
             ))}
