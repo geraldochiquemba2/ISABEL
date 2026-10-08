@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/Navbar";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, useRef } from "react";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
@@ -135,14 +135,35 @@ export function useStore() {
   return useContext(StoreContext);
 }
 
+// Como a página foi carregada: "reload" = refresh (vai ao topo),
+// "back_forward" = voltar (restaura), resto = restauro-se-houver.
+function navType(): string {
+  try {
+    const e = (performance.getEntriesByType("navigation")[0] as any) || {};
+    return e.type || "navigate";
+  } catch {
+    return "navigate";
+  }
+}
+
 function ScrollToTop() {
   const [location] = useLocation();
+  const firstRun = useRef(true);
   useEffect(() => {
     // Restaura onde parou (guardado pela memória de rolagem) ou vai ao topo.
     // A chave inclui a vertical: "/" é partilhado pelo seletor e por TODAS
     // as Homes — sem isto, escolher uma área nova caía na posição antiga.
+    // Só o 1º carregamento após refresh força o topo; navegações SPA
+    // seguintes usam a lógica normal (senão o type "reload" herdado do
+    // documento matava o voltar).
     // Corre ANTES dos efeitos do Router (filho antes do pai) e o reforço do
     // Router só atua se ninguém mexeu — sem lutas de scroll.
+    const freshReload = firstRun.current && navType() === "reload";
+    firstRun.current = false;
+    if (freshReload) {
+      window.scrollTo(0, 0);
+      return;
+    }
     let saved = 0;
     try {
       saved = parseInt(sessionStorage.getItem(scrollKey()) || "0", 10) || 0;
@@ -291,9 +312,17 @@ function Router() {
   }, []);
 
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
-  // Guarda por vertical + URL em sessionStorage — sobrevive aos reloads
-  // (os cards navegam com window.location.href, que limpa memória JS).
+  // Refresh (só o 1º carregamento) vai sempre ao topo. Guarda por vertical +
+  // URL em sessionStorage — sobrevive aos reloads (os cards navegam com
+  // window.location.href, que limpa memória JS).
+  const firstRestore = useRef(true);
   useEffect(() => {
+    const freshReload = firstRestore.current && navType() === "reload";
+    firstRestore.current = false;
+    if (freshReload) {
+      window.scrollTo(0, 0);
+      return;
+    }
     let cancelled = false;
     let saved = 0;
     try {
