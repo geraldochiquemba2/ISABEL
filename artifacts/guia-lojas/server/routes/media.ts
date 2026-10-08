@@ -31,7 +31,10 @@ mediaRouter.post("/upload", async (req, res) => {
     const captionText = `📸 Nova Imagem (GuiaLocal)\nFicheiro: ${filename || "upload.jpg"}\nData: ${new Date().toLocaleString("pt-PT")}`;
     formData.append("caption", captionText);
 
-    // Enviar para o Telegram
+    // Enviar para o Telegram (todas as fotos vão para o MESMO chat, logo o
+    // limite de ~1 msg/seg por chat aplica-se: respeita o cooldown global e
+    // nunca martela — devolve 429 ao cliente para tentar de novo).
+    await waitTelegramCooldown();
     const telegramUrl = `https://api.telegram.org/bot${token}/sendPhoto`;
     const response = await fetch(telegramUrl, {
       method: "POST",
@@ -40,6 +43,12 @@ mediaRouter.post("/upload", async (req, res) => {
 
     const result = await response.json();
     if (!result.ok) {
+      if (result?.error_code === 429) {
+        const waitMs = Math.min(Number(result?.parameters?.retry_after) > 0 ? Number(result.parameters.retry_after) : 30, 300) * 1000;
+        telegramCooldownUntil = Date.now() + waitMs;
+        console.warn(`⚠️ Telegram 429 no upload: cooldown global de ${Math.round(waitMs / 1000)}s.`);
+        return res.status(429).json({ error: `Telegram ocupado, tente de novo em ${Math.round(waitMs / 1000)} segundos.` });
+      }
       console.error("Erro do Telegram:", result);
       return res.status(500).json({ error: `Erro do Telegram: ${result.description}` });
     }
@@ -140,18 +149,58 @@ function writeAtomic(p: string, buf: Buffer): void {
   fs.renameSync(tmp, p);
 }
 
-async function fetchWithRetry(url: string, attempts = 3): Promise<Response> {
+// Cooldown global anti-ban: quando o Telegram responde 429 com retry_after,
+// TODO o tráfego Bot API (getFile, downloads, uploads) pausa até expirar.
+// 429 ocasionais com espera correta são normais e inofensivos; ignorar o
+// retry_after e martelar é o que leva a restrição do bot.
+let telegramCooldownUntil = 0;
+
+async function waitTelegramCooldown(): Promise<void> {
+  const wait = telegramCooldownUntil - Date.now();
+  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+}
+
+// Lê parameters.retry_after (segundos) da resposta 429 do Telegram.
+// Devolve milissegundos (teto de 5 min por chamada; o cooldown acumula).
+async function readRetryAfter(res: Response): Promise<number> {
+  try {
+    const data = (await res.clone().json()) as any;
+    const ra = Number(data?.parameters?.retry_after);
+    if (Number.isFinite(ra) && ra > 0) return Math.min(ra, 300) * 1000;
+  } catch { /* corpo não-JSON (ex: ficheiros) */ }
+  return 0;
+}
+
+async function fetchWithRetry(url: string, attempts = 4): Promise<Response> {
+  // Respeita cooldown global de um 429 anterior antes de sequer tentar.
+  await waitTelegramCooldown();
   let lastErr: unknown = null;
   for (let i = 1; i <= attempts; i++) {
     try {
       const res = await fetch(url);
       if (res.ok) return res;
-      if (res.status === 429 || (res.status >= 500 && res.status < 600)) {
+      if (res.status === 429) {
+        // Flood control do Telegram: a resposta traz parameters.retry_after
+        // (segundos). Ignorar e martelar estende a penalidade (pode chegar a
+        // dezenas de milhares de segundos) e restringir o bot — por isso
+        // pausa-se TODO o tráfego Bot API até expirar, em vez de retry fixo.
+        const waitMs = (await readRetryAfter(res)) || 5000;
+        telegramCooldownUntil = Date.now() + waitMs;
+        lastErr = new Error(`Telegram 429 — retry_after ${Math.round(waitMs / 1000)}s`);
+        console.warn(`⚠️ Telegram 429 em ${i}/${attempts}: a aguardar ${Math.round(waitMs / 1000)}s (cooldown global).`);
+        await new Promise((r) => setTimeout(r, waitMs));
+        continue;
+      }
+      if (res.status >= 500 && res.status < 600) {
         lastErr = new Error(`Telegram ${res.status}`); // transitório → repete
       } else {
         throw new Error(`Telegram ${res.status}`); // 4xx → definitivo
       }
     } catch (e) {
+      if (e instanceof Error && e.message.startsWith("Telegram 429")) {
+        lastErr = e; // já aguardou acima; próxima volta respeita o cooldown
+        continue;
+      }
       lastErr = e;
     }
     if (i < attempts) await new Promise((r) => setTimeout(r, 500 * i));
