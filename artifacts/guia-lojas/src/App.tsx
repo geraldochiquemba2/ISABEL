@@ -304,18 +304,27 @@ function Router() {
       if (!cancelled && saved > 0) window.scrollTo(0, saved);
     };
     const t1 = requestAnimationFrame(go);
-    // Escada de reforço após conteúdo assíncrono (API fria, imagens) assentar.
-    // Se o utilizador já mexeu, não puxa de volta (cancel acima).
-    const timers = [300, 900, 1700].map(
-      (ms) =>
-        setTimeout(() => {
-          if (!cancelled && saved > 0 && Math.abs(window.scrollY - saved) > 8) window.scrollTo(0, saved);
-        }, ms)
-    );
+    // Perseguição até assentar: com API fria a lista cresce durante segundos
+    // e um scroll cedo "cola" a meio (ficava nos ~500). Tenta até chegar,
+    // até 6s. Se o utilizador já mexeu, não puxa de volta (cancel acima).
+    let tries = 0;
+    const iv = setInterval(() => {
+      tries++;
+      if (cancelled) {
+        clearInterval(iv);
+        return;
+      }
+      if (saved > 0 && Math.abs(window.scrollY - saved) > 8) {
+        window.scrollTo(0, saved);
+      } else {
+        clearInterval(iv);
+      }
+      if (tries >= 10) clearInterval(iv);
+    }, 600);
     return () => {
       cancel();
       cancelAnimationFrame(t1);
-      timers.forEach(clearTimeout);
+      clearInterval(iv);
     };
   }, [location, selectedStore]);
 
