@@ -232,7 +232,7 @@ export default function Proposito() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => setShowLogin(false)}>
           <div className="bg-white rounded-2xl w-full max-w-sm p-6 mx-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-[#171717]">Login Admin</h3>
+              <h3 className="text-lg font-semibold text-[#171717]">Login</h3>
               <button onClick={() => setShowLogin(false)} className="p-2 hover:bg-gray-100 rounded-full">
                 <X size={20} />
               </button>
