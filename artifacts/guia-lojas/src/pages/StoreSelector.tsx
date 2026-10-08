@@ -242,7 +242,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   weddings: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <circle cx="12" cy="22" r="7" />
 
@@ -256,7 +256,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   formacoes: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 8L4 14l14 6 14-6L18 8z" />
 
@@ -270,7 +270,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   imoveis: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="6" y="12" width="24" height="18" rx="2" />
 
@@ -292,7 +292,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   collection: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M12 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" />
 
@@ -308,7 +308,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   eventos: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="8" y="10" width="20" height="18" rx="2" />
 
@@ -326,7 +326,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "love-services": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 30s-10-6-10-14c0-4 3-6 6-6 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 2 6 6 0 8-10 14-10 14z" />
 
@@ -338,7 +338,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   business: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <circle cx="18" cy="18" r="10" />
 
@@ -352,15 +352,15 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   infantil: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <circle cx="18" cy="14" r="6" />
 
       <path d="M12 20c-2 2-3 5-3 8h24c0-3-1-6-3-8" />
 
-      <circle cx="15" cy="13" r="1" fill="#A96F12" />
+      <circle cx="15" cy="13" r="1" fill="#1e293b" />
 
-      <circle cx="21" cy="13" r="1" fill="#A96F12" />
+      <circle cx="21" cy="13" r="1" fill="#1e293b" />
 
       <path d="M16 16c1 1 3 1 4 0" strokeLinecap="round" />
 
@@ -370,7 +370,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   automoveis: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M6 22h24l-3-10H9L6 22z" />
 
@@ -388,7 +388,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   saude: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="6" y="8" width="24" height="20" rx="2" />
 
@@ -402,7 +402,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   beleza: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 4l-2 8h4l-2-8z" />
 
@@ -418,7 +418,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   casa: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M6 16l12-10 12 10" />
 
@@ -434,7 +434,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "tecnologia-electronicos": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="10" y="6" width="16" height="24" rx="3" />
 
@@ -448,7 +448,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "alimentacao-restauracao": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M12 6v10c0 2-2 4-4 4v0c2 0 4 2 4 4v10" />
 
@@ -462,7 +462,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "turismo-lazer": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 6L6 14l12 4 12-4L18 6z" />
 
@@ -476,7 +476,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "desporto-fitness": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M8 18h4v-6h-4zM24 18h4v-6h-4z" />
 
@@ -492,7 +492,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "empregos-oportunidades": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="8" y="12" width="20" height="16" rx="2" />
 
@@ -508,7 +508,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "agricultura-agronegocio": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 30V14" />
 
@@ -526,7 +526,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "influenciadores-criadores": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <circle cx="18" cy="14" r="6" />
 
@@ -542,7 +542,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "transportes-logistica": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M4 18h20v8H4z" />
 
@@ -558,7 +558,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   "servicos-profissionais": (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <rect x="8" y="6" width="20" height="24" rx="2" />
 
@@ -572,7 +572,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   entretenimento: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M8 28l20-10-20-10v20z" />
 
@@ -584,7 +584,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
   lugares: (
 
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#1e293b" strokeWidth="1.5">
 
       <path d="M18 30s-8-6.5-8-13a8 8 0 0 1 16 0c0 6.5-8 13-8 13z" />
 
@@ -1010,7 +1010,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             >
 
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl" style={{ backgroundColor: `${area.accent}1A` }}>{categoryIcons[area.id]}</div>
+              <div className="flex items-center justify-center w-12 h-12">{categoryIcons[area.id]}</div>
 
               <span className="text-[10px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
 
