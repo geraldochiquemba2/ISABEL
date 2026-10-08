@@ -2,6 +2,7 @@
 # Mac grátis do GitHub (~8 builds/mês). Assinatura 100% automática via
 # App Store Connect API key (3 secrets no repo: ASC_KEY_ID,
 # ASC_ISSUER_ID, ASC_PRIVATE_KEY — os mesmos da conta, já existem).
+# Rebuild forçado para subir o IPA com logo branco à TestFlight.
 name: YESOLA iOS
 
 on:
