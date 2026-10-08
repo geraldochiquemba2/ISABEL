@@ -6,6 +6,7 @@ import { fetchStores } from "@/lib/api";
 import { Store } from "@/data/mock";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { sortStoresForCards } from "@/lib/storeCategories";
 import { thumbUrl } from "@/lib/img";
 import {
   Heart, ChevronRight, MapPin, Menu, X,
@@ -42,7 +43,7 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
   });
 
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
-  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const featured = sortStoresForCards(nonAdmin.filter((s: any) => s.isFeatured)).slice(0, 6);
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []

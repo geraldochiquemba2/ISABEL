@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
-import { thumbUrl, thumbList } from "@/lib/img";
+import { thumbUrl, thumbList, dedupeUrls } from "@/lib/img";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -78,9 +78,9 @@ export default function StoreProfile() {
   // Calcular imagens e carrossel ANTES dos early returns (regra dos hooks React)
   // Thumbs (480px) no carrossel: a cheia (1600px/original de MBs) demorava
   // segundos a aparecer ao clicar no card. Full só no lightbox/modal.
-  const fullCoverImages = store?.coverImages && store.coverImages.length > 0
+  const fullCoverImages = dedupeUrls(store?.coverImages && store.coverImages.length > 0
     ? store.coverImages
-    : (store?.coverImage ? [store.coverImage] : []);
+    : (store?.coverImage ? [store.coverImage] : []));
   const images = useMemo(() => thumbList(fullCoverImages), [store?.coverImages, store?.coverImage]);
 
   // Swipe lateral (toque e rato) para navegar nas fotos da capa
@@ -651,7 +651,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
     e?.stopPropagation();
     if (lightboxIndex !== null && filtered.length > 0) {
       const p = filtered[lightboxIndex];
-      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
       if (pImages.length > 1) {
         setLightboxPhotoIndex((prev) => (prev - 1 + pImages.length) % pImages.length);
       } else {
@@ -665,7 +665,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
     e?.stopPropagation();
     if (lightboxIndex !== null && filtered.length > 0) {
       const p = filtered[lightboxIndex];
-      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
       if (pImages.length > 1) {
         setLightboxPhotoIndex((prev) => (prev + 1) % pImages.length);
       } else {
@@ -840,7 +840,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
               >
                 {(() => {
                   const p = filtered[lightboxIndex];
-                  const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+                  const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
                   const currentImg = pImages[lightboxPhotoIndex];
                   
                   if (currentImg) {
@@ -1058,7 +1058,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
     e?.stopPropagation();
     if (lightboxIndex !== null && products.length > 0) {
       const p = products[lightboxIndex];
-      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
       if (pImages.length > 1) {
         setLightboxPhotoIndex((prev) => (prev - 1 + pImages.length) % pImages.length);
       } else {
@@ -1072,7 +1072,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
     e?.stopPropagation();
     if (lightboxIndex !== null && products.length > 0) {
       const p = products[lightboxIndex];
-      const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+      const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
       if (pImages.length > 1) {
         setLightboxPhotoIndex((prev) => (prev + 1) % pImages.length);
       } else {
@@ -1186,7 +1186,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
               >
                 {(() => {
                   const p = products[lightboxIndex];
-                  const pImages = p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+                  const pImages = dedupeUrls(p.imageUrls?.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []));
                   const currentImg = pImages[lightboxPhotoIndex];
 
                   if (currentImg) {

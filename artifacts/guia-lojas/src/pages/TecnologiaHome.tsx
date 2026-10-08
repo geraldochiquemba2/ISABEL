@@ -15,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import StoreCategorySection from "@/components/StoreCategorySection";
+import { sortStoresForCards } from "@/lib/storeCategories";
 import { thumbUrl } from "@/lib/img";
 
 const CATEGORIES_META = [
@@ -52,7 +53,7 @@ export default function TecnologiaHome({ onBackToSelector }: { onBackToSelector?
   });
 
   const nonAdmin = stores.filter((s: any) => s.phone !== "999999999");
-  const featured = nonAdmin.filter((s: any) => s.isFeatured).slice(0, 6);
+  const featured = sortStoresForCards(nonAdmin.filter((s: any) => s.isFeatured)).slice(0, 6);
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []

@@ -55,23 +55,34 @@ type PhotoStoreLike = {
   products?: Array<{ imageUrl?: string | null; imageUrls?: string | string[] | null }> | null;
 };
 
-/** Conta as fotos reais da loja (capas + produtos), como os cards mostram. */
+/** Conta as fotos REAIS ÚNICAS da loja (capas + produtos), como os cards mostram.
+ * Deduplica: a mesma URL gravada em cover_image + cover_images não conta 2x. */
 export function countStorePhotos(store: PhotoStoreLike | null | undefined): number {
   if (!store) return 0;
-  let n = 0;
+  const seen = new Set<string>();
+  const push = (u: unknown) => {
+    if (typeof u !== "string") return;
+    const v = u.trim();
+    if (v) seen.add(v);
+  };
   if (Array.isArray(store.coverImages)) {
-    n += store.coverImages.filter((u) => typeof u === "string" && u.trim()).length;
+    // imageUrls por vezes vem como string separada por espaços (legado)
+    for (const u of store.coverImages) {
+      if (typeof u === "string" && u.includes(" ") && !u.trim().startsWith("/")) {
+        u.split(" ").filter(Boolean).forEach(push);
+      } else push(u);
+    }
   }
-  if (typeof store.coverImage === "string" && store.coverImage.trim()) n += 1;
+  push(store.coverImage);
   if (Array.isArray(store.products)) {
     for (const p of store.products) {
       if (!p) continue;
-      if (typeof p.imageUrls === "string") n += p.imageUrls.split(" ").filter(Boolean).length;
-      else if (Array.isArray(p.imageUrls)) n += p.imageUrls.filter((u) => typeof u === "string" && u.trim()).length;
-      else if (typeof p.imageUrl === "string" && p.imageUrl.trim()) n += 1;
+      if (typeof p.imageUrls === "string") p.imageUrls.split(" ").filter(Boolean).forEach(push);
+      else if (Array.isArray(p.imageUrls)) p.imageUrls.forEach(push);
+      else push(p.imageUrl);
     }
   }
-  return n;
+  return seen.size;
 }
 
 /**

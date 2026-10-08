@@ -14,10 +14,31 @@ export function thumbUrl(url?: string | null): string {
 
 export function thumbList(urls: Array<string | null | undefined>): string[] {
   const out: string[] = [];
+  const seen = new Set<string>();
   for (const u of urls) {
     if (!u) continue;
     const t = thumbUrl(u);
-    if (t) out.push(t);
+    // Mesma foto gravada em cover_image + cover_images (74 lojas, 398
+    // produtos): sem isto o carrossel mostra 2 pontos para 1 foto.
+    if (t && !seen.has(t)) {
+      seen.add(t);
+      out.push(t);
+    }
+  }
+  return out;
+}
+
+// Deduplica mantendo a ordem (para arrays cheios: lightbox, contagens).
+export function dedupeUrls(urls: Array<string | null | undefined>): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const u of urls) {
+    if (typeof u !== "string") continue;
+    const v = u.trim();
+    if (v && !seen.has(v)) {
+      seen.add(v);
+      out.push(v);
+    }
   }
   return out;
 }
