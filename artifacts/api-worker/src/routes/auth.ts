@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../db";
 import type { Env } from "../env";
+import { hashPassword, verifyPassword, isDefaultPassword } from "@workspace/password";
 
 const CATEGORY_LABELS: Record<string, string> = {
   moda: "Moda",
@@ -313,7 +314,7 @@ authRouter.post("/register", async (c) => {
     const created = (await db(c.env).query(
       `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE') RETURNING id, name, phone, store_id, status, status_reason`,
-      [storeName || "Lojista", phone, password, province || "", municipality || "", address || "", storeId, storeType]
+      [storeName || "Lojista", phone, await hashPassword(password), province || "", municipality || "", address || "", storeId, storeType]
     )) as any[];
 
     const user = created[0];
@@ -345,8 +346,13 @@ authRouter.post("/login", async (c) => {
     }
 
     const user = rows[0];
-    if (user.password !== password) {
+    // Aceita hash novo OU plaintext legado (converte para hash neste login).
+    if (!(await verifyPassword(user.password, password))) {
       return c.json({ error: "Telefone ou senha incorretos." }, 400);
+    }
+    if (typeof user.password === "string" && !user.password.startsWith("pbkdf2$")) {
+      user.password = await hashPassword(password);
+      await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [user.id, user.password]);
     }
     if (user.status === "PENDENTE") {
       return c.json({ error: "A sua conta ainda está em análise. Aguarde aprovação do administrador." }, 403);
@@ -385,7 +391,7 @@ authRouter.post("/login", async (c) => {
         address: user.address,
         status: user.status,
         statusReason: user.status_reason,
-        mustChangePassword: user.password === "123456789",
+        mustChangePassword: await isDefaultPassword(user.password),
         subscription: {
           status: user.subscription_status,
           activatedAt: user.subscription_activated_at,
@@ -409,7 +415,7 @@ authRouter.put("/change-password", async (c) => {
     if (!userId || !newPassword || newPassword.length < 6) {
       return c.json({ error: "Dados inválidos. A senha deve ter pelo menos 6 caracteres." }, 400);
     }
-    await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [userId, newPassword]);
+    await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [userId, await hashPassword(newPassword)]);
     return c.json({ success: true });
   } catch (err) {
     console.error(err);
@@ -423,10 +429,16 @@ authRouter.post("/admin-login", async (c) => {
     const { phone, password } = await c.req.json();
     if (!phone || !password) return c.json({ error: "Dados inválidos." }, 400);
     const rows = (await db(c.env).query(
-      "SELECT id FROM users WHERE phone=$1 AND password=$2 AND phone='999999999' LIMIT 1",
-      [phone, password]
+      "SELECT id, password FROM users WHERE phone=$1 AND phone='999999999' LIMIT 1",
+      [phone]
     )) as any[];
     if (!rows.length) return c.json({ error: "Credenciais de administrador inválidas." }, 400);
+    const admin = rows[0];
+    if (!(await verifyPassword(admin.password, password)))
+      return c.json({ error: "Credenciais de administrador inválidas." }, 400);
+    if (typeof admin.password === "string" && !admin.password.startsWith("pbkdf2$")) {
+      await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [admin.id, await hashPassword(password)]);
+    }
     return c.json({ success: true });
   } catch (err) {
     console.error(err);

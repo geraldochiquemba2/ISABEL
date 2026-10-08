@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db";
+import { hashPassword, DEFAULT_PASSWORD } from "@workspace/password";
 
 export const adminRouter = Router();
 
@@ -133,10 +134,7 @@ adminRouter.delete("/users/:id/cancel", async (req, res) => {
 adminRouter.put("/users/:id/reset-password", async (req, res) => {
   try {
     const { id } = req.params;
-    await pool.query(
-      "UPDATE users SET password = '123456789' WHERE id = $1",
-      [id]
-    );
+    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [id, await hashPassword(DEFAULT_PASSWORD)]);
     res.json({ success: true, message: "Senha redefinida para 123456789" });
   } catch (err) {
     console.error(err);
@@ -180,7 +178,7 @@ adminRouter.put("/password-reset-requests/:id/approve", async (req, res) => {
       return res.status(404).json({ error: "Pedido não encontrado" });
     }
     const userId = request.rows[0].user_id;
-    await pool.query("UPDATE users SET password = '123456789' WHERE id = $1", [userId]);
+    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [userId, await hashPassword(DEFAULT_PASSWORD)]);
     await pool.query("UPDATE password_reset_requests SET status = 'APROVADO' WHERE id = $1", [id]);
     res.json({ success: true, message: "Senha redefinida para 123456789" });
   } catch (err) {

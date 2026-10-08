@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../db";
 import type { Env } from "../env";
+import { hashPassword, DEFAULT_PASSWORD } from "@workspace/password";
 
 export const adminRouter = new Hono<{ Bindings: Env }>();
 
@@ -134,11 +135,11 @@ adminRouter.delete("/users/:id/cancel", async (c) => {
 adminRouter.put("/users/:id/reset-password", async (c) => {
   try {
     const id = c.req.param("id");
-    await db(c.env).query("UPDATE users SET password = '123456789' WHERE id = $1", [id]);
+    await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [id, await hashPassword(DEFAULT_PASSWORD)]);
     return c.json({ success: true, message: "Senha redefinida para 123456789" });
   } catch (err) {
     console.error(err);
-    return c.json({ error: "Erro ao redefinir senha" }, 500);
+    return c.json({ error: "Erro ao redefinir senha" });
   }
 });
 
@@ -178,7 +179,7 @@ adminRouter.put("/password-reset-requests/:id/approve", async (c) => {
       return c.json({ error: "Pedido não encontrado" }, 404);
     }
     const userId = rows[0].user_id;
-    await db(c.env).query("UPDATE users SET password = '123456789' WHERE id = $1", [userId]);
+    await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [userId, await hashPassword(DEFAULT_PASSWORD)]);
     await db(c.env).query("UPDATE password_reset_requests SET status = 'APROVADO' WHERE id = $1", [id]);
     return c.json({ success: true, message: "Senha redefinida para 123456789" });
   } catch (err) {

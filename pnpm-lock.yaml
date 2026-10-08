@@ -142,6 +142,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.10.4
         version: 0.10.4
+      '@workspace/password':
+        specifier: workspace:*
+        version: link:../../lib/password
       hono:
         specifier: ^4.7.5
         version: 4.13.13
@@ -327,6 +330,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/password':
+        specifier: workspace:*
+        version: link:../../lib/password
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -625,6 +631,8 @@ importers:
       drizzle-kit:
         specifier: ^0.31.10
         version: 0.31.10
+
+  lib/password: {}
 
   scripts:
     devDependencies:

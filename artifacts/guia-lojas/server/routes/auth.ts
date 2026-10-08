@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db";
+import { hashPassword, verifyPassword, isDefaultPassword, DEFAULT_PASSWORD } from "@workspace/password";
 
 const CATEGORY_LABELS: Record<string, string> = {
   moda: "Moda",
@@ -280,11 +281,11 @@ authRouter.post("/register", async (req, res) => {
       ]
     );
 
-    // Inserir Utilizador
+    // Inserir Utilizador (senha sempre em hash; ver lib/password)
     const result = await pool.query(
       `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE') RETURNING id, name, phone, store_id, status, status_reason`,
-      [storeName || 'Lojista', phone, password, province || '', municipality || '', address || '', storeId, storeType]
+      [storeName || 'Lojista', phone, await hashPassword(password), province || '', municipality || '', address || '', storeId, storeType]
     );
 
     const created = result.rows[0];
@@ -316,8 +317,13 @@ authRouter.post("/login", async (req, res) => {
     }
 
     const user = result.rows[0];
-    if (user.password !== password) {
+    // Aceita hash novo OU plaintext legado (converte para hash neste login).
+    if (!(await verifyPassword(user.password, password))) {
       return res.status(400).json({ error: "Telefone ou senha incorretos." });
+    }
+    if (typeof user.password === "string" && !user.password.startsWith("pbkdf2$")) {
+      user.password = await hashPassword(password);
+      await pool.query("UPDATE users SET password = $2 WHERE id = $1", [user.id, user.password]);
     }
     if (user.status === "PENDENTE") {
       return res.status(403).json({ error: "A sua conta ainda está em análise. Aguarde aprovação do administrador." });
@@ -356,7 +362,7 @@ authRouter.post("/login", async (req, res) => {
         address: user.address,
         status: user.status,
         statusReason: user.status_reason,
-        mustChangePassword: user.password === "123456789",
+        mustChangePassword: await isDefaultPassword(user.password),
         subscription: {
           status: user.subscription_status,
           activatedAt: user.subscription_activated_at,
@@ -380,7 +386,7 @@ authRouter.put("/change-password", async (req, res) => {
     if (!userId || !newPassword || newPassword.length < 6) {
       return res.status(400).json({ error: "Dados inválidos. A senha deve ter pelo menos 6 caracteres." });
     }
-    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [userId, newPassword]);
+    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [userId, await hashPassword(newPassword)]);
     res.json({ success: true });
   } catch (err) {
     console.error(err);
@@ -394,10 +400,16 @@ authRouter.post("/admin-login", async (req, res) => {
     const { phone, password } = req.body;
     if (!phone || !password) return res.status(400).json({ error: "Dados inválidos." });
     const result = await pool.query(
-      "SELECT id FROM users WHERE phone=$1 AND password=$2 AND phone='999999999' LIMIT 1",
-      [phone, password]
+      "SELECT id, password FROM users WHERE phone=$1 AND phone='999999999' LIMIT 1",
+      [phone]
     );
     if (!result.rows.length) return res.status(400).json({ error: "Credenciais de administrador inválidas." });
+    const admin = result.rows[0];
+    if (!(await verifyPassword(admin.password, password)))
+      return res.status(400).json({ error: "Credenciais de administrador inválidas." });
+    if (typeof admin.password === "string" && !admin.password.startsWith("pbkdf2$")) {
+      await pool.query("UPDATE users SET password = $2 WHERE id = $1", [admin.id, await hashPassword(password)]);
+    }
     res.json({ success: true });
   } catch (err) {
     console.error(err);
