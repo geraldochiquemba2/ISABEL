@@ -220,7 +220,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             <TrendingUp size={16} className="text-[#D4A843]" />
             <h3 className="text-[14px] font-semibold text-[#2D2C2B]">Em alta</h3>
           </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+          <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
             {trending.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />
             ))}
@@ -244,7 +244,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             </div>
             {categoryStores.length > 0 ? (
               <>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
                   {categoryStores.map((store: Store) => (
                     <StoreCard key={store.id} store={store} from={storeType} />
                   ))}
@@ -269,7 +269,7 @@ export default function StoreCategorySection({ categories, stores, storeType, ex
             </div>
           </div>
           <p className="text-[11px] text-[#9CA3AF] mb-3">Lojas com categorias ainda por classificar.</p>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+          <div className="grid grid-flow-col grid-rows-2 auto-cols-max gap-3 overflow-x-auto scrollbar-hide pb-2">
             {orphanStores.map((store: Store) => (
               <StoreCard key={store.id} store={store} from={storeType} />
             ))}
