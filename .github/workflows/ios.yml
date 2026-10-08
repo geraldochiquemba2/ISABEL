@@ -97,14 +97,20 @@ jobs:
           best = None
           for f in glob.glob(os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles/*.mobileprovision")):
               out = subprocess.run(["security", "cms", "-D", "-i", f], capture_output=True).stdout
-              pl = plistlib.loads(out)
-              appid = pl.get("Entitlements", {}).get("application-identifier", "")
-              if appid.endswith("pt.yesola.app"):
+              try:
+                  pl = plistlib.loads(out)
+              except Exception as e:
+                  print(f"ilegivel: {f} {e}")
+                  continue
+              appid = pl.get("Entitlements", {}).get("application-identifier", "?")
+              print(f"perfil: {pl.get('Name')} appid={appid}")
+              if isinstance(appid, str) and appid.endswith("pt.yesola.app"):
                   best = pl.get("Name")
-                  break
+          print(f"ESCOLHIDO={best}")
           print(best or "")
           EOF
           )
+          PROF=$(echo "$PROF" | tail -1)
           echo "Perfil: $PROF"
           python3 -c "import plistlib; plistlib.dump({'method':'app-store','teamID':'4ZQGZ9N775','uploadSymbols':True,'provisioningProfiles':{'pt.yesola.app':'$PROF'}}, open('ExportOptions.plist','wb'))"
           xcodebuild -exportArchive \
