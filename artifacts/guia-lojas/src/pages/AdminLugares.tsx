@@ -41,10 +41,14 @@ export default function AdminLugares() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["adminPlaces"] });
 
   const saveMut = useMutation({
-    mutationFn: () =>
-      editing
-        ? updatePlace(editing.id, { ...form, latitude: form.latitude ? Number(form.latitude) : null, longitude: form.longitude ? Number(form.longitude) : null })
-        : createPlace({ ...form, latitude: form.latitude ? Number(form.latitude) : null, longitude: form.longitude ? Number(form.longitude) : null }),
+    mutationFn: async (): Promise<void> => {
+      const payload = { ...form, latitude: form.latitude ? Number(form.latitude) : null, longitude: form.longitude ? Number(form.longitude) : null };
+      if (editing) {
+        await updatePlace(editing.id, payload);
+      } else {
+        await createPlace(payload);
+      }
+    },
     onSuccess: () => { setForm(EMPTY); setEditing(null); setTab("lista"); setMsg("Guardado."); invalidate(); },
     onError: (e: any) => setMsg(e.message || "Erro ao guardar."),
   });
