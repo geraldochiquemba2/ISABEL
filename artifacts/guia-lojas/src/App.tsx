@@ -314,21 +314,42 @@ function Router() {
     };
     const t1 = requestAnimationFrame(go);
     // Perseguição até assentar: com API fria a lista cresce durante segundos
-    // e um scroll cedo "cola" a meio (ficava nos ~500). Tenta até chegar,
-    // até 6s. Se o utilizador já mexeu, não puxa de volta (cancel acima).
+    // e um scroll cedo "cola" a meio (ficava nos ~500). Tenta até chegar.
+    // Se a altura ainda está a crescer (dados a chegar, ex: refresh com Neon
+    // a acordar), o contador rearma — teto duro de ~18s. Se o utilizador já
+    // mexeu, não puxa de volta (cancel acima).
     let tries = 0;
+    let steady = 0;
+    let lastHeight = 0;
+    try {
+      lastHeight = document.body.scrollHeight;
+    } catch {
+      /* sem DOM */
+    }
     const iv = setInterval(() => {
       tries++;
-      if (cancelled) {
+      if (cancelled || tries >= 30) {
         clearInterval(iv);
         return;
       }
+      let h = lastHeight;
+      try {
+        h = document.body.scrollHeight;
+      } catch {
+        /* sem DOM */
+      }
+      if (h > lastHeight + 4) {
+        // Conteúdo ainda a chegar (refresh com API fria): rearma e continua.
+        lastHeight = h;
+        steady = 0;
+      }
       if (saved > 0 && Math.abs(window.scrollY - saved) > 8) {
         window.scrollTo(0, saved);
+        steady = 0;
       } else {
-        clearInterval(iv);
+        steady++;
+        if (steady >= 2) clearInterval(iv); // estável: chegou (ou sem altura)
       }
-      if (tries >= 10) clearInterval(iv);
     }, 600);
     return () => {
       cancel();
