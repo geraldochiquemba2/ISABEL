@@ -1,0 +1,89 @@
+# YESOLA iOS — alternativa gratuita ao Codemagic (fila lenta).
+# Mac grátis do GitHub (~8 builds/mês). Assinatura 100% automática via
+# App Store Connect API key (3 secrets no repo: ASC_KEY_ID,
+# ASC_ISSUER_ID, ASC_PRIVATE_KEY — os mesmos da conta, já existem).
+name: YESOLA iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "artifacts/guia-lojas/**"
+      - ".github/workflows/ios.yml"
+      - "ExportOptions.plist"
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: artifacts/guia-lojas
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: artifacts/guia-lojas/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --prefer-offline
+
+      - name: Build web assets
+        run: pnpm run build
+        env:
+          PORT: "3000"
+          BASE_PATH: "/"
+          NODE_ENV: production
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+      - name: Install CocoaPods
+        run: |
+          cd ios/App
+          pod install --repo-update
+
+      - name: Write API key
+        run: |
+          echo "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/AuthKey.p8"
+          chmod 600 "$RUNNER_TEMP/AuthKey.p8"
+
+      - name: Archive (assinatura automática)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
+            -authenticationKeyID "${{ secrets.ASC_KEY_ID }}" \
+            -authenticationKeyIssuerID "${{ secrets.ASC_ISSUER_ID }}" \
+            archive
+
+      - name: Export IPA
+        run: |
+          cd ios/App
+          cp ../../../ExportOptions.plist ./ExportOptions.plist
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath "$RUNNER_TEMP/ipa"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: YESOLA-ios-ipa
+          path: ${{ runner.temp }}/ipa/*.ipa
+          retention-days: 14
