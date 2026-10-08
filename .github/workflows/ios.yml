@@ -65,6 +65,7 @@ jobs:
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
+            -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
