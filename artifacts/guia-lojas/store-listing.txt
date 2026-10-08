@@ -1,0 +1,63 @@
+YESOLA — FICHA DE LOJA (App Store + Play Store)
+==================================================
+Pacote/Bundle: pt.yesola.app
+Nome: YESOLA
+Versão: 1.0.0 (build 1)
+Site/API: https://yesola.ao
+
+TÍTULO / NOME (30 chars)
+YESOLA — Guia de Lojas
+
+SUBTÍTULO App Store (30 chars)
+Guia de lojas em Angola
+
+DESCRIÇÃO (PT)
+🛍️ YESOLA — o guia de lojas e serviços de Angola.
+
+Descobre lojas, restaurantes, beleza, saúde, imóveis, automóveis,
+emprego, eventos e muito mais, organizadas por categoria e província.
+Vê produtos, preços, fotos, contactos e localização — e fala direto
+com a loja.
+
+• Milhares de lojas e serviços em todo o país
+• Categorias: alimentação, beleza, saúde, casa, tecnologia, casamentos…
+• Produtos com preço em Kwanza e botão de encomenda
+• Conta lojista: publica a tua loja, produtos e promoções
+• Pesquisa rápida por nome, categoria e zona
+• Guarda favoritos e recebe novidades
+
+Feito em Angola, para angolanos.
+
+PALAVRAS-CHAVE App Store (100 chars, sem espaços a mais)
+lojas,angola,luanda,guia,compras,descontos,servicos,restaurantes,beleza,emprego
+
+CATEGORIA
+App Store: Shopping. Play: Compras.
+Classificação: 4+ (sem conteúdo adulto). Preço: grátis.
+
+URL PRIVACIDADE (obrigatório)
+https://yesola.ao/privacidade
+
+SEGURANÇA DOS DADOS (declarar na ficha):
+- Nome, telefone: conta + contacto com lojas (funcionalidade)
+- Fotos: perfil da loja e produtos (funcionalidade, opcional)
+- Localização aproximada: mostrar lojas perto (funcionalidade)
+- Sem rastreio. Encriptado em trânsito.
+
+PERMISSÕES (já com texto PT no Info.plist):
+- Câmara: fotografias de produtos e da loja
+- Galeria: escolher fotografias / guardar
+- Notificações: novidades, encomendas e mensagens
+
+CONTA DE TESTE PARA REVISORES (criar antes de submeter):
+Utilizador: +244900000001 / senha 1234
+Lojista:    +244900000002 / senha 1234
+Instruções: entrar, pesquisar "loja", abrir ficha, ver produtos.
+
+CHECKLIST APP STORE CONNECT:
+[ ] App YESOLA criada (Bundle pt.yesola.app, SKU yesola1)
+[ ] IPA do Codemagic carregado (TestFlight)
+[ ] Ícone 1024, screenshots 6.7" + 6.5" (+ iPad se universal)
+[ ] Ficha PT colada (nome, subtítulo, descrição, keywords)
+[ ] Privacidade + conta de teste preenchidas
+[ ] Lançamento MANUAL (como a LadiesGo)
