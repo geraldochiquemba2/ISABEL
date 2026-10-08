@@ -25,6 +25,10 @@ const WORD_ALIASES: Record<string, string[]> = {
   zara: ["moda"],
   peruca: ["cabelo"],
   perucas: ["cabelo"],
+  // Lojas registadas com a categoria genérica da vertical ("Alimentação &
+  // Restauração") em vez da secção ("Restaurantes") — sem isto caíam todas
+  // em "Outras lojas" e a secção Restaurantes ficava vazia.
+  restauracao: ["restaurantes"],
 };
 
 const normWords = (s: string) =>
