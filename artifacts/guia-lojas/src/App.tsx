@@ -258,6 +258,65 @@ function Router() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
+  // Guarda por URL (path+query) em sessionStorage — sobrevive aos reloads
+  // (os cards navegam com window.location.href, que limpa memória JS).
+  useEffect(() => {
+    let cancelled = false;
+    let saved = 0;
+    try {
+      saved = parseInt(sessionStorage.getItem("scroll:" + location) || "0", 10) || 0;
+    } catch {
+      /* sem storage */
+    }
+    const cancel = () => {
+      cancelled = true;
+      window.removeEventListener("wheel", cancel);
+      window.removeEventListener("touchmove", cancel);
+    };
+    window.addEventListener("wheel", cancel, { passive: true });
+    window.addEventListener("touchmove", cancel, { passive: true });
+    const t1 = requestAnimationFrame(() => {
+      if (!cancelled && saved > 0) window.scrollTo(0, saved);
+    });
+    // Reforço após conteúdo assíncrono (imagens/listas) assentar. Se o
+    // utilizador já mexeu, não puxa de volta (cancel acima).
+    const t2 = setTimeout(() => {
+      if (!cancelled && saved > 0 && Math.abs(window.scrollY - saved) > 8) window.scrollTo(0, saved);
+    }, 700);
+    return () => {
+      cancel();
+      cancelAnimationFrame(t1);
+      clearTimeout(t2);
+    };
+  }, [location]);
+
+  // Grava a posição continuamente + ao sair da página.
+  useEffect(() => {
+    let raf = 0;
+    const save = () => {
+      try {
+        sessionStorage.setItem(
+          "scroll:" + window.location.pathname + window.location.search,
+          String(window.scrollY)
+        );
+      } catch {
+        /* sem storage */
+      }
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(save);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pagehide", save);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pagehide", save);
+    };
+  }, []);
+
   // Deep-link: se abriu /loja/:id?from=colecao sem loja escolhida,
   // assume essa vertical para a loja abrir e o voltar funcionar em 2 níveis.
   useEffect(() => {
@@ -295,6 +354,12 @@ function Router() {
     // o efeito deep-link voltava a inferir a vertical do URL e a home
     // reaparecia (parecia um simples refresh).
     localStorage.removeItem("eliora-selected-store");
+    // Sem isto, a memória de rolagem reporia a posição antiga do seletor.
+    try {
+      sessionStorage.removeItem("scroll:/");
+    } catch {
+      /* sem storage */
+    }
     setSelectedStore(null);
     setLoc("/");
     window.scrollTo(0, 0);
