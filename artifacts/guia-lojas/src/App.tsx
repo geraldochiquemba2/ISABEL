@@ -138,7 +138,16 @@ export function useStore() {
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Restaura onde parou (guardado pela memória de rolagem) ou vai ao topo.
+    // Corre ANTES dos efeitos do Router (filho antes do pai) e o reforço de
+    // 700ms do Router só atua se ninguém mexeu — sem lutas de scroll.
+    let saved = 0;
+    try {
+      saved = parseInt(sessionStorage.getItem("scroll:" + location) || "0", 10) || 0;
+    } catch {
+      /* sem storage */
+    }
+    window.scrollTo(0, saved);
   }, [location]);
   return null;
 }
