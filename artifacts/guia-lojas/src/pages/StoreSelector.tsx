@@ -1010,7 +1010,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             >
 
-              <div className="flex items-center justify-center w-10 h-10">{categoryIcons[area.id]}</div>
+              <div className="flex items-center justify-center w-12 h-12 rounded-2xl" style={{ backgroundColor: `${area.accent}1A` }}>{categoryIcons[area.id]}</div>
 
               <span className="text-[10px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
 
@@ -1034,7 +1034,9 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             <div key={i} className="trust-item">
 
-              <span className="text-[#C99432]">{badge.icon}</span>
+              <span className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C994321A" }}>
+                <span className="text-[#C99432]">{badge.icon}</span>
+              </span>
 
               <span className="text-[11px] font-medium text-[#111111] leading-tight whitespace-pre-line">{badge.label}</span>
 
