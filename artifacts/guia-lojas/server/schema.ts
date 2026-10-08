@@ -416,6 +416,19 @@ export async function initDB() {
       `CREATE INDEX IF NOT EXISTS idx_stores_categories_gin ON stores USING GIN (categories)`,
       `CREATE INDEX IF NOT EXISTS idx_stores_type_created ON stores(store_type, created_at DESC)`,
       `CREATE INDEX IF NOT EXISTS idx_products_store_created ON products(store_id, created_at DESC)`,
+      // Segunda ronda (auditoria de TODAS as rotas): estes filtros não tinham
+      // índice e são dos mais batidos em cada carregamento de página.
+      // /api/categories?store_type= em TODA Home/Explorar/Dashboard.
+      `CREATE INDEX IF NOT EXISTS idx_categories_store_type ON categories(store_type)`,
+      // /api/places?kind=&province=&municipality=
+      `CREATE INDEX IF NOT EXISTS idx_places_municipality ON places(municipality)`,
+      `CREATE INDEX IF NOT EXISTS idx_places_kind_province_municipality ON places(kind, province, municipality)`,
+      // Pedidos de reset: filtros por vertical+estado e por telefone.
+      `CREATE INDEX IF NOT EXISTS idx_password_reset_store_status ON password_reset_requests(store_type, status)`,
+      `CREATE INDEX IF NOT EXISTS idx_password_reset_phone ON password_reset_requests(phone, store_type, status)`,
+      // JOINs com filtro de estado (listas públicas só mostram lojas de
+      // contas APROVADAs: JOIN users ON store_id + status).
+      `CREATE INDEX IF NOT EXISTS idx_users_store_status ON users(store_id, status)`,
     ];
     for (const idx of indexes) {
       await client.query(idx);
