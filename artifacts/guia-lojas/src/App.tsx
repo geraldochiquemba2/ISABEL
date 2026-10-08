@@ -277,8 +277,17 @@ function Router() {
   if (basePath === "/privacidade") return <Privacidade />;
 
   useEffect(() => {
-    history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
+    // No Safari iOS, forçar 'manual' PARTE o restauro nativo (pré-paint) e o
+    // gesto/botão de voltar — o browser deixa de guardar posições e cai
+    // sempre no topo (bugs WebKit documentados; ex. Astro #16061, Next #20951,
+    // TanStack #7815). Aí deixa-se 'auto' e o browser trata; a nossa memória
+    // vira no-op para a mesma posição. Nos outros, 'manual' + restauro JS.
+    const ua = window.navigator.userAgent.toLowerCase();
+    const isIosSafari =
+      (/iphone|ipad|ipod/.test(ua) && /safari/.test(ua) && !/crios|fxios|edgios|opios/.test(ua)) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); // iPadOS finge ser Mac
+    history.scrollRestoration = isIosSafari ? "auto" : "manual";
+    if (!isIosSafari) window.scrollTo(0, 0);
   }, []);
 
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
