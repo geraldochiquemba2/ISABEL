@@ -139,20 +139,31 @@ function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
     // Restaura onde parou (guardado pela memória de rolagem) ou vai ao topo.
-    // Usa window.location (igual à chave de gravação) para nunca falhar a
-    // correspondência, incluindo ?from= e reloads completos.
-    // Corre ANTES dos efeitos do Router (filho antes do pai) e o reforço de
-    // 700ms do Router só atua se ninguém mexeu — sem lutas de scroll.
+    // A chave inclui a vertical: "/" é partilhado pelo seletor e por TODAS
+    // as Homes — sem isto, escolher uma área nova caía na posição antiga.
+    // Corre ANTES dos efeitos do Router (filho antes do pai) e o reforço do
+    // Router só atua se ninguém mexeu — sem lutas de scroll.
     let saved = 0;
     try {
-      const key = "scroll:" + window.location.pathname + window.location.search;
-      saved = parseInt(sessionStorage.getItem(key) || "0", 10) || 0;
+      saved = parseInt(sessionStorage.getItem(scrollKey()) || "0", 10) || 0;
     } catch {
       /* sem storage */
     }
     window.scrollTo(0, saved);
   }, [location]);
   return null;
+}
+
+// Chave da memória de rolagem: vertical + URL. "/" sozinho não chega porque
+// o seletor e todas as Homes vivem no mesmo path.
+function scrollKey(): string {
+  let vertical = "none";
+  try {
+    vertical = localStorage.getItem("eliora-selected-store") || "none";
+  } catch {
+    /* sem storage */
+  }
+  return "scroll:" + vertical + ":" + window.location.pathname + window.location.search;
 }
 
 function inferStoreFromUrl(): StoreType {
@@ -271,18 +282,14 @@ function Router() {
   }, []);
 
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
-  // Guarda por URL (path+query) em sessionStorage — sobrevive aos reloads
+  // Guarda por vertical + URL em sessionStorage — sobrevive aos reloads
   // (os cards navegam com window.location.href, que limpa memória JS).
   useEffect(() => {
     let cancelled = false;
     let saved = 0;
     try {
-      // Lê do URL real (igual à chave de gravação).
-      saved =
-        parseInt(
-          sessionStorage.getItem("scroll:" + window.location.pathname + window.location.search) || "0",
-          10
-        ) || 0;
+      // Lê pela mesma chave da gravação (vertical + URL real).
+      saved = parseInt(sessionStorage.getItem(scrollKey()) || "0", 10) || 0;
     } catch {
       /* sem storage */
     }
@@ -310,17 +317,16 @@ function Router() {
       cancelAnimationFrame(t1);
       timers.forEach(clearTimeout);
     };
-  }, [location]);
+  }, [location, selectedStore]);
 
   // Grava a posição continuamente, ao clicar (síncrono, antes de navegar) e
   // ao sair da página. O clique em captura elimina qualquer corrida com o
   // throttle do scroll.
   useEffect(() => {
     let raf = 0;
-    const key = () => "scroll:" + window.location.pathname + window.location.search;
     const save = () => {
       try {
-        sessionStorage.setItem(key(), String(window.scrollY));
+        sessionStorage.setItem(scrollKey(), String(window.scrollY));
       } catch {
         /* sem storage */
       }
@@ -378,9 +384,15 @@ function Router() {
     // o efeito deep-link voltava a inferir a vertical do URL e a home
     // reaparecia (parecia um simples refresh).
     localStorage.removeItem("eliora-selected-store");
-    // Sem isto, a memória de rolagem reporia a posição antiga do seletor.
+    // Trocar de loja limpa TUDO: nenhuma memória de rolagem pode vazar para
+    // outra página (URLs repetem-se entre vertical e seletor).
     try {
-      sessionStorage.removeItem("scroll:/");
+      const dead: string[] = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith("scroll:")) dead.push(k);
+      }
+      dead.forEach((k) => sessionStorage.removeItem(k));
     } catch {
       /* sem storage */
     }

@@ -141,7 +141,7 @@ export default function LugaresHome() {
           {menuOpen && (
             <div className="bg-[#FFFDF8] border-t border-[#E8CC91]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
               <button onClick={() => (window.location.href = "/login-lugares")} className="py-2 text-left">Entrar</button>
-              <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="py-2 text-left">Trocar de loja</button>
+              <button onClick={() => { try { localStorage.removeItem("eliora-selected-store"); const dead: string[] = []; for (let i = 0; i < sessionStorage.length; i++) { const k = sessionStorage.key(i); if (k && k.startsWith("scroll:")) dead.push(k); } dead.forEach((k) => sessionStorage.removeItem(k)); } catch { /* sem storage */ } window.location.href = "/"; }} className="py-2 text-left">Trocar de loja</button>
             </div>
           )}
         </header>
