@@ -1,0 +1,21 @@
+# isabel-api — Cloudflare Worker (substitui o Node/Express no Render).
+# Preencher antes do primeiro deploy (valores na conta Cloudflare):
+#   - account_id: Account ID (Workers & Pages > Overview, canto direito)
+#   - YESOLA_IMAGES: bucket R2 (R2 Object Storage > Create bucket)
+#   - DATABASE_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID: wrangler secret put
+name = "isabel-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+# RENDER_EXTERNAL_URL já não é preciso (sem sleep no Workers)
+
+[[r2_buckets]]
+binding = "YESOLA_IMAGES"
+bucket_name = "yesola-images"
+
+[triggers]
+# Verificação de assinaturas vencidas (era setInterval de 1h no Node)
+crons = ["0 * * * *"]

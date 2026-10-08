@@ -66,3 +66,6 @@ artifacts/guia-lojas/android/.gradle/
 artifacts/guia-lojas/android/app/src/main/assets/public/
 *.jks
 *.keystore
+
+# wrangler dry-run
+.dry

@@ -288,12 +288,45 @@ export async function reactivateLojista(id: string): Promise<void> {
   if (!res.ok) throw new Error("Erro ao reativar utilizador");
 }
 
-// POST /api/media/upload — Upload de imagem via Telegram
-export async function uploadImage(imageBase64: string, filename: string): Promise<{ imageUrl: string }> {
+// POST /api/media/upload — Upload de imagem (R2 no Worker; Telegram como arquivo).
+// Gera o thumb 480px no cliente (canvas) para o servidor não precisar de
+// sharp: cobre todos os pontos de upload de uma vez. Servidor antigo ignora
+// o campo extra (compatível durante a migração).
+function makeThumb(base64: string, maxWidth = 480): Promise<string> {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          let { width, height } = img;
+          if (width <= maxWidth) return resolve(base64);
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return resolve(base64);
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", 0.6));
+        } catch {
+          resolve(base64);
+        }
+      };
+      img.onerror = () => resolve(base64);
+      img.src = base64;
+    } catch {
+      resolve(base64);
+    }
+  });
+}
+
+export async function uploadImage(imageBase64: string, filename: string): Promise<{ imageUrl: string; thumbnailUrl?: string }> {
+  const thumbBase64 = await makeThumb(imageBase64);
   const res = await fetch("/api/media/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ imageBase64, filename }),
+    body: JSON.stringify({ imageBase64, thumbBase64, filename }),
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error || "Erro no upload da imagem");
