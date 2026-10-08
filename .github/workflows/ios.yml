@@ -54,12 +54,27 @@ jobs:
           cd ios/App
           pod install --repo-update
 
-      - name: Write API key
+      - name: Fetch signing files (cria distribuição sozinho)
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          CERTIFICATE_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
-          echo "${{ secrets.ASC_PRIVATE_KEY }}" > "$RUNNER_TEMP/AuthKey.p8"
-          chmod 600 "$RUNNER_TEMP/AuthKey.p8"
+          pip3 install codemagic-cli-tools
+          app-store-connect fetch-signing-files "pt.yesola.app" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --create
 
-      - name: Archive (assinatura automática)
+      - name: Keychain + profiles
+        run: |
+          keychain initialize
+          keychain add-certificates
+          cd ios/App
+          xcode-project use-profiles
+
+      - name: Archive (assinatura manual via perfil)
         run: |
           cd ios/App
           xcodebuild -workspace App.xcworkspace \
@@ -67,10 +82,6 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
-            -authenticationKeyID "${{ secrets.ASC_KEY_ID }}" \
-            -authenticationKeyIssuerID "${{ secrets.ASC_ISSUER_ID }}" \
             archive
 
       - name: Export IPA
