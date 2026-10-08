@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./lib/apiBase";
 import { enableDragScroll, enableAutoScroll, enableTouchDrag } from "./lib/dragScroll";
 
 // Só movimento manual: arrastar com o rato no PC, swipe nativo no telemóvel.

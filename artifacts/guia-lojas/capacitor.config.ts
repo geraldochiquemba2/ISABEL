@@ -5,9 +5,9 @@ const config: CapacitorConfig = {
   appName: "YESOLA",
   webDir: "dist/public",
   server: {
-    // Modo wrapper v1: a WebView carrega o site publicado (mesma origem →
-    // /api e imagens funcionam sem mudar código). Requer internet.
-    url: "https://yesola.ao",
+    // Modo empacotado (App Store): a WebView corre os assets locais
+    // (dist/public). Os /api relativos são prefixados para https://yesola.ao
+    // pelo interceptor em src/lib/apiBase.ts. Sem url remota.
     cleartext: false,
     androidScheme: "https",
     allowNavigation: ["yesola.ao", "www.yesola.ao"],
