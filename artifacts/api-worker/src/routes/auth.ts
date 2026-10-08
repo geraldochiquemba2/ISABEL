@@ -120,7 +120,9 @@ export function normalizeCategory(category?: string) {
   return CATEGORY_LABELS[normalized] || category;
 }
 
-// Normaliza até 4 categorias (a primeira é a principal)
+// Normaliza até 4 categorias (a primeira é a principal). Guarda o texto
+// COMO FOI ESCRITO (só trim) — sem mapa de rótulos (era migração legada
+// que reescrevia nomes sem avisar).
 function normalizeStoreCategories(body: any): { primary: string; all: string[] } {
   const raw = Array.isArray(body?.categories)
     ? body.categories.filter((c: any) => typeof c === "string" && c.trim())
@@ -128,7 +130,7 @@ function normalizeStoreCategories(body: any): { primary: string; all: string[] }
   const seen = new Set<string>();
   const all: string[] = [];
   for (const c of [...raw, body?.category].filter(Boolean)) {
-    const v = normalizeCategory(String(c));
+    const v = String(c).trim();
     if (v && !seen.has(v)) {
       seen.add(v);
       all.push(v);
@@ -165,6 +167,8 @@ function storeTypeFromCategory(category: any): string {
   if (c.includes("influenciador")) return "influenciadores-criadores";
   if (c.includes("transporte")) return "transportes-logistica";
   if (c.includes("profissional")) return "servicos-profissionais";
+  if (c.includes("banco")) return "bancos";
+  if (c.includes("seguradora")) return "seguradoras";
   return "collection";
 }
 
@@ -183,6 +187,8 @@ function storeTypeFromCategoryShort(category: any): string {
   if (c.includes("saude")) return "saude";
   if (c.includes("beleza")) return "beleza";
   if (c.includes("casa")) return "casa";
+  if (c.includes("banco")) return "bancos";
+  if (c.includes("seguradora")) return "seguradoras";
   return "collection";
 }
 
@@ -208,6 +214,8 @@ function coverColorFor(storeType: string): string {
     case "influenciadores-criadores": return "#C2185B";
     case "transportes-logistica": return "#F57F17";
     case "servicos-profissionais": return "#1A237E";
+    case "bancos": return "#1E40AF";
+    case "seguradoras": return "#0F766E";
     default: return "#B89A78";
   }
 }
@@ -235,6 +243,8 @@ function descriptionFor(storeType: string): string {
     case "influenciadores-criadores": return "A minha loja na YESOLA Influenciadores & Criadores.";
     case "transportes-logistica": return "A minha loja na YESOLA Transportes & Logística.";
     case "servicos-profissionais": return "A minha loja na YESOLA Serviços Profissionais.";
+    case "bancos": return "A minha loja na YESOLA Bancos.";
+    case "seguradoras": return "A minha loja na YESOLA Seguradoras.";
     default: return "A minha loja na YESOLA Collection.";
   }
 }
@@ -263,6 +273,8 @@ function coverImageFor(storeType: string): string {
     case "influenciadores-criadores": return u("photo-1611162617213-7d7a39e9b1d7");
     case "transportes-logistica": return u("photo-1586528116311-ad8dd3c8310d");
     case "servicos-profissionais": return u("photo-1454165804606-c3d57bc86b40");
+    case "bancos": return u("photo-1486406146926-c627a92ad1ab");
+    case "seguradoras": return u("photo-1560518883-ce09059eeffa");
     default: return u("photo-1441986300917-64674bd600d8");
   }
 }
@@ -273,7 +285,10 @@ export const authRouter = new Hono<{ Bindings: Env }>();
 authRouter.post("/register", async (c) => {
   try {
     const body = (await c.req.json()) as any;
-    const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = body;
+    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = body;
+    // Trim à entrada: espaços acidentais do teclado móvel nunca fazem parte da credencial.
+    const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
+    const password = typeof rawPassword === "string" ? rawPassword.trim() : rawPassword;
     const { primary: normalizedCategory, all: normalizedCategories } = normalizeStoreCategories(body);
     const storeType = storeTypeFromClient || storeTypeFromCategory(category);
 
@@ -339,7 +354,8 @@ authRouter.post("/register", async (c) => {
 // POST /api/auth/login — Login do Lojista
 authRouter.post("/login", async (c) => {
   try {
-    const { phone, password, storeType } = await c.req.json();
+    const { phone: rawLoginPhone, password, storeType } = await c.req.json();
+    const phone = typeof rawLoginPhone === "string" ? rawLoginPhone.trim() : rawLoginPhone;
     const store_type = storeType || "collection";
     const rows = (await db(c.env).query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, store_type])) as any[];
     if (!rows.length) {
@@ -348,11 +364,24 @@ authRouter.post("/login", async (c) => {
 
     const user = rows[0];
     // Aceita hash novo OU plaintext legado (converte para hash neste login).
-    if (!(await verifyPassword(user.password, password))) {
+    // Tolera espaços acidentais (teclado móvel): tenta exato, depois trimado,
+    // e normaliza o guardado para a forma trimada em hash.
+    let passwordOk = await verifyPassword(user.password, password);
+    let effectivePassword = password;
+    if (!passwordOk && typeof password === "string" && password.trim() !== password) {
+      passwordOk = await verifyPassword(user.password, password.trim());
+      if (passwordOk) effectivePassword = password.trim();
+    }
+    if (!passwordOk) {
       return c.json({ error: "Telefone ou senha incorretos." }, 400);
     }
-    if (typeof user.password === "string" && !user.password.startsWith("pbkdf2$")) {
-      user.password = await hashPassword(password, passwordIterations(c.env));
+    if (
+      typeof user.password === "string" &&
+      (!user.password.startsWith("pbkdf2$") ||
+        user.password.trim() !== effectivePassword ||
+        effectivePassword !== password)
+    ) {
+      user.password = await hashPassword(effectivePassword.trim(), passwordIterations(c.env));
       await db(c.env).query("UPDATE users SET password = $2 WHERE id = $1", [user.id, user.password]);
     }
     if (user.status === "PENDENTE") {
@@ -412,7 +441,8 @@ authRouter.post("/login", async (c) => {
 // PUT /api/auth/change-password — Alterar palavra-passe
 authRouter.put("/change-password", async (c) => {
   try {
-    const { userId, newPassword } = await c.req.json();
+    const { userId, newPassword: rawNew } = await c.req.json();
+    const newPassword = typeof rawNew === "string" ? rawNew.trim() : rawNew;
     if (!userId || !newPassword || newPassword.length < 6) {
       return c.json({ error: "Dados inválidos. A senha deve ter pelo menos 6 caracteres." }, 400);
     }

@@ -234,6 +234,26 @@ const areas = [
     icon: <Users size={24} className="text-white" />,
     accent: "#C2185B",
   },
+  {
+    id: "bancos",
+    name: "Bancos",
+    subtitle: "O seu dinheiro seguro",
+    description: "Contas, crédito e investimentos nos melhores bancos em Angola.",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#1E40AF]/80 to-[#1E3A8A]/80",
+    icon: <Landmark size={24} className="text-white" />,
+    accent: "#1E40AF",
+  },
+  {
+    id: "seguradoras",
+    name: "Seguradoras",
+    subtitle: "Proteção total",
+    description: "Seguros auto, saúde, vida e património nas melhores seguradoras em Angola.",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop&auto=format&q=80",
+    gradient: "from-[#0F766E]/80 to-[#115E59]/80",
+    icon: <ShieldCheck size={24} className="text-white" />,
+    accent: "#0F766E",
+  },
 ];
 
 
@@ -565,6 +585,34 @@ const categoryIcons: Record<string, React.ReactNode> = {
       <path d="M14 12h8M14 16h8M14 20h5" />
 
       <path d="M12 24h12" />
+
+    </svg>
+
+  ),
+
+  bancos: (
+
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+
+      <path d="M6 14h24" />
+
+      <path d="M8 14v14M12 14v14M18 14v14M24 14v14M28 14v14" />
+
+      <path d="M4 30h28" />
+
+      <path d="M18 4l14 8H4l14-8z" />
+
+    </svg>
+
+  ),
+
+  seguradoras: (
+
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
+
+      <path d="M18 4l12 8v8c0 7-5.5 12.6-12 14-6.5-1.4-12-7-12-14v-8l12-8z" />
+
+      <path d="M13 18l4 4 7-8" strokeLinecap="round" />
 
     </svg>
 

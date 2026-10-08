@@ -102,6 +102,14 @@ import ServicosProfHome from "@/pages/ServicosProfHome";
 import ExploreServicosProfissionais from "@/pages/ExploreServicosProfissionais";
 import LoginServicosProf from "@/pages/LoginServicosProf";
 import DashboardServicosProf from "@/pages/DashboardServicosProf";
+import BancosHome from "@/pages/BancosHome";
+import ExploreBancos from "@/pages/ExploreBancos";
+import LoginBancos from "@/pages/LoginBancos";
+import DashboardBancos from "@/pages/DashboardBancos";
+import SeguradorasHome from "@/pages/SeguradorasHome";
+import ExploreSeguradoras from "@/pages/ExploreSeguradoras";
+import LoginSeguradoras from "@/pages/LoginSeguradoras";
+import DashboardSeguradoras from "@/pages/DashboardSeguradoras";
 import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
 import Proposito from "@/pages/Proposito";
@@ -111,7 +119,7 @@ import { initPush } from "@/lib/push";
 
 const queryClient = new QueryClient();
 
-type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "entretenimento" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | null;
+type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "entretenimento" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | "bancos" | "seguradoras" | null;
 
 interface StoreContextType {
   selectedStore: StoreType;
@@ -217,6 +225,12 @@ function slugToVertical(slug: string): StoreType {
     servicos: "servicos-profissionais",
     "servicos-profissionais": "servicos-profissionais",
     "servicos-prof": "servicos-profissionais",
+    banco: "bancos",
+    bancos: "bancos",
+    seguro: "seguradoras",
+    seguros: "seguradoras",
+    seguradora: "seguradoras",
+    seguradoras: "seguradoras",
   };
   return map[slug.toLowerCase()] ?? null;
 }
@@ -692,6 +706,42 @@ function Router() {
           <Route path="/dashboard-servicos" component={DashboardServicosProf} />
           <Route>
             <ServicosProfHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "bancos") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-bancos" component={ExploreBancos} />
+          <Route path="/login-bancos" component={LoginBancos} />
+          <Route path="/dashboard-bancos" component={DashboardBancos} />
+          <Route>
+            <BancosHome onBackToSelector={handleBackToSelector} />
+          </Route>
+        </Switch>
+
+      </StoreContext.Provider>
+    );
+  }
+
+  if (selectedStore === "seguradoras") {
+    return (
+      <StoreContext.Provider value={{ selectedStore, setSelectedStore: handleStoreSelect }}>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/loja/:id" component={StoreProfile} />
+          <Route path="/explorar-seguradoras" component={ExploreSeguradoras} />
+          <Route path="/login-seguradoras" component={LoginSeguradoras} />
+          <Route path="/dashboard-seguradoras" component={DashboardSeguradoras} />
+          <Route>
+            <SeguradorasHome onBackToSelector={handleBackToSelector} />
           </Route>
         </Switch>
 

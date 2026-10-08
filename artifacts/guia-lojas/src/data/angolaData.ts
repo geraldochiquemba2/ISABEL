@@ -368,7 +368,7 @@ export const ANGOLA_PROVINCES: Province[] = [
       "Bom Jesus": ["Bom Jesus", "Bom Jesus / Sede", "Bom Jesus / Centro", "Quilonga Grande", "Margem Direita do Cuanza"],
       "Cabiri": ["Cabiri", "Cabiri / Sede", "Cabiri / Centro", "Centro de Cabiri", "Mabuia", "Banza Quintel"],
       "Cabo Ledo": ["Cabo Ledo", "Cabo Ledo / Sede", "Sangano", "Praia dos Surfistas", "Bairro dos Pescadores", "Rio Longa"],
-      "Calumbo": ["Calumbo", "Centralidade Zango 8000", "Zango 1", "Zango 2", "Zango 3A", "Kikuxi", "Kikuxi Betão", "Bairro Escola", "Vila de Calumbo", "Bela Vista"],
+      "Calumbo": ["Calumbo", "Centralidade Zango 8000", "Zango 0", "Zango 1", "Zango 2", "Zango 3A", "Kikuxi", "Kikuxi Betão", "Bairro Escola", "Vila de Calumbo", "Bela Vista"],
       "Caculo Cahango": ["Caculo Cahango / Sede", "Caculo Cahango / Centro", "Comuna Sede", "Calomboloca"]
     }
   },

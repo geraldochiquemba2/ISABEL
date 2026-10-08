@@ -119,13 +119,16 @@ export function normalizeCategory(category?: string) {
   return CATEGORY_LABELS[normalized] || category;
 }
 
-// Normaliza até 4 categorias (a primeira é a principal)
+// Normaliza até 4 categorias (a primeira é a principal). Guarda o texto
+// COMO FOI ESCRITO (só trim): o mapa CATEGORY_LABELS era de migração legada
+// e estava a reescrever nomes sem avisar — ex: "Restaurantes" virava
+// "Alimentação & Restauração". Não normalizar aqui.
 function normalizeStoreCategories(body: any): { primary: string; all: string[] } {
   const raw = Array.isArray(body?.categories) ? body.categories.filter((c: any) => typeof c === "string" && c.trim()) : [];
   const seen = new Set<string>();
   const all: string[] = [];
   for (const c of [...raw, body?.category].filter(Boolean)) {
-    const v = normalizeCategory(String(c));
+    const v = String(c).trim();
     if (v && !seen.has(v)) { seen.add(v); all.push(v); }
     if (all.length >= 4) break;
   }
@@ -138,7 +141,10 @@ export const authRouter = Router();
 // POST /api/auth/register — Registo do Lojista
 authRouter.post("/register", async (req, res) => {
   try {
-    const { storeName, phone, password, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
+    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
+    // Trim à entrada: espaços acidentais do teclado móvel nunca fazem parte da credencial.
+    const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
+    const password = typeof rawPassword === "string" ? rawPassword.trim() : rawPassword;
     const { primary: normalizedCategory, all: normalizedCategories } = normalizeStoreCategories(req.body);
     const storeType = storeTypeFromClient || (category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection");
     
@@ -171,6 +177,8 @@ authRouter.post("/register", async (req, res) => {
     const isInfluenciadores = storeType === "influenciadores-criadores";
     const isTransportes = storeType === "transportes-logistica";
     const isServicosProf = storeType === "servicos-profissionais";
+    const isBancos = storeType === "bancos";
+    const isSeguradoras = storeType === "seguradoras";
     const description = isLove
       ? "A minha loja na YESOLA Serviços de Amor."
       : isWeddings
@@ -213,8 +221,12 @@ authRouter.post("/register", async (req, res) => {
       ? 'A minha loja na YESOLA Transportes & Logística.'
       : isServicosProf
       ? 'A minha loja na YESOLA Serviços Profissionais.'
+      : isBancos
+      ? 'A minha loja na YESOLA Bancos.'
+      : isSeguradoras
+      ? 'A minha loja na YESOLA Seguradoras.'
       : 'A minha loja na YESOLA Collection.';
-    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isEntretenimento ? '#7C3AED' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : '#B89A78';
+    const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isEntretenimento ? '#7C3AED' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : isBancos ? '#1E40AF' : isSeguradoras ? '#0F766E' : '#B89A78';
     const coverImage = isLove
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
@@ -257,6 +269,10 @@ authRouter.post("/register", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format&q=80'
       : isServicosProf
       ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format&q=80'
+      : isBancos
+      ? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop&auto=format&q=80'
+      : isSeguradoras
+      ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
 
     await pool.query(
@@ -309,7 +325,8 @@ authRouter.post("/register", async (req, res) => {
 // POST /api/auth/login — Login do Lojista
 authRouter.post("/login", async (req, res) => {
   try {
-    const { phone, password, storeType } = req.body;
+    const { phone: rawLoginPhone, password, storeType } = req.body;
+    const phone = typeof rawLoginPhone === "string" ? rawLoginPhone.trim() : rawLoginPhone;
     const store_type = storeType || 'collection';
     const result = await pool.query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, store_type]);
     if (!result.rows.length) {
@@ -318,11 +335,19 @@ authRouter.post("/login", async (req, res) => {
 
     const user = result.rows[0];
     // Aceita hash novo OU plaintext legado (converte para hash neste login).
-    if (!(await verifyPassword(user.password, password))) {
+    // Tolera espaços acidentais (teclado móvel): tenta exato, depois trimado,
+    // e normaliza o guardado para a forma trimada em hash.
+    let passwordOk = await verifyPassword(user.password, password);
+    let effectivePassword = password;
+    if (!passwordOk && typeof password === "string" && password.trim() !== password) {
+      passwordOk = await verifyPassword(user.password, password.trim());
+      if (passwordOk) effectivePassword = password.trim();
+    }
+    if (!passwordOk) {
       return res.status(400).json({ error: "Telefone ou senha incorretos." });
     }
-    if (typeof user.password === "string" && !user.password.startsWith("pbkdf2$")) {
-      user.password = await hashPassword(password);
+    if (typeof user.password === "string" && (!user.password.startsWith("pbkdf2$") || user.password.trim() !== effectivePassword || effectivePassword !== password)) {
+      user.password = await hashPassword(effectivePassword.trim());
       await pool.query("UPDATE users SET password = $2 WHERE id = $1", [user.id, user.password]);
     }
     if (user.status === "PENDENTE") {
@@ -382,7 +407,8 @@ authRouter.post("/login", async (req, res) => {
 // PUT /api/auth/change-password — Alterar palavra-passe
 authRouter.put("/change-password", async (req, res) => {
   try {
-    const { userId, newPassword } = req.body;
+    const { userId, newPassword: rawNew } = req.body;
+    const newPassword = typeof rawNew === "string" ? rawNew.trim() : rawNew;
     if (!userId || !newPassword || newPassword.length < 6) {
       return res.status(400).json({ error: "Dados inválidos. A senha deve ter pelo menos 6 caracteres." });
     }
@@ -444,7 +470,7 @@ authRouter.post("/link-store", async (req, res) => {
     // Se userId não fornecido, procurar por phone + store_type
     let userIdToUse = userId;
     if (!userIdToUse && phone) {
-      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : "collection";
+      const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("tecnologia") ? "tecnologia-electronicos" : category?.toLowerCase().includes("alimentacao") ? "alimentacao-restauracao" : category?.toLowerCase().includes("turismo") ? "turismo-lazer" : category?.toLowerCase().includes("desporto") ? "desporto-fitness" : category?.toLowerCase().includes("emprego") ? "empregos-oportunidades" : category?.toLowerCase().includes("agricultur") ? "agricultura-agronegocio" : category?.toLowerCase().includes("influenciador") ? "influenciadores-criadores" : category?.toLowerCase().includes("transporte") ? "transportes-logistica" : category?.toLowerCase().includes("profissional") ? "servicos-profissionais" : category?.toLowerCase().includes("banco") ? "bancos" : category?.toLowerCase().includes("seguradora") ? "seguradoras" : "collection";
       const userResult = await pool.query("SELECT id FROM users WHERE phone=$1 AND store_type=$2", [phone, storeType]);
       if (!userResult.rows.length) {
         return res.status(404).json({ error: "Utilizador não encontrado." });
@@ -460,7 +486,7 @@ authRouter.post("/link-store", async (req, res) => {
     const storeId = `loja-${Date.now()}`;
     
     // Criar nova loja vinculada ao utilizador
-    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : "collection";
+    const storeType = category?.toLowerCase().includes("wedding") ? "weddings" : category?.toLowerCase().includes("love") ? "love-services" : category?.toLowerCase().includes("business") ? "business" : category?.toLowerCase().includes("formacao") ? "formacoes" : category?.toLowerCase().includes("evento") ? "eventos" : category?.toLowerCase().includes("entretenimento") ? "entretenimento" : category?.toLowerCase().includes("imovel") ? "imoveis" : category?.toLowerCase().includes("infantil") ? "infantil" : category?.toLowerCase().includes("automovel") ? "automoveis" : category?.toLowerCase().includes("saude") ? "saude" : category?.toLowerCase().includes("beleza") ? "beleza" : category?.toLowerCase().includes("casa") ? "casa" : category?.toLowerCase().includes("banco") ? "bancos" : category?.toLowerCase().includes("seguradora") ? "seguradoras" : "collection";
     const isW = storeType === "weddings";
     const isL = storeType === "love-services";
     const isB = storeType === "business";
@@ -482,7 +508,9 @@ authRouter.post("/link-store", async (req, res) => {
     const isInf2 = storeType === "influenciadores-criadores";
     const isTra = storeType === "transportes-logistica";
     const isSer = storeType === "servicos-profissionais";
-    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isEnt ? '#7C3AED' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : '#B89A78';
+    const isBan = storeType === "bancos";
+    const isSeg = storeType === "seguradoras";
+    const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isEnt ? '#7C3AED' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : isBan ? '#1E40AF' : isSeg ? '#0F766E' : '#B89A78';
     const linkCoverImage = isL
       ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
       : isW
@@ -525,6 +553,10 @@ authRouter.post("/link-store", async (req, res) => {
       ? 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format&q=80'
       : isSer
       ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format&q=80'
+      : isBan
+      ? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop&auto=format&q=80'
+      : isSeg
+      ? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop&auto=format&q=80'
       : 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop&auto=format&q=80';
     await pool.query(
       `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, province, municipality, locality, store_type)
@@ -536,7 +568,7 @@ authRouter.post("/link-store", async (req, res) => {
         normalizedCategories,
         address || '',
         phone || '',
-        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isEnt ? 'A minha loja na YESOLA Entretenimento.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : 'A minha loja na YESOLA Collection.',
+        isW ? 'A minha loja na YESOLA Casamentos.' : isL ? 'A minha loja na YESOLA Serviços de Amor.' : isB ? 'A minha loja na YESOLA Negócios & Finanças.' : isF ? 'A minha loja na YESOLA Formações & Cursos.' : isE ? 'A minha loja na YESOLA Eventos & Celebrações.' : isEnt ? 'A minha loja na YESOLA Entretenimento.' : isI ? 'A minha loja na YESOLA Imóveis & Alojamento.' : isInf ? 'A minha loja na YESOLA Infantil & Maternidade.' : isA ? 'A minha loja na YESOLA Automóveis.' : isS ? 'A minha loja na YESOLA Saúde & Bem-Estar.' : isBe ? 'A minha loja na YESOLA Beleza & Bem-Estar.' : isC ? 'A minha loja na YESOLA Casa & Serviços.' : isTec ? 'A minha loja na YESOLA Tecnologia & Electrónicos.' : isAli ? 'A minha loja na YESOLA Alimentação & Restauração.' : isTui ? 'A minha loja na YESOLA Turismo & Lazer.' : isDes ? 'A minha loja na YESOLA Desporto & Fitness.' : isEmp ? 'A minha loja na YESOLA Empregos & Oportunidades.' : isAge ? 'A minha loja na YESOLA Agricultura & Agro-Negócio.' : isInf2 ? 'A minha loja na YESOLA Influenciadores & Criadores.' : isTra ? 'A minha loja na YESOLA Transportes & Logística.' : isSer ? 'A minha loja na YESOLA Serviços Profissionais.' : isBan ? 'A minha loja na YESOLA Bancos.' : isSeg ? 'A minha loja na YESOLA Seguradoras.' : 'A minha loja na YESOLA Collection.',
         linkCoverColor,
         linkCoverImage,
         province || '',

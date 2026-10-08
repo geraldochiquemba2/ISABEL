@@ -112,17 +112,24 @@ productsRouter.post("/", async (c) => {
   }
 });
 
-// PUT /api/products/:id — atualizar produto
+// PUT /api/products/:id — atualizar produto (merge: ausente/null = preserva)
 productsRouter.put("/:id", async (c) => {
   try {
     const id = c.req.param("id");
-    const { name, price, currency, imageUrl, imageUrls, imageColor, category, subcategory, isCarrinho, description } =
-      await c.req.json();
-    console.log(`[PUT /api/products/${id}] description=`, description);
+    const body = ((await c.req.json()) as any) || {};
+    const has = (k: string) => Object.prototype.hasOwnProperty.call(body, k) && body[k] !== null;
+    const curAll = (await db(c.env).query("SELECT * FROM products WHERE id=$1", [id])) as any[];
+    const cur = curAll[0];
+    if (!cur) return c.json({ error: "Produto não encontrado" }, 404);
+    console.log(`[PUT /api/products/${id}] description=`, body.description);
     await db(c.env).query(
       `UPDATE products SET name=$2, price=$3, currency=$4, image_url=$5, image_urls=$6, image_color=$7, category=$8, subcategory=$9, is_carrinho=$10, description=$11
        WHERE id=$1`,
-      [id, name, price || 0, currency || "AOA", imageUrl || null, imageUrls || [], imageColor || "#f0f0f0", category || null, subcategory || null, isCarrinho || false, description || ""]
+      [id, has("name") ? body.name : cur.name, has("price") ? body.price : cur.price,
+       has("currency") ? body.currency : cur.currency, has("imageUrl") ? body.imageUrl : cur.image_url,
+       has("imageUrls") ? body.imageUrls : cur.image_urls, has("imageColor") ? body.imageColor : cur.image_color,
+       has("category") ? body.category : cur.category, has("subcategory") ? body.subcategory : cur.subcategory,
+       has("isCarrinho") ? body.isCarrinho : cur.is_carrinho, has("description") ? body.description : cur.description]
     );
     return c.json({ success: true });
   } catch (err) {

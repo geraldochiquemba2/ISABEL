@@ -255,6 +255,12 @@ export async function initDB() {
       INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
       VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'servicos-profissionais')
       ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'bancos')
+      ON CONFLICT (phone, store_type) DO NOTHING;
+      INSERT INTO users (name, phone, password, province, municipality, address, status, store_type)
+      VALUES ('Admin', '999999999', '1234567890', 'Luanda', 'Luanda', 'Endereço Admin', 'APROVADO', 'seguradoras')
+      ON CONFLICT (phone, store_type) DO NOTHING;
     `);
 
     // Inserir Categorias predefinidas se a tabela estiver vazia
@@ -298,34 +304,9 @@ export async function initDB() {
       );
     }
 
-    // Normalizar categorias antigas e erradas
-    const categoryNormalizations = [
-      ['automotivo', 'Automóveis & Mobilidade'],
-      ['motores', 'Automóveis & Mobilidade'],
-      ['auto motores', 'Automóveis & Mobilidade'],
-      ['auto-motores', 'Automóveis & Mobilidade'],
-      ['eletronicos', 'Tecnologia & Electrónicos'],
-      ['eletrônicos', 'Tecnologia & Electrónicos'],
-      ['saude', 'Beleza & Bem-Estar'],
-      ['saúde', 'Beleza & Bem-Estar'],
-      ['saude-beleza', 'Beleza & Bem-Estar'],
-      ['beleza', 'Beleza & Bem-Estar'],
-      ['saúde & beleza', 'Beleza & Bem-Estar'],
-      ['perucas', 'Beleza & Bem-Estar'],
-      ['servicos', 'Casa & Serviços'],
-      ['serviços', 'Casa & Serviços'],
-      ['servicos-residenciais', 'Casa & Serviços'],
-      ['casa & decoração', 'Casa & Serviços'],
-      ['casa-decoracao', 'Casa & Serviços'],
-      ['alimentação', 'Alimentação & Restauração'],
-      ['alimentacao', 'Alimentação & Restauração'],
-    ];
-    for (const [oldCat, newCat] of categoryNormalizations) {
-      await client.query(
-        `UPDATE stores SET category=$2 WHERE lower(category)=lower($1)`,
-        [oldCat, newCat]
-      );
-    }
+    // Migração legada de rótulos removida: reescrevia categorias sem avisar
+    // em TODO arranque (ex: "Restaurantes" virava "Alimentação & Restauração").
+    // Guarda-se o texto como foi escrito; correções fazem-se no Admin.
 
     // As lojas de teste foram permanentemente removidas.
 

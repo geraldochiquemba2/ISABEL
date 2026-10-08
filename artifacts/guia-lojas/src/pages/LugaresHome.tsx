@@ -141,7 +141,7 @@ export default function LugaresHome() {
           {menuOpen && (
             <div className="bg-[#FFFDF8] border-t border-[#E8CC91]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
               <button onClick={() => (window.location.href = "/login-lugares")} className="py-2 text-left">Entrar</button>
-              <button onClick={() => (window.location.href = "/")} className="py-2 text-left">Trocar de loja</button>
+              <button onClick={() => { localStorage.removeItem("eliora-selected-store"); window.location.href = "/"; }} className="py-2 text-left">Trocar de loja</button>
             </div>
           )}
         </header>

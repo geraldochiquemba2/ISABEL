@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { pool } from "../db";
-import { normalizeCategory } from "./auth";
 
 export const storesRouter = Router();
 
@@ -257,18 +256,18 @@ storesRouter.get("/:id", async (req, res) => {
   }
 });
 
-// Normaliza até 4 categorias; a primeira é a principal (compat com `category`).
-// Aplica o mesmo mapa de rótulos do registo (auth) para não divergir.
+// Normaliza até 4 categorias; a primeira é a principal.
+// Guarda o texto COMO FOI ESCRITO (só trim) — sem mapa de rótulos.
 function normalizeStoreCategories(body: any): { primary: string; all: string[] } {
   const raw = Array.isArray(body?.categories) ? body.categories.filter((c: any) => typeof c === "string" && c.trim()) : [];
   const seen = new Set<string>();
   const all: string[] = [];
   for (const c of [...raw, body?.category].filter(Boolean)) {
-    const v = normalizeCategory(String(c));
+    const v = String(c).trim();
     if (v && !seen.has(v)) { seen.add(v); all.push(v); }
     if (all.length >= 4) break;
   }
-  const primary = all[0] || normalizeCategory(typeof body?.category === "string" ? body.category : undefined);
+  const primary = all[0] || (typeof body?.category === "string" && body.category.trim() ? body.category.trim() : "Geral");
   return { primary, all: all.length ? all : [primary] };
 }
 
@@ -290,50 +289,55 @@ storesRouter.post("/", async (req, res) => {
   }
 });
 
-// PUT /api/stores/:id — atualizar loja
+// PUT /api/stores/:id — atualizar loja (merge: só toca nos campos enviados;
+// ausente ou null = preserva a BD. Antes, `|| []`/`|| null` APAGAVA fotos e
+// até o nome em updates parciais — ex: botão Câmara nativa. "" limpa de propósito.)
 storesRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality, schedule, latitude, longitude } = req.body;
+    const body = req.body || {};
+    const has = (k: string) => Object.prototype.hasOwnProperty.call(body, k) && body[k] !== null;
+    const curAll = await pool.query("SELECT * FROM stores WHERE id=$1", [id]);
+    const cur = curAll.rows[0];
+    if (!cur) return res.status(404).json({ error: "Loja não encontrada" });
     // NUNCA persistir is_open vindo do cliente: o objeto da loja que circula
     // no frontend já traz o status CALCULADO (horário do dia); guardá-lo
     // fechava a loja para sempre (foi o que aconteceu a N lojas: dono gravou
     // fora de horas e ficou is_open=false permanente). Preserva o valor da BD.
     // Fecho manual futuro deve usar endpoint dedicado (estilo featured/trending).
-    const curFlag = await pool.query("SELECT is_open FROM stores WHERE id=$1", [id]);
-    const effectiveIsOpen = curFlag.rows[0]?.is_open ?? true;
+    const effectiveIsOpen = cur.is_open ?? true;
     // Guardas independentes: só escreve categorias/localidade se foram enviadas
     // (array vazio ou ausência = preserva o que está na BD, nunca apaga)
-    const providedCats = Array.isArray(req.body.categories)
-      ? req.body.categories.filter((c: any) => typeof c === "string" && c.trim())
+    const providedCats = Array.isArray(body.categories)
+      ? body.categories.filter((c: any) => typeof c === "string" && c.trim())
       : undefined;
-    const providedCat = typeof req.body.category === "string" && req.body.category.trim()
-      ? req.body.category.trim()
+    const providedCat = typeof body.category === "string" && body.category.trim()
+      ? body.category.trim()
       : undefined;
-    const providedLocality = typeof locality === "string" ? locality : undefined;
+    const providedLocality = typeof body.locality === "string" ? body.locality : undefined;
     const catsGiven = !!(providedCats?.length || providedCat);
     let category: string;
     let categories: string[];
     let localityVal: string;
-    if (!catsGiven || providedLocality === undefined) {
-      const cur = await pool.query("SELECT category, categories, locality FROM stores WHERE id=$1", [id]);
-      const row = cur.rows[0];
-      if (!catsGiven && row) {
-        category = row.category;
-        categories = row.categories && row.categories.length ? row.categories : [row.category];
-      } else {
-        ({ primary: category, all: categories } = normalizeStoreCategories({ categories: providedCats, category: providedCat }));
-      }
-      localityVal = providedLocality !== undefined ? providedLocality : (row?.locality || "");
+    if (!catsGiven) {
+      category = cur.category;
+      categories = cur.categories && cur.categories.length ? cur.categories : [cur.category];
     } else {
       ({ primary: category, all: categories } = normalizeStoreCategories({ categories: providedCats, category: providedCat }));
-      localityVal = providedLocality;
     }
+    localityVal = providedLocality !== undefined ? providedLocality : (cur.locality || "");
     await pool.query(
       `UPDATE stores SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7,
        description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, is_open=$16, schedule=$17, latitude=$18, longitude=$19
        WHERE id=$1`,
-      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, localityVal, effectiveIsOpen, schedule ? JSON.stringify(schedule) : null, latitude || null, longitude || null]
+      [id, has("name") ? body.name : cur.name, category, categories, has("address") ? body.address : cur.address,
+       has("phone") ? body.phone : cur.phone, has("whatsapp") ? body.whatsapp : cur.whatsapp,
+       has("description") ? body.description : cur.description, has("coverColor") ? body.coverColor : cur.cover_color,
+       has("coverImage") ? body.coverImage : cur.cover_image, has("coverImages") ? body.coverImages : cur.cover_images,
+       has("logoUrl") ? body.logoUrl : cur.logo_url, has("province") ? body.province : cur.province,
+       has("municipality") ? body.municipality : cur.municipality, localityVal, effectiveIsOpen,
+       has("schedule") ? (body.schedule ? JSON.stringify(body.schedule) : null) : cur.schedule,
+       has("latitude") ? (body.latitude || null) : cur.latitude, has("longitude") ? (body.longitude || null) : cur.longitude]
     );
     res.json({ success: true });
   } catch (err) {
