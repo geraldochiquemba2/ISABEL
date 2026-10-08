@@ -402,13 +402,13 @@ function Router() {
     // o efeito deep-link voltava a inferir a vertical do URL e a home
     // reaparecia (parecia um simples refresh).
     localStorage.removeItem("eliora-selected-store");
-    // Trocar de loja limpa TUDO: nenhuma memória de rolagem pode vazar para
-    // outra página (URLs repetem-se entre vertical e seletor).
+    // Trocar de loja limpa as memórias das verticais, MAS preserva a do
+    // seletor ("scroll:none:/") para ele próprio voltar onde parou.
     try {
       const dead: string[] = [];
       for (let i = 0; i < sessionStorage.length; i++) {
         const k = sessionStorage.key(i);
-        if (k && k.startsWith("scroll:")) dead.push(k);
+        if (k && k.startsWith("scroll:") && k !== "scroll:none:/") dead.push(k);
       }
       dead.forEach((k) => sessionStorage.removeItem(k));
     } catch {
