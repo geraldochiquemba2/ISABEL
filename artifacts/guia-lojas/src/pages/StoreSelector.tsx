@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import {
-  Heart, ShoppingBag, HeartHandshake, Landmark, GraduationCap,
-  Crown, Building2, Baby, Car, ChevronRight, ChevronDown, Search, Stethoscope, Sparkles,
-  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon, Home,
-  Smartphone, UtensilsCrossed, Plane, Dumbbell, Briefcase, Sprout,
-  Users, Truck, Palette, MapPin,
+  HeartHandshake, Landmark, GraduationCap,
+  Building2, Baby, Car, ChevronRight, ChevronDown, Search, Sparkles,
+  ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
+  UtensilsCrossed, Plane, Dumbbell, Briefcase,
+  Truck, MapPin, Church, HeartPulse, Shirt, PartyPopper, Gem, Clapperboard,
+  Wrench, TrendingUp, Cpu, Sofa, Tractor, Camera, Umbrella,
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
 
@@ -21,7 +22,7 @@ const areas = [
     description: "Encontre igrejas e serviços públicos no mapa — sem conta, sem pagamento.",
     image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#A96F12]/80 to-[#6F4E0B]/80",
-    icon: <MapPin size={24} className="text-white" />,
+    icon: <Church size={24} className="text-white" />,
     accent: "#A96F12",
   },
   {
@@ -31,7 +32,7 @@ const areas = [
     description: "Encontre profissionais, clínicas e serviços que cuidam de si e da sua família com excelência, atenção e amor.",
     image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#2E7D32]/80 to-[#1B5E20]/80",
-    icon: <Stethoscope size={24} className="text-white" />,
+    icon: <HeartPulse size={24} className="text-white" />,
     accent: "#2E7D32",
   },
   {
@@ -51,7 +52,7 @@ const areas = [
     description: "Moda, acessórios e lifestyle para quem carrega a luz de Deus. Descubra o vosso estilo com dignidade.",
     image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-amber-500/80 to-yellow-600/80",
-    icon: <ShoppingBag size={24} className="text-white" />,
+    icon: <Shirt size={24} className="text-white" />,
     accent: "#B89A78",
   },
   {
@@ -61,7 +62,7 @@ const areas = [
     description: "Planeamento, assessoria e tudo para o seu evento em Luanda e além. Decoração, catering, entretenimento e mais.",
     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#ad696b]/80 to-[#3c2731]/80",
-    icon: <Crown size={24} className="text-white" />,
+    icon: <PartyPopper size={24} className="text-white" />,
     accent: "#ad696b",
   },
   {
@@ -71,7 +72,7 @@ const areas = [
     description: "Concierge de celebrações em Luanda e além. Planeamento, decoração, beleza e memória para o vosso dia especial.",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-rose-500/80 to-pink-600/80",
-    icon: <Heart size={24} className="text-white" />,
+    icon: <Gem size={24} className="text-white" />,
     accent: "#E8A0BF",
   },
   {
@@ -91,7 +92,7 @@ const areas = [
     description: "Cinema, música, teatro, gaming e espetáculos em Angola e além. A diversão começa aqui.",
     image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#7C3AED]/80 to-[#4C1D95]/80",
-    icon: <Sparkles size={24} className="text-white" />,
+    icon: <Clapperboard size={24} className="text-white" />,
     accent: "#7C3AED",
   },
   {
@@ -101,7 +102,7 @@ const areas = [
     description: "Documentação, consultoria, design, tradução, arquitectura e muito mais. Profissionais qualificados para si.",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#1A237E]/80 to-[#0D47A1]/80",
-    icon: <Palette size={24} className="text-white" />,
+    icon: <Wrench size={24} className="text-white" />,
     accent: "#1A237E",
   },
   {
@@ -111,7 +112,7 @@ const areas = [
     description: "Consultoria, finanças e estratégia para empreendedores, empresas e famílias em Angola e além.",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#112844]/80 to-[#b88a3b]/80",
-    icon: <Landmark size={24} className="text-white" />,
+    icon: <TrendingUp size={24} className="text-white" />,
     accent: "#b88a3b",
   },
   {
@@ -171,7 +172,7 @@ const areas = [
     description: "Smartphones, computadores, electrodomicílios, reparação e muito mais. Tecnologia acessível para todos em Angola.",
     image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#1565C0]/80 to-[#0D47A1]/80",
-    icon: <Smartphone size={24} className="text-white" />,
+    icon: <Cpu size={24} className="text-white" />,
     accent: "#1565C0",
   },
   {
@@ -181,7 +182,7 @@ const areas = [
     description: "Profissionais qualificados para limpeza, canalização, pintura, jardinagem e muito mais. Encontre o profissional ideal para o seu lar.",
     image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#8B4513]/80 to-[#6B3410]/80",
-    icon: <Home size={24} className="text-white" />,
+    icon: <Sofa size={24} className="text-white" />,
     accent: "#8B4513",
   },
   {
@@ -221,7 +222,7 @@ const areas = [
     description: "Agricultura, pecuária, máquinas agrícolas, produtos frescos e muito mais. O futuro de Angola começa no campo.",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#2E7D32]/80 to-[#1B5E20]/80",
-    icon: <Sprout size={24} className="text-white" />,
+    icon: <Tractor size={24} className="text-white" />,
     accent: "#2E7D32",
   },
   {
@@ -231,7 +232,7 @@ const areas = [
     description: "Influenciadores digitais, criadores de conteúdo, fotógrafos, videomakers e muito mais. Conecte-se com os melhores profissionais.",
     image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#C2185B]/80 to-[#880E4F]/80",
-    icon: <Users size={24} className="text-white" />,
+    icon: <Camera size={24} className="text-white" />,
     accent: "#C2185B",
   },
   {
@@ -251,397 +252,41 @@ const areas = [
     description: "Seguros auto, saúde, vida e património nas melhores seguradoras em Angola.",
     image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#0F766E]/80 to-[#115E59]/80",
-    icon: <ShieldCheck size={24} className="text-white" />,
+    icon: <Umbrella size={24} className="text-white" />,
     accent: "#0F766E",
   },
 ];
 
 
 
+// Ícones modernos das áreas (Lucide, dourado #A96F12, 36px como os anteriores).
+// Cada chave é um id de `areas` — todas as 25 áreas têm ícone.
 const categoryIcons: Record<string, React.ReactNode> = {
-
-  weddings: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <circle cx="12" cy="22" r="7" />
-
-      <circle cx="24" cy="22" r="7" />
-
-      <path d="M19 22c-1-3 0-7 3-8" strokeLinecap="round" />
-
-    </svg>
-
-  ),
-
-  formacoes: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 8L4 14l14 6 14-6L18 8z" />
-
-      <path d="M8 16v8c0 2 4 4 10 4s10-2 10-4v-8" />
-
-      <line x1="30" y1="14" x2="30" y2="26" />
-
-    </svg>
-
-  ),
-
-  imoveis: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="6" y="12" width="24" height="18" rx="2" />
-
-      <rect x="10" y="16" width="5" height="5" rx="1" />
-
-      <rect x="21" y="16" width="5" height="5" rx="1" />
-
-      <rect x="10" y="25" width="5" height="5" rx="1" />
-
-      <rect x="21" y="25" width="5" height="5" rx="1" />
-
-      <path d="M4 12h28" />
-
-      <path d="M14 12V8a4 4 0 0 1 8 0v4" />
-
-    </svg>
-
-  ),
-
-  collection: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M12 6c-2 0-4 2-4 4v2l6-2 4 2 4-2 6 2v-2c0-2-2-4-4-4-2 0-3 1-4 2h-4c-1-1-2-2-4-2z" />
-
-      <path d="M10 12l-2 16h20l-2-16" />
-
-      <path d="M14 12v4" />
-
-      <path d="M22 12v4" />
-
-    </svg>
-
-  ),
-
-  eventos: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="8" y="10" width="20" height="18" rx="2" />
-
-      <path d="M8 16h20" />
-
-      <path d="M14 10V8" />
-
-      <path d="M22 10V8" />
-
-      <circle cx="18" cy="23" r="3" />
-
-    </svg>
-
-  ),
-
-  "love-services": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 30s-10-6-10-14c0-4 3-6 6-6 2 0 3 1 4 3 1-2 2-3 4-3 3 0 6 2 6 6 0 8-10 14-10 14z" />
-
-      <path d="M18 18c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z" />
-
-    </svg>
-
-  ),
-
-  business: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <circle cx="18" cy="18" r="10" />
-
-      <path d="M18 10v16" />
-
-      <path d="M14 14c0-2 2-3 4-3s4 1 4 3-2 2-4 3-4 1-4 3 2 3 4 3 4-1 4-3" />
-
-    </svg>
-
-  ),
-
-  infantil: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <circle cx="18" cy="14" r="6" />
-
-      <path d="M12 20c-2 2-3 5-3 8h24c0-3-1-6-3-8" />
-
-      <circle cx="15" cy="13" r="1" fill="#A96F12" />
-
-      <circle cx="21" cy="13" r="1" fill="#A96F12" />
-
-      <path d="M16 16c1 1 3 1 4 0" strokeLinecap="round" />
-
-    </svg>
-
-  ),
-
-  automoveis: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M6 22h24l-3-10H9L6 22z" />
-
-      <circle cx="12" cy="24" r="2.5" />
-
-      <circle cx="24" cy="24" r="2.5" />
-
-      <path d="M9 12l2-5h14l2 5" />
-
-      <path d="M14 17h8" strokeLinecap="round" />
-
-    </svg>
-
-  ),
-
-  saude: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="6" y="8" width="24" height="20" rx="2" />
-
-      <path d="M16 14v8M12 18h8" />
-
-      <rect x="10" y="4" width="12" height="6" rx="1" />
-
-    </svg>
-
-  ),
-
-  beleza: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 4l-2 8h4l-2-8z" />
-
-      <path d="M12 12c-2 0-4 2-4 4 0 4 4 8 10 8s10-4 10-8c0-2-2-4-4-4" />
-
-      <path d="M18 24v6" />
-
-      <path d="M14 30h8" />
-
-    </svg>
-
-  ),
-
-  casa: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M6 16l12-10 12 10" />
-
-      <path d="M8 14v14h20V14" />
-
-      <rect x="14" y="22" width="8" height="6" rx="1" />
-
-      <rect x="11" y="17" width="5" height="4" rx="1" />
-
-    </svg>
-
-  ),
-
-  "tecnologia-electronicos": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="10" y="6" width="16" height="24" rx="3" />
-
-      <circle cx="18" cy="26" r="1.5" />
-
-      <path d="M14 10h8" />
-
-    </svg>
-
-  ),
-
-  "alimentacao-restauracao": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M12 6v10c0 2-2 4-4 4v0c2 0 4 2 4 4v10" />
-
-      <path d="M24 6v6c0 4 4 6 4 10s-4 6-4 6" />
-
-      <line x1="18" y1="6" x2="18" y2="30" />
-
-    </svg>
-
-  ),
-
-  "turismo-lazer": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 6L6 14l12 4 12-4L18 6z" />
-
-      <path d="M6 14v8c0 2 6 6 12 6s12-4 12-6v-8" />
-
-      <path d="M18 18v10" />
-
-    </svg>
-
-  ),
-
-  "desporto-fitness": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M8 18h4v-6h-4zM24 18h4v-6h-4z" />
-
-      <rect x="12" y="15" width="12" height="6" rx="1" />
-
-      <circle cx="6" cy="18" r="2" />
-
-      <circle cx="30" cy="18" r="2" />
-
-    </svg>
-
-  ),
-
-  "empregos-oportunidades": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="8" y="12" width="20" height="16" rx="2" />
-
-      <path d="M14 12V10a4 4 0 0 1 8 0v2" />
-
-      <circle cx="18" cy="20" r="2" />
-
-      <path d="M18 22v2" />
-
-    </svg>
-
-  ),
-
-  "agricultura-agronegocio": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 30V14" />
-
-      <path d="M12 20c-2-2-2-6 0-8 2 2 6 2 6 0" />
-
-      <path d="M24 20c2-2 2-6 0-8-2 2-6 2-6 0" />
-
-      <path d="M14 10c0-4 4-6 4-6s4 2 4 6" />
-
-      <path d="M10 30h16" />
-
-    </svg>
-
-  ),
-
-  "influenciadores-criadores": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <circle cx="18" cy="14" r="6" />
-
-      <path d="M8 30c0-5.5 4.5-10 10-10s10 4.5 10 10" />
-
-      <circle cx="28" cy="10" r="4" />
-
-      <path d="M26 10h4M28 8v4" />
-
-    </svg>
-
-  ),
-
-  "transportes-logistica": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M4 18h20v8H4z" />
-
-      <path d="M24 22h6l4 4v4h-10v-8z" />
-
-      <circle cx="10" cy="28" r="3" />
-
-      <circle cx="28" cy="28" r="3" />
-
-    </svg>
-
-  ),
-
-  "servicos-profissionais": (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <rect x="8" y="6" width="20" height="24" rx="2" />
-
-      <path d="M14 12h8M14 16h8M14 20h5" />
-
-      <path d="M12 24h12" />
-
-    </svg>
-
-  ),
-
-  bancos: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M6 14h24" />
-
-      <path d="M8 14v14M12 14v14M18 14v14M24 14v14M28 14v14" />
-
-      <path d="M4 30h28" />
-
-      <path d="M18 4l14 8H4l14-8z" />
-
-    </svg>
-
-  ),
-
-  seguradoras: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 4l12 8v8c0 7-5.5 12.6-12 14-6.5-1.4-12-7-12-14v-8l12-8z" />
-
-      <path d="M13 18l4 4 7-8" strokeLinecap="round" />
-
-    </svg>
-
-  ),
-
-  entretenimento: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M8 28l20-10-20-10v20z" />
-
-      <circle cx="18" cy="18" r="13" />
-
-    </svg>
-
-  ),
-
-  lugares: (
-
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#A96F12" strokeWidth="1.5">
-
-      <path d="M18 30s-8-6.5-8-13a8 8 0 0 1 16 0c0 6.5-8 13-8 13z" />
-
-      <circle cx="18" cy="17" r="3" />
-
-    </svg>
-
-  ),
-
+  lugares: <Church size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  saude: <HeartPulse size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  beleza: <Sparkles size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  collection: <Shirt size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  eventos: <PartyPopper size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  weddings: <Gem size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "love-services": <HeartHandshake size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  entretenimento: <Clapperboard size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "servicos-profissionais": <Wrench size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  business: <TrendingUp size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "alimentacao-restauracao": <UtensilsCrossed size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  imoveis: <Building2 size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "turismo-lazer": <Plane size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  automoveis: <Car size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "transportes-logistica": <Truck size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "tecnologia-electronicos": <Cpu size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  casa: <Sofa size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  formacoes: <GraduationCap size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  infantil: <Baby size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "desporto-fitness": <Dumbbell size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "empregos-oportunidades": <Briefcase size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "agricultura-agronegocio": <Tractor size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  "influenciadores-criadores": <Camera size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  bancos: <Landmark size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  seguradoras: <Umbrella size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
 };
 
 
