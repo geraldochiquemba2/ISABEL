@@ -63,7 +63,7 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Icon120</string>
+				<string>Icon-40@3x</string>
 			</array>
 		</dict>
 	</dict>
@@ -73,7 +73,7 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Icon152</string>
+				<string>Icon-76@2x</string>
 			</array>
 		</dict>
 	</dict>
