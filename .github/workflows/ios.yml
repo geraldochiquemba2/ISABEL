@@ -86,6 +86,9 @@ jobs:
             --create
           cd ios/App
           xcode-project use-profiles
+          cd "$GITHUB_WORKSPACE/artifacts/guia-lojas"
+          echo "--- perfis no workspace ---"
+          ls *.mobileprovision ios/App/*.mobileprovision 2>/dev/null || true
           echo "--- perfis instalados ---"
           ls "$HOME/Library/MobileDevice/Provisioning Profiles/" || true
 
@@ -102,10 +105,27 @@ jobs:
       - name: Prepare ExportOptions.plist (perfil App Store)
         run: |
           python3 - <<'EOF'
-          import glob, os, plistlib, subprocess, sys
+          import glob, os, plistlib, shutil, subprocess, sys
           prov_dir = os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles")
-          profiles = glob.glob(os.path.join(prov_dir, "*.mobileprovision"))
+          ws = os.environ.get("GITHUB_WORKSPACE", "")
+          patterns = [os.path.join(prov_dir, "*.mobileprovision")]
+          if ws:
+              patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "*.mobileprovision"))
+              patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "ios", "App", "*.mobileprovision"))
+          seen = set()
+          profiles = []
+          for pat in patterns:
+              for p in glob.glob(pat):
+                  if p not in seen:
+                      seen.add(p)
+                      profiles.append(p)
           print(f"Perfis encontrados: {len(profiles)}")
+          os.makedirs(prov_dir, exist_ok=True)
+          for p in profiles:
+              dest_p = os.path.join(prov_dir, os.path.basename(p))
+              if os.path.abspath(p) != os.path.abspath(dest_p):
+                  shutil.copy(p, dest_p)
+                  print(f"instalado: {os.path.basename(p)}")
           bundle = "pt.yesola.app"
           team = "4ZQGZ9N775"
           chosen = None
