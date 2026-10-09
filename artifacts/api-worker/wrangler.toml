@@ -18,4 +18,7 @@ workers_dev = true
 
 [triggers]
 # Verificação de assinaturas vencidas (era setInterval de 1h no Node)
-crons = ["0 * * * *"]
+# + keep-alive de 2min: o Neon adormece aos ~5min e acordar custa 5-10s.
+# O ping conta como atividade e mantém o compute quente (720 invocações/dia,
+# irrelevante nos 100k do free).
+crons = ["0 * * * *", "*/2 * * * *"]
