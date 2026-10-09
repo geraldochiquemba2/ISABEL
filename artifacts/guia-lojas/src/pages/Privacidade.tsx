@@ -1,13 +1,13 @@
-import { Link } from "wouter";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { goBackTo } from "@/lib/storeBack";
 
 export default function Privacidade() {
   return (
     <main className="min-h-[100dvh] bg-[#FBF7F2] text-[#292727]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#697482] hover:text-[#171717] transition-colors mb-8">
+        <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#697482] hover:text-[#171717] transition-colors mb-8">
           <ArrowLeft size={16} /> Voltar
-        </Link>
+        </button>
         <div className="flex items-center gap-3 mb-2">
           <span className="w-11 h-11 rounded-2xl bg-[#171717] text-white grid place-items-center">
             <ShieldCheck size={20} />

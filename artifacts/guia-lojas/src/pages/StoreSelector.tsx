@@ -842,7 +842,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
             Sobre<br />nós
           </a>
 
-          <a href="/" className="flex items-center justify-center">
+          <a href="/" onClick={(e) => { if (window.location.pathname === "/") { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); } }} className="flex items-center justify-center">
 
             <img
 

@@ -1,5 +1,5 @@
-import { Link } from "wouter";
 import { ArrowLeft, Store } from "lucide-react";
+import { goBackTo } from "@/lib/storeBack";
 
 // Página "Sobre nós" (botão à esquerda da logo na página inicial).
 // O texto final chega da Isabel — as secções abaixo são a estrutura;
@@ -8,9 +8,9 @@ export default function Sobre() {
   return (
     <main className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#6F6F6F] hover:text-[#111111] transition-colors mb-8">
+        <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#6F6F6F] hover:text-[#111111] transition-colors mb-8">
           <ArrowLeft size={16} /> Voltar
-        </Link>
+        </button>
         <div className="flex items-center gap-3 mb-2">
           <span className="w-11 h-11 rounded-2xl bg-[#A96F12] text-white grid place-items-center">
             <Store size={20} />

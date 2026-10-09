@@ -452,7 +452,10 @@ function Router() {
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
     setSelectedStore(storeId as StoreType);
-    window.location.href = "/";
+    // reload() em vez de href="/": todos os chamadores já estão em "/",
+    // e href empilhava um "/" duplicado no histórico (o voltar do navegador
+    // tropeçava nele). reload não cria entrada nova.
+    window.location.reload();
   };
 
   const handleBackToSelector = () => {

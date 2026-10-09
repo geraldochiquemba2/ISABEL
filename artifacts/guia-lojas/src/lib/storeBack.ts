@@ -78,3 +78,23 @@ export function goBackFromStore(from: string | null): void {
   // por isso a navegação SPA (setLocation) podia mostrar a vertical errada.
   window.location.href = "/";
 }
+
+/**
+ * Voltar de páginas informativas (/sobre, /contacto, /privacidade).
+ * Usa history.back() quando a página anterior é da própria YESOLA — assim
+ * NÃO empilha "/" no histórico. Senão (link direto, partilha), vai para
+ * `home`. Sem isto, o voltar do navegador tropeçava nestas páginas a seguir
+ * (loja -> ... -> /sobre em vez de voltar à montra).
+ */
+export function goBackTo(home = "/"): void {
+  try {
+    const ref = document.referrer ? new URL(document.referrer) : null;
+    if (ref && ref.origin === window.location.origin && window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+  } catch {
+    /* cai no fallback */
+  }
+  window.location.href = home;
+}
