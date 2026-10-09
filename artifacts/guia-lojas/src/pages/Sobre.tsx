@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, MapPin, Heart, Users, ShieldCheck, MessageCircle, LayoutGrid, Target, Eye, Gem } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
 
@@ -74,6 +74,16 @@ function FotoReservada({ legenda, alta }: { legenda: string; alta?: boolean }) {
 export default function Sobre() {
   const [aba, setAba] = useState("missao");
   const mvv = MVV.find((m) => m.id === aba)!;
+
+  // Barra de estado do telemóvel (hora, bateria, rede) com o creme da página.
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const prev = meta?.getAttribute("content");
+    meta?.setAttribute("content", "#FFFDF8");
+    return () => {
+      if (prev) meta?.setAttribute("content", prev);
+    };
+  }, []);
 
   return (
     <main className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111] pb-10" style={{ fontFamily: "'DM Sans', sans-serif" }}>
