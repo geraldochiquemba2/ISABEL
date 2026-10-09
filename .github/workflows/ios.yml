@@ -99,14 +99,51 @@ jobs:
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
             archive
 
+      - name: Prepare ExportOptions.plist (perfil App Store)
+        run: |
+          python3 - <<'EOF'
+          import glob, os, plistlib, subprocess, sys
+          prov_dir = os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles")
+          profiles = glob.glob(os.path.join(prov_dir, "*.mobileprovision"))
+          print(f"Perfis encontrados: {len(profiles)}")
+          bundle = "pt.yesola.app"
+          team = "4ZQGZ9N775"
+          chosen = None
+          for p in profiles:
+              try:
+                  out = subprocess.run(["security", "cms", "-D", "-i", p], capture_output=True, check=True).stdout
+                  d = plistlib.loads(out)
+                  name = d.get("Name", "")
+                  app_id = ((d.get("Entitlements", {}) or {}).get("application-identifier", ""))
+                  print(f"- {os.path.basename(p)} name={name!r} app_id={app_id!r}")
+                  if app_id in (f"{team}.{bundle}", bundle) or app_id.endswith("." + bundle):
+                      chosen = name
+              except Exception as e:
+                  print(f"! falha a ler {p}: {e}")
+          if not chosen:
+              print("ERRO: nenhum perfil para pt.yesola.app", file=sys.stderr)
+              sys.exit(1)
+          print(f"Perfil escolhido: {chosen}")
+          export_plist = {
+              "method": "app-store-connect",
+              "teamID": team,
+              "signingStyle": "manual",
+              "provisioningProfiles": {bundle: chosen},
+              "uploadSymbols": True,
+          }
+          dest = os.path.join(os.environ["RUNNER_TEMP"], "ExportOptions.plist")
+          with open(dest, "wb") as f:
+              plistlib.dump(export_plist, f, fmt=plistlib.FMT_XML)
+          print(f"ExportOptions escrito em {dest}")
+          EOF
+          cat "$RUNNER_TEMP/ExportOptions.plist"
+
       - name: Export IPA
         run: |
-          echo "ExportOptions.plist do repo:"
-          cat "$GITHUB_WORKSPACE/ExportOptions.plist"
           cd ios/App
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
             -exportPath "$RUNNER_TEMP/ipa"
 
       - name: Upload IPA
