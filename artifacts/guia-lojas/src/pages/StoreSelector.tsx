@@ -7,7 +7,7 @@ import {
   Building2, Baby, Car, ChevronRight, ChevronDown, Search,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
   UtensilsCrossed, Plane, Dumbbell, Briefcase,
-  Truck, Church, HeartPulse, Shirt, PartyPopper, Gem, Clapperboard,
+  Truck, Church, HeartPulse, Shirt, PartyPopper, Heart, Clapperboard,
   Wrench, TrendingUp, Cpu, Sofa, Tractor, Camera, Umbrella, Scissors,
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
@@ -72,7 +72,7 @@ const areas = [
     description: "Concierge de celebrações em Luanda e além. Planeamento, decoração, beleza e memória para o vosso dia especial.",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-rose-500/80 to-pink-600/80",
-    icon: <Gem size={24} className="text-white" />,
+    icon: <Heart size={24} className="text-white" />,
     accent: "#E8A0BF",
   },
   {
@@ -267,7 +267,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
   beleza: <Scissors size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   collection: <Shirt size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   eventos: <PartyPopper size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
-  weddings: <Gem size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  weddings: <Heart size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   "love-services": <HeartHandshake size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   entretenimento: <Clapperboard size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   "servicos-profissionais": <Wrench size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
