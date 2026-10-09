@@ -79,7 +79,7 @@ jobs:
           # certificado e o Archive falhava sem identidade de assinatura.
           keychain initialize
           keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-password "${{ secrets.P12_PASSWORD }}"
-          app-store-connect fetch-signing-files "pt.yesola.app" \
+          app-store-connect fetch-signing-files "pt.yesola.appstore" \
             --platform IOS \
             --type IOS_APP_STORE \
             --certificate-key "@file:$RUNNER_TEMP/yesola.key" \
@@ -134,7 +134,7 @@ jobs:
                   if os.path.abspath(p) != os.path.abspath(dest_p):
                       shutil.copy(p, dest_p)
                       print(f"instalado: {os.path.basename(p)} -> {d}")
-          bundle = "pt.yesola.app"
+          bundle = "pt.yesola.appstore"
           team = "4ZQGZ9N775"
           chosen = None
           for p in profiles:
@@ -149,7 +149,7 @@ jobs:
               except Exception as e:
                   print(f"! falha a ler {p}: {e}")
           if not chosen:
-              print("ERRO: nenhum perfil para pt.yesola.app", file=sys.stderr)
+              print("ERRO: nenhum perfil para pt.yesola.appstore", file=sys.stderr)
               sys.exit(1)
           print(f"Perfil escolhido: {chosen}")
           export_plist = {

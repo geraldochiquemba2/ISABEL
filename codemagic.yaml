@@ -17,7 +17,7 @@ workflows:
         PORT: "3000"
         BASE_PATH: "/"
         NODE_ENV: production
-        BUNDLE_ID: "pt.yesola.app"
+        BUNDLE_ID: "pt.yesola.appstore"
     triggering:
       events:
         - push
