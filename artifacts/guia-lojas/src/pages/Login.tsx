@@ -9,6 +9,7 @@ import { useLocation as useWouterLocation } from "wouter";
 import { PageTransition } from "@/components/PageTransition";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { registerLojista, loginLojista } from "@/lib/api";
+import ConsentCheckbox from "@/components/ConsentCheckbox";
 import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { getAreaCategories } from "@/data/areaCategories";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
@@ -35,6 +36,7 @@ const registerSchema = z
     province: z.string().min(1, "Selecione a província"),
     municipality: z.string().min(1, "Selecione o município"),
     address: z.string().min(5, "Endereço muito curto"),
+    acceptedTerms: z.boolean().refine((v) => v === true, "É obrigatório aceitar a Política de Privacidade e os Termos de Uso"),
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: "As senhas não coincidem",
@@ -418,6 +420,12 @@ export default function Login() {
                   </div>
                   <FieldError msg={regErr.confirmPassword?.message} />
                 </div>
+
+                <ConsentCheckbox
+                  checked={!!watch("acceptedTerms")}
+                  onChange={(v) => setValue("acceptedTerms", v, { shouldValidate: true })}
+                  error={regErr.acceptedTerms?.message}
+                />
 
                 <button
                   type="submit"

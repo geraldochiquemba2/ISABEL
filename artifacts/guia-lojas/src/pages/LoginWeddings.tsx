@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, MapPin, Navigation } from "lucide-react";
 import { useLocation as useWouterLocation } from "wouter";
 import { loginLojista, registerLojista } from "@/lib/api";
+import ConsentCheckbox from "@/components/ConsentCheckbox";
 import { useGroupTitles } from "@/lib/useVerticalGroups";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
@@ -35,7 +36,8 @@ const registerSchema = z.object({
   locality: z.string().optional(),
   province: z.string().min(1, "Selecione a província"),
   municipality: z.string().min(1, "Selecione o município"),
-  address: z.string().min(2, "Endereço muito curto"),
+    address: z.string().min(2, "Endereço muito curto"),
+    acceptedTerms: z.boolean().refine((v) => v === true, "É obrigatório aceitar a Política de Privacidade e os Termos de Uso"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
   confirmPassword: z.string(),
 }).refine((d) => d.password === d.confirmPassword, {
@@ -341,6 +343,12 @@ export default function LoginWeddings() {
                 </div>
                 <FieldError msg={regErr.confirmPassword?.message} />
               </div>
+
+              <ConsentCheckbox
+                checked={!!watch("acceptedTerms")}
+                onChange={(v) => setValue("acceptedTerms", v, { shouldValidate: true })}
+                error={regErr.acceptedTerms?.message}
+              />
 
               <button type="submit" className="w-full bg-[#D8B532] text-white py-3 text-sm font-medium rounded-full hover:bg-[#1a1d20] transition-colors">
                 Criar conta

@@ -141,7 +141,11 @@ export const authRouter = Router();
 // POST /api/auth/register — Registo do Lojista
 authRouter.post("/register", async (req, res) => {
   try {
-    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = req.body;
+    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude, acceptedTerms } = req.body;
+    // Lei 22/11 art. 12: tratamento só com consentimento inequívoco e expresso.
+    if (acceptedTerms !== true) {
+      return res.status(400).json({ error: "É obrigatório aceitar a Política de Privacidade e os Termos de Uso." });
+    }
     // Trim à entrada: espaços acidentais do teclado móvel nunca fazem parte da credencial.
     const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
     const password = typeof rawPassword === "string" ? rawPassword.trim() : rawPassword;
@@ -299,8 +303,8 @@ authRouter.post("/register", async (req, res) => {
 
     // Inserir Utilizador (senha sempre em hash; ver lib/password)
     const result = await pool.query(
-      `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE') RETURNING id, name, phone, store_id, status, status_reason`,
+      `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status, terms_accepted_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE', NOW()) RETURNING id, name, phone, store_id, status, status_reason`,
       [storeName || 'Lojista', phone, await hashPassword(password), province || '', municipality || '', address || '', storeId, storeType]
     );
 

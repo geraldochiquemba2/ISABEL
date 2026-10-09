@@ -285,7 +285,11 @@ export const authRouter = new Hono<{ Bindings: Env }>();
 authRouter.post("/register", async (c) => {
   try {
     const body = (await c.req.json()) as any;
-    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude } = body;
+    const { storeName, phone: rawPhone, password: rawPassword, category, province, municipality, address, storeType: storeTypeFromClient, latitude, longitude, acceptedTerms } = body;
+    // Lei 22/11 art. 12: tratamento só com consentimento inequívoco e expresso.
+    if (acceptedTerms !== true) {
+      return c.json({ error: "É obrigatório aceitar a Política de Privacidade e os Termos de Uso." }, 400);
+    }
     // Trim à entrada: espaços acidentais do teclado móvel nunca fazem parte da credencial.
     const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
     const password = typeof rawPassword === "string" ? rawPassword.trim() : rawPassword;
@@ -328,8 +332,8 @@ authRouter.post("/register", async (c) => {
 
     // Inserir Utilizador
     const created = (await db(c.env).query(
-      `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE') RETURNING id, name, phone, store_id, status, status_reason`,
+      `INSERT INTO users (name, phone, password, province, municipality, address, store_id, store_type, status, terms_accepted_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDENTE', NOW()) RETURNING id, name, phone, store_id, status, status_reason`,
       [storeName || "Lojista", phone, await hashPassword(password, passwordIterations(c.env)), province || "", municipality || "", address || "", storeId, storeType]
     )) as any[];
 

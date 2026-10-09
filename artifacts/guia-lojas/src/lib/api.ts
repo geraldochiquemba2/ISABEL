@@ -202,6 +202,10 @@ export async function deleteProduct(id: string): Promise<void> {
 
 // POST /api/auth/register — Criar conta
 export async function registerLojista(data: any): Promise<any> {
+  // Barreira central: sem aceite expresso (Lei 22/11 art. 12) nem chama a API.
+  if (data?.acceptedTerms !== true) {
+    throw new Error("É obrigatório aceitar a Política de Privacidade e os Termos de Uso.");
+  }
   const res = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -116,6 +116,7 @@ import Proposito from "@/pages/Proposito";
 import Privacidade from "@/pages/Privacidade";
 import Sobre from "@/pages/Sobre";
 import Contacto from "@/pages/Contacto";
+import Termos from "@/pages/Termos";
 import OfflineBanner from "@/components/OfflineBanner";
 import { initPush } from "@/lib/push";
 
@@ -485,6 +486,7 @@ function Router() {
   if (basePath === "/privacidade") return <Privacidade />;
   if (basePath === "/sobre") return <Sobre />;
   if (basePath === "/contacto") return <Contacto />;
+  if (basePath === "/termos") return <Termos />;
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {

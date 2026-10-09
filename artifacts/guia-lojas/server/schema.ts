@@ -69,6 +69,7 @@ export async function initDB() {
         store_type    TEXT DEFAULT 'collection',
         status        TEXT DEFAULT 'PENDENTE',
         status_reason TEXT,
+        terms_accepted_at TIMESTAMPTZ,
         created_at    TIMESTAMPTZ DEFAULT NOW(),
         UNIQUE(phone, store_type)
       );
@@ -121,6 +122,7 @@ export async function initDB() {
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS store_id TEXT`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'PENDENTE'`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS status_reason TEXT`,
+      `ALTER TABLE users ADD COLUMN IF NOT EXISTS terms_accepted_at TIMESTAMPTZ`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS image_color TEXT DEFAULT '#f0f0f0'`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS image_urls TEXT[]`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS subcategory TEXT`,
