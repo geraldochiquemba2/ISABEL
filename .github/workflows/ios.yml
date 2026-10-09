@@ -186,6 +186,7 @@ jobs:
       # preencho APP_STORE_APP_ID nos secrets).
       - name: Publish to TestFlight
         if: env.HAS_APP_STORE_ID != ''
+        continue-on-error: true
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
