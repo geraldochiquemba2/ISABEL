@@ -102,7 +102,7 @@ async function checkExpired(env: Env) {
 export default {
   fetch: app.fetch,
   async scheduled(event: { cron: string }, env: Env) {
-    // Keep-alive (2min): só SELECT 1 para o Neon não hibernar.
+    // Keep-alive (30min): só SELECT 1 para o Neon não hiberar tanto.
     if (event.cron !== "0 * * * *") {
       try {
         await db(env).query("SELECT 1");
