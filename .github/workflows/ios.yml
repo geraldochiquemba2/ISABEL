@@ -129,5 +129,5 @@ jobs:
           app-store-connect publish \
             --path "${{ runner.temp }}/ipa/*.ipa" \
             --testflight \
-            --beta-build-localizations '[{"locale":"pt-PT","description":"YESOLA - guia de lojas e servicos de Angola.","whatsNew":"Primeira versao TestFlight."}]' \
+            --beta-build-localizations '[{"locale":"pt-PT","description":"YESOLA - guia de lojas e servicos de Angola.","whats_new":"Primeira versao TestFlight."}]' \
             --max-build-processing-wait 20
