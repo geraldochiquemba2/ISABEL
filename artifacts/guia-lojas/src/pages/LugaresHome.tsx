@@ -16,6 +16,36 @@ const KINDS = [
 
 const DEFAULT_CATS = ["Igrejas", "Saúde", "Segurança", "Educação", "Correios", "Administração"];
 
+// Se o utilizador chegou aqui com uma área ativa (ex. eletrónicos), mostra
+// um atalho de volta — /lugares é global e não troca de área, o que parecia
+// "ter sido atirado para as igrejas do nada".
+const AREA_NAMES: Record<string, string> = {
+  collection: "Collection",
+  beleza: "Beleza",
+  saude: "Saúde",
+  eventos: "Eventos",
+  weddings: "Casamentos",
+  "love-services": "Love Services",
+  entretenimento: "Entretenimento",
+  business: "Business",
+  imoveis: "Imóveis",
+  automoveis: "Automóveis",
+  casa: "Casa",
+  formacoes: "Formações",
+  infantil: "Infantil",
+  "tecnologia-electronicos": "Eletrónicos",
+  "alimentacao-restauracao": "Alimentação",
+  "turismo-lazer": "Turismo",
+  "desporto-fitness": "Desporto",
+  "empregos-oportunidades": "Empregos",
+  "agricultura-agronegocio": "Agricultura",
+  "influenciadores-criadores": "Influenciadores",
+  "transportes-logistica": "Transportes",
+  "servicos-profissionais": "Serviços",
+  bancos: "Bancos",
+  seguradoras: "Seguradoras",
+};
+
 const TRUST_BADGES = [
   { icon: <ShieldCheck size={18} />, label: "Informação verificada" },
   { icon: <BadgeCheck size={18} />, label: "Do mapa e da comunidade" },
@@ -83,6 +113,14 @@ export default function LugaresHome() {
   const [municipality, setMunicipality] = useState("");
   const [showProvinceModal, setShowProvinceModal] = useState(false);
   const [locationFilter, setLocationFilter] = useState("");
+  // Área ativa antes de entrar em Lugares (não muda ao navegar para aqui).
+  const [activeArea] = useState(() => {
+    try {
+      return localStorage.getItem("eliora-selected-store") || "";
+    } catch {
+      return "";
+    }
+  });
 
   const { data: places = [], isLoading } = useQuery({
     queryKey: ["places", q, kind, province, municipality],
@@ -145,6 +183,18 @@ export default function LugaresHome() {
             </div>
           )}
         </header>
+
+        {/* Atalho de volta à área ativa (ver AREA_NAMES acima) */}
+        {activeArea && activeArea !== "lugares" && (
+          <div className="px-5 pt-3">
+            <button
+              onClick={() => (window.location.href = "/")}
+              className="flex items-center gap-1.5 text-[12px] font-semibold text-[#A96F12] bg-white border border-[#E8CC91] rounded-full px-3.5 py-2"
+            >
+              <ArrowLeft size={14} /> Voltar a {AREA_NAMES[activeArea] || "minha área"}
+            </button>
+          </div>
+        )}
 
         {/* Pesquisa */}
         <section className="px-5 pt-4">

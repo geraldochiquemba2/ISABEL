@@ -286,16 +286,11 @@ function Router() {
   const [location, setLoc] = useLocation();
   const basePath = location.split("?")[0];
 
-  // Rotas globais: funcionam em qualquer vertical. Antes, /login, /busca etc.
-  // só existiam na collection e, com outra vertical ativa, o "Entrar" caía
-  // na página inicial em vez de ir para o login.
-  if (basePath === "/login") return <Login />;
-  if (basePath === "/busca") return <SearchPage />;
-  if (basePath === "/dashboard") return <Dashboard />;
-  if (basePath === "/carrinhos") return <VerCarrinhos />;
-  if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
-  if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
-  if (basePath === "/privacidade") return <Privacidade />;
+  // NOTA hooks: os useEffect/useRef abaixo correm EM TODAS as rotas, antes
+  // de qualquer early-return. Antes, /login, /busca etc. retornavam aqui
+  // (2 hooks) e "/" corria 6+ hooks — ao navegar entre elas o React lançava
+  // "Rendered fewer hooks than expected", desmontava tudo e o ecrã ficava
+  // BRANCO até ao refresh. Ordem de hooks tem de ser estável.
 
   useEffect(() => {
     // No Safari iOS, forçar 'manual' PARTE o restauro nativo (pré-paint) e o
@@ -439,6 +434,15 @@ function Router() {
       setSelectedStore(v);
     }
   }, [location, selectedStore]);
+  // Rotas globais: funcionam em qualquer vertical (ver nota hooks acima —
+  // este bloco vive DEPOIS de todos os hooks de propósito).
+  if (basePath === "/login") return <Login />;
+  if (basePath === "/busca") return <SearchPage />;
+  if (basePath === "/dashboard") return <Dashboard />;
+  if (basePath === "/carrinhos") return <VerCarrinhos />;
+  if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
+  if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
+  if (basePath === "/privacidade") return <Privacidade />;
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
