@@ -65,7 +65,7 @@ jobs:
           cd ios/App
           pod install --repo-update
 
-      - name: Fetch signing files (perfil App Store)
+      - name: Signing (cert + perfil App Store)
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
@@ -75,6 +75,8 @@ jobs:
           echo "${{ secrets.DISTRIBUTION_P12 }}" | base64 -d > "$RUNNER_TEMP/dist.p12"
           echo "${{ secrets.YESOLA_KEY }}" > "$RUNNER_TEMP/yesola.key"
           chmod 600 "$RUNNER_TEMP/dist.p12" "$RUNNER_TEMP/yesola.key"
+          # UM único keychain: o segundo `keychain initialize` apagava o
+          # certificado e o Archive falhava sem identidade de assinatura.
           keychain initialize
           keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-password "${{ secrets.P12_PASSWORD }}"
           app-store-connect fetch-signing-files "pt.yesola.app" \
@@ -82,13 +84,10 @@ jobs:
             --type IOS_APP_STORE \
             --certificate-key "@file:$RUNNER_TEMP/yesola.key" \
             --create
-
-      - name: Keychain + profiles
-        run: |
-          keychain initialize
-          keychain add-certificates
           cd ios/App
           xcode-project use-profiles
+          echo "--- perfis instalados ---"
+          ls "$HOME/Library/MobileDevice/Provisioning Profiles/" || true
 
       - name: Archive (assinatura manual via perfil)
         run: |
@@ -128,8 +127,11 @@ jobs:
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           pip3 install --break-system-packages codemagic-cli-tools
+          IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa | head -1)
+          echo "IPA=$IPA"
+          test -f "$IPA"
           app-store-connect publish \
-            --path "${{ runner.temp }}/ipa/*.ipa" \
+            --path "$IPA" \
             --testflight \
             --beta-build-localizations '[{"locale":"pt-PT","description":"YESOLA - guia de lojas e servicos de Angola.","whats_new":"Primeira versao TestFlight."}]' \
             --max-build-processing-wait 20
