@@ -119,6 +119,6 @@ jobs:
         run: |
           pip3 install --break-system-packages codemagic-cli-tools
           app-store-connect publish \
-            --path "${{ runner.temp }}/ipa" \
+            --path "${{ runner.temp }}/ipa/*.ipa" \
             --testflight \
             --max-build-processing-wait 20
