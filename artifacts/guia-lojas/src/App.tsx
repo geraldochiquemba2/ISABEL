@@ -436,6 +436,44 @@ function Router() {
       setSelectedStore(v);
     }
   }, [location, selectedStore]);
+  // Voltar do navegador até ao seletor: o seletor e a home da área partilham
+  // o URL "/", por isso o back não tinha para onde ir (só o "Trocar de loja"
+  // funcionava). Marca-se cada entrada do histórico (seletor vs vertical);
+  // ao recuar para uma entrada de seletor, limpa-se a seleção e mostra-se o
+  // seletor em vez da home da área.
+  useEffect(() => {
+    try {
+      const st = (window.history.state || {}) as any;
+      if (selectedStore) {
+        if (st.yesolaVertical !== selectedStore) {
+          window.history.replaceState({ ...(st || {}), yesolaVertical: selectedStore, yesolaSelector: false }, "");
+        }
+      } else if (window.location.pathname === "/" && !st.yesolaSelector) {
+        window.history.replaceState({ ...(st || {}), yesolaSelector: true }, "");
+      }
+    } catch {
+      /* histórico indisponível */
+    }
+  }, [location, selectedStore]);
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      const st = (e.state || {}) as any;
+      try {
+        if (st && st.yesolaSelector && window.location.pathname === "/") {
+          localStorage.removeItem("eliora-selected-store");
+          setSelectedStore(null);
+          window.scrollTo(0, 0);
+        } else if (st && st.yesolaVertical && window.location.pathname === "/") {
+          localStorage.setItem("eliora-selected-store", st.yesolaVertical);
+          setSelectedStore(st.yesolaVertical as StoreType);
+        }
+      } catch {
+        /* armazenamento indisponível */
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
   // Rotas globais: funcionam em qualquer vertical (ver nota hooks acima —
   // este bloco vive DEPOIS de todos os hooks de propósito).
   if (basePath === "/login") return <Login />;
@@ -452,9 +490,16 @@ function Router() {
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
     setSelectedStore(storeId as StoreType);
-    // reload() em vez de href="/": todos os chamadores já estão em "/",
-    // e href empilhava um "/" duplicado no histórico (o voltar do navegador
-    // tropeçava nele). reload não cria entrada nova.
+    try {
+      // Empilha a home da área como entrada própria, preservando atrás a
+      // entrada do seletor (marcada pelo efeito acima): o voltar do navegador
+      // recua então para o seletor em vez de sair do site.
+      window.history.pushState({ yesolaVertical: storeId, yesolaSelector: false }, "", "/");
+    } catch {
+      /* histórico indisponível */
+    }
+    // reload() em vez de href="/": href empilhava um "/" duplicado sem marca
+    // (o voltar do navegador tropeçava nele). reload não cria entrada nova.
     window.location.reload();
   };
 
