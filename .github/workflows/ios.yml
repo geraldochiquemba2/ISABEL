@@ -89,7 +89,9 @@ jobs:
           cd "$GITHUB_WORKSPACE/artifacts/guia-lojas"
           echo "--- perfis no workspace ---"
           ls *.mobileprovision ios/App/*.mobileprovision 2>/dev/null || true
-          echo "--- perfis instalados ---"
+          echo "--- perfis instalados (Xcode UserData) ---"
+          ls "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/" || true
+          echo "--- perfis instalados (legacy) ---"
           ls "$HOME/Library/MobileDevice/Provisioning Profiles/" || true
 
       - name: Archive (assinatura manual via perfil)
@@ -106,9 +108,13 @@ jobs:
         run: |
           python3 - <<'EOF'
           import glob, os, plistlib, shutil, subprocess, sys
-          prov_dir = os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles")
+          prov_legacy = os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles")
+          prov_new = os.path.expanduser("~/Library/Developer/Xcode/UserData/Provisioning Profiles")
           ws = os.environ.get("GITHUB_WORKSPACE", "")
-          patterns = [os.path.join(prov_dir, "*.mobileprovision")]
+          patterns = [
+              os.path.join(prov_new, "*.mobileprovision"),
+              os.path.join(prov_legacy, "*.mobileprovision"),
+          ]
           if ws:
               patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "*.mobileprovision"))
               patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "ios", "App", "*.mobileprovision"))
@@ -120,12 +126,14 @@ jobs:
                       seen.add(p)
                       profiles.append(p)
           print(f"Perfis encontrados: {len(profiles)}")
-          os.makedirs(prov_dir, exist_ok=True)
+          for d in (prov_new, prov_legacy):
+              os.makedirs(d, exist_ok=True)
           for p in profiles:
-              dest_p = os.path.join(prov_dir, os.path.basename(p))
-              if os.path.abspath(p) != os.path.abspath(dest_p):
-                  shutil.copy(p, dest_p)
-                  print(f"instalado: {os.path.basename(p)}")
+              for d in (prov_new, prov_legacy):
+                  dest_p = os.path.join(d, os.path.basename(p))
+                  if os.path.abspath(p) != os.path.abspath(dest_p):
+                      shutil.copy(p, dest_p)
+                      print(f"instalado: {os.path.basename(p)} -> {d}")
           bundle = "pt.yesola.app"
           team = "4ZQGZ9N775"
           chosen = None
