@@ -52,6 +52,9 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync ios
 
+      - name: Generate icons+splash (ferramenta oficial)
+        run: npx -y @capacitor/assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'
+
       - name: Install CocoaPods
         run: |
           cd ios/App
