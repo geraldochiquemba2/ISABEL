@@ -836,7 +836,11 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
       <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 backdrop-blur-md border-b border-[#E8CC91]/60">
 
-        <div className="flex items-center justify-center px-5 py-2.5">
+        <div className="flex items-center justify-between px-5 py-2.5">
+
+          <a href="/sobre" className="w-[86px] text-left text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
+            Sobre<br />nós
+          </a>
 
           <a href="/" className="flex items-center justify-center">
 
@@ -850,6 +854,10 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             loading="lazy" decoding="async" />
 
+          </a>
+
+          <a href="/contacto" className="w-[86px] text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
+            Fale<br />connosco
           </a>
 
         </div>

@@ -114,6 +114,8 @@ import NotFound from "@/pages/not-found";
 import ExploreCollection from "@/pages/ExploreCollection";
 import Proposito from "@/pages/Proposito";
 import Privacidade from "@/pages/Privacidade";
+import Sobre from "@/pages/Sobre";
+import Contacto from "@/pages/Contacto";
 import OfflineBanner from "@/components/OfflineBanner";
 import { initPush } from "@/lib/push";
 
@@ -443,6 +445,8 @@ function Router() {
   if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
   if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
   if (basePath === "/privacidade") return <Privacidade />;
+  if (basePath === "/sobre") return <Sobre />;
+  if (basePath === "/contacto") return <Contacto />;
   const isDashboard = location.startsWith("/dashboard") || location.startsWith("/login") || location === "/selector";
 
   const handleStoreSelect = (storeId: string) => {
