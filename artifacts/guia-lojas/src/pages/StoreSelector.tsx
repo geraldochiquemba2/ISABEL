@@ -695,19 +695,11 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
         <div className="category-grid">
 
-          {areas.map((area, i) => (
+          {areas.map((area) => (
 
             <motion.button
 
               key={area.id}
-
-              initial={{ opacity: 0, y: 14 }}
-
-              whileInView={{ opacity: 1, y: 0 }}
-
-              viewport={{ once: true, margin: "-30px" }}
-
-              transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.4) }}
 
               whileHover={{ scale: 1.03 }}
 
@@ -719,14 +711,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
             >
 
-              <motion.span
-                className="flex items-center justify-center w-12 h-12"
-                whileHover={{ rotate: [0, -12, 10, -6, 0], scale: 1.18 }}
-                whileTap={{ rotate: [0, -12, 10, -6, 0], scale: 1.18 }}
-                transition={{ duration: 0.45 }}
-              >
-                {categoryIcons[area.id]}
-              </motion.span>
+              <div className="flex items-center justify-center w-12 h-12">{categoryIcons[area.id]}</div>
 
               <span className="text-[10px] font-medium text-[#111111] text-center leading-tight">{area.name}</span>
 
