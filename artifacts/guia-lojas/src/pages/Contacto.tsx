@@ -1,9 +1,8 @@
 import { Link } from "wouter";
 import { ArrowLeft, MessageCircle, Clock } from "lucide-react";
 
-// Número oficial de atendimento (WhatsApp). Preencher quando a Isabel enviar.
-// Enquanto estiver vazio, a página mostra "em breve" em vez de botão partido.
-const CONTACT_WHATSAPP = "";
+// Número oficial de atendimento (WhatsApp, formato internacional sem +).
+const CONTACT_WHATSAPP = "244922001778";
 
 export default function Contacto() {
   const waLink = CONTACT_WHATSAPP
