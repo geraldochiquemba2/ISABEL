@@ -20,7 +20,7 @@ const EQUIPA = [
   { nome: "Leonel António", zona: "Huambo · Huambo", foto: "/equipa/leonel-huambo.jpeg" },
   { nome: "Maria de Fátima", zona: "Lobito · Benguela", foto: "/equipa/maria-de-fatima.jpeg" },
   { nome: "Marlene Cavango", zona: "Kilamba · Luanda", foto: "/equipa/marlene-cavango.jpeg" },
-  { nome: "Gídia Goreth", zona: "Lubango · Huíla", foto: "/equipa/gidia-lubango.jpeg" },
+  { nome: "Gídia de Jesus", zona: "Lubango · Huíla", foto: "/equipa/gidia-lubango.jpeg" },
 ];
 
 const DISTINGUE = [
