@@ -5,7 +5,16 @@ import { goBackTo } from "@/lib/storeBack";
 // Página "Sobre nós" — texto oficial da Isabel (doc: Yesola_Sobre_Nos_Com_Proposito).
 // FOTOS: os blocos de fotografia são reservados (dourado/bege) até chegarem as
 // fotografias reais e autorizadas — nunca usar fotos genéricas de pessoas.
-const GALERIA = ["Kalandula", "Tundavala", "Namibe", "Morro do Moco", "Pedras Negras", "Serra da Leba"];
+// Galeria: fotografias reais de Angola (Wikimedia Commons, licença livre).
+// Serão substituídas pelas fotografias oficiais e autorizadas quando chegarem.
+const GALERIA = [
+  { nome: "Kalandula", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Kalandula%20waterfalls%20of%20the%20Lucala-River%20in%20Malange%2C%20Angola.JPG?width=800" },
+  { nome: "Tundavala", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Tundavala%20Gap.jpg?width=800" },
+  { nome: "Namibe", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Mini%20oasis%20in%20the%20namibe%20desert%2C%20Angola.JPG?width=800" },
+  { nome: "Morro do Moco", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Morro%20do%20Moco%2C%20Huambo%2C%20Angola.jpg?width=800" },
+  { nome: "Pedras Negras", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Pungo%20Andongo%2C%20Malange%2C%20Angola.JPG?width=800" },
+  { nome: "Serra da Leba", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Serra%20da%20Leba%20Road%2C%20Angola.jpg?width=800" },
+];
 
 const EQUIPA = [
   { nome: "Elisa Wandi", zona: "Ingombotas" },
@@ -88,10 +97,15 @@ export default function Sobre() {
         <section className="py-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
             {GALERIA.map((g) => (
-              <FotoReservada key={g} legenda={g} />
+              <div key={g.nome} className="relative rounded-2xl overflow-hidden min-h-[120px] bg-[#F5E7C6]">
+                <img src={g.img} alt={g.nome} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                <span className="absolute bottom-2 left-2 text-[10px] font-bold text-white bg-black/55 px-2 py-0.5 rounded-full">
+                  {g.nome}
+                </span>
+              </div>
             ))}
           </div>
-          <p className="text-[10px] text-[#9CA3AF] mt-2 text-center">Galeria de referência: fotografias reais e autorizadas de Angola.</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-2 text-center">Fotos reais de Angola (Wikimedia Commons, licença livre) — substituíveis pelas oficiais.</p>
         </section>
 
         {/* Quem somos */}
