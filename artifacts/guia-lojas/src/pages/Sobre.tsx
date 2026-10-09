@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, MapPin, Heart, Users, ShieldCheck, MessageCircle, LayoutGrid, Target, Eye, Gem } from "lucide-react";
+import { ArrowLeft, MapPin, Heart, ShieldCheck, MessageCircle, LayoutGrid, Target, Eye, Gem, X } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
 
 // Página "Sobre nós" — texto oficial da Isabel (doc: Yesola_Sobre_Nos_Com_Proposito).
@@ -17,10 +17,10 @@ const GALERIA = [
 ];
 
 const EQUIPA = [
-  { nome: "Elisa Wandi", zona: "Ingombotas" },
-  { nome: "Ana Dumbo", zona: "Benguela" },
-  { nome: "Leonel António", zona: "Huambo" },
-  { nome: "Gládia Goreth", zona: "Lubango" },
+  { nome: "Leonel António", zona: "Huambo · Huambo", foto: "/equipa/leonel-huambo.jpeg" },
+  { nome: "Maria de Fátima", zona: "Lobito · Benguela", foto: "/equipa/maria-de-fatima.jpeg" },
+  { nome: "Marlene Cavango", zona: "Kilamba · Luanda", foto: "/equipa/marlene-cavango.jpeg" },
+  { nome: "Gídia Goreth", zona: "Lubango · Huíla", foto: "/equipa/gidia-lubango.jpeg" },
 ];
 
 const DISTINGUE = [
@@ -74,6 +74,8 @@ function FotoReservada({ legenda, alta }: { legenda: string; alta?: boolean }) {
 export default function Sobre() {
   const [aba, setAba] = useState("missao");
   const mvv = MVV.find((m) => m.id === aba)!;
+  // Foto ampliada (tocar numa foto da equipa/fundadora abre em ponto grande).
+  const [fotoAberta, setFotoAberta] = useState<null | { src: string; nome: string }>(null);
 
   // Barra de estado do telemóvel (hora, bateria, rede) com o creme da página.
   useEffect(() => {
@@ -170,7 +172,14 @@ export default function Sobre() {
         <section className="py-4">
           <Titulo>A liderança</Titulo>
           <div className="mt-3 rounded-2xl bg-white border border-[#E8CC91] overflow-hidden">
-            <FotoReservada legenda="Isabel Taka · Fundadora" alta />
+            <button
+              type="button"
+              className="w-full cursor-zoom-in"
+              onClick={() => setFotoAberta({ src: "/equipa/isabel-taka.jpeg", nome: "Isabel Taka · Fundadora" })}
+              aria-label="Ampliar foto de Isabel Taka"
+            >
+              <img src="/equipa/isabel-taka.jpeg" alt="Isabel Taka · Fundadora" className="w-full aspect-[4/5] object-cover object-top" loading="lazy" decoding="async" />
+            </button>
             <div className="p-5">
               <h3 className="text-[16px] font-bold">Isabel Taka <span className="text-[#A96F12] font-semibold">| Fundadora</span></h3>
               <p className="text-[13px] text-[#44403c] mt-2 leading-7">
@@ -194,16 +203,22 @@ export default function Sobre() {
           </p>
           <div className="grid grid-cols-2 gap-2.5 mt-3">
             {EQUIPA.map((m) => (
-              <div key={m.nome} className="rounded-2xl bg-white border border-[#E8CC91] p-3 text-center">
-                <div className="w-12 h-12 mx-auto rounded-full bg-[#FFF4DC] border border-[#E8CC91] flex items-center justify-center">
-                  <Users size={20} className="text-[#A96F12]" />
+              <div key={m.nome} className="rounded-2xl bg-white border border-[#E8CC91] overflow-hidden">
+                <button
+                  type="button"
+                  className="w-full cursor-zoom-in"
+                  onClick={() => setFotoAberta({ src: m.foto, nome: `${m.nome} · ${m.zona}` })}
+                  aria-label={`Ampliar foto de ${m.nome}`}
+                >
+                  <img src={m.foto} alt={m.nome} className="w-full aspect-[3/4] object-cover object-top" loading="lazy" decoding="async" />
+                </button>
+                <div className="p-2.5 text-center">
+                  <p className="text-[12px] font-bold leading-tight">{m.nome}</p>
+                  <p className="text-[10px] text-[#A96F12] font-semibold mt-0.5">{m.zona}</p>
                 </div>
-                <p className="text-[13px] font-bold mt-2">{m.nome}</p>
-                <p className="text-[11px] text-[#A96F12] font-semibold">{m.zona}</p>
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-[#9CA3AF] mt-2 text-center">Nomes e composição da equipa sujeitos a confirmação antes da publicação.</p>
         </section>
 
         {/* Propósito social */}
@@ -286,6 +301,30 @@ export default function Sobre() {
           </div>
         </section>
       </div>
+
+      {/* Foto em ponto grande */}
+      {fotoAberta && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-5"
+          onClick={() => setFotoAberta(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setFotoAberta(null)}
+            aria-label="Fechar"
+            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+          >
+            <X size={22} />
+          </button>
+          <img
+            src={fotoAberta.src}
+            alt={fotoAberta.nome}
+            className="max-h-[80dvh] max-w-full object-contain rounded-xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <p className="text-white text-sm font-semibold mt-4">{fotoAberta.nome}</p>
+        </div>
+      )}
     </main>
   );
 }
