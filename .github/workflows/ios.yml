@@ -102,10 +102,12 @@ jobs:
 
       - name: Export IPA
         run: |
+          echo "ExportOptions.plist do repo:"
+          cat "$GITHUB_WORKSPACE/ExportOptions.plist"
           cd ios/App
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -exportOptionsPlist /Users/runner/export_options.plist \
+            -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist" \
             -exportPath "$RUNNER_TEMP/ipa"
 
       - name: Upload IPA
