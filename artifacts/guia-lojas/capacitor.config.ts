@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "pt.yesola.app",
+  appId: "pt.yesola.appstore",
   appName: "YESOLA",
   webDir: "dist/public",
   server: {
