@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
 import {
   HeartHandshake, Landmark, GraduationCap,
-  Building2, Baby, Car, ChevronRight, ChevronDown, Search, Sparkles,
+  Building2, Baby, Car, ChevronRight, ChevronDown, Search,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
   UtensilsCrossed, Plane, Dumbbell, Briefcase,
-  Truck, MapPin, Church, HeartPulse, Shirt, PartyPopper, Gem, Clapperboard,
-  Wrench, TrendingUp, Cpu, Sofa, Tractor, Camera, Umbrella,
+  Truck, Church, HeartPulse, Shirt, PartyPopper, Gem, Clapperboard,
+  Wrench, TrendingUp, Cpu, Sofa, Tractor, Camera, Umbrella, Scissors,
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
 
@@ -42,7 +42,7 @@ const areas = [
     description: "Cabelo, unhas, maquiagem, skincare e muito mais. Encontre os melhores profissionais de beleza em Angola.",
     image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=600&fit=crop&auto=format&q=80",
     gradient: "from-[#9A7D60]/80 to-[#9A7209]/80",
-    icon: <Sparkles size={24} className="text-white" />,
+    icon: <Scissors size={24} className="text-white" />,
     accent: "#9A7D60",
   },
   {
@@ -264,7 +264,7 @@ const areas = [
 const categoryIcons: Record<string, React.ReactNode> = {
   lugares: <Church size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   saude: <HeartPulse size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
-  beleza: <Sparkles size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
+  beleza: <Scissors size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   collection: <Shirt size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   eventos: <PartyPopper size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
   weddings: <Gem size={36} className="text-[#A96F12]" strokeWidth={1.5} />,
