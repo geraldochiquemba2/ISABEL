@@ -198,5 +198,6 @@ jobs:
           app-store-connect publish \
             --path "$IPA" \
             --testflight \
+            --expire-build-submitted-for-review \
             --beta-build-localizations '[{"locale":"pt-PT","description":"YESOLA - guia de lojas e servicos de Angola.","whats_new":"Primeira versao TestFlight."}]' \
             --max-build-processing-wait 20
