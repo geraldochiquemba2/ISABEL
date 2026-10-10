@@ -1,4 +1,3 @@
-import { Capacitor } from "@capacitor/core";
 import { isNativeApp } from "@/lib/nativePhoto";
 
 let started = false;
@@ -10,7 +9,6 @@ export async function initStatusBar(): Promise<void> {
   started = true;
   try {
     if (!isNativeApp()) return;
-    if (!Capacitor.isPluginAvailable("StatusBar")) return;
     const { StatusBar } = await import("@capacitor/status-bar");
     try {
       await StatusBar.setOverlaysWebView({ overlay: false });
@@ -35,10 +33,10 @@ function isLight(hex: string): boolean {
 
 // Muda a cor da status bar NATIVA (hora/bateria/rede) em tempo real.
 // Chame sempre que mudar de área/loja. Na web não faz nada.
+// NOTA: importa o plugin primeiro — isPluginAvailable dá falso sem o import.
 export async function setNativeStatusColor(color: string): Promise<void> {
   try {
     if (!isNativeApp()) return;
-    if (!Capacitor.isPluginAvailable("StatusBar")) return;
     const { StatusBar, Style } = await import("@capacitor/status-bar");
     try {
       await StatusBar.setBackgroundColor({ color });
