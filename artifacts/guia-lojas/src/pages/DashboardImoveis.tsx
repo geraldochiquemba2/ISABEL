@@ -5,6 +5,7 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -13,12 +14,12 @@ import { getAreaCategories } from "@/data/areaCategories";
 import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
 import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
-import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, RefreshCw, Menu, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
 const inputCls = "w-full border border-[#A7B3C5] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#A7B3C5] outline-none focus:border-[#0B2D56] focus:ring-2 focus:ring-[#0B2D56]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#A7B3C5] mb-1.5";
@@ -235,6 +236,7 @@ export default function DashboardImoveis() {
         { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
         { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
       ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#F4EBD7]"><p className="text-sm text-[#A7B3C5]">Carregando...</p></div>;
@@ -294,6 +296,7 @@ export default function DashboardImoveis() {
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
+          {section === "conta" && <ContaSection />}
         </main>
       </div>
 

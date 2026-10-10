@@ -5,6 +5,7 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -14,11 +15,11 @@ import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories"
 import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
 const inputCls = "w-full border border-[#E9D9B6] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#77736D] outline-none focus:border-[#D8B532] focus:ring-2 focus:ring-[#D8B532]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#77736D] mb-1.5";
@@ -279,6 +280,7 @@ export default function DashboardWeddings() {
     { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
     { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
     { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
   ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#FBF7EC]"><p className="text-sm text-[#77736D]">Carregando...</p></div>;
@@ -374,6 +376,7 @@ export default function DashboardWeddings() {
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
+          {section === "conta" && <ContaSection />}
         </main>
       </div>
 

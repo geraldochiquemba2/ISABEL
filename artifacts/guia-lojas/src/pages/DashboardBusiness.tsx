@@ -5,9 +5,10 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -18,7 +19,7 @@ import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 import { motion, AnimatePresence } from "framer-motion";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
 const inputCls = "w-full border border-[#E8F2EE] bg-white py-3 px-4 text-sm text-[#171717] placeholder:text-[#6F7780] outline-none focus:border-[#075342] focus:ring-2 focus:ring-[#075342]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#6F7780] mb-1.5";
@@ -238,6 +239,7 @@ export default function DashboardBusiness() {
         { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
         { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
       ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#E8F2EE]"><p className="text-sm text-[#6F7780]">Carregando...</p></div>;
@@ -297,6 +299,7 @@ export default function DashboardBusiness() {
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
+          {section === "conta" && <ContaSection />}
         </main>
       </div>
 

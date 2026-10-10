@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Ban, Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
   Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw, MapPin, Navigation,
-} from "lucide-react";
+, UserRound } from "lucide-react";
 import {
   fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct,
   changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword, updateStoreLocation,
@@ -15,6 +15,7 @@ import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import { PageTransition } from "@/components/PageTransition";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
@@ -96,7 +97,7 @@ const LOVE_SERVICE_GROUPS_META = [
   },
 ];
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5";
 const inputCls = "w-full border border-[#F7E9EB] bg-white py-2.5 px-4 text-sm text-[#171416] placeholder:text-[#6F696B] outline-none focus:border-[#A71936] focus:ring-2 focus:ring-[#A71936]/10 transition-all rounded-xl";
@@ -738,6 +739,7 @@ export default function DashboardLove() {
       { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
       { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
       { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
     ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#F7E9EB]"><p className="text-sm text-[#6F696B]">Carregando...</p></div>;
@@ -841,6 +843,7 @@ export default function DashboardLove() {
             </div>
           )}
 
+          {section === "conta" && <ContaSection />}
           {section === "admin" && <AdminPanel storeType="love-services" accentColor="#A71936" />}
         </div>
       </main>

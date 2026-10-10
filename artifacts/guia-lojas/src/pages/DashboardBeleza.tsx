@@ -5,9 +5,10 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
-import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, Menu, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminPanel from "@/components/AdminPanel";
@@ -18,7 +19,7 @@ import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories"
 import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
 const inputCls = "w-full border border-[#EAD9D5] bg-white py-3 px-4 text-sm text-[#292727] placeholder:text-[#697482] outline-none focus:border-[#7A4549] focus:ring-2 focus:ring-[#7A4549]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#697482] mb-1.5";
@@ -237,6 +238,7 @@ export default function DashboardBeleza() {
       { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
       { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
       { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
     ]),
   ];
 
@@ -297,6 +299,7 @@ export default function DashboardBeleza() {
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}
           {section === "produtos" && store && <ProdutosSection store={store} />}
           {section === "contactos" && store && <ContactosSection store={store} />}
+          {section === "conta" && <ContaSection />}
         </main>
       </div>
 

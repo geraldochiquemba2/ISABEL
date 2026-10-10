@@ -5,6 +5,7 @@ import { fetchStoreById, updateStore, createProduct, deleteProduct, updateProduc
 import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
+import ContaSection from "@/components/ContaSection";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -13,12 +14,12 @@ import { getAreaCategories } from "@/data/areaCategories";
 import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories";
 import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
-import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image, MapPin, Navigation } from "lucide-react";
+import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, ShieldAlert, Phone, RefreshCw, Menu, Image, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminPanel from "@/components/AdminPanel";
 
-type Section = "overview" | "loja" | "produtos" | "contactos" | "admin" | "password-reset";
+type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin" | "password-reset";
 
 const inputCls = "w-full border border-[#EEF3F4] bg-white py-3 px-4 text-sm text-[#175A61] placeholder:text-[#68757C] outline-none focus:border-[#1E737B] focus:ring-2 focus:ring-[#1E737B]/10 transition-all rounded-xl";
 const labelCls = "block text-[10px] font-semibold uppercase tracking-widest text-[#68757C] mb-1.5";
@@ -236,6 +237,7 @@ export default function DashboardFormacoes() {
         { id: "loja" as Section, label: "Minha Loja", icon: <Store size={15} /> },
         { id: "produtos" as Section, label: "Serviços", icon: <Package size={15} /> },
         { id: "contactos" as Section, label: "Contactos", icon: <MessageCircle size={15} /> },
+      { id: "conta" as Section, label: "Conta", icon: <UserRound size={15} /> },
       ];
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8]"><p className="text-sm text-[#68757C]">Carregando...</p></div>;
@@ -352,6 +354,7 @@ export default function DashboardFormacoes() {
           )}
 
           {/* Admin panel */}
+          {section === "conta" && <ContaSection />}
           {section === "admin" && <AdminPanel storeType="formacoes" accentColor="#1E737B" />}
 
           {/* Store owner sections */}
