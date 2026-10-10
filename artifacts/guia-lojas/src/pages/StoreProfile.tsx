@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban, Map as MapIcon } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -301,12 +301,13 @@ export default function StoreProfile() {
         <button
           data-testid="button-back"
           onClick={handleBack}
-          className={`absolute top-4 left-4 w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} flex items-center justify-center transition-colors backdrop-blur-sm z-20`}
+          className={`fixed left-4 w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} flex items-center justify-center transition-colors backdrop-blur-sm z-20`}
+          style={{ top: "calc(1rem + env(safe-area-inset-top))" }}
         >
           <ArrowLeft size={16} />
         </button>
 
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+        <div className="fixed right-4 flex items-center gap-2 z-20" style={{ top: "calc(1rem + env(safe-area-inset-top))" }}>
           <button
             onClick={async () => {
               const shareData = {
@@ -592,7 +593,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
                     style={{ backgroundColor: "#4285F4" }}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="Google Maps" className="w-6 h-6" loading="lazy" decoding="async" />
+                    <MapPin size={22} className="text-white" />
                     <span>Google Maps</span>
                   </button>
 
@@ -607,7 +608,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium text-white shadow-sm"
                     style={{ backgroundColor: "#33CCFF" }}
                   >
-                    <img src="https://img.icons8.com/color/96/waze.png" alt="Waze" className="w-6 h-6" loading="lazy" decoding="async" />
+                    <Navigation size={22} className="text-white" />
                     <span>Waze</span>
                   </button>
 
@@ -622,7 +623,7 @@ export default function StoreProfile() {
                     className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl transition-colors text-sm font-medium shadow-sm"
                     style={{ backgroundColor: "#e8e8e8", color: "#333" }}
                   >
-                    <img src="https://i.pinimg.com/originals/8a/61/01/8a6101fe4a7acc2ce31fad7336966c60.png" alt="Apple Maps" className="w-6 h-6" loading="lazy" decoding="async" />
+                    <MapIcon size={22} className="text-white" />
                     <span>Apple Maps</span>
                   </button>
                 </div>
@@ -930,7 +931,8 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
             {/* Close button */}
             <button
               onClick={() => setLightboxIndex(null)}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors p-2.5 z-50 bg-white/10 rounded-full"
+              className="absolute right-4 text-white hover:text-gray-300 transition-colors p-2.5 z-50 bg-white/10 rounded-full"
+              style={{ top: "calc(1rem + env(safe-area-inset-top))" }}
             >
               <X size={20} />
             </button>
@@ -1238,7 +1240,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
                 onClick={() => { setLightboxIndex(i); setLightboxPhotoIndex(0); }}
               >
                 {pImages.length > 0 ? (
-                  <img src={pImages[0]} alt={product.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={pImages[0]} alt={product.name} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.imageColor }}>
                     <ShoppingCart size={28} className="text-gray-300" />
@@ -1282,7 +1284,8 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
           >
             <button
               onClick={() => setLightboxIndex(null)}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors p-2.5 z-50 bg-white/10 rounded-full"
+              className="absolute right-4 text-white hover:text-gray-300 transition-colors p-2.5 z-50 bg-white/10 rounded-full"
+              style={{ top: "calc(1rem + env(safe-area-inset-top))" }}
             >
               <X size={20} />
             </button>

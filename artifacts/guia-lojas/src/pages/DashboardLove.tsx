@@ -800,7 +800,7 @@ export default function DashboardLove() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 min-h-screen overflow-y-auto">
+      <main className="flex-1 min-h-screen overflow-y-auto pt-[calc(66px+env(safe-area-inset-top))] md:pt-0">
         <div className="max-w-4xl mx-auto px-6 py-10 md:px-12">
           {section === "overview" && !isAdmin && store && (
             <div className="space-y-6">

@@ -290,7 +290,7 @@ export default function DashboardBancos() {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
+        <main className="flex-1 p-4 pt-[calc(4rem+env(safe-area-inset-top))] md:p-8 md:pt-8 overflow-y-auto">
           {section === "overview" && !isAdmin && store && <OverviewSection store={store} />}
           {section === "admin" && <AdminPanel storeType="bancos" accentColor="#1E40AF" />}
           {section === "loja" && store && <LojaSection store={store} isDirty={isDirty} setDirty={setIsDirty} saveFnRef={saveFnRef} />}

@@ -1,4 +1,33 @@
 import { Store, Product } from "@/data/mock";
+import { z } from "zod";
+
+// Mensagens de validação em português (os formulários de registo/login usam
+// este módulo em todas as verticais, por isso o mapa global cobre tudo).
+// Mensagens personalizadas passadas nos schemas têm prioridade sobre este mapa.
+z.setErrorMap((issue, ctx) => {
+  if (issue.code === "invalid_type") {
+    if ((issue as any).received === "undefined") return { message: "Campo obrigatório" };
+    return { message: "Valor inválido" };
+  }
+  if (issue.code === "too_small") {
+    const t = (issue as any).type;
+    if (t === "string") return { message: `Mínimo de ${(issue as any).minimum} caracteres` };
+    if (t === "array") return { message: "Selecione pelo menos 1 opção" };
+    if (t === "number") return { message: `Valor mínimo: ${(issue as any).minimum}` };
+  }
+  if (issue.code === "too_big") {
+    const t = (issue as any).type;
+    if (t === "string") return { message: `Máximo de ${(issue as any).maximum} caracteres` };
+    if (t === "array") return { message: `Máximo de ${(issue as any).maximum} opções` };
+  }
+  if (issue.code === "invalid_string") {
+    if ((issue as any).validation === "regex") return { message: "Formato inválido" };
+    if ((issue as any).validation === "email") return { message: "E-mail inválido" };
+    return { message: "Valor inválido" };
+  }
+  if (issue.code === "custom") return { message: ctx.defaultError };
+  return { message: ctx.defaultError };
+});
 
 // CATEGORIES
 export async function getCategories(storeType?: string) {

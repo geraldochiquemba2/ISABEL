@@ -324,7 +324,7 @@ export default function DashboardFormacoes() {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 overflow-y-auto">
+        <main className="flex-1 p-4 pt-[calc(4rem+env(safe-area-inset-top))] md:p-8 md:pt-8 overflow-y-auto">
           {showChangePwd && (
             <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
               <div className="bg-white rounded-2xl p-6 max-w-md w-full space-y-4">

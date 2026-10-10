@@ -255,3 +255,14 @@ body.drag-scrolling, body.drag-scrolling * { user-select: none !important; curso
 .store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 @media (min-width: 768px) { .store-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .store-grid > * { width: 100% !important; flex-shrink: 1 !important; }
+
+/* iPhone com notch/Dynamic Island (app nativa): barras fixas respeitam a
+   safe-area para o conteúdo não passar por baixo da hora/bateria/rede. */
+.pt-safe { padding-top: env(safe-area-inset-top); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+@supports (padding-top: env(safe-area-inset-top)) {
+  header.sticky, header.fixed, nav.sticky,
+  div.fixed.top-0, div.sticky.top-0 {
+    padding-top: env(safe-area-inset-top);
+  }
+}
