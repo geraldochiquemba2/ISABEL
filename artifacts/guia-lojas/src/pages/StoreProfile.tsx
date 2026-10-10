@@ -1027,14 +1027,14 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                 <p className="text-xs text-white/70 mt-1 leading-relaxed max-w-xs">{filtered[lightboxIndex].description}</p>
               )}
               <p className="text-sm font-semibold text-emerald-400 mt-1">
-                {filtered[lightboxIndex].price > 0 ? `${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Gratuito"}
+                {filtered[lightboxIndex].price > 0 ? `${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Preço sob consulta"}
               </p>
               
               <a
                 href={`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(
                   `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
                   `Produto: ${filtered[lightboxIndex].name}\n` +
-                  `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}`
+                  `${filtered[lightboxIndex].price > 0 ? `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Preço sob consulta"}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1070,7 +1070,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
   const whatsappMessage = encodeURIComponent(
     `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
     `Produto: ${product.name}\n` +
-    `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(product.price)}`
+    `${product.price > 0 ? `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(product.price)}` : "Preço sob consulta"}`
   );
 
   const whatsappUrl = `https://wa.me/244${storeWhatsapp}?text=${whatsappMessage}`;
@@ -1127,7 +1127,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
               {product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} {formatPrice(product.price)}
             </p>
           ) : (
-            <p className="text-xs text-emerald-600 font-medium">Gratuito</p>
+            <p className="text-xs text-amber-700 font-medium">Preço sob consulta</p>
           )}
           {/* Category + subcategory badges */}
           {(product.category || product.subcategory) && (

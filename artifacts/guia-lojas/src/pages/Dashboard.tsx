@@ -2147,7 +2147,7 @@ function ProductRow({ product, onDelete, onUpdate, store }: { product: Product; 
             <p className="text-sm font-medium text-foreground">{product.name}</p>
             <div className="flex items-center gap-2 mt-0.5 flex-wrap">
               <p className="text-xs text-muted-foreground">
-                {product.price > 0 ? `${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${product.price.toFixed(2).replace(".", ",")}` : "Gratuito"}
+                {product.price > 0 ? `${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${product.price.toFixed(2).replace(".", ",")}` : "Preço sob consulta"}
               </p>
               {product.category && (
                 <>
