@@ -338,6 +338,20 @@ function Router() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
+  // Ao voltar do fundo, repinta a status bar nativa com a cor atual
+  // (o iOS repõe o dourado da configuração ao reabrir a vista).
+  useEffect(() => {
+    const onShow = () => {
+      try {
+        if (!document.hidden) {
+          import("@/lib/statusColor").then((m) => m.reapplyStatusColor()).catch(() => {});
+        }
+      } catch { /* ignora */ }
+    };
+    document.addEventListener("visibilitychange", onShow);
+    return () => document.removeEventListener("visibilitychange", onShow);
+  }, []);
+
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
   // Refresh (só o 1º carregamento) vai sempre ao topo. Guarda por vertical +
   // URL em sessionStorage — sobrevive aos reloads (os cards navegam com
