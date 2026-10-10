@@ -70,8 +70,9 @@ export function setStatusColor(color: string) {
 
 // Cor pela rota. Devolve null em /loja/* (a página da loja define pela loja).
 export function colorForPath(pathname: string): string | null {
-  const p = pathname.toLowerCase();
+  const p = pathname.toLowerCase().split("?")[0];
   if (p.startsWith("/loja/")) return null;
+  if (p === "/" || p === "") return "#FBF7EC"; // inicial: cor da página
   for (const k of PATH_KEYS) {
     if (p.includes(k)) return VERTICAL_COLORS[PATH_TO_TYPE[k]] || GOLD;
   }
