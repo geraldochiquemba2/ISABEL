@@ -18,6 +18,7 @@ import { weddingGroupsRouter } from "./routes/wedding-groups";
 import { weddingsPageContentRouter } from "./routes/weddings-page-content";
 import { placesRouter } from "./routes/places";
 import { pushRouter } from "./routes/push";
+import { moderationRouter } from "./routes/moderation";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -74,6 +75,7 @@ app.route("/api/wedding-groups", weddingGroupsRouter);
 app.route("/api/weddings-page-content", weddingsPageContentRouter);
 app.route("/api/places", placesRouter);
 app.route("/api/push", pushRouter);
+app.route("/api/moderation", moderationRouter);
 
 app.notFound((c) =>
   c.req.path.startsWith("/api/")

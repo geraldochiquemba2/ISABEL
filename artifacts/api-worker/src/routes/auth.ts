@@ -626,3 +626,35 @@ authRouter.post("/request-password-reset", async (c) => {
     return c.json({ error: "Erro ao solicitar redefinição de senha." }, 500);
   }
 });
+
+// DELETE /api/auth/account — Eliminar a própria conta e a sua loja (Lei 22/11 + App Store 5.1.1).
+authRouter.delete("/account", async (c) => {
+  try {
+    const { phone: rawPhone, password, storeType } = await c.req.json();
+    const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
+    const store_type = storeType || "collection";
+    if (!phone || !password) {
+      return c.json({ error: "Telefone e senha são obrigatórios." }, 400);
+    }
+    const rows = (await db(c.env).query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, store_type])) as any[];
+    if (!rows.length) {
+      return c.json({ error: "Conta não encontrada." }, 404);
+    }
+    const user = rows[0];
+    const ok = await verifyPassword(user.password, password);
+    if (!ok) {
+      return c.json({ error: "Senha incorreta." }, 400);
+    }
+    if (user.store_id) {
+      await db(c.env).query("DELETE FROM products WHERE store_id=$1", [user.store_id]);
+      await db(c.env).query("DELETE FROM stores WHERE id=$1", [user.store_id]);
+    }
+    await db(c.env).query("DELETE FROM blocks WHERE phone=$1 AND store_type=$2", [phone, store_type]);
+    await db(c.env).query("DELETE FROM password_reset_requests WHERE phone=$1 AND store_type=$2", [phone, store_type]);
+    await db(c.env).query("DELETE FROM users WHERE id=$1", [user.id]);
+    return c.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return c.json({ error: "Erro ao eliminar conta." }, 500);
+  }
+});
