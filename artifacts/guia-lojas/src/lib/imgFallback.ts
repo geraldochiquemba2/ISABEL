@@ -38,6 +38,22 @@ function fallbackForPath(): string {
   return fbUrl(DEFAULT_FB);
 }
 
+function beacon(url: string, stage: string) {
+  try {
+    const body = JSON.stringify({ url: url.slice(0, 300), stage });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/api/moderation/imgfail", body);
+    } else {
+      fetch("/api/moderation/imgfail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch { /* ignora */ }
+}
+
 let started = false;
 
 export function initImgFallback(): void {
@@ -51,10 +67,12 @@ export function initImgFallback(): void {
         if (!t || t.tagName !== "IMG") return;
         const img = t as HTMLImageElement;
         if (img.dataset.fbDone) {
+          beacon(img.src, "fallback-failed");
           img.style.display = "none";
           return;
         }
         img.dataset.fbDone = "1";
+        beacon(img.src, "original-failed");
         const fb = fallbackForPath();
         if (img.src !== fb) img.src = fb;
         else img.style.display = "none";

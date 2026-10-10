@@ -120,6 +120,25 @@ moderationRouter.delete("/blocks", async (c) => {
   }
 });
 
+// POST /api/moderation/imgfail — Telemetria de imagens que falham no cliente.
+// Corpo: { url, stage } — guarda em reports para diagnóstico.
+moderationRouter.post("/imgfail", async (c) => {
+  try {
+    const { url, stage } = await c.req.json();
+    await withTables(c.env, () =>
+      db(c.env).query(
+        `INSERT INTO reports (reporter_phone, reporter_store_type, target_type, target_id, reason)
+         VALUES ('', '', 'imgfail', $1, $2)`,
+        [String(url || "").slice(0, 300), String(stage || "").slice(0, 50)]
+      )
+    );
+    return c.json({ success: true });
+  } catch (e) {
+    console.error(e);
+    return c.json({ error: "x" }, 500);
+  }
+});
+
 // GET /api/moderation/admin/reports — Lista denúncias para o admin
 moderationRouter.get("/admin/reports", async (c) => {
   try {
