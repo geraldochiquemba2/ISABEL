@@ -154,6 +154,27 @@ export async function initDB() {
       `UPDATE stores SET store_type = 'weddings' WHERE name ILIKE '%weddings%' OR category ILIKE '%weddings%'`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS schedule JSONB DEFAULT NULL`,
       `ALTER TABLE products ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''`,
+      // Moderação (revisão App Store 1.0): denúncias de conteúdo e bloqueios.
+      `CREATE TABLE IF NOT EXISTS reports (
+        id            SERIAL PRIMARY KEY,
+        reporter_phone TEXT DEFAULT '',
+        reporter_store_type TEXT DEFAULT '',
+        target_type   TEXT NOT NULL DEFAULT 'store',
+        target_id     TEXT NOT NULL DEFAULT '',
+        reason        TEXT NOT NULL DEFAULT '',
+        status        TEXT DEFAULT 'ABERTA',
+        created_at    TIMESTAMPTZ DEFAULT NOW()
+      )`,
+      `CREATE TABLE IF NOT EXISTS blocks (
+        id            SERIAL PRIMARY KEY,
+        phone         TEXT NOT NULL,
+        store_type    TEXT NOT NULL DEFAULT 'collection',
+        store_id      TEXT NOT NULL,
+        created_at    TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(phone, store_type, store_id)
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status)`,
+      `CREATE INDEX IF NOT EXISTS idx_blocks_phone ON blocks(phone, store_type)`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_activated_at TIMESTAMPTZ`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_expires_at TIMESTAMPTZ`,
       `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'INATIVO'`,

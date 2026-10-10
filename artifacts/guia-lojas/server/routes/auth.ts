@@ -660,3 +660,37 @@ authRouter.post("/request-password-reset", async (req, res) => {
   }
 });
 
+// DELETE /api/auth/account — Eliminar a própria conta e a sua loja (Lei 22/11 + App Store 5.1.1).
+// Corpo: { phone, storeType, password } — exige confirmação com a senha atual.
+authRouter.delete("/account", async (req, res) => {
+  try {
+    const { phone: rawPhone, password, storeType } = req.body || {};
+    const phone = typeof rawPhone === "string" ? rawPhone.trim() : rawPhone;
+    const store_type = storeType || "collection";
+    if (!phone || !password) {
+      return res.status(400).json({ error: "Telefone e senha são obrigatórios." });
+    }
+    const result = await pool.query("SELECT * FROM users WHERE phone=$1 AND store_type=$2", [phone, store_type]);
+    if (!result.rows.length) {
+      return res.status(404).json({ error: "Conta não encontrada." });
+    }
+    const user = result.rows[0];
+    const ok = await verifyPassword(user.password, password);
+    if (!ok) {
+      return res.status(400).json({ error: "Senha incorreta." });
+    }
+    // Apaga produtos da loja (ON DELETE CASCADE também cobre), loja, conta e vestígios.
+    if (user.store_id) {
+      await pool.query("DELETE FROM products WHERE store_id=$1", [user.store_id]);
+      await pool.query("DELETE FROM stores WHERE id=$1", [user.store_id]);
+    }
+    await pool.query("DELETE FROM blocks WHERE phone=$1 AND store_type=$2", [phone, store_type]);
+    await pool.query("DELETE FROM password_reset_requests WHERE phone=$1 AND store_type=$2", [phone, store_type]);
+    await pool.query("DELETE FROM users WHERE id=$1", [user.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao eliminar conta." });
+  }
+});
+

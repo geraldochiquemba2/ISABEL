@@ -15,6 +15,7 @@ import { weddingGroupsRouter } from "./routes/wedding-groups";
 import { weddingsPageContentRouter } from "./routes/weddings-page-content";
 import { placesRouter } from "./routes/places";
 import { pushRouter } from "./routes/push";
+import { moderationRouter } from "./routes/moderation";
 import fs from "fs";
 
 dotenv.config();
@@ -137,6 +138,7 @@ app.use("/api/wedding-groups", weddingGroupsRouter);
 app.use("/api/weddings-page-content", weddingsPageContentRouter);
 app.use("/api/places", placesRouter);
 app.use("/api/push", pushRouter);
+app.use("/api/moderation", moderationRouter);
 
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
 

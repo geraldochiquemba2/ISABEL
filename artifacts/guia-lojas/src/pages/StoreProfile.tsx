@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -9,7 +9,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchStoreById, trackWhatsAppClick } from "@/lib/api";
+import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
 import { thumbUrl, thumbList, dedupeUrls } from "@/lib/img";
 
@@ -63,6 +63,11 @@ export default function StoreProfile() {
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMapApps, setShowMapApps] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSent, setReportSent] = useState(false);
+  const [reportError, setReportError] = useState("");
+  const [isBlocked, setIsBlocked] = useState(false);
   const coverTouch = useRef<{ x: number } | null>(null);
   const coverDragging = useRef(false);
   const [dragX, setDragX] = useState<number | null>(null);
@@ -74,6 +79,65 @@ export default function StoreProfile() {
     staleTime: 5 * 60_000,
     gcTime: 10 * 60_000,
   });
+
+  function getViewer() {
+    try {
+      const s = localStorage.getItem("guialocal_user");
+      return s ? JSON.parse(s) : null;
+    } catch { return null; }
+  }
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("yesola-blocks");
+      const list: string[] = raw ? JSON.parse(raw) : [];
+      if (store?.id && list.includes(store.id)) setIsBlocked(true);
+      else setIsBlocked(false);
+    } catch { /* ignora */ }
+  }, [store?.id]);
+
+  function toggleLocalBlock(id: string, block: boolean) {
+    try {
+      const raw = localStorage.getItem("yesola-blocks");
+      const list: string[] = raw ? JSON.parse(raw) : [];
+      const next = block ? Array.from(new Set([...list, id])) : list.filter((x) => x !== id);
+      localStorage.setItem("yesola-blocks", JSON.stringify(next));
+    } catch { /* ignora */ }
+  }
+
+  async function handleBlockToggle() {
+    const v = getViewer();
+    if (!store?.id) return;
+    try {
+      if (!isBlocked) {
+        if (v?.phone) await blockStore(v.phone, v.storeType || "collection", store.id);
+        toggleLocalBlock(store.id, true);
+        setIsBlocked(true);
+      } else {
+        if (v?.phone) await unblockStore(v.phone, v.storeType || "collection", store.id);
+        toggleLocalBlock(store.id, false);
+        setIsBlocked(false);
+      }
+    } catch {
+      alert("Não foi possível atualizar o bloqueio. Tente novamente.");
+    }
+  }
+
+  async function handleSendReport() {
+    if (!store?.id) return;
+    if (reportReason.trim().length < 3) { setReportError("Descreva o motivo."); return; }
+    setReportError("");
+    try {
+      const v = getViewer();
+      await reportContent({
+        phone: v?.phone, storeType: v?.storeType || "collection",
+        targetType: "store", targetId: store.id, reason: reportReason.trim(),
+      });
+      setReportSent(true);
+    } catch (e: any) {
+      setReportError(e.message || "Erro ao enviar denúncia.");
+    }
+  }
 
   // Calcular imagens e carrossel ANTES dos early returns (regra dos hooks React)
   // Thumbs (480px) no carrossel: a cheia (1600px/original de MBs) demorava
@@ -360,6 +424,24 @@ export default function StoreProfile() {
               </button>
             </a>
 
+            <button
+              onClick={() => { setShowReport(true); setReportSent(false); setReportReason(""); setReportError(""); }}
+              data-testid="button-report-store"
+              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
+            >
+              <Flag size={13} />
+              Denunciar
+            </button>
+
+            <button
+              onClick={handleBlockToggle}
+              data-testid="button-block-store"
+              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
+            >
+              <Ban size={13} />
+              {isBlocked ? "Desbloquear" : "Bloquear"}
+            </button>
+
             {store.phone && (
               <a 
                 href={`tel:${store.phone.startsWith('+') ? store.phone : `+244${store.phone.replace(/\D/g, '')}`}`}
@@ -416,6 +498,52 @@ export default function StoreProfile() {
 
           </div>
         </div>
+
+        {/* Modal de Denúncia */}
+        <AnimatePresence>
+          {showReport && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+              onClick={() => setShowReport(false)}
+            >
+              <div
+                className="bg-white rounded-2xl p-6 w-full max-w-sm space-y-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-base">Denunciar loja</h3>
+                  <button onClick={() => setShowReport(false)} aria-label="Fechar"><X size={18} /></button>
+                </div>
+                {reportSent ? (
+                  <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl p-3">
+                    Denúncia enviada. A nossa equipa vai rever este conteúdo. Obrigado.
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-600">Descreva o problema com <strong>{store.name}</strong> (conteúdo impróprio, burla, informação falsa…).</p>
+                    <textarea
+                      value={reportReason}
+                      onChange={(e) => setReportReason(e.target.value)}
+                      rows={4}
+                      placeholder="Motivo da denúncia"
+                      className="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-yellow-500"
+                    />
+                    {reportError && <p className="text-xs text-red-600 font-medium">{reportError}</p>}
+                    <button
+                      onClick={handleSendReport}
+                      className="w-full bg-foreground text-background py-2.5 rounded-full text-sm font-semibold"
+                    >
+                      Enviar denúncia
+                    </button>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Modal de Aplicativos de Mapa */}
         <AnimatePresence>

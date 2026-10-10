@@ -552,3 +552,52 @@ export async function rejectCarrinhoAccess(storeId: string): Promise<void> {
   });
   if (!res.ok) throw new Error("Erro ao rejeitar acesso");
 }
+
+// ── Conta: eliminação pelo próprio utilizador (Lei 22/11 + App Store 5.1.1) ──
+export async function deleteAccount(phone: string, storeType: string, password: string): Promise<void> {
+  const res = await fetch("/api/auth/account", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, storeType, password }),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error || "Erro ao eliminar conta");
+}
+
+// ── Moderação: denúncias e bloqueios (revisão App Store) ──
+export async function reportContent(data: {
+  phone?: string; storeType?: string;
+  targetType: "store" | "product"; targetId: string; reason: string;
+}): Promise<void> {
+  const res = await fetch("/api/moderation/reports", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error || "Erro ao enviar denúncia");
+}
+
+export async function fetchBlockedStores(phone: string, storeType: string): Promise<string[]> {
+  const res = await fetch(`/api/moderation/blocks?phone=${encodeURIComponent(phone)}&store_type=${encodeURIComponent(storeType)}`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export async function blockStore(phone: string, storeType: string, storeId: string): Promise<void> {
+  const res = await fetch("/api/moderation/blocks", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, storeType, storeId }),
+  });
+  if (!res.ok) throw new Error("Erro ao bloquear loja");
+}
+
+export async function unblockStore(phone: string, storeType: string, storeId: string): Promise<void> {
+  const res = await fetch("/api/moderation/blocks", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, storeType, storeId }),
+  });
+  if (!res.ok) throw new Error("Erro ao desbloquear loja");
+}
