@@ -317,6 +317,27 @@ function Router() {
     if (!isIosSafari) window.scrollTo(0, 0);
   }, []);
 
+  // App nativa: ao voltar do fundo (app fechada e reaberta), volta à inicial
+  // em vez de ficar na última loja. Limite de 5s para não interromper usos
+  // rápidos (ex.: câmara nativa por cima da WebView).
+  useEffect(() => {
+    let hiddenAt = 0;
+    const onVis = () => {
+      try {
+        if (document.hidden) {
+          hiddenAt = Date.now();
+        } else if (hiddenAt && Date.now() - hiddenAt > 5000) {
+          hiddenAt = 0;
+          setLoc("/");
+        } else {
+          hiddenAt = 0;
+        }
+      } catch { /* ignora */ }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
   // Refresh (só o 1º carregamento) vai sempre ao topo. Guarda por vertical +
   // URL em sessionStorage — sobrevive aos reloads (os cards navegam com
