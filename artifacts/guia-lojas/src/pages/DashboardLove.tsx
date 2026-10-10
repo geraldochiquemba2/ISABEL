@@ -4,8 +4,7 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Ban, Eye, Store, Package, MessageCircle, ShieldAlert, KeyRound, Phone,
-  Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw, MapPin, Navigation,
-, UserRound } from "lucide-react";
+  Plus, Edit2, Trash2, X, Menu, Camera, LogOut, Upload, RefreshCw, MapPin, Navigation, UserRound } from "lucide-react";
 import {
   fetchStoreById, updateStore, createProduct, deleteProduct, updateProduct,
   changePassword, uploadImage, fetchAdminUsersFiltered, resetUserPassword, updateStoreLocation,
