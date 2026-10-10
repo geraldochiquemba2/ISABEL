@@ -34,8 +34,12 @@ function isLight(hex: string): boolean {
 function beaconInfo(info: string) {
   try {
     const body = JSON.stringify({ url: info.slice(0, 300), stage: "statusbar-info" });
-    if (navigator.sendBeacon) navigator.sendBeacon("/api/moderation/imgfail", body);
-    else fetch("/api/moderation/imgfail", { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true }).catch(() => {});
+    fetch("https://yesola.ao/api/moderation/imgfail", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+      keepalive: true,
+    }).catch(() => {});
   } catch { /* ignora */ }
 }
 

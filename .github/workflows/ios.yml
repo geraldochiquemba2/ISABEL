@@ -48,6 +48,7 @@ jobs:
           PORT: "3000"
           BASE_PATH: "/"
           NODE_ENV: production
+          VITE_GIT_SHA: ${{ github.sha }}
 
       - name: Sync Capacitor
         run: npx cap sync ios

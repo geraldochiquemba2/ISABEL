@@ -41,16 +41,15 @@ function fallbackForPath(): string {
 function beacon(url: string, stage: string) {
   try {
     const body = JSON.stringify({ url: url.slice(0, 300), stage });
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon("/api/moderation/imgfail", body);
-    } else {
-      fetch("/api/moderation/imgfail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-        keepalive: true,
-      }).catch(() => {});
-    }
+    // URL absoluta: na app nativa (capacitor://) o sendBeacon relativo falha
+    // em silêncio; o fetch é interceptado para https://yesola.ao.
+    const endpoint = "https://yesola.ao/api/moderation/imgfail";
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+      keepalive: true,
+    }).catch(() => {});
   } catch { /* ignora */ }
 }
 
@@ -62,10 +61,12 @@ export function initImgFallback(): void {
   // Diagnóstico: de onde a app carrega (live vs pacote nativo).
   import("@capacitor/core").then(
     ({ Capacitor }) => {
+      const sha = (import.meta as any).env?.VITE_GIT_SHA || "local";
       beacon(
         window.location.href + " | " + (navigator.userAgent || "").slice(0, 50) +
-        " | plat:" + Capacitor.getPlatform() + " native:" + Capacitor.isNativePlatform(),
-        "appinfo-b91"
+        " | plat:" + Capacitor.getPlatform() + " native:" + Capacitor.isNativePlatform() +
+        " sha:" + String(sha).slice(0, 7),
+        "appinfo-b92"
       );
     },
     () => {
