@@ -1,10 +1,12 @@
 import { ArrowLeft, MessageCircle, Clock } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
+import { useThemeColor } from "@/lib/useThemeColor";
 
 // Número oficial de atendimento (WhatsApp, formato internacional sem +).
 const CONTACT_WHATSAPP = "244922001778";
 
 export default function Contacto() {
+  useThemeColor("#FFFDF8");
   const waLink = CONTACT_WHATSAPP
     ? `https://wa.me/${CONTACT_WHATSAPP}?text=${encodeURIComponent("Olá YESOLA, preciso de ajuda.")}`
     : "";

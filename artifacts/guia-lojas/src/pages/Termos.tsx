@@ -1,9 +1,11 @@
 import { ArrowLeft, FileText } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
+import { useThemeColor } from "@/lib/useThemeColor";
 
 // Termos de Uso da YESOLA (yesola.ao). Aceites expressos na criação de conta,
 // em conjunto com a Política de Privacidade (Lei n.º 22/11, art. 12).
 export default function Termos() {
+  useThemeColor("#FFFDF8");
   return (
     <main className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">

@@ -1,10 +1,12 @@
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
+import { useThemeColor } from "@/lib/useThemeColor";
 
 // Política de Privacidade da YESOLA, em conformidade com a Lei n.º 22/11,
 // de 17 de Junho (Protecção de Dados Pessoais, Angola) e os direitos
 // reconhecidos pela Agência de Protecção de Dados (APD, apd.ao).
 export default function Privacidade() {
+  useThemeColor("#FBF7F2");
   return (
     <main className="min-h-[100dvh] bg-[#FBF7F2] text-[#292727]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">
