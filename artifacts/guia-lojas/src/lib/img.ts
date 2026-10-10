@@ -11,9 +11,14 @@
 // (o fetch é reescrito pelo interceptor em apiBase.ts, mas <img> não é).
 import { API_BASE } from "./apiBase";
 
+// Imagens direto no Worker (1 invocação) em vez de Pages→Worker (2 invocações).
+// Corte de ~50% na cota gratuita. As demais seguem na API_BASE.
+const MEDIA_BASE = "https://isabel-api.chiquembaines.workers.dev";
+
 export function absUrl(url: string): string {
   if (!url) return url;
   if (/^(https?:|data:|blob:|capacitor:)/i.test(url)) return url;
+  if (url.startsWith("/api/media/")) return MEDIA_BASE + url;
   if (url.startsWith("/")) return API_BASE.replace(/\/+$/, "") + url;
   return url;
 }
