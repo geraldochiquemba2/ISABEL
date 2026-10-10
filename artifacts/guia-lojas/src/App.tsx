@@ -1008,6 +1008,7 @@ function Router() {
     useEffect(() => {
     initPush();
     import("@/lib/statusbar").then((m) => m.initStatusBar());
+    import("@/lib/imgFallback").then((m) => m.initImgFallback());
     }, []);
   return (
     <QueryClientProvider client={queryClient}>
