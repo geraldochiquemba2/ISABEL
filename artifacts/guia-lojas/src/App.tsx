@@ -120,7 +120,18 @@ import Termos from "@/pages/Termos";
 import OfflineBanner from "@/components/OfflineBanner";
 import { initPush } from "@/lib/push";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Noite de lançamento: menos refetch = menos cota Cloudflare.
+      staleTime: 5 * 60_000,
+      gcTime: 15 * 60_000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 1,
+    },
+  },
+});
 
 type StoreType = "weddings" | "love-services" | "collection" | "business" | "formacoes" | "eventos" | "entretenimento" | "imoveis" | "infantil" | "automoveis" | "saude" | "beleza" | "casa" | "tecnologia-electronicos" | "alimentacao-restauracao" | "turismo-lazer" | "desporto-fitness" | "empregos-oportunidades" | "agricultura-agronegocio" | "influenciadores-criadores" | "transportes-logistica" | "servicos-profissionais" | "bancos" | "seguradoras" | null;
 
