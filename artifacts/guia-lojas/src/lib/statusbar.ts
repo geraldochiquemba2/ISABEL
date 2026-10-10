@@ -9,9 +9,15 @@ export async function initStatusBar(): Promise<void> {
   started = true;
   try {
     if (!isNativeApp()) return;
-    const { StatusBar } = await import("@capacitor/status-bar");
+    const { StatusBar, Style } = await import("@capacitor/status-bar");
     try {
       await StatusBar.setOverlaysWebView({ overlay: false });
+    } catch {
+      /* ignora */
+    }
+    try {
+      // Texto escuro (fundo claro). Style.Light = conteúdo escuro.
+      await StatusBar.setStyle({ style: Style.Light });
     } catch {
       /* ignora */
     }
