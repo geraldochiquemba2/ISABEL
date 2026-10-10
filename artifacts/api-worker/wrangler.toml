@@ -10,6 +10,11 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
+# Rota direta /api/* (corta a invocação dupla Pages Function + Worker).
+routes = [
+  { pattern = "yesola.ao/api/*", zone_name = "yesola.ao" },
+]
+
 [vars]
 # RENDER_EXTERNAL_URL já não é preciso (sem sleep no Workers)
 # PASSWORD_ITERATIONS só no plano free (10ms CPU -> erro 1101 acima disso):
