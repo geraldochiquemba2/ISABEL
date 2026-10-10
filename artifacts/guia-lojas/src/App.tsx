@@ -289,6 +289,14 @@ function Router() {
   const [location, setLoc] = useLocation();
   const basePath = location.split("?")[0];
 
+  // Faixa da status bar segue a cor da área (/loja/* é a página da loja que define).
+  useEffect(() => {
+    import("@/lib/statusColor").then((m) => {
+      const c = m.colorForPath(basePath);
+      if (c) m.setStatusColor(c);
+    });
+  }, [basePath]);
+
   // NOTA hooks: os useEffect/useRef abaixo correm EM TODAS as rotas, antes
   // de qualquer early-return. Antes, /login, /busca etc. retornavam aqui
   // (2 hooks) e "/" corria 6+ hooks — ao navegar entre elas o React lançava

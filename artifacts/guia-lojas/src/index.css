@@ -269,7 +269,7 @@ html::before {
   left: 0;
   right: 0;
   height: env(safe-area-inset-top, 0px);
-  background: #B8860B;
+  background: var(--statusbar-bg, #B8860B);
   z-index: 40;
   pointer-events: none;
 }

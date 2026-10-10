@@ -94,6 +94,9 @@ export default function StoreProfile() {
       if (store?.id && list.includes(store.id)) setIsBlocked(true);
       else setIsBlocked(false);
     } catch { /* ignora */ }
+    if (store) {
+      import("@/lib/statusColor").then((m) => m.setStatusColor(m.colorForStore(store as any)));
+    }
   }, [store?.id]);
 
   function toggleLocalBlock(id: string, block: boolean) {
