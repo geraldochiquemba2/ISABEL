@@ -354,8 +354,12 @@ function Router() {
 
   // App nativa: arrancar sempre na inicial, mesmo que a WebView recarregue
   // no caminho atual (iOS recarrega a vista no caminho em que estava).
+  // Só na nativa — na web os links diretos têm de funcionar.
   useEffect(() => {
     try {
+      const native =
+        (window as any).Capacitor?.isNativePlatform?.() === true;
+      if (!native) return;
       const p = window.location.pathname;
       if (p && p !== "/") setLoc("/");
     } catch { /* ignora */ }

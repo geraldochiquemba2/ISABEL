@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
@@ -357,6 +358,13 @@ interface StoreSelectorProps {
 
 export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
+  const [, setLoc] = useLocation();
+  const go = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    setLoc(href);
+    window.scrollTo(0, 0);
+  };
+
   const [showAllStores, setShowAllStores] = useState(false);
 
   const [storeSearch, setStoreSearch] = useState("");
@@ -493,7 +501,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
         <div className="flex items-center justify-between px-5 py-2.5">
 
-          <a href="/sobre" className="w-[86px] text-left text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
+          <a href="/sobre" onClick={(e) => go(e, "/sobre")} className="w-[86px] text-left text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
             Sobre<br />nós
           </a>
 
@@ -511,7 +519,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
           </a>
 
-          <a href="/contacto" className="w-[86px] text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
+          <a href="/contacto" onClick={(e) => go(e, "/contacto")} className="w-[86px] text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#A96F12] hover:text-[#C99432] transition-colors leading-tight">
             Fale<br />connosco
           </a>
 
@@ -715,7 +723,7 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
 
               whileTap={{ scale: 0.97 }}
 
-              onClick={() => area.id === "lugares" ? (window.location.href = "/lugares") : onSelect(area.id)}
+              onClick={() => area.id === "lugares" ? (setLoc("/lugares"), window.scrollTo(0, 0)) : onSelect(area.id)}
 
               className="area-item"
 
