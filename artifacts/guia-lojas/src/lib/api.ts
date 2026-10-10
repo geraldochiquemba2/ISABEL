@@ -90,7 +90,7 @@ export async function fetchStores(filters?: {
   const res = await fetch(`/api/stores?${params.toString()}`);
   if (!res.ok) throw new Error("Erro ao buscar lojas");
   const stores: Store[] = await res.json();
-  return stores.map(applyDynamicOpenStatus).filter((s) => !isStoreBlocked(s.id));
+  return stores.map(applyDynamicOpenStatus);
 }
 
 // Lojas bloqueadas pelo utilizador (só na vista dele) — ver Bloquear na loja.

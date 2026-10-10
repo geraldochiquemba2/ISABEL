@@ -6,7 +6,8 @@ import { Store } from "@/data/mock";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { thumbUrl, thumbList } from "@/lib/img";
 import { nativeShare, nativeTap } from "@/lib/nativePhoto";
-import { fetchStoreById } from "@/lib/api";
+import { fetchStoreById, getBlockedStoreIds } from "@/lib/api";
+import StoreLockOverlay from "@/components/StoreLock";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
 // das secções, para lojas registadas com categorias livres não ficarem invisíveis.
@@ -85,6 +86,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   };
   // Rotação automática: cards com +1 foto trocam a cada 3 segundos.
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [blocked, setBlocked] = useState(() => getBlockedStoreIds().includes(store.id));
 
   useEffect(() => {
     if (images.length <= 1) return;
@@ -103,6 +105,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
     >
       <div className="relative h-28 overflow-hidden bg-[#F1ECE3]">
         <img src={imgError ? fallbackImage : (images[currentIdx] || fallbackImage)} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" onError={() => setImgError(true)} />
+        {blocked && <StoreLockOverlay storeId={store.id} onUnlock={() => setBlocked(false)} />}
         {store.logoUrl && (
           <img src={thumbUrl(store.logoUrl)} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}

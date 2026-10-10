@@ -110,6 +110,11 @@ export default function StoreProfile() {
 
   async function handleBlockToggle() {
     const v = getViewer();
+    if (!v?.phone) {
+      alert("Inicie sessão para bloquear lojas.");
+      window.location.href = "/login";
+      return;
+    }
     if (!store?.id) return;
     try {
       if (!isBlocked) {

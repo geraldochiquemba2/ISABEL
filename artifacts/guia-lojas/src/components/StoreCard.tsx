@@ -6,7 +6,8 @@ import { Store } from "@/data/mock";
 import { MapPin } from "lucide-react";
 import { nativeTap } from "@/lib/nativePhoto";
 import { thumbUrl, thumbList } from "@/lib/img";
-import { fetchStoreById } from "@/lib/api";
+import { fetchStoreById, getBlockedStoreIds } from "@/lib/api";
+import StoreLockOverlay from "@/components/StoreLock";
 
 interface StoreCardProps {
   store: Store;
@@ -20,6 +21,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   const queryClient = useQueryClient();
   const [imgError, setImgError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [blocked, setBlocked] = useState(() => getBlockedStoreIds().includes(store.id));
   const imgHeight = size === "lg" ? "h-56" : size === "sm" ? "h-36" : "h-44";
 
   // Thumbs (480px) nos cards: a cheia demorava segundos a aparecer.
@@ -109,6 +111,9 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
               ))}
             </div>
           )}
+
+          {/* Cadeado: loja bloqueada fica no lugar */}
+          {blocked && <StoreLockOverlay storeId={store.id} onUnlock={() => setBlocked(false)} />}
         </div>
 
         {/* Status badge with logo */}
