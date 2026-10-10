@@ -319,13 +319,17 @@ function Router() {
 
   // App nativa: ao voltar do fundo (app fechada e reaberta), volta à inicial
   // em vez de ficar na última loja. Limite de 5s para não interromper usos
-  // rápidos (ex.: câmara nativa por cima da WebView).
+  // rápidos (ex.: câmara nativa por cima da WebView). Só nativa.
   useEffect(() => {
     let hiddenAt = 0;
     const onVis = () => {
       try {
+        const native =
+          (window as any).Capacitor?.isNativePlatform?.() === true;
+        if (!native) return;
         if (document.hidden) {
           hiddenAt = Date.now();
+          try { sessionStorage.setItem("yesola-hide-at", String(hiddenAt)); } catch { /* ignora */ }
         } else if (hiddenAt && Date.now() - hiddenAt > 5000) {
           hiddenAt = 0;
           setLoc("/");
@@ -354,14 +358,21 @@ function Router() {
 
   // App nativa: arrancar sempre na inicial, mesmo que a WebView recarregue
   // no caminho atual (iOS recarrega a vista no caminho em que estava).
-  // Só na nativa — na web os links diretos têm de funcionar.
+  // Só nativa — na web os links diretos têm de funcionar.
+  // Usa marcador de tempo: navegações internas têm marcador fresco (<8s)
+  // e passam; só recargas após tempo em fundo voltam à inicial.
   useEffect(() => {
     try {
       const native =
         (window as any).Capacitor?.isNativePlatform?.() === true;
       if (!native) return;
-      const p = window.location.pathname;
-      if (p && p !== "/") setLoc("/");
+      const raw = sessionStorage.getItem("yesola-hide-at");
+      sessionStorage.removeItem("yesola-hide-at");
+      const dt = raw ? Date.now() - parseInt(raw, 10) : 0;
+      if (dt > 8000) {
+        const p = window.location.pathname;
+        if (p && p !== "/") setLoc("/");
+      }
     } catch { /* ignora */ }
   }, []);
 
