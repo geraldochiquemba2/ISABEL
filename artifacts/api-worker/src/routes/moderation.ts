@@ -139,6 +139,35 @@ moderationRouter.post("/imgfail", async (c) => {
   }
 });
 
+// POST /api/moderation/admin/check-files — Diagnóstico: diz para cada fileId
+// se o Telegram ainda o tem (getFile). Corpo: { ids: string[] } (máx 100).
+moderationRouter.post("/admin/check-files", async (c) => {
+  try {
+    const { ids } = (await c.req.json()) as any;
+    if (!Array.isArray(ids) || ids.length === 0 || ids.length > 100) {
+      return c.json({ error: "Envie até 100 ids." }, 400);
+    }
+    const token = c.env.TELEGRAM_BOT_TOKEN;
+    if (!token) return c.json({ error: "Sem token." }, 500);
+    const out: Record<string, string> = {};
+    for (const raw of ids) {
+      const id = String(raw || "");
+      if (!/^[\w-]{5,200}$/.test(id)) { out[id] = "invalid"; continue; }
+      try {
+        const r = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${id}`);
+        const j = (await r.json()) as any;
+        out[id] = j?.ok ? "alive" : "dead";
+      } catch {
+        out[id] = "error";
+      }
+    }
+    return c.json(out);
+  } catch (e) {
+    console.error(e);
+    return c.json({ error: "x" }, 500);
+  }
+});
+
 // GET /api/moderation/admin/reports — Lista denúncias para o admin
 moderationRouter.get("/admin/reports", async (c) => {
   try {
