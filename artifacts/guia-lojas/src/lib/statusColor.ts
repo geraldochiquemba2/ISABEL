@@ -66,6 +66,10 @@ export function setStatusColor(color: string) {
   try {
     document.documentElement.style.setProperty("--statusbar-bg", color);
   } catch { /* SSR/edge: ignora */ }
+  // Espelha na status bar NATIVA (hora/bateria/rede) quando na app instalada.
+  try {
+    import("@/lib/statusbar").then((m) => m.setNativeStatusColor(color)).catch(() => {});
+  } catch { /* ignora */ }
 }
 
 // Cor pela rota. Devolve null em /loja/* (a página da loja define pela loja).

@@ -11,13 +11,44 @@ export async function initStatusBar(): Promise<void> {
   try {
     if (!isNativeApp()) return;
     if (!Capacitor.isPluginAvailable("StatusBar")) return;
-    const { StatusBar, Style } = await import("@capacitor/status-bar");
-    await StatusBar.setOverlaysWebView({ overlay: false });
-    await StatusBar.setStyle({ style: Style.Dark });
+    const { StatusBar } = await import("@capacitor/status-bar");
     try {
-      await StatusBar.setBackgroundColor({ color: "#B8860B" });
+      await StatusBar.setOverlaysWebView({ overlay: false });
     } catch {
-      /* iOS ignora quando sobrepõe; Android <15 aplica */
+      /* ignora */
+    }
+  } catch {
+    /* plugin ausente ou web: ignora */
+  }
+  await setNativeStatusColor("#B8860B");
+}
+
+function isLight(hex: string): boolean {
+  const m = hex.replace("#", "");
+  if (m.length < 6) return false;
+  const r = parseInt(m.slice(0, 2), 16) / 255;
+  const g = parseInt(m.slice(2, 4), 16) / 255;
+  const b = parseInt(m.slice(4, 6), 16) / 255;
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return lum > 0.55;
+}
+
+// Muda a cor da status bar NATIVA (hora/bateria/rede) em tempo real.
+// Chame sempre que mudar de área/loja. Na web não faz nada.
+export async function setNativeStatusColor(color: string): Promise<void> {
+  try {
+    if (!isNativeApp()) return;
+    if (!Capacitor.isPluginAvailable("StatusBar")) return;
+    const { StatusBar, Style } = await import("@capacitor/status-bar");
+    try {
+      await StatusBar.setBackgroundColor({ color });
+    } catch {
+      /* iOS com sobreposição ignora; Android <15 aplica */
+    }
+    try {
+      await StatusBar.setStyle({ style: isLight(color) ? Style.Dark : Style.Light });
+    } catch {
+      /* ignora */
     }
   } catch {
     /* plugin ausente ou web: ignora */
