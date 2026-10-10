@@ -23,7 +23,7 @@ const LOVE_SERVICE_GROUPS_META = [
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
-  const fallbackImage = "https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=400&h=300&fit=crop&auto=format&q=75";
+  const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
   const images = thumbList(productImages && productImages.length > 0 ? productImages : (store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage]));
   const [currentIdx, setCurrentIdx] = useState(0);
 

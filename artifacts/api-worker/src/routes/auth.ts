@@ -252,7 +252,7 @@ function descriptionFor(storeType: string): string {
 function coverImageFor(storeType: string): string {
   const u = (id: string) => `https://images.unsplash.com/${id}?w=800&h=500&fit=crop&auto=format&q=80`;
   switch (storeType) {
-    case "love-services": return u("photo-1529603095155-15342c491f1a");
+    case "love-services": return u("photo-1519741497674-611481863552");
     case "weddings": return u("photo-1519741497674-611481863552");
     case "business": return u("photo-1507003211169-0a1dd7228f2d");
     case "formacoes": return u("photo-1524178232363-6fb168ff49fe");

@@ -267,7 +267,7 @@ export default function TransportesHome({ onBackToSelector }: { onBackToSelector
             {featured.map((store: any) => (
               <div key={store.id} className="flex-shrink-0 w-44 bg-white rounded-2xl overflow-hidden border border-[#FFE0B2] cursor-pointer" onClick={() => window.location.href = `/loja/${store.id}?from=transportes`}>
                 <div className="h-28 overflow-hidden">
-                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1449965408869-ebd3fee465f6?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+                  <img src={thumbUrl(store.coverImage) || "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop&auto=format&q=80"} alt={store.name} className="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-3">
                   <h4 className="text-[13px] font-semibold text-[#171717] truncate">{store.name}</h4>

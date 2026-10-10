@@ -232,7 +232,7 @@ authRouter.post("/register", async (req, res) => {
       : 'A minha loja na YESOLA Collection.';
     const coverColor = isLove ? '#A71936' : isBusiness ? '#075342' : isFormacoes ? '#1E737B' : isEventos ? '#C45125' : isEntretenimento ? '#7C3AED' : isImoveis ? '#0B2D56' : isInfantil ? '#F7C948' : isAutomoveis ? '#0f1d32' : isSaude ? '#2E7D32' : isBeleza ? '#7A4549' : isCasa ? '#68635D' : isTecnologia ? '#1565C0' : isAlimentacao ? '#D84315' : isTurismo ? '#00796B' : isDesporto ? '#E65100' : isEmpregos ? '#4527A0' : isAgricultura ? '#2E7D32' : isInfluenciadores ? '#C2185B' : isTransportes ? '#F57F17' : isServicosProf ? '#1A237E' : isBancos ? '#1E40AF' : isSeguradoras ? '#0F766E' : '#B89A78';
     const coverImage = isLove
-      ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
+      ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
       : isWeddings
       ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
       : isBusiness
@@ -516,7 +516,7 @@ authRouter.post("/link-store", async (req, res) => {
     const isSeg = storeType === "seguradoras";
     const linkCoverColor = isL ? '#A71936' : isB ? '#075342' : isF ? '#1E737B' : isE ? '#C45125' : isEnt ? '#7C3AED' : isI ? '#0B2D56' : isInf ? '#F7C948' : isA ? '#0f1d32' : isS ? '#2E7D32' : isBe ? '#7A4549' : isC ? '#68635D' : isTec ? '#1565C0' : isAli ? '#D84315' : isTui ? '#00796B' : isDes ? '#E65100' : isEmp ? '#4527A0' : isAge ? '#2E7D32' : isInf2 ? '#C2185B' : isTra ? '#F57F17' : isSer ? '#1A237E' : isBan ? '#1E40AF' : isSeg ? '#0F766E' : '#B89A78';
     const linkCoverImage = isL
-      ? 'https://images.unsplash.com/photo-1529603095155-15342c491f1a?w=800&h=500&fit=crop&auto=format&q=80'
+      ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
       : isW
       ? 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=500&fit=crop&auto=format&q=80'
       : isB
