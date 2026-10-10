@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -22,6 +23,7 @@ const WEDDING_SERVICE_GROUPS_META = [
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&auto=format&q=75";
   const images = thumbList(productImages && productImages.length > 0 ? productImages : (store.coverImages && store.coverImages.length > 0 ? store.coverImages : [store.coverImage || fallbackImage]));
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -37,7 +39,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E9D9B6] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=weddings`}
+      onClick={() => { navigate(`/loja/${store.id}?from=weddings`); window.scrollTo(0, 0); }}
     >
       <div className="relative h-28 overflow-hidden">
         <img           src={images[currentIdx] || fallbackImage}

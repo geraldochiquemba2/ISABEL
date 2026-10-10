@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Car, Wrench, Key, Shield, Droplets, Truck, MapPin, FileCheck, ParkingSquare, X } from "lucide-react";
@@ -38,6 +39,7 @@ const AUTOMOVEIS_CATEGORIES_META = [
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&auto=format&q=75";
   const images = thumbList(productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -53,7 +55,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#e2e8f0] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=automoveis`}
+      onClick={() => { navigate(`/loja/${store.id}?from=automoveis`); window.scrollTo(0, 0); }}
     >
       <div className="relative h-28 overflow-hidden">
         <img

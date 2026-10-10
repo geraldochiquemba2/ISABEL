@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, MapPin, ArrowUpRight, Mail, Phone, Instagram, X } from "lucide-react";
@@ -77,6 +78,7 @@ const groupsMeta: CollectionGroup[] = [
 ];
 
 function StoreCard({ store, productImages }: { store: Store; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   const images = thumbList(productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -92,7 +94,7 @@ function StoreCard({ store, productImages }: { store: Store; productImages?: str
   return (
     <div 
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#E9D9B6] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=collection`}
+      onClick={() => { navigate(`/loja/${store.id}?from=collection`); window.scrollTo(0, 0); }}
     >
       <div className="relative h-28 overflow-hidden">
         <img

@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, MapPin, Users, Video, Mic, Camera, Tv, Music, Globe, Smile, Heart, X } from "lucide-react";
@@ -36,6 +37,7 @@ const INFLUENCIADORES_CATEGORIES_META = [
 ];
 
 function StoreCard({ store, productImages }: { store: any; productImages?: string[] }) {
+  const [, navigate] = useLocation();
   const fallbackImage = "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop&auto=format&q=75";
   const images = thumbList(productImages && productImages.length > 0 ? productImages : [store.coverImage || store.image || fallbackImage]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -51,7 +53,7 @@ function StoreCard({ store, productImages }: { store: any; productImages?: strin
   return (
     <div
       className="flex-shrink-0 w-48 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-lg transition-shadow border border-[#F8BBD0] cursor-pointer hover:-translate-y-1"
-      onClick={() => window.location.href = `/loja/${store.id}?from=influenciadores`}
+      onClick={() => { navigate(`/loja/${store.id}?from=influenciadores`); window.scrollTo(0, 0); }}
     >
       <div className="relative h-28 overflow-hidden">
         <img
