@@ -2,7 +2,8 @@ import { isNativeApp } from "@/lib/nativePhoto";
 
 let started = false;
 
-// Comportamento padrão do telemóvel (edge-to-edge, sem cor imposta).
+// Barra opaca neutra (branca, padrão do sistema): a WebView começa ABAIXO
+// da hora/bateria/rede para o conteúdo nunca invadir o topo. Na web não faz nada.
 export async function initStatusBar(): Promise<void> {
   if (started) return;
   started = true;
@@ -10,7 +11,7 @@ export async function initStatusBar(): Promise<void> {
     if (!isNativeApp()) return;
     const { StatusBar } = await import("@capacitor/status-bar");
     try {
-      await StatusBar.setOverlaysWebView({ overlay: true });
+      await StatusBar.setOverlaysWebView({ overlay: false });
     } catch {
       /* ignora */
     }
