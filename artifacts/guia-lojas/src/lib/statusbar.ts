@@ -31,6 +31,14 @@ function isLight(hex: string): boolean {
   return lum > 0.55;
 }
 
+function beaconInfo(info: string) {
+  try {
+    const body = JSON.stringify({ url: info.slice(0, 300), stage: "statusbar-info" });
+    if (navigator.sendBeacon) navigator.sendBeacon("/api/moderation/imgfail", body);
+    else fetch("/api/moderation/imgfail", { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true }).catch(() => {});
+  } catch { /* ignora */ }
+}
+
 // Muda a cor da status bar NATIVA (hora/bateria/rede) em tempo real.
 // Chame sempre que mudar de área/loja. Na web não faz nada.
 // NOTA: importa o plugin primeiro — isPluginAvailable dá falso sem o import.
@@ -45,6 +53,12 @@ export async function setNativeStatusColor(color: string): Promise<void> {
     }
     try {
       await StatusBar.setStyle({ style: isLight(color) ? Style.Dark : Style.Light });
+    } catch {
+      /* ignora */
+    }
+    try {
+      const info = await StatusBar.getInfo();
+      beaconInfo(`set:${color} native:${JSON.stringify(info)}`);
     } catch {
       /* ignora */
     }
