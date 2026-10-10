@@ -62,24 +62,15 @@ const PATH_TO_TYPE: Record<string, string> = {
   weddings: "weddings",
 };
 
-export function setStatusColor(color: string) {
-  lastColor = color;
-  try {
-    document.documentElement.style.setProperty("--statusbar-bg", color);
-  } catch { /* SSR/edge: ignora */ }
-  // Espelha na status bar NATIVA (hora/bateria/rede) quando na app instalada.
-  try {
-    import("@/lib/statusbar").then((m) => m.setNativeStatusColor(color)).catch(() => {});
-  } catch { /* ignora */ }
+export function setStatusColor(_color: string) {
+  return;
 }
 
 let lastColor = GOLD;
 
 // Reaplica a última cor (o iOS volta ao dourado da config ao reabrir a app).
 export function reapplyStatusColor() {
-  try {
-    import("@/lib/statusbar").then((m) => m.setNativeStatusColor(lastColor)).catch(() => {});
-  } catch { /* ignora */ }
+  return;
 }
 
 // Cor pela rota. Devolve null em /loja/* (a página da loja define pela loja).

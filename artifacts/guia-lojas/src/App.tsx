@@ -352,6 +352,15 @@ function Router() {
     return () => document.removeEventListener("visibilitychange", onShow);
   }, []);
 
+  // App nativa: arrancar sempre na inicial, mesmo que a WebView recarregue
+  // no caminho atual (iOS recarrega a vista no caminho em que estava).
+  useEffect(() => {
+    try {
+      const p = window.location.pathname;
+      if (p && p !== "/") setLoc("/");
+    } catch { /* ignora */ }
+  }, []);
+
   // Memória de rolagem: voltar de uma loja devolve onde parou em vez do topo.
   // Refresh (só o 1º carregamento) vai sempre ao topo. Guarda por vertical +
   // URL em sessionStorage — sobrevive aos reloads (os cards navegam com

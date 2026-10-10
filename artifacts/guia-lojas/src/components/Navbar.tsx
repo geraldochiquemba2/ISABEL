@@ -38,7 +38,7 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
     href === "/" ? location === "/" : location.startsWith(href);
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`} style={{ paddingTop: "env(safe-area-inset-top)", background: "#B8860B" }}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}>
       <div 
         className="backdrop-blur-md bg-white/95 border-b border-yellow-200/50"
         style={{background: scrolled ? 'linear-gradient(135deg, rgba(212,168,67,0.95) 0%, rgba(184,134,11,0.95) 100%)' : 'linear-gradient(135deg, #D4A843 0%, #C9963A 50%, #B8860B 100%)'}}

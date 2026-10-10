@@ -260,19 +260,6 @@ body.drag-scrolling, body.drag-scrolling * { user-select: none !important; curso
    safe-area para o conteúdo não passar por baixo da hora/bateria/rede. */
 .pt-safe { padding-top: env(safe-area-inset-top); }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-/* Faixa sólida por trás da hora/bateria/rede (app nativa): o conteúdo rola
-   por baixo dela em vez de passar por cima da status bar. */
-html::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: env(safe-area-inset-top, 0px);
-  background: var(--statusbar-bg, #B8860B);
-  z-index: 40;
-  pointer-events: none;
-}
 @supports (padding-top: env(safe-area-inset-top)) {
   header.sticky, header.fixed, nav.sticky,
   div.fixed.top-0, div.sticky.top-0 {
