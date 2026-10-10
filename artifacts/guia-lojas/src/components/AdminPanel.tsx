@@ -6,11 +6,12 @@ import {
   fetchStores, updateStoreFeatured, getCategories, createCategory, updateCategory, deleteCategory,
   fetchPasswordResetRequests, approvePasswordReset, rejectPasswordReset,
   fetchPendingCarrinhoRequests, approveCarrinhoAccess, rejectCarrinhoAccess,
+  fetchReports, resolveReport,
 } from "@/lib/api";
 import {
   KeyRound, ShieldAlert, Phone, Store, Package, Check, X, Ban, RefreshCw,
   Eye, Star, TrendingUp, FolderPlus, Edit2, Trash2, ChevronDown, ChevronUp,
-  RotateCcw, ShoppingCart, Search,
+  RotateCcw, ShoppingCart, Search, Flag,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CategoryIconPicker, { CategoryIcon } from "./CategoryIconPicker";
@@ -50,7 +51,7 @@ const STORE_TYPE_OPTIONS = [
 const storeTypeLabel = (v?: string | null) =>
   STORE_TYPE_OPTIONS.find(([val]) => val === v)?.[1] || "—";
 
-type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets" | "carrinhos";
+type AdminTab = "utilizadores" | "categorias" | "lojas" | "password-resets" | "carrinhos" | "denuncias";
 
 interface AdminPanelProps {
   storeType: string;
@@ -65,6 +66,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
     { id: "utilizadores", label: "Utilizadores", icon: <ShieldAlert size={15} /> },
     { id: "password-resets", label: "Pedidos de Reset", icon: <RotateCcw size={15} /> },
     { id: "carrinhos", label: "Carrinhos", icon: <ShoppingCart size={15} /> },
+    { id: "denuncias", label: "Denúncias", icon: <Flag size={15} /> },
     { id: "categorias", label: "Categorias", icon: <FolderPlus size={15} /> },
     { id: "lojas", label: "Destacar Lojas", icon: <Star size={15} /> },
   ];
@@ -100,6 +102,7 @@ export default function AdminPanel({ storeType, accentColor = "#D4A843" }: Admin
       {tab === "utilizadores" && <UtilizadoresTab storeType={storeType} accentColor={accentColor} />}
       {tab === "password-resets" && <PasswordResetsTab storeType={storeType} accentColor={accentColor} />}
       {tab === "carrinhos" && <CarrinhosTab storeType={storeType} accentColor={accentColor} />}
+      {tab === "denuncias" && <DenunciasTab accentColor={accentColor} />}
       {tab === "categorias" && <CategoriasTab accentColor={accentColor} storeType={storeType} />}
       {tab === "lojas" && <LojasTab storeType={storeType} accentColor={accentColor} />}
     </div>
@@ -294,6 +297,64 @@ function UtilizadoresTab({ storeType, accentColor }: { storeType: string; accent
 }
 
 // ── TAB: CATEGORIAS ──────────────────────────────────────
+function DenunciasTab({ accentColor }: { accentColor: string }) {
+  const [reports, setReports] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { load(); }, []);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const all = await fetchReports();
+      setReports(Array.isArray(all) ? all.filter((r: any) => r.target_type !== "imgfail") : []);
+    } catch (e) { console.error(e); }
+    finally { setLoading(false); }
+  }
+
+  async function handleResolve(id: number, status: "RESOLVIDA" | "IGNORADA") {
+    if (status === "IGNORADA" && !confirm("Ignorar esta denúncia?")) return;
+    try { await resolveReport(id, status); load(); } catch { alert("Erro ao resolver."); }
+  }
+
+  const open = reports.filter((r) => r.status === "ABERTA");
+
+  if (loading) return <div className="text-center py-12 text-sm text-[#87909a]">A carregar...</div>;
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-[#87909a]">{open.length} denúncia(s) aberta(s) — nada é removido sem a sua decisão.</p>
+      {open.length === 0 && (
+        <p className="text-center text-sm text-[#87909a] py-8 border border-dashed rounded-2xl">Nenhuma denúncia aberta.</p>
+      )}
+      <div className="space-y-3">
+        {open.map((r) => (
+          <div key={r.id} className="border border-[#EDE8DE] rounded-2xl p-4 bg-white shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-semibold">{r.target_type === "product" ? "Produto" : "Loja"}: {r.target_id}</h3>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase bg-amber-50 text-amber-600 border border-amber-200">ABERTA</span>
+                </div>
+                <p className="text-xs mt-1">“{r.reason}”</p>
+                <p className="text-[10px] text-[#87909a] mt-1">Por: {r.reporter_phone || "anónimo"} · {new Date(r.created_at).toLocaleString("pt-AO")}</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <button onClick={() => handleResolve(r.id, "RESOLVIDA")} className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-semibold px-3 py-1.5 rounded-full transition-colors">
+                  <Check size={11} /> Resolvida
+                </button>
+                <button onClick={() => handleResolve(r.id, "IGNORADA")} className="flex items-center gap-1 bg-gray-400 hover:bg-gray-500 text-white text-[10px] font-semibold px-3 py-1.5 rounded-full transition-colors">
+                  <X size={11} /> Ignorar
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PasswordResetsTab({ storeType, accentColor }: { storeType: string; accentColor: string }) {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

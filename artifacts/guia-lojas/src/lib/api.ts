@@ -90,7 +90,26 @@ export async function fetchStores(filters?: {
   const res = await fetch(`/api/stores?${params.toString()}`);
   if (!res.ok) throw new Error("Erro ao buscar lojas");
   const stores: Store[] = await res.json();
-  return stores.map(applyDynamicOpenStatus);
+  return stores.map(applyDynamicOpenStatus).filter((s) => !isStoreBlocked(s.id));
+}
+
+// Lojas bloqueadas pelo utilizador (só na vista dele) — ver Bloquear na loja.
+export function getBlockedStoreIds(): string[] {
+  try {
+    const raw = localStorage.getItem("yesola-blocks");
+    const list: unknown = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function isStoreBlocked(id: string): boolean {
+  try {
+    return getBlockedStoreIds().includes(id);
+  } catch {
+    return false;
+  }
 }
 
 // GET /api/stores/:id — Detalhes de uma loja
@@ -629,4 +648,20 @@ export async function unblockStore(phone: string, storeType: string, storeId: st
     body: JSON.stringify({ phone, storeType, storeId }),
   });
   if (!res.ok) throw new Error("Erro ao desbloquear loja");
+}
+
+// ── Moderação (admin): ver e resolver denúncias ──
+export async function fetchReports(): Promise<any[]> {
+  const res = await fetch("/api/moderation/admin/reports");
+  if (!res.ok) throw new Error("Erro ao buscar denúncias");
+  return res.json();
+}
+
+export async function resolveReport(id: number, status: "RESOLVIDA" | "IGNORADA"): Promise<void> {
+  const res = await fetch(`/api/moderation/admin/reports/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) throw new Error("Erro ao resolver denúncia");
 }
