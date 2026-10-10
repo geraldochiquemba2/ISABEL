@@ -1,0 +1,173 @@
+# YESOLA iOS Ad Hoc — teste nativo SEM Apple (sem TestFlight/review).
+# Disparo manual: Actions > YESOLA iOS Ad Hoc > Run workflow.
+#   live_web=true  -> app lê o site ao vivo (testa web sem rebuild)
+#   live_web=false -> app empacotada (testa nativo: splash, statusbar, etc.)
+# Saída: artifact YESOLA-adhoc-ipa (descarregar) -> subir no https://www.diawi.com
+# -> instalar no iPhone ( Modo Programador ativo em Definições > Privacidade).
+# REQUISITO: UDIDs registados na conta Apple (pede-se uma vez).
+name: YESOLA iOS Ad Hoc
+
+on:
+  workflow_dispatch:
+    inputs:
+      live_web:
+        description: "App lê o site ao vivo (sem rebuild p/ web)"
+        required: true
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+
+jobs:
+  adhoc:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: artifacts/guia-lojas
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --prefer-offline --no-frozen-lockfile
+
+      - name: Build web assets
+        run: pnpm run build
+        env:
+          PORT: "3000"
+          BASE_PATH: "/"
+          NODE_ENV: production
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+        env:
+          CAP_SERVER_URL: ${{ inputs.live_web == 'true' && 'https://yesola.ao' || '' }}
+
+      - name: Bump build number
+        run: |
+          python3 -c "import re; p='ios/App/App.xcodeproj/project.pbxproj'; s=open(p).read(); s=re.sub(r'CURRENT_PROJECT_VERSION = \d+;', 'CURRENT_PROJECT_VERSION = $GITHUB_RUN_NUMBER;', s); open(p,'w').write(s)"
+          grep -m2 "CURRENT_PROJECT_VERSION" ios/App/App.xcodeproj/project.pbxproj
+
+      - name: Generate icons+splash (ferramenta oficial)
+        run: npx -y @capacitor/assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'
+
+      - name: Install CocoaPods
+        run: |
+          cd ios/App
+          pod install --repo-update
+
+      - name: Signing (cert + perfil Ad Hoc)
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.ASC_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          pip3 install --break-system-packages codemagic-cli-tools
+          echo "${{ secrets.DISTRIBUTION_P12 }}" | base64 -d > "$RUNNER_TEMP/dist.p12"
+          echo "${{ secrets.YESOLA_KEY }}" > "$RUNNER_TEMP/yesola.key"
+          chmod 600 "$RUNNER_TEMP/dist.p12" "$RUNNER_TEMP/yesola.key"
+          keychain initialize
+          keychain add-certificates --certificate "$RUNNER_TEMP/dist.p12" --certificate-password "${{ secrets.P12_PASSWORD }}"
+          app-store-connect fetch-signing-files "pt.yesola.appstore" \
+            --platform IOS \
+            --type IOS_APP_ADHOC \
+            --certificate-key "@file:$RUNNER_TEMP/yesola.key" \
+            --create
+          cd ios/App
+          xcode-project use-profiles
+
+      - name: Archive (assinatura manual via perfil)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            archive
+
+      - name: Prepare ExportOptions.plist (ad-hoc)
+        run: |
+          python3 - <<'EOF'
+          import glob, os, plistlib, shutil, subprocess, sys
+          prov_new = os.path.expanduser("~/Library/Developer/Xcode/UserData/Provisioning Profiles")
+          prov_legacy = os.path.expanduser("~/Library/MobileDevice/Provisioning Profiles")
+          ws = os.environ.get("GITHUB_WORKSPACE", "")
+          patterns = [
+              os.path.join(prov_new, "*.mobileprovision"),
+              os.path.join(prov_legacy, "*.mobileprovision"),
+          ]
+          if ws:
+              patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "*.mobileprovision"))
+              patterns.append(os.path.join(ws, "artifacts", "guia-lojas", "ios", "App", "*.mobileprovision"))
+          seen = set()
+          profiles = []
+          for pat in patterns:
+              for p in glob.glob(pat):
+                  if p not in seen:
+                      seen.add(p)
+                      profiles.append(p)
+          for d in (prov_new, prov_legacy):
+              os.makedirs(d, exist_ok=True)
+          for p in profiles:
+              for d in (prov_new, prov_legacy):
+                  dest_p = os.path.join(d, os.path.basename(p))
+                  if os.path.abspath(p) != os.path.abspath(dest_p):
+                      shutil.copy(p, dest_p)
+          bundle = "pt.yesola.appstore"
+          team = "4ZQGZ9N775"
+          chosen = None
+          for p in profiles:
+              try:
+                  out = subprocess.run(["security", "cms", "-D", "-i", p], capture_output=True, check=True).stdout
+                  d = plistlib.loads(out)
+                  name = d.get("Name", "")
+                  app_id = ((d.get("Entitlements", {}) or {}).get("application-identifier", ""))
+                  if app_id in (f"{team}.{bundle}", bundle) or app_id.endswith("." + bundle):
+                      chosen = name
+              except Exception as e:
+                  print(f"! falha a ler {p}: {e}")
+          if not chosen:
+              print("ERRO: nenhum perfil ad-hoc para pt.yesola.appstore (registre os UDIDs!)", file=sys.stderr)
+              sys.exit(1)
+          print(f"Perfil escolhido: {chosen}")
+          export_plist = {
+              "method": "ad-hoc",
+              "teamID": team,
+              "signingStyle": "manual",
+              "provisioningProfiles": {bundle: chosen},
+              "uploadSymbols": True,
+          }
+          dest = os.path.join(os.environ["RUNNER_TEMP"], "ExportOptions.plist")
+          with open(dest, "wb") as f:
+              plistlib.dump(export_plist, f, fmt=plistlib.FMT_XML)
+          print(f"ExportOptions escrito em {dest}")
+          EOF
+          cat "$RUNNER_TEMP/ExportOptions.plist"
+
+      - name: Export IPA
+        run: |
+          cd ios/App
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/ipa"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: YESOLA-adhoc-ipa
+          path: ${{ runner.temp }}/ipa/*.ipa
+          retention-days: 7
