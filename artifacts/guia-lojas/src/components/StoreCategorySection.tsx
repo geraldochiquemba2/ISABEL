@@ -99,7 +99,7 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
   return (
     <div
       className="flex-shrink-0 w-44 rounded-2xl overflow-hidden bg-white shadow-md border border-[#EDE8DE] cursor-pointer hover:-translate-y-1 transition-all relative group"
-      onClick={() => { nativeTap(); window.location.href = `/loja/${store.id}?from=${from}`; }}
+      onClick={() => { nativeTap(); navigate(`/loja/${store.id}?from=${from}`); window.scrollTo(0, 0); }}
       onMouseEnter={prefetchStore}
       onFocus={prefetchStore}
     >
