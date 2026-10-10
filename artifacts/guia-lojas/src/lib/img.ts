@@ -5,11 +5,25 @@
 // Usar nos cartões/grelhas; páginas de detalhe continuam com a cheia.
 //
 // Só toca em URLs do nosso proxy; Unsplash e outras externas passam intactas.
+//
+// URLs absolutas SEMPRE: a app nativa corre empacotada em
+// capacitor://localhost, onde caminhos relativos /api/... não resolvem
+// (o fetch é reescrito pelo interceptor em apiBase.ts, mas <img> não é).
+import { API_BASE } from "./apiBase";
+
+export function absUrl(url: string): string {
+  if (!url) return url;
+  if (/^(https?:|data:|blob:|capacitor:)/i.test(url)) return url;
+  if (url.startsWith("/")) return API_BASE.replace(/\/+$/, "") + url;
+  return url;
+}
+
 export function thumbUrl(url?: string | null): string {
   if (!url) return "";
-  if (!url.startsWith("/api/media/image/")) return url;
-  if (url.includes("size=")) return url;
-  return url.includes("?") ? `${url}&size=thumb` : `${url}?size=thumb`;
+  if (!url.startsWith("/api/media/image/")) return absUrl(url);
+  if (url.includes("size=")) return absUrl(url);
+  const out = url.includes("?") ? `${url}&size=thumb` : `${url}?size=thumb`;
+  return absUrl(out);
 }
 
 export function thumbList(urls: Array<string | null | undefined>): string[] {
@@ -34,7 +48,7 @@ export function dedupeUrls(urls: Array<string | null | undefined>): string[] {
   const seen = new Set<string>();
   for (const u of urls) {
     if (typeof u !== "string") continue;
-    const v = u.trim();
+    const v = absUrl(u.trim());
     if (v && !seen.has(v)) {
       seen.add(v);
       out.push(v);
