@@ -996,10 +996,11 @@ function Router() {
   );
 }
 
-function App() {
-  useEffect(() => {
+  function App() {
+    useEffect(() => {
     initPush();
-  }, []);
+    import("@/lib/statusbar").then((m) => m.initStatusBar());
+    }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
