@@ -43,26 +43,43 @@ function beaconInfo(info: string) {
 // Chame sempre que mudar de área/loja. Na web não faz nada.
 // NOTA: importa o plugin primeiro — isPluginAvailable dá falso sem o import.
 export async function setNativeStatusColor(color: string): Promise<void> {
+  let native = false;
+  let imported = false;
+  let result = "";
   try {
-    if (!isNativeApp()) return;
-    const { StatusBar, Style } = await import("@capacitor/status-bar");
+    try { native = isNativeApp(); } catch { native = false; }
+    let StatusBar: any = null;
+    let Style: any = null;
     try {
-      await StatusBar.setBackgroundColor({ color });
-    } catch {
-      /* iOS com sobreposição ignora; Android <15 aplica */
+      const mod = await import("@capacitor/status-bar");
+      StatusBar = mod.StatusBar;
+      Style = mod.Style;
+      imported = !!StatusBar;
+    } catch (e: any) {
+      result = "import-fail:" + String(e?.message || e).slice(0, 80);
     }
-    try {
-      await StatusBar.setStyle({ style: isLight(color) ? Style.Dark : Style.Light });
-    } catch {
-      /* ignora */
+    if (native && imported) {
+      try {
+        await StatusBar.setBackgroundColor({ color });
+        result += "|bg-ok";
+      } catch (e: any) {
+        result += "|bg-fail:" + String(e?.message || e).slice(0, 60);
+      }
+      try {
+        await StatusBar.setStyle({ style: isLight(color) ? Style.Dark : Style.Light });
+        result += "|style-ok";
+      } catch (e: any) {
+        result += "|style-fail:" + String(e?.message || e).slice(0, 60);
+      }
+      try {
+        const info = await StatusBar.getInfo();
+        result += "|info:" + JSON.stringify(info);
+      } catch (e: any) {
+        result += "|info-fail:" + String(e?.message || e).slice(0, 60);
+      }
     }
-    try {
-      const info = await StatusBar.getInfo();
-      beaconInfo(`set:${color} native:${JSON.stringify(info)}`);
-    } catch {
-      /* ignora */
-    }
-  } catch {
-    /* plugin ausente ou web: ignora */
+  } catch (e: any) {
+    result += "|outer-fail:" + String(e?.message || e).slice(0, 60);
   }
+  beaconInfo(`native:${native} imported:${imported} color:${color} ${result}`);
 }

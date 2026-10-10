@@ -59,6 +59,19 @@ let started = false;
 export function initImgFallback(): void {
   if (started) return;
   started = true;
+  // Diagnóstico: de onde a app carrega (live vs pacote nativo).
+  import("@capacitor/core").then(
+    ({ Capacitor }) => {
+      beacon(
+        window.location.href + " | " + (navigator.userAgent || "").slice(0, 50) +
+        " | plat:" + Capacitor.getPlatform() + " native:" + Capacitor.isNativePlatform(),
+        "appinfo-b91"
+      );
+    },
+    () => {
+      beacon(window.location.href + " | " + (navigator.userAgent || "").slice(0, 80), "appinfo-b90");
+    }
+  );
   try {
     document.addEventListener(
       "error",
