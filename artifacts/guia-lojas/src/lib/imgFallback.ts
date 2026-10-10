@@ -66,15 +66,17 @@ export function initImgFallback(): void {
         const t = e.target as HTMLElement | null;
         if (!t || t.tagName !== "IMG") return;
         const img = t as HTMLImageElement;
-        // Tenta de novo 2x (picos de tráfego dão 429/timeout transitório)
-        // antes de trocar pelo fallback da área.
+        // Tenta de novo 3x com anti-cache (falhas transitórias, picos,
+        // cache envenenada) antes de trocar pelo fallback da área.
         const tries = Number(img.dataset.fbTry || "0");
-        if (tries < 2 && img.src.includes("/api/media/")) {
+        if (tries < 3 && !img.dataset.fbOrig) {
+          img.dataset.fbOrig = img.src;
+        }
+        if (tries < 3) {
           img.dataset.fbTry = String(tries + 1);
-          const src = img.src;
-          window.setTimeout(() => {
-            if (img.isConnected) img.src = src;
-          }, 2000 * (tries + 1));
+          const base = (img.dataset.fbOrig || img.src).split("#")[0].split("?imgr=")[0];
+          const sep = base.includes("?") ? "&" : "?";
+          img.src = base + sep + "imgr=" + (tries + 1);
           return;
         }
         if (img.dataset.fbDone) {
