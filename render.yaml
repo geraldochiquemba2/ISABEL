@@ -4,7 +4,7 @@ services:
     name: isabel-loja-api
     env: node
     rootDir: artifacts/guia-lojas
-    buildCommand: pnpm install && pnpm run build # build gera dist/public (o servidor serve o frontend a partir daí; sem isto o fallback SPA falha)
+    buildCommand: npm install -g pnpm@9 && pnpm install && pnpm run build # build gera dist/public (o servidor serve o frontend a partir daí; sem isto o fallback SPA falha)
     startCommand: pnpm exec tsx server/index.ts
     healthCheckPath: /api/ping # o Render reinicia deploys que deixem de responder aqui
     envVars:
@@ -26,7 +26,7 @@ services:
     name: isabel-loja-frontend
     runtime: static # (antes: env: static — campo antigo, mesma função)
     rootDir: artifacts/guia-lojas
-    buildCommand: pnpm install && pnpm run build
+    buildCommand: npm install -g pnpm@9 && pnpm install && pnpm run build
     staticPublishPath: dist
     routes:
       - type: rewrite # SPA: deep-links (/loja/xxx, /explorar...) caem no index.html em vez de 404
