@@ -171,7 +171,7 @@ export default function LoginLove() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...loginReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F696B]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#6F696B]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -323,7 +323,7 @@ export default function LoginLove() {
                 <label className={labelCls}>Senha</label>
                 <div className="relative">
                   <input type={showPwd ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("password")} />
-                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-0 top-2.5 text-[#6F696B]">
+                  <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#6F696B]">
                     {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -334,7 +334,7 @@ export default function LoginLove() {
                 <label className={labelCls}>Confirmar senha</label>
                 <div className="relative">
                   <input type={showConfirm ? "text" : "password"} placeholder="••••••••" className={`${inputCls} pr-8`} {...regReg("confirmPassword")} />
-                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-0 top-2.5 text-[#6F696B]">
+                  <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#6F696B]">
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>

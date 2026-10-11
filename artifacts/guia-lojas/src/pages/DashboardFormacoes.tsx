@@ -335,14 +335,14 @@ export default function DashboardFormacoes() {
                   <label className={labelCls}>Nova Senha</label>
                   <div className="relative">
                     <input type={showNewPwd ? "text" : "password"} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} placeholder="••••••••" className={`${inputCls} pr-8`} />
-                    <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-0 top-2.5 text-[#68757C]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                    <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#68757C]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                   </div>
                 </div>
                 <div>
                   <label className={labelCls}>Confirmar Senha</label>
                   <div className="relative">
                     <input type={showConfirmPwd ? "text" : "password"} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} placeholder="••••••••" className={`${inputCls} pr-8`} />
-                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-0 top-2.5 text-[#68757C]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                    <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#68757C]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                   </div>
                 </div>
                 {pwdError && <p className="text-xs text-red-500">{pwdError}</p>}

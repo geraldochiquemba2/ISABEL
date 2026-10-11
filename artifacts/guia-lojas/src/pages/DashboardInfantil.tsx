@@ -310,11 +310,11 @@ export default function DashboardInfantil() {
               <div className="space-y-3">
                 <div className="relative">
                   <input type={showNewPwd ? "text" : "password"} placeholder="Nova senha" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} className={`${inputCls} pr-8`} />
-                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-3 text-[#E6DED3]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#E6DED3]">{showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
                 <div className="relative">
                   <input type={showConfirmPwd ? "text" : "password"} placeholder="Confirmar senha" value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} className={`${inputCls} pr-8`} />
-                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-3 text-[#E6DED3]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-[#E6DED3]">{showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">

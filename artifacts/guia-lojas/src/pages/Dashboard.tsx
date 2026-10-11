@@ -346,7 +346,7 @@ export default function Dashboard() {
                     onChange={(e) => setNewPwd(e.target.value)}
                     className="w-full border-b border-border bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors pr-8"
                   />
-                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-0 top-2.5 text-muted-foreground">
+                  <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-muted-foreground">
                     {showNewPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -361,7 +361,7 @@ export default function Dashboard() {
                     onChange={(e) => setConfirmPwd(e.target.value)}
                     className="w-full border-b border-border bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-foreground transition-colors pr-8"
                   />
-                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-0 top-2.5 text-muted-foreground">
+                  <button type="button" onClick={() => setShowConfirmPwd(!showConfirmPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-muted-foreground">
                     {showConfirmPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
