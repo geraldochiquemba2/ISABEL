@@ -728,12 +728,35 @@ function formatPrice(price: number): string {
 type PhotoProduct = { imageUrl?: string; imageUrls?: string | string[] | null };
 
 function firstPhotoUrl(p: PhotoProduct | null | undefined): string {
-  if (!p) return "";
+  return photoUrlAt(p, 0);
+}
+
+// Todas as fotos (dedup, ordem, URLs públicas). Mesma ordem do thumbList,
+// por isso o índice da foto visível no card/lightbox corresponde.
+function allPhotoUrls(p: PhotoProduct | null | undefined): string[] {
+  if (!p) return [];
   const raw = typeof p.imageUrls === "string"
     ? p.imageUrls.split(" ").filter(Boolean)
     : Array.isArray(p.imageUrls) && p.imageUrls.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
-  const first = raw.find((u) => typeof u === "string" && u.trim());
-  return first ? shareUrl(first.trim()) : "";
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const u of raw) {
+    if (typeof u !== "string") continue;
+    const v = u.trim();
+    if (v && !seen.has(v)) {
+      seen.add(v);
+      out.push(v);
+    }
+  }
+  return out;
+}
+
+// Foto N (0 = principal). Usada para mandar a foto que o cliente está a ver.
+function photoUrlAt(p: PhotoProduct | null | undefined, index: number): string {
+  const list = allPhotoUrls(p);
+  if (!list.length) return "";
+  const i = Math.min(Math.max(Number.isFinite(index) ? index : 0, 0), list.length - 1);
+  return shareUrl(list[i]);
 }
 
 function moneyLabel(price: number, currency?: string): string {
@@ -741,8 +764,8 @@ function moneyLabel(price: number, currency?: string): string {
   return price > 0 ? `Preço: ${sym} ${formatPrice(price)}` : "Preço sob consulta";
 }
 
-function singleOrderMessage(storeName: string, p: { name: string; price: number; currency?: string } & PhotoProduct): string {
-  const foto = firstPhotoUrl(p);
+function singleOrderMessage(storeName: string, p: { name: string; price: number; currency?: string } & PhotoProduct, photoIndex = 0): string {
+  const foto = photoUrlAt(p, photoIndex);
   return (
     `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
     `Produto: ${p.name}\n` +
@@ -1071,7 +1094,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
               
               <a
                 href={`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(
-                  singleOrderMessage(storeName, filtered[lightboxIndex])
+                  singleOrderMessage(storeName, filtered[lightboxIndex], lightboxPhotoIndex)
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1104,7 +1127,10 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
     return () => clearInterval(t);
   }, [pImgs.length]);
 
-  const whatsappMessage = encodeURIComponent(singleOrderMessage(storeName, product));
+  // Pedir manda a foto que está visível no card (roda a cada 2s), não
+  // necessariamente a principal.
+  const visibleIdx = pImgs.length > 0 ? pImgIdx % pImgs.length : 0;
+  const whatsappMessage = encodeURIComponent(singleOrderMessage(storeName, product, visibleIdx));
 
   const whatsappUrl = `https://wa.me/244${storeWhatsapp}?text=${whatsappMessage}`;
 
