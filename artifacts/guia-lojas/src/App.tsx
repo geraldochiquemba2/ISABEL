@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -293,6 +293,64 @@ function slugToVertical(slug: string): StoreType {
   return map[slug.toLowerCase()] ?? null;
 }
 
+// Vertical → rota do painel (espelho das rotas do Switch mais abaixo).
+const DASHBOARD_BY_VERTICAL: Record<string, string> = {
+  collection: "/dashboard",
+  weddings: "/dashboard-weddings",
+  "love-services": "/dashboard-love",
+  business: "/dashboard-business",
+  formacoes: "/dashboard-formacoes",
+  eventos: "/dashboard-eventos",
+  entretenimento: "/dashboard-entretenimento",
+  imoveis: "/dashboard-imoveis",
+  infantil: "/dashboard-infantil",
+  automoveis: "/dashboard-automoveis",
+  saude: "/dashboard-saude",
+  beleza: "/dashboard-beleza",
+  casa: "/dashboard-casa",
+  "tecnologia-electronicos": "/dashboard-tecnologia",
+  "alimentacao-restauracao": "/dashboard-alimentacao",
+  "turismo-lazer": "/dashboard-turismo",
+  "desporto-fitness": "/dashboard-desporto",
+  "empregos-oportunidades": "/dashboard-empregos",
+  "agricultura-agronegocio": "/dashboard-agricultura",
+  "influenciadores-criadores": "/dashboard-influenciadores",
+  "transportes-logistica": "/dashboard-transportes",
+  "servicos-profissionais": "/dashboard-servicos",
+  bancos: "/dashboard-bancos",
+  seguradoras: "/dashboard-seguradoras",
+};
+
+// Sessão iniciada a abrir página de login/entrada: volta direto ao painel
+// sem pedir a senha outra vez. "Ver site" nunca desloga (não toca na
+// sessão) — só Sair, Trocar de loja ou o seletor de áreas é que limpam.
+// Devolve { to, vertical } ou null (sem sessão, área diferente ou admin de
+// outra área a entrar — nesse caso mostra o formulário normalmente).
+function sessionDashboardForLogin(basePath: string): { to: string; vertical: Exclude<StoreType, null> } | null {
+  let vertical: StoreType = null;
+  if (basePath === "/login") {
+    vertical = "collection";
+  } else {
+    const m = basePath.match(/^\/login-([a-z-]+)$/);
+    if (!m) return null;
+    vertical = slugToVertical(m[1]);
+  }
+  if (!vertical) return null;
+  const to = DASHBOARD_BY_VERTICAL[vertical];
+  if (!to) return null;
+  try {
+    const raw = localStorage.getItem("guialocal_user");
+    if (!raw) return null;
+    const u = JSON.parse(raw);
+    const mine = u?.storeType || "collection";
+    const isAdmin = u?.phone === "999999999";
+    if (mine !== vertical && !isAdmin) return null;
+    return { to, vertical: vertical as Exclude<StoreType, null> };
+  } catch {
+    return null;
+  }
+}
+
 function Router() {
   const [selectedStore, setSelectedStore] = useState<StoreType>(
     () => (localStorage.getItem("eliora-selected-store") as StoreType) ?? inferStoreFromUrl()
@@ -555,6 +613,18 @@ function Router() {
   }, []);
   // Rotas globais: funcionam em qualquer vertical (ver nota hooks acima —
   // este bloco vive DEPOIS de todos os hooks de propósito).
+  // Sessão ativa a entrar no login: salta direto ao painel (sem flash do
+  // seletor: sincroniza a vertical na mesma passagem).
+  const loginJump = sessionDashboardForLogin(basePath);
+  if (loginJump) {
+    try {
+      localStorage.setItem("eliora-selected-store", loginJump.vertical);
+    } catch {
+      /* armazenamento indisponível */
+    }
+    if (selectedStore !== loginJump.vertical) setSelectedStore(loginJump.vertical);
+    return <Redirect to={loginJump.to} />;
+  }
   if (basePath === "/login") return <Login />;
   if (basePath === "/busca") return <SearchPage />;
   if (basePath === "/dashboard") return <Dashboard />;
