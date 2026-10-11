@@ -691,6 +691,14 @@ function Router() {
     if (location === "/admin-lugares") {
       return <AdminLugares />;
     }
+    // Garantia: estar na página de boas-vindas (escolher área) termina a
+    // sessão. Sair, Trocar de loja ou voltar aqui são as únicas saídas —
+    // "Ver site" nunca desloga (a sessão continua para voltar ao painel).
+    try {
+      localStorage.removeItem("guialocal_user");
+    } catch {
+      /* armazenamento indisponível */
+    }
     return <StoreSelector onSelect={handleStoreSelect} />;
   }
 
