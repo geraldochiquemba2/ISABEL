@@ -18,6 +18,7 @@ import { getStoreCategories, filterGroupsForStore } from "@/lib/storeCategories"
 import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 import { motion, AnimatePresence } from "framer-motion";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
@@ -274,7 +275,7 @@ export default function DashboardBusiness() {
           </div>
 
           <nav className="space-y-1">
-            <button onClick={() => window.location.href = "/"} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
+            <button onClick={() => { keepNativeArea(); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
               <Eye size={15} /> Ver site
             </button>
             {sidebarItems.map((item) => (

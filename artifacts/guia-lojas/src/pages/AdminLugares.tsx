@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Pencil, Trash2, Download, MapPin } from "lucide-react"
 import { fetchPlaces, createPlace, updatePlace, deletePlace, importPlaces, type Place } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { PageTransition } from "@/components/PageTransition";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 const AMENITIES = [
   { id: "place_of_worship", name: "Igrejas" },
@@ -83,7 +84,7 @@ export default function AdminLugares() {
       <div className="min-h-[100dvh] bg-[#FFFDF8] pb-10" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         <header className="sticky top-0 z-50 bg-[#FFFDF8]/95 border-b border-[#E8CC91]/60">
           <div className="flex items-center gap-3 px-5 py-4">
-            <button onClick={() => (window.location.href = "/")} className="p-1" aria-label="Voltar">
+            <button onClick={() => { keepNativeArea(); window.location.href = "/"; }} className="p-1" aria-label="Voltar">
               <ArrowLeft size={22} />
             </button>
             <h1 className="text-[18px] font-bold">Lugares — Administração</h1>

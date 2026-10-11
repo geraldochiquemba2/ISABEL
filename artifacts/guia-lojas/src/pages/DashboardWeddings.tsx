@@ -18,6 +18,7 @@ import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package, KeyRound, EyeOff, Camera, Image, ShieldAlert, Phone, RefreshCw, LayoutDashboard, Menu, MapPin, Navigation , UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
@@ -323,7 +324,7 @@ export default function DashboardWeddings() {
 
           <nav className="space-y-1">
             <button
-              onClick={() => window.location.href = "/"}
+              onClick={() => { keepNativeArea(); window.location.href = "/"; }}
               className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2"
             >
               <Eye size={15} />

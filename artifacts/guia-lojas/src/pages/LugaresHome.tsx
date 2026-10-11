@@ -7,6 +7,7 @@ import {
 import { fetchPlaces, type Place } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import { PageTransition } from "@/components/PageTransition";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 const KINDS = [
   { id: "", name: "Todos" },
@@ -188,7 +189,7 @@ export default function LugaresHome() {
         {activeArea && activeArea !== "lugares" && (
           <div className="px-5 pt-3">
             <button
-              onClick={() => (window.location.href = "/")}
+              onClick={() => { keepNativeArea(); window.location.href = "/"; }}
               className="flex items-center gap-1.5 text-[12px] font-semibold text-[#A96F12] bg-white border border-[#E8CC91] rounded-full px-3.5 py-2"
             >
               <ArrowLeft size={14} /> Voltar a {AREA_NAMES[activeArea] || "minha área"}

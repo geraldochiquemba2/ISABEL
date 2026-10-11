@@ -18,6 +18,7 @@ import { Ban, LogOut, Eye, MessageCircle, Edit2, Trash2, Plus, X, Store, Package
 import { PageTransition } from "@/components/PageTransition";
 import AdminPanel from "@/components/AdminPanel";
 import { motion, AnimatePresence } from "framer-motion";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
@@ -278,7 +279,7 @@ export default function DashboardAutomoveis() {
           </div>
 
           <nav className="space-y-1">
-            <button onClick={() => window.location.href = "/"} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
+            <button onClick={() => { keepNativeArea(); window.location.href = "/"; }} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all mb-2">
               <Eye size={15} /> Ver site
             </button>
             {sidebarItems.map((item) => (

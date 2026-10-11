@@ -119,6 +119,7 @@ import Contacto from "@/pages/Contacto";
 import Termos from "@/pages/Termos";
 import OfflineBanner from "@/components/OfflineBanner";
 import { initPush } from "@/lib/push";
+import { keepNativeArea } from "@/lib/nativeBoot";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -640,6 +641,8 @@ function Router() {
   const handleStoreSelect = (storeId: string) => {
     localStorage.setItem("eliora-selected-store", storeId);
     setSelectedStore(storeId as StoreType);
+    // Nativo: o reload a seguir é continuação interna (não volta às boas-vindas).
+    keepNativeArea();
     try {
       // Empilha a home da área como entrada própria, preservando atrás a
       // entrada do seletor (marcada pelo efeito acima): o voltar do navegador
