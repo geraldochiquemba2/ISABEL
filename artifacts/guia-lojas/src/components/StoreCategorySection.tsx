@@ -46,6 +46,7 @@ const expandWords = (n: string): string[] => {
 };
 
 export function StoreCard({ store, from }: { store: Store; from: string }) {
+  const [, navigate] = useLocation();
   const queryClient = useQueryClient();
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   // Ordem: 1) capas da loja 2) fotos dos produtos (muitas lojas têm produtos
