@@ -29,12 +29,6 @@ const config: CapacitorConfig = {
       backgroundColor: "#FFFFFF",
     },
   },
-    StatusBar: {
-      overlaysWebView: false,
-      style: "DARK",
-      backgroundColor: "#FFFFFF",
-    },
-  },
   ios: {
     contentInset: "automatic",
     backgroundColor: "#2c3035",
