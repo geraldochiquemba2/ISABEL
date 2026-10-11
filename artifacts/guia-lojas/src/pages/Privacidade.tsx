@@ -10,7 +10,7 @@ export default function Privacidade() {
   return (
     <main className="min-h-[100dvh] bg-[#FBF7F2] text-[#292727]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">
-        <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#697482] hover:text-[#171717] transition-colors mb-8">
+        <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#697482] hover:text-[#171717] transition-colors mb-8 sticky top-[max(12px,env(safe-area-inset-top))] z-30 bg-white/90 backdrop-blur-md border border-black/10 shadow-sm rounded-full px-3 py-1.5">
           <ArrowLeft size={16} /> Voltar
         </button>
         <div className="flex items-center gap-3 mb-2">

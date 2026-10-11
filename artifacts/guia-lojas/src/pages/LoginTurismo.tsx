@@ -125,7 +125,7 @@ export default function LoginTurismo() {
       <div className="mx-auto max-w-[1380px] px-6 py-8 md:px-12">
         <button
           onClick={() => window.location.href = "/turismo"}
-          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#00796B] transition-colors mb-12"
+          className="flex items-center gap-2 text-sm text-[#68727c] hover:text-[#00796B] transition-colors mb-12 sticky top-[max(12px,env(safe-area-inset-top))] z-30 bg-white/90 backdrop-blur-md border border-black/10 shadow-sm rounded-full px-3 py-1.5"
         >
           <ArrowLeft size={16} />
           Voltar
