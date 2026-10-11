@@ -23,8 +23,18 @@ export function absUrl(url: string): string {
   return url;
 }
 
-export function thumbUrl(url?: string | null): string {
-  if (!url) return "";
+// Link público com o domínio próprio (mensagens WhatsApp, partilhas).
+// A rota yesola.ao/api/* vai direta ao Worker: 1 invocação, igual ao
+// workers.dev — sem custo extra de cota e com o domínio da loja.
+export function shareUrl(url: string): string {
+  const abs = absUrl(url);
+  if (abs.startsWith(MEDIA_BASE)) {
+    return API_BASE.replace(/\/+$/, "") + abs.slice(MEDIA_BASE.length);
+  }
+  return abs;
+}
+
+export function thumbUrl(url?: string | null): string {  if (!url) return "";
   if (!url.startsWith("/api/media/image/")) return absUrl(url);
   if (url.includes("size=")) return absUrl(url);
   const out = url.includes("?") ? `${url}&size=thumb` : `${url}?size=thumb`;

@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
-import { thumbUrl, thumbList, dedupeUrls, absUrl } from "@/lib/img";
+import { thumbUrl, thumbList, dedupeUrls, shareUrl } from "@/lib/img";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -733,7 +733,7 @@ function firstPhotoUrl(p: PhotoProduct | null | undefined): string {
     ? p.imageUrls.split(" ").filter(Boolean)
     : Array.isArray(p.imageUrls) && p.imageUrls.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
   const first = raw.find((u) => typeof u === "string" && u.trim());
-  return first ? absUrl(first.trim()) : "";
+  return first ? shareUrl(first.trim()) : "";
 }
 
 function moneyLabel(price: number, currency?: string): string {
