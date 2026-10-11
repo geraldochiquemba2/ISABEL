@@ -13,7 +13,7 @@
  *   (ex.: ?from=beleza -> home Beleza), com reload para garantir que o
  *   contexto de loja (localStorage + estado do Router) fica correto.
  */
-const FROM_MAP: Record<string, string> = {
+import { keepNativeArea } from "./nativeBoot";const FROM_MAP: Record<string, string> = {
   weddings: "weddings",
   love: "love-services",
   "love-services": "love-services",
@@ -76,6 +76,8 @@ export function goBackFromStore(from: string | null): void {
   }
   // Reload intencional: o Router lê a loja do localStorage só ao iniciar,
   // por isso a navegação SPA (setLocation) podia mostrar a vertical errada.
+  // Nativo: continuação interna (o boot não volta às boas-vindas).
+  keepNativeArea();
   window.location.href = "/";
 }
 
@@ -96,5 +98,7 @@ export function goBackTo(home = "/"): void {
   } catch {
     /* cai no fallback */
   }
+  // Nativo: continuação interna (o boot não volta às boas-vindas).
+  keepNativeArea();
   window.location.href = home;
 }
