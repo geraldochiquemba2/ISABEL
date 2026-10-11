@@ -233,7 +233,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => setShowPwd(!showPwd)}
-                      className="absolute right-0 top-2.5 text-muted-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground flex items-center"
                     >
                       {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
@@ -393,7 +393,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => setShowPwd(!showPwd)}
-                      className="absolute right-0 top-2.5 text-muted-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground flex items-center"
                     >
                       {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
@@ -413,7 +413,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-0 top-2.5 text-muted-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground flex items-center"
                     >
                       {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>

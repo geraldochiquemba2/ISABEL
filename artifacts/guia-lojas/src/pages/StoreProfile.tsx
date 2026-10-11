@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
-import { thumbUrl, thumbList, dedupeUrls } from "@/lib/img";
+import { thumbUrl, thumbList, dedupeUrls, absUrl } from "@/lib/img";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -720,6 +720,37 @@ function formatPrice(price: number): string {
   return `${formatted},${dec}`;
 }
 
+// ─── Foto no pedido WhatsApp ─────────────────────────────────────────────
+// O link wa.me só leva TEXTO (limite oficial: sem foto anexada). O que dá
+// para fazer é incluir o link público da foto na mensagem — o WhatsApp
+// mostra a pré-visualização e o vendedor toca para ver. Só a 1ª foto
+// (mensagens gigantes partem em alguns telemóveis).
+type PhotoProduct = { imageUrl?: string; imageUrls?: string | string[] | null };
+
+function firstPhotoUrl(p: PhotoProduct | null | undefined): string {
+  if (!p) return "";
+  const raw = typeof p.imageUrls === "string"
+    ? p.imageUrls.split(" ").filter(Boolean)
+    : Array.isArray(p.imageUrls) && p.imageUrls.length ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : []);
+  const first = raw.find((u) => typeof u === "string" && u.trim());
+  return first ? absUrl(first.trim()) : "";
+}
+
+function moneyLabel(price: number, currency?: string): string {
+  const sym = currency === "USD" ? "$" : currency === "EUR" ? "€" : "Kz";
+  return price > 0 ? `Preço: ${sym} ${formatPrice(price)}` : "Preço sob consulta";
+}
+
+function singleOrderMessage(storeName: string, p: { name: string; price: number; currency?: string } & PhotoProduct): string {
+  const foto = firstPhotoUrl(p);
+  return (
+    `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
+    `Produto: ${p.name}\n` +
+    `${moneyLabel(p.price, p.currency)}` +
+    `${foto ? `\nFoto: ${foto}` : ""}`
+  );
+}
+
 function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
   // Categoria virtual para produtos sem categoria (não existe na BD).
   const OUTROS_CAT = "__outros__";
@@ -1040,9 +1071,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
               
               <a
                 href={`https://wa.me/${storeWhatsapp}?text=${encodeURIComponent(
-                  `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
-                  `Produto: ${filtered[lightboxIndex].name}\n` +
-                  `${filtered[lightboxIndex].price > 0 ? `Preço: ${filtered[lightboxIndex].currency === 'USD' ? '$' : filtered[lightboxIndex].currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(filtered[lightboxIndex].price)}` : "Preço sob consulta"}`
+                  singleOrderMessage(storeName, filtered[lightboxIndex])
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1075,11 +1104,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
     return () => clearInterval(t);
   }, [pImgs.length]);
 
-  const whatsappMessage = encodeURIComponent(
-    `Olá! Gostaria de pedir o seguinte produto de vossa loja ${storeName}:\n\n` +
-    `Produto: ${product.name}\n` +
-    `${product.price > 0 ? `Preço: ${product.currency === 'USD' ? '$' : product.currency === 'EUR' ? '€' : 'Kz'} ${formatPrice(product.price)}` : "Preço sob consulta"}`
-  );
+  const whatsappMessage = encodeURIComponent(singleOrderMessage(storeName, product));
 
   const whatsappUrl = `https://wa.me/244${storeWhatsapp}?text=${whatsappMessage}`;
 
@@ -1185,7 +1210,8 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
     if (selectedProducts.length === 0) return;
     let msg = `Olá! Gostaria de pedir os seguintes carrinhos de *${storeName}*:\n\n`;
     selectedProducts.forEach((p, i) => {
-      msg += `${i + 1}. ${p.name}\n   Preço: ${p.price?.toLocaleString("pt-AO")} ${p.currency}\n\n`;
+      const foto = firstPhotoUrl(p);
+      msg += `${i + 1}. ${p.name}\n   Preço: ${p.price?.toLocaleString("pt-AO")} ${p.currency}${foto ? `\n   Foto: ${foto}` : ""}\n\n`;
     });
     msg += `*Total: ${totalPrice.toLocaleString("pt-AO")} Kz*\n\nAguardo confirmação!`;
     trackWhatsAppClick(storeId);
