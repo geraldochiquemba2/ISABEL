@@ -58,12 +58,15 @@ export default function Contacto() {
           <ArrowLeft size={16} /> Voltar
         </button>
 
-        {/* Cabeçalho — igual ao criativo */}
+        {/* Cabeçalho — logo oficial igual à página de escolher área */}
         <header className="text-center">
-          <p className="font-['Playfair_Display'] text-[34px] md:text-[42px] leading-none font-semibold tracking-[0.08em] text-[#A96F12]">
-            YESOLA<span className="align-super text-[18px]">✦</span>
-          </p>
-          <div className="mx-auto mt-1 h-[3px] w-[180px] rounded-full bg-[#A96F12]/80" />
+          <img
+            src="/logo-yesola-star-gold.png"
+            alt="YESOLA"
+            className="h-16 sm:h-20 w-auto object-contain mx-auto drop-shadow-[0_2px_8px_rgba(201,148,50,0.2)]"
+            loading="lazy"
+            decoding="async"
+          />
           <h1 className="font-['Playfair_Display'] text-[44px] md:text-[56px] leading-tight font-bold mt-4 tracking-[-0.02em]">
             Fale connosco
           </h1>
