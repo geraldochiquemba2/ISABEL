@@ -1,4 +1,4 @@
-import { ArrowLeft, Headset, Building2, Megaphone, Users, Phone, Clock, Sparkle } from "lucide-react";
+import { ArrowLeft, Headset, Building2, Megaphone, Users, Clock, Sparkle } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
 import { useThemeColor } from "@/lib/useThemeColor";
 
@@ -50,77 +50,86 @@ function WhatsAppIcon({ size = 22 }: { size?: number }) {
 }
 
 export default function Contacto() {
-  useThemeColor("#FFFDF8");
+  useThemeColor("#FFF9EC");
   return (
-    <main className="min-h-[100dvh] bg-white text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      <div className="mx-auto max-w-[860px] px-5 py-8 md:px-12 md:py-10">
+    <main className="min-h-[100dvh] text-[#111111] relative overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: "linear-gradient(180deg, #FFFEF8 0%, #FFF8E3 30%, #FFF3D3 55%, #FFF9EC 100%)" }}>
+      {/* Brilho dourado de fundo — aproxima o criativo */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#F5C542]/30 blur-3xl" />
+        <div className="absolute -top-16 -right-20 h-72 w-72 rounded-full bg-[#C9A227]/25 blur-3xl" />
+        <div className="absolute top-1/3 -left-28 h-96 w-96 rounded-full bg-[#FFE9A8]/40 blur-3xl" />
+        <div className="absolute top-1/2 -right-28 h-96 w-96 rounded-full bg-[#F5C542]/25 blur-3xl" />
+        <div className="absolute -bottom-24 left-1/4 h-72 w-72 rounded-full bg-[#C9A227]/20 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-[860px] px-5 py-8 md:px-12 md:py-10">
         <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#6F6F6F] hover:text-[#111111] transition-colors mb-6 sticky top-[max(12px,env(safe-area-inset-top))] z-30 bg-white/90 backdrop-blur-md border border-black/10 shadow-sm rounded-full px-3 py-1.5">
           <ArrowLeft size={16} /> Voltar
         </button>
 
-        {/* Cabeçalho — logo oficial igual à página de escolher área */}
+        {/* Cabeçalho — logo oficial + título azul-marinho */}
         <header className="text-center">
           <img
             src="/logo-yesola-star-gold.png"
             alt="YESOLA"
-            className="h-16 sm:h-20 w-auto object-contain mx-auto drop-shadow-[0_2px_8px_rgba(201,148,50,0.2)]"
+            className="h-20 sm:h-24 w-auto object-contain mx-auto drop-shadow-[0_4px_16px_rgba(201,148,50,0.45)]"
             loading="lazy"
             decoding="async"
           />
-          <h1 className="font-['Playfair_Display'] text-[44px] md:text-[56px] leading-tight font-bold mt-4 tracking-[-0.02em]">
+          <h1 className="font-['Playfair_Display'] text-[44px] md:text-[56px] leading-tight font-bold mt-3 tracking-[-0.02em] text-[#10123A]">
             Fale connosco
           </h1>
-          <p className="text-[17px] md:text-[19px] text-[#6F6F6F] mt-1">Estamos aqui para ajudar.</p>
+          <p className="text-[17px] md:text-[19px] text-[#5B5E6B] mt-1">Estamos aqui para ajudar.</p>
+          <div className="mt-3 flex items-center gap-3 max-w-[420px] mx-auto">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#C9A227] to-[#C9A227]" />
+            <Sparkle size={16} className="text-[#C9A227] shrink-0" />
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#C9A227] to-[#C9A227]" />
+          </div>
         </header>
 
-        {/* Cartões */}
-        <div className="mt-8 flex flex-col gap-4">
+        {/* Cartões — creme com moldura dourada e brilho */}
+        <div className="mt-6 flex flex-col gap-4">
           {CONTACTOS.map((c) => {
             const Icon = c.icon;
             const waLink = `https://wa.me/${c.wa}?text=${encodeURIComponent(c.mensagem)}`;
             return (
               <section
                 key={c.id}
-                className="bg-white border border-[#C9A227]/70 rounded-2xl p-5 md:p-6 flex gap-4"
+                className="rounded-3xl border-2 border-[#D9B545] bg-gradient-to-b from-[#FFFFFB] to-[#FFF6DC] shadow-[0_0_28px_rgba(217,181,69,0.45),inset_0_1px_0_rgba(255,255,255,0.9)] p-4 md:p-5 flex gap-4"
               >
-                <div className="shrink-0 pt-1 text-[#A96F12]">
-                  <Icon size={52} strokeWidth={1.8} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-[19px] md:text-[21px] font-bold leading-snug">{c.titulo}</h2>
-                  <p className="text-[14px] md:text-[15px] text-[#6F6F6F] mt-1.5 leading-6">{c.texto}</p>
-                  <div className="mt-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
-                    <a
-                      href={`tel:${c.wa}`}
-                      className="inline-flex items-center gap-2 text-[17px] font-bold tracking-tight"
-                    >
-                      <Phone size={17} className="text-[#A96F12]" />
-                      {c.telefone}
-                    </a>
-                    <a
-                      href={waLink}
-                      target="_blank"
-                      rel="noopener"
-                      className="inline-flex items-center justify-center gap-2 bg-[#1FA855] text-white text-[14px] font-semibold px-5 py-2.5 rounded-xl hover:brightness-95 transition-all shrink-0"
-                    >
-                      <WhatsAppIcon size={22} /> Falar no WhatsApp
-                    </a>
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 md:w-[72px] md:h-[72px] shrink-0 rounded-full border-2 border-[#D9B545] bg-[#FFFEF5] grid place-items-center text-[#B8860B] shadow-[0_0_18px_rgba(217,181,69,0.55),inset_0_2px_6px_rgba(217,181,69,0.25)]">
+                    <Icon size={32} strokeWidth={1.9} />
                   </div>
+                </div>
+                <div className="w-px self-stretch bg-[#D9B545]/60" aria-hidden="true" />
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-['Playfair_Display'] text-[19px] md:text-[22px] font-bold leading-snug text-[#10123A]">{c.titulo}</h2>
+                  <p className="text-[13.5px] md:text-[14.5px] text-[#5B5E6B] mt-1.5 leading-6">{c.texto}</p>
+                  <a
+                    href={waLink}
+                    target="_blank"
+                    rel="noopener"
+                    className="mt-2.5 inline-flex items-center gap-2 text-[17px] md:text-[18px] font-bold tracking-tight text-[#10123A] hover:text-[#1FA855] transition-colors"
+                    aria-label={`${c.titulo} no WhatsApp: ${c.telefone}`}
+                  >
+                    <WhatsAppIcon size={24} /> {c.telefone}
+                  </a>
                 </div>
               </section>
             );
           })}
         </div>
 
-        {/* Rodapé — igual ao criativo */}
+        {/* Rodapé — horário + slogan */}
         <footer className="mt-8 text-center pb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-px flex-1 bg-[#C9A227]/70" />
-            <Sparkle size={16} className="text-[#A96F12]" />
-            <div className="h-px flex-1 bg-[#C9A227]/70" />
+          <div className="flex items-center gap-3 max-w-[520px] mx-auto">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#C9A227] to-[#C9A227]" />
+            <Sparkle size={16} className="text-[#C9A227] shrink-0" />
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#C9A227] to-[#C9A227]" />
           </div>
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-[13px] text-[#6F6F6F]">
-            <Clock size={13} /> Respondemos em horário comercial.
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-[13px] text-[#5B5E6B]">
+            <Clock size={13} /> Segunda a sexta-feira, das 09h00 às 16h30.
           </p>
           <p className="mt-1 font-['Playfair_Display'] text-[17px] md:text-[19px] font-semibold text-[#A96F12]">
             Yesola, tudo o que procuras, encontras aqui.
