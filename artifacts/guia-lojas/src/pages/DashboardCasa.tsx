@@ -19,6 +19,7 @@ import { thumbUrl } from "@/lib/img";
 import { getLocalities } from "@/lib/locationIndex";
 import { motion, AnimatePresence } from "framer-motion";
 import { keepNativeArea } from "@/lib/nativeBoot";
+import { filterGroupProducts, filterOrphanProducts } from "@/lib/productGroups";
 
 type Section = "overview" | "loja" | "produtos" | "contactos" | "conta" | "admin";
 
@@ -717,7 +718,8 @@ function ProdutosSection({ store }: { store: any }) {
   const removeProductImage = (index: number) => { setProductImages((prev) => prev.filter((_, i) => i !== index)); };
 
   const products = store.products || [];
-  const getProductsForGroup = (category: string) => products.filter((p: any) => p.category?.toLowerCase().includes(category.toLowerCase()));
+  const getProductsForGroup = (category: string) => filterGroupProducts(products, CASA_CATEGORIES, category);
+  const orphanProducts = filterOrphanProducts(products, CASA_CATEGORIES);
 
   return (
     <div>
@@ -836,6 +838,32 @@ function ProdutosSection({ store }: { store: any }) {
             </div>
           );
         })}
+        {orphanProducts.length > 0 && (
+          <div className="bg-white rounded-2xl border border-dashed border-amber-400/60 overflow-hidden">
+            <div className="w-full flex items-center gap-4 p-5 text-left">
+              <span className="font-mono text-xs tracking-[0.2em] text-amber-600">!</span>
+              <div>
+                <h4 className="text-sm font-semibold text-gray-900">Sem categoria</h4>
+                <p className="text-xs text-gray-500 mt-0.5">{orphanProducts.length} serviço(s) por classificar — edita para atribuir categoria ou elimina.</p>
+              </div>
+            </div>
+            <div className="border-t border-gray-100 p-5">
+              <div className="space-y-2">
+                {orphanProducts.map((p: any) => (
+                  <div key={p.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    {p.imageUrl && <img src={thumbUrl(p.imageUrl)} alt={p.name} className="w-10 h-10 rounded-lg object-cover" loading="lazy" decoding="async" />}
+                    <div className="flex-1">
+                      <h5 className="text-xs font-medium text-gray-900">{p.name}</h5>
+                      <p className="text-[10px] text-gray-500">Sem categoria {p.price ? `· ${p.currency === "USD" ? "$" : p.currency === "EUR" ? "€" : p.currency === "GBP" ? "£" : "Kz"} ${p.price.toLocaleString("pt-AO")}` : ""}</p>
+                    </div>
+                    <button onClick={() => { setEditProduct(p); setForm({ name: p.name, price: String(p.price || ""), currency: p.currency || "AOA", category: p.category || "", subcategory: p.subcategory || "", description: p.description || "" }); setProductImages(p.imageUrls && p.imageUrls.length > 0 ? p.imageUrls : (p.imageUrl ? [p.imageUrl] : [])); setShowForm(true); }} className="text-gray-500 hover:text-amber-600 transition-colors p-1"><Edit2 size={13} /></button>
+                    <button onClick={() => { if (confirm("Eliminar este serviço?")) deleteMut.mutate(p.id); }} className="text-gray-500 hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
