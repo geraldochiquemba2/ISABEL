@@ -788,7 +788,7 @@ function ProdutosSection({ store }: { store: any }) {
   const [form, setForm] = useState({ name: "", price: "", currency: "AOA", category: "", subcategory: "", description: "" });
   const [productImages, setProductImages] = useState<string[]>([]);
   const [uploadingImg, setUploadingImg] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
 
   const createMut = useMutation({
     mutationFn: async () => {
@@ -968,11 +968,11 @@ function ProdutosSection({ store }: { store: any }) {
           return groupProducts.length > 0;
         }).map((group) => {
           const groupProducts = getProductsForGroup(group.category);
-          const isExpanded = selectedGroup === group.category;
+          const isExpanded = !collapsedGroups.includes(group.category);
           return (
             <div key={group.category} className="bg-white rounded-2xl border border-[#E9D9B6] overflow-hidden">
               <button
-                onClick={() => setSelectedGroup(isExpanded ? null : group.category)}
+                onClick={() => setCollapsedGroups((prev) => prev.includes(group.category) ? prev.filter((c) => c !== group.category) : [...prev, group.category])}
                 className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center gap-4">
