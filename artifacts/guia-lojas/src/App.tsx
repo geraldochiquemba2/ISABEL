@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/Navbar";
 import { SplashScreen } from "@/components/SplashScreen";
-import { useEffect, useState, createContext, useContext, useRef } from "react";
+import { useEffect, useState, createContext, useContext, useRef, useLayoutEffect } from "react";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
 import StoreProfile from "@/pages/StoreProfile";
@@ -1162,23 +1162,32 @@ function Router() {
     const prevLoc = useRef(location);
 
     // Splash ao entrar e ao navegar entre paginas
-    useEffect(() => {
-      const t = setTimeout(() => setShowSplash(false), 1100);
-      return () => clearTimeout(t);
+    useLayoutEffect(() => {
+      document.documentElement.style.overflow = "hidden";
+      const t = setTimeout(() => {
+        setShowSplash(false);
+        document.documentElement.style.overflow = "";
+      }, 1100);
+      return () => {
+        clearTimeout(t);
+        document.documentElement.style.overflow = "";
+      };
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (prevLoc.current === location) return;
       prevLoc.current = location;
       setShowSplash(true);
-      const t = setTimeout(() => setShowSplash(false), 700);
-      return () => clearTimeout(t);
+      document.documentElement.style.overflow = "hidden";
+      const t = setTimeout(() => {
+        setShowSplash(false);
+        document.documentElement.style.overflow = "";
+      }, 700);
+      return () => {
+        clearTimeout(t);
+        document.documentElement.style.overflow = "";
+      };
     }, [location]);
-
-    useEffect(() => {
-      document.body.style.overflow = showSplash ? "hidden" : "";
-      return () => { document.body.style.overflow = ""; };
-    }, [showSplash]);
 
     useEffect(() => {
     initPush();
@@ -1188,12 +1197,16 @@ function Router() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
         <SplashScreen show={showSplash} />
-        <OfflineBanner />
-        <Toaster />
+        <div style={{ visibility: showSplash ? "hidden" : "visible", pointerEvents: showSplash ? "none" : "auto" }}>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <div style={{ display: showSplash ? "none" : "block" }}>
+            <OfflineBanner />
+            <Toaster />
+          </div>
+        </div>
       </TooltipProvider>
     </QueryClientProvider>
   );

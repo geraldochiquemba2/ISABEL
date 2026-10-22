@@ -1,22 +1,30 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 interface SplashScreenProps {
   show: boolean;
 }
 
 export function SplashScreen({ show }: SplashScreenProps) {
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {show && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
           style={{
             position: "fixed",
-            inset: 0,
-            zIndex: 100000,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100dvh",
+            zIndex: 2147483647,
             background: "#ffffff",
             color: "#0b0b0c",
             display: "flex",
@@ -24,12 +32,13 @@ export function SplashScreen({ show }: SplashScreenProps) {
             alignItems: "center",
             justifyContent: "center",
             gap: 14,
-            pointerEvents: "auto",
+            pointerEvents: "all",
+            touchAction: "none",
             fontFamily: '"DM Sans", system-ui, sans-serif',
           }}
         >
           <img
-            src="/logo-yesola.png"
+            src="/logo-yesola-star-gold.png"
             alt="YESOLA"
             style={{
               width: 150,
@@ -50,6 +59,7 @@ export function SplashScreen({ show }: SplashScreenProps) {
           </span>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
