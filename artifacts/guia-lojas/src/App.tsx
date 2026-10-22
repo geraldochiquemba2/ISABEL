@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/Navbar";
+import { SplashScreen } from "@/components/SplashScreen";
 import { useEffect, useState, createContext, useContext, useRef } from "react";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
@@ -1156,6 +1157,29 @@ function Router() {
 }
 
   function App() {
+    const [location] = useLocation();
+    const [showSplash, setShowSplash] = useState(true);
+    const prevLoc = useRef(location);
+
+    // Splash ao entrar e ao navegar entre paginas
+    useEffect(() => {
+      const t = setTimeout(() => setShowSplash(false), 1100);
+      return () => clearTimeout(t);
+    }, []);
+
+    useEffect(() => {
+      if (prevLoc.current === location) return;
+      prevLoc.current = location;
+      setShowSplash(true);
+      const t = setTimeout(() => setShowSplash(false), 700);
+      return () => clearTimeout(t);
+    }, [location]);
+
+    useEffect(() => {
+      document.body.style.overflow = showSplash ? "hidden" : "";
+      return () => { document.body.style.overflow = ""; };
+    }, [showSplash]);
+
     useEffect(() => {
     initPush();
     import("@/lib/statusbar").then((m) => m.initStatusBar());
@@ -1167,6 +1191,7 @@ function Router() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
         </WouterRouter>
+        <SplashScreen show={showSplash} />
         <OfflineBanner />
         <Toaster />
       </TooltipProvider>
