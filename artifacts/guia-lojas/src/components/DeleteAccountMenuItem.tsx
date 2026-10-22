@@ -50,6 +50,10 @@ export function DeleteAccountMenuItem({ className = "", compact = false }: Delet
       setError("Sessão expirada. Entre novamente.");
       return;
     }
+    if (user.phone === "999000111") {
+      setError("A conta de demonstração não pode ser eliminada.");
+      return;
+    }
     setLoading(true);
     try {
       await deleteAccount(user.phone, user.storeType || "collection", password);
