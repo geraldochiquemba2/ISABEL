@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban, Map as MapIcon } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban, Map as MapIcon, LayoutDashboard } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { STORES } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
+import { dashboardPathForUser } from "@/lib/session";
 import { thumbUrl, thumbList, dedupeUrls, shareUrl } from "@/lib/img";
 
 function MapPreview({ latitude, longitude }: { latitude: number; longitude: number }) {
@@ -86,6 +87,8 @@ export default function StoreProfile() {
       return s ? JSON.parse(s) : null;
     } catch { return null; }
   }
+
+  const viewer = getViewer();
 
   useEffect(() => {
     try {
@@ -316,6 +319,17 @@ export default function StoreProfile() {
         </button>
 
         <div className="fixed right-4 flex items-center gap-2 z-20" style={{ top: "calc(1rem + env(safe-area-inset-top))" }}>
+          {viewer?.phone && (
+            <a
+              href={dashboardPathForUser(viewer)}
+              data-testid="button-back-dashboard"
+              title="Voltar ao meu painel"
+              className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} transition-colors backdrop-blur-sm`}
+            >
+              <LayoutDashboard size={14} />
+              Painel
+            </a>
+          )}
           <button
             onClick={async () => {
               const shareData = {

@@ -420,7 +420,10 @@ export default function Dashboard() {
               <X size={16} />
             </button>
           </div>
-          <nav className="space-y-0.5 flex-1">
+          <a href="/" className="flex items-center gap-2.5 px-3 py-2.5 mb-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-border transition-colors">
+            <Eye size={15} /> Ver site
+          </a>
+          <nav className="space-y-0.5">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -436,14 +439,15 @@ export default function Dashboard() {
               </button>
             ))}
           </nav>
-          
-          <DeleteAccountMenuItem className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50 mt-auto" />
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50"
-          >
-            <LogOut size={15} /> Sair
-          </button>
+          <div className="space-y-0.5 pt-4 mt-4 border-t border-border">
+            <DeleteAccountMenuItem className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50" />
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50"
+            >
+              <LogOut size={15} /> Sair
+            </button>
+          </div>
         </aside>
 
         {/* Content */}

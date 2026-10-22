@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
+import { dashboardPathForUser, getSessionUser, type SessionUser } from "@/lib/session";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStores } from "@/lib/api";
@@ -43,10 +44,15 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
   useThemeColor("#FBF7EC");
   const [, setLocation] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
   const [showProvinceModal, setShowProvinceModal] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState("");
+
+  useEffect(() => {
+    setSessionUser(getSessionUser());
+  }, []);
 
   const municipalities = selectedProvince
     ? ANGOLA_PROVINCES.find((p) => p.name === selectedProvince)?.municipalities || []
@@ -129,7 +135,11 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
         </div>
         {menuOpen && (
           <div className="bg-[#FBF7EC] border-t border-[#E9D9B6]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
-            <a href="/login" className="py-2">Entrar</a>
+            {sessionUser ? (
+              <a href={dashboardPathForUser(sessionUser)} className="py-2">Painel</a>
+            ) : (
+              <a href="/login" className="py-2">Entrar</a>
+            )}
             <a href="/explorar" className="py-2">Explorar</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>

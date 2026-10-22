@@ -100,6 +100,7 @@ export default function Login() {
     try {
       const res = await loginLojista({ ...values, storeType: "collection" });
       localStorage.setItem("guialocal_user", JSON.stringify(res.user));
+      localStorage.setItem("eliora-selected-store", "collection");
       setSubmitted(true);
       setTimeout(() => setLoc("/dashboard"), 1000);
     } catch (err: any) {
@@ -112,6 +113,7 @@ export default function Login() {
     try {
       const res = await registerLojista({ ...values, latitude: latitude || undefined, longitude: longitude || undefined });
       localStorage.setItem("guialocal_user", JSON.stringify(res.user));
+      localStorage.setItem("eliora-selected-store", "collection");
       setSubmitted(true);
       setTimeout(() => setLoc("/dashboard"), 1000);
     } catch (err: any) {
