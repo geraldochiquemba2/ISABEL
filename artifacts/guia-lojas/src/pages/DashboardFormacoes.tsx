@@ -6,6 +6,7 @@ import { NativeCameraButton } from "@/lib/nativePhoto";
 import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import MapPicker from "@/components/MapPicker";
 import ContaSection from "@/components/ContaSection";
+import { DeleteAccountMenuItem } from "@/components/DeleteAccountMenuItem";
 import { updateStoreLocation } from "@/lib/api";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
@@ -316,6 +317,7 @@ export default function DashboardFormacoes() {
               <KeyRound size={15} />
               Alterar senha
             </button>
+            <DeleteAccountMenuItem className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all" />
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-white/5 transition-all"

@@ -1,8 +1,8 @@
 YESOLA — FICHA DE LOJA (App Store + Play Store)
 ==================================================
-Pacote/Bundle: pt.yesola.app
+Pacote/Bundle: pt.yesola.appstore
 Nome: YESOLA
-Versão: 1.0.0 (build 1)
+Versão: 1.0 (build 128; próximo build 129)
 Site/API: https://yesola.ao
 
 TÍTULO / NOME (30 chars)
@@ -49,13 +49,20 @@ PERMISSÕES (já com texto PT no Info.plist):
 - Galeria: escolher fotografias / guardar
 - Notificações: novidades, encomendas e mensagens
 
-CONTA DE TESTE PARA REVISORES (criar antes de submeter):
-Utilizador: +244900000001 / senha 1234
-Lojista:    +244900000002 / senha 1234
-Instruções: entrar, pesquisar "loja", abrir ficha, ver produtos.
+CONTA DE TESTE PARA REVISORES (ACTUALIZADA):
+Lojista (todas as 24 categorias): 999000111 / Apple1234
+Instruções: escolher uma categoria (ex.: Beleza) → Entrar → telemóvel 999000111,
+senha Apple1234 → abrir o menu/hambúrguer → ver produtos, editar loja e
+"Eliminar conta". A conta funciona em qualquer uma das 24 categorias.
+
+NOTA: as credenciais antigas (+244900000001 / 1234) já não funcionam.
+
+ELIMINAÇÃO DE CONTA (App Store 5.1.1):
+Disponível no menu/hambúrguer de todos os dashboards ("Eliminar conta"),
+com confirmação por senha, apagando conta, loja e produtos/serviços.
 
 CHECKLIST APP STORE CONNECT:
-[ ] App YESOLA criada (Bundle pt.yesola.app, SKU yesola1)
+[ ] App YESOLA criada (Bundle pt.yesola.appstore, SKU yesola1)
 [ ] IPA do Codemagic carregado (TestFlight)
 [ ] Ícone 1024, screenshots 6.7" + 6.5" (+ iPad se universal)
 [ ] Ficha PT colada (nome, subtítulo, descrição, keywords)

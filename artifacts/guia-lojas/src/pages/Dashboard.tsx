@@ -7,6 +7,7 @@ import { thumbUrl } from "@/lib/img";
 import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
+import { DeleteAccountMenuItem } from "@/components/DeleteAccountMenuItem";
 import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera, KeyRound, EyeOff, ShoppingCart, MapPin, Navigation, UserRound } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
@@ -418,9 +419,10 @@ export default function Dashboard() {
             ))}
           </nav>
           
+          <DeleteAccountMenuItem className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50 mt-auto" />
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50 mt-auto"
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors text-left text-red-500 hover:bg-red-50"
           >
             <LogOut size={15} /> Sair
           </button>
@@ -439,6 +441,10 @@ export default function Dashboard() {
               {item.icon} {item.label}
             </button>
           ))}
+          <DeleteAccountMenuItem
+            compact
+            className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-red-500"
+          />
           <button
             onClick={handleLogout}
             className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-red-500"

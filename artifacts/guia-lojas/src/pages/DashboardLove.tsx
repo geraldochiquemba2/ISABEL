@@ -15,6 +15,7 @@ import { useVerticalGroups, useGroupTitles } from "@/lib/useVerticalGroups";
 import { PageTransition } from "@/components/PageTransition";
 import MapPicker from "@/components/MapPicker";
 import ContaSection from "@/components/ContaSection";
+import { DeleteAccountMenuItem } from "@/components/DeleteAccountMenuItem";
 import CategoryMultiSelect from "@/components/CategoryMultiSelect";
 import LocationCombobox from "@/components/LocationCombobox";
 import { getAreaCategories } from "@/data/areaCategories";
@@ -794,6 +795,7 @@ export default function DashboardLove() {
           <button onClick={() => window.location.href = "/love-services"} className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all">
             <Store size={15} /> Ver site
           </button>
+          <DeleteAccountMenuItem className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all" />
           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all">
             <LogOut size={15} /> Sair
           </button>
