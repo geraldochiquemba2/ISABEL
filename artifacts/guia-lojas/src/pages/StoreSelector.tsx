@@ -12,7 +12,6 @@ import {
   Wrench, TrendingUp, Cpu, Sofa, Tractor, Camera, Umbrella, Scissors,
 } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
-import { DemoLoginButton } from "@/components/DemoLoginButton";
 
 // Hierarquia YESOLA: Área → Categoria → Subcategoria → Loja/Profissional
 // Aqui cada item é uma ÁREA (ex: Casamentos, Moda & Acessórios, Negócios)
@@ -743,14 +742,6 @@ export default function StoreSelector({ onSelect }: StoreSelectorProps) {
       </section>
 
 
-
-      {/* Demonstração */}
-      <section className="px-5 pt-2 pb-4 text-center">
-        <p className="mb-2 text-[11px] leading-relaxed text-[#9CA3AF]">
-          Conheça o painel do lojista com uma conta de demonstração.
-        </p>
-        <DemoLoginButton storeType="collection" />
-      </section>
 
       {/* Trust Badges */}
 
