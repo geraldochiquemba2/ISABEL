@@ -8,7 +8,7 @@ import MapPicker from "@/components/MapPicker";
 import { updateStoreLocation } from "@/lib/api";
 import AdminPanel from "@/components/AdminPanel";
 import { DeleteAccountMenuItem } from "@/components/DeleteAccountMenuItem";
-import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera, KeyRound, EyeOff, ShoppingCart, MapPin, Navigation, UserRound } from "lucide-react";
+import { Ban, ShieldAlert, LogOut, Info, RefreshCw, Eye, MessageCircle, TrendingUp, Edit2, Trash2, Plus, ChevronRight, Tag, AlertTriangle, X, LayoutDashboard, Store, Package, Camera, KeyRound, EyeOff, ShoppingCart, MapPin, Navigation, UserRound, Menu } from "lucide-react";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { ANGOLA_PROVINCES } from "@/data/angolaData";
@@ -51,6 +51,7 @@ export default function Dashboard() {
   const [pwdLoading, setPwdLoading] = useState(false);
   const [showNewPwd, setShowNewPwd] = useState(false);
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   async function handleForceChangePwd() {
     setPwdError("");
@@ -87,6 +88,7 @@ export default function Dashboard() {
     }
     setIsDirty(false);
     setSection(newSection);
+    setMobileMenuOpen(false);
   };
 
   // Buscar dados da loja e do status da conta dinamicamente via React Query
@@ -382,6 +384,14 @@ export default function Dashboard() {
       )}
 
       <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
+        <div className="md:hidden sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-border bg-white px-4">
+          <button onClick={() => setMobileMenuOpen(true)} aria-label="Abrir menu" className="-ml-2 rounded-lg p-2 transition-colors hover:bg-muted">
+            <Menu size={20} />
+          </button>
+          <span className="truncate text-sm font-semibold text-foreground">
+            {isAdmin ? "Administração" : store?.name || "Painel"}
+          </span>
+        </div>
         {/* Sticky top bar com botão Salvar quando em "Minha Loja" */}
         {section === "loja" && (
           <div className="sticky top-14 z-30 bg-white border-b border-border px-4 sm:px-6 h-12 flex items-center justify-between shadow-sm">
@@ -398,10 +408,18 @@ export default function Dashboard() {
 
         <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="hidden md:flex flex-col w-52 bg-muted border-r border-border p-5 flex-shrink-0">
-          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-4 px-2 truncate">
-            {isAdmin ? "Admin" : store?.name || "Painel"}
-          </p>
+        {mobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+        )}
+        <aside className={`${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 left-0 z-50 h-screen w-64 md:w-52 flex flex-col bg-muted border-r border-border p-5 flex-shrink-0 overflow-y-auto transition-transform duration-300`}>
+          <div className="flex items-center justify-between mb-4 px-2">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest truncate">
+              {isAdmin ? "Admin" : store?.name || "Painel"}
+            </p>
+            <button onClick={() => setMobileMenuOpen(false)} aria-label="Fechar menu" className="md:hidden p-1 rounded-lg hover:bg-border transition-colors">
+              <X size={16} />
+            </button>
+          </div>
           <nav className="space-y-0.5 flex-1">
             {navItems.map((item) => (
               <button
@@ -428,33 +446,8 @@ export default function Dashboard() {
           </button>
         </aside>
 
-        {/* Mobile bottom nav */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border flex pb-safe">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
-                section === item.id ? "text-foreground" : "text-muted-foreground"
-              }`}
-            >
-              {item.icon} {item.label}
-            </button>
-          ))}
-          <DeleteAccountMenuItem
-            compact
-            className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-red-500"
-          />
-          <button
-            onClick={handleLogout}
-            className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-red-500"
-          >
-            <LogOut size={15} /> Sair
-          </button>
-        </div>
-
         {/* Content */}
-        <main className="flex-1 p-6 pb-20 md:pb-8 overflow-auto bg-white">
+        <main className="flex-1 p-6 pb-8 overflow-auto bg-white">
           {isLoading && !isAdmin ? (
             <div className="text-center py-12 text-sm text-muted-foreground">Carregando dados da loja...</div>
           ) : (
