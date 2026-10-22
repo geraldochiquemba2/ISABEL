@@ -2,7 +2,7 @@ YESOLA — FICHA DE LOJA (App Store + Play Store)
 ==================================================
 Pacote/Bundle: pt.yesola.appstore
 Nome: YESOLA
-Versão: 1.0 (build 131)
+Versão: 1.0 (build 132)
 Site/API: https://yesola.ao
 
 TÍTULO / NOME (30 chars)

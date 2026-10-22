@@ -77,8 +77,17 @@ workflows:
             -exportPath $PWD/build/output
     artifacts:
       - artifacts/guia-lojas/ios/App/build/output/**/*.ipa
-    # Publicação para TestFlight: ligar depois de criar a app no
-    # App Store Connect (publishing.ios.app_store_connect).
+    publishing:
+      app_store_connect:
+        # Chaves do grupo app_store_credentials (nunca no repositório).
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        # Sobe para TestFlight e submete à revisão da App Store.
+        submit_to_testflight: true
+        submit_to_app_store: true
+        cancel_previous_submissions: true
+        release_type: MANUAL
 
   # ------------------------------------------------------------------
   # YESOLA Android: gera o .aab assinado para a Play Store.
