@@ -119,6 +119,7 @@ import Sobre from "@/pages/Sobre";
 import Contacto from "@/pages/Contacto";
 import Termos from "@/pages/Termos";
 import OfflineBanner from "@/components/OfflineBanner";
+import { DemoLoginButton } from "@/components/DemoLoginButton";
 import { initPush } from "@/lib/push";
 import { keepNativeArea } from "@/lib/nativeBoot";
 
@@ -351,6 +352,26 @@ function sessionDashboardForLogin(basePath: string): { to: string; vertical: Exc
   } catch {
     return null;
   }
+}
+
+function DemoLoginGate() {
+  const [location] = useLocation();
+  const path = location.split("?")[0].toLowerCase();
+  if (!path.startsWith("/login")) return null;
+  let vertical: StoreType = null;
+  if (path === "/login") {
+    vertical = "collection";
+  } else {
+    const m = path.match(/^\/login-([a-z-]+)$/);
+    vertical = m ? slugToVertical(m[1]) : null;
+  }
+  if (!vertical) return null;
+  try {
+    if (localStorage.getItem("guialocal_user")) return null;
+  } catch {
+    return null;
+  }
+  return <DemoLoginButton storeType={vertical} floating />;
 }
 
 function Router() {
@@ -1201,6 +1222,7 @@ function Router() {
         <div style={{ visibility: showSplash ? "hidden" : "visible", pointerEvents: showSplash ? "none" : "auto" }}>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <Router />
+            <DemoLoginGate />
           </WouterRouter>
           <div style={{ display: showSplash ? "none" : "block" }}>
             <OfflineBanner />

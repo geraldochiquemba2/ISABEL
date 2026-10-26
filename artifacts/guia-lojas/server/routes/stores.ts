@@ -222,6 +222,8 @@ storesRouter.get("/:id", async (req, res) => {
       address: store.address,
       phone: store.phone,
       whatsapp: store.whatsapp,
+      views: store.views || 0,
+      whatsapp_contacts: store.whatsapp_contacts || 0,
       whatsapp_clicks: store.whatsapp_clicks || 0,
       isOpen: store.is_open,
       description: store.description,
