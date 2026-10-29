@@ -5,14 +5,12 @@ const config: CapacitorConfig = {
   appName: "YESOLA",
   webDir: "dist/public",
   server: {
-    // Modo empacotado (App Store): a WebView corre os assets locais
-    // (dist/public). Os /api relativos são prefixados para https://yesola.ao
-    // pelo interceptor em src/lib/apiBase.ts. Sem url remota.
-    // DEV (lane ios-dev): CAP_SERVER_URL=https://yesola.ao faz a app de
-    // teste carregar o site ao vivo (estilo Expo Go p/ web: sem rebuild).
-    ...(process.env.CAP_SERVER_URL
-      ? { url: process.env.CAP_SERVER_URL }
-      : {}),
+    // Modo remoto (App Store/Play Store): a WebView carrega o site de
+    // produção, por isso a app acompanha sempre o que está publicado em
+    // yesola.ao sem precisar de novo build. Os assets de dist/public ficam
+    // só para o cap sync. CAP_SERVER_URL permite apontar para outro
+    // ambiente (ex.: preview/staging).
+    url: process.env.CAP_SERVER_URL ?? "https://yesola.ao",
     cleartext: false,
     androidScheme: "https",
     allowNavigation: ["yesola.ao", "www.yesola.ao"],
