@@ -20,7 +20,6 @@ const EQUIPA = [
   { nome: "Leonel António", zona: "Huambo · Huambo", foto: "/equipa/leonel-huambo.jpeg" },
   { nome: "Maria de Fátima", zona: "Lobito · Benguela", foto: "/equipa/maria-de-fatima.jpeg" },
   { nome: "Marlene Cavango", zona: "Kilamba · Luanda", foto: "/equipa/marlene-cavango.jpeg" },
-  { nome: "Gídia de Jesus", zona: "Lubango · Huíla", foto: "/equipa/gidia-lubango.jpeg" },
 ];
 
 const DISTINGUE = [
@@ -193,35 +192,7 @@ export default function Sobre() {
           </div>
         </section>
 
-        {/* Equipa */}
-        <section className="py-4">
-          <Titulo>Uma equipa que aproxima Angola</Titulo>
-          <p className="text-[13px] text-[#44403c] mt-2.5 leading-7">
-            A presença da Yesola é construída com o apoio de representantes que actuam em diferentes
-            municípios e províncias, estabelecendo contacto com empresas, acompanhando informações
-            comerciais e contribuindo para a organização das lojas na plataforma.
-          </p>
-          <div className="grid grid-cols-2 gap-2.5 mt-3">
-            {EQUIPA.map((m) => (
-              <div key={m.nome} className="rounded-2xl bg-white border border-[#E8CC91] overflow-hidden">
-                <button
-                  type="button"
-                  className="w-full cursor-zoom-in"
-                  onClick={() => setFotoAberta({ src: m.foto, nome: `${m.nome} · ${m.zona}` })}
-                  aria-label={`Ampliar foto de ${m.nome}`}
-                >
-                  <img src={m.foto} alt={m.nome} className="w-full aspect-[3/4] object-cover object-top" loading="lazy" decoding="async" />
-                </button>
-                <div className="p-2.5 text-center">
-                  <p className="text-[12px] font-bold leading-tight">{m.nome}</p>
-                  <p className="text-[10px] text-[#A96F12] font-semibold mt-0.5">{m.zona}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Propósito social */}
+{/* Propósito social */}
         <section className="py-4">
           <div className="rounded-2xl bg-[#111111] text-white p-6 text-center">
             <Heart size={22} className="mx-auto text-[#E8CC91]" />

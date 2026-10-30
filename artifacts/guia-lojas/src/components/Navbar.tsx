@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Search, LogOut, User, Store } from "lucide-react";
+import { Menu, X, Search, LogOut, User, Store, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
@@ -64,11 +64,12 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
 
             {/* Center nav */}
             <div className="hidden md:flex items-center gap-1">
-              {[
+              {              [
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
                 { href: "/consultores-estilo", label: "Estilo" },
                 { href: "/carrinhos", label: "Carrinhos" },
+                { href: "/favoritos", label: "Lojas Favoritas" },
               ].map((link) => (
                 <Link key={link.href} href={link.href}>
                   <span
@@ -96,6 +97,11 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
                   <span>Trocar loja</span>
                 </button>
               )}
+              <Link href="/favoritos">
+                <button className="p-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all" title="Lojas Favoritas">
+                  <Heart size={18} />
+                </button>
+              </Link>
               <Link href="/busca">
                 <button className="p-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all" data-testid="button-nav-search">
                   <Search size={18} />
@@ -165,11 +171,12 @@ export function Navbar({ onBackToSelector }: NavbarProps) {
                 </button>
               )}
               <div className="h-px bg-white/20 my-2" />
-              {[
+              {              [
                 { href: "/", label: "Início" },
                 { href: "/busca", label: "Explorar" },
                 { href: "/consultores-estilo", label: "Consultores de Estilo" },
                 { href: "/carrinhos", label: "Carrinhos" },
+                { href: "/favoritos", label: "Lojas Favoritas" },
               ].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
                   <span className={`block px-4 py-3 rounded-xl text-sm transition-all ${

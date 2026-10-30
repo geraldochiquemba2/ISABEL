@@ -78,19 +78,21 @@ export function ElioraWeddings({ onBackToSelector }: { onBackToSelector?: () => 
       <header className="sticky top-0 z-50 bg-[#FBF7EC]/95 backdrop-blur-md border-b border-[#E9D9B6]/60">
         <div className="flex items-center justify-between px-5 py-4">
           <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
-          <div className="flex flex-col items-center">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#171717" }}>YESOLA</span>
-            <span className="text-[9px] tracking-[0.25em] text-[#D8B532] font-semibold uppercase mt-0.5">Casamentos</span>
-          </div>
+              <div className="flex flex-col items-center">
+                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#2c3035" }}>YESOLA</span>
+                <span className="text-[9px] tracking-[0.25em] text-[#8a8f98] font-semibold uppercase mt-0.5">Casamentos</span>
+              </div>
+              <a href="/favoritos" className="p-1" title="Lojas Favoritas"><Heart size={22} color="#2c3035" /></a>
 
         </div>
-        {menuOpen && (
-          <div className="bg-[#FBF7EC] border-t border-[#E9D9B6]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <a href="/login-weddings" className="py-2">Entrar</a>
-            <a href="/explorar-weddings" className="py-2">Explorar</a>
-            {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
-          </div>
-        )}
+            {menuOpen && (
+              <div className="bg-white/95 backdrop-blur-md border-t border-[#e5e7eb] px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#2c3035]">
+                <a href="/login-weddings" className="py-2">Entrar</a>
+                <a href="/explorar-weddings" className="py-2">Explorar</a>
+                <a href="/favoritos" className="py-2">Lojas Favoritas</a>
+                {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
+              </div>
+            )}
       </header>
 
       {/* Categories */}

@@ -1,15 +1,18 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban, Map as MapIcon, LayoutDashboard } from "lucide-react";
-import { SiWhatsapp } from "react-icons/si";
-import { STORES } from "@/data/mock";
+import { MapPin, Phone, Clock, Heart, ArrowLeft, Tag, ChevronRight, MessageSquare, X, ShoppingCart, Navigation, Flag, Ban, Map as MapIcon, LayoutDashboard, MoreHorizontal, Truck, Share2, ExternalLink, Pencil } from "lucide-react";
+import { SiWhatsapp, SiInstagram, SiTiktok, SiFacebook } from "react-icons/si";
+import { STORES, type Store } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
 import { PageTransition } from "@/components/PageTransition";
+import { TermsGateProvider, useTermsGate } from "@/components/TermsGate";
+import { getDeliveryInfo, getSocialHandle, getSocialLinks, type SocialKey } from "@/lib/storeExtras";
+import { toast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { useQuery } from "@tanstack/react-query";
-import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore } from "@/lib/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchStoreById, trackWhatsAppClick, reportContent, blockStore, unblockStore, updateStore } from "@/lib/api";
 import { goBackFromStore } from "@/lib/storeBack";
 import { dashboardPathForUser } from "@/lib/session";
 import { thumbUrl, thumbList, dedupeUrls, shareUrl } from "@/lib/img";
@@ -49,6 +52,14 @@ function MapPreview({ latitude, longitude }: { latitude: number; longitude: numb
 }
 
 export default function StoreProfile() {
+  return (
+    <TermsGateProvider>
+      <StoreProfileContent />
+    </TermsGateProvider>
+  );
+}
+
+function StoreProfileContent() {
   const { id } = useParams<{ id: string }>();
   const search = useSearch();
   const params = new URLSearchParams(search);
@@ -60,10 +71,17 @@ export default function StoreProfile() {
   // link direto (WhatsApp/partilha) não tem histórico interno — nesse caso
   // vamos para a home da vertical de ?from= em vez de página vazia.
   const handleBack = () => goBackFromStore(params.get("from"));
+  const { guard } = useTermsGate();
+  const queryClient = useQueryClient();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [coverError, setCoverError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMapApps, setShowMapApps] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const [showSocial, setShowSocial] = useState(false);
+  const [showDelivery, setShowDelivery] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
   const [showReport, setShowReport] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [reportSent, setReportSent] = useState(false);
@@ -101,6 +119,19 @@ export default function StoreProfile() {
       import("@/lib/statusColor").then((m) => m.setStatusColor(m.colorForStore(store as any)));
     }
   }, [store?.id]);
+
+  useEffect(() => {
+    if (!showMore) return;
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
+      if (!moreRef.current?.contains(e.target as Node)) setShowMore(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, [showMore]);
 
   function toggleLocalBlock(id: string, block: boolean) {
     try {
@@ -214,6 +245,41 @@ export default function StoreProfile() {
   }
 
   const currentImage = images[currentImageIndex];
+  const socialLinks = getSocialLinks(store);
+  const deliveryInfo = getDeliveryInfo(store);
+  const saved = isFavorite(store.id);
+  const viewer = getViewer();
+  const isOwner = !!viewer?.storeId && viewer.storeId === store.id;
+  const whatsappNumber = toAngolaWhatsApp(store.whatsapp || store.phone);
+  const whatsappHref = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} (${store.category}) e gostaria de mais informações.`)}`
+    : "";
+  const telHref = store.phone
+    ? `tel:${store.phone.startsWith("+") ? store.phone : `+244${store.phone.replace(/\D/g, "")}`}`
+    : "";
+
+  const openWhatsApp = () => {
+    trackWhatsAppClick(store.id);
+    window.open(whatsappHref, "_blank", "noopener,noreferrer");
+  };
+  const onWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    guard(openWhatsApp);
+  };
+  const onCallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    guard(() => {
+      window.location.href = telHref;
+    });
+  };
+  const handleFavorite = () => {
+    toggleFavorite(store.id);
+    toast({
+      title: saved ? "Removida das guardadas" : "Loja guardada",
+      description: saved ? "Pode voltar a guardá-la quando quiser." : "Encontra-a depois em Lojas Favoritas.",
+    });
+  };
+
   const endCoverDrag = (dx: number | null) => {
     coverDragging.current = false;
     setDragX(null);
@@ -331,6 +397,15 @@ export default function StoreProfile() {
             </a>
           )}
           <button
+              onClick={handleFavorite}
+              aria-pressed={saved}
+              title={saved ? "Remover das lojas favoritas" : "Guardar loja"}
+              data-testid="button-save-store-cover"
+              className={`w-9 h-9 rounded-full ${isFromWeddings ? "bg-[#2c3035]/80 hover:bg-[#2c3035] text-white" : "bg-white/80 hover:bg-white text-[#171717]"} flex items-center justify-center transition-colors backdrop-blur-sm`}
+            >
+            <Heart size={15} className={saved ? "text-rose-500" : ""} fill={saved ? "currentColor" : "none"} />
+          </button>
+          <button
             onClick={async () => {
               const shareData = {
                 title: store.name,
@@ -432,44 +507,40 @@ export default function StoreProfile() {
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-wrap gap-2">
-            <a
-              href={`https://wa.me/244${store.whatsapp || store.phone}?text=${encodeURIComponent(`Olá, vim pela loja ${store.name} (${store.category}) e gostaria de mais informações.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="button-whatsapp"
-              onClick={() => trackWhatsAppClick(store.id)}
-            >
-              <button className="flex items-center gap-1.5 sm:gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap">
-                <SiWhatsapp size={14} />
-                WhatsApp
+          {isOwner && (!socialLinks.length || !deliveryInfo) && (
+            <div className="flex flex-col gap-2 rounded-2xl border border-[#E9D9B6] bg-white/70 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-medium text-[#171717]">Complete a sua loja</p>
+                <p className="text-xs text-[#77736D] mt-0.5">Mostre as redes sociais e as condições de entrega aos clientes.</p>
+              </div>
+              <button
+                onClick={() => setShowEditor(true)}
+                className="self-start rounded-full bg-[#D8B532] px-4 py-2 text-xs font-semibold text-white hover:bg-[#B8962A] transition-colors sm:self-auto"
+              >
+                Adicionar
               </button>
-            </a>
+            </div>
+          )}
 
-            <button
-              onClick={() => { setShowReport(true); setReportSent(false); setReportReason(""); setReportError(""); }}
-              data-testid="button-report-store"
-              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
-            >
-              <Flag size={13} />
-              Denunciar
-            </button>
-
-            <button
-              onClick={handleBlockToggle}
-              data-testid="button-block-store"
-              className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
-            >
-              <Ban size={13} />
-              {isBlocked ? "Desbloquear" : "Bloquear"}
-            </button>
+          {/* Action buttons — "Mais" é sempre o último. */}
+          <div className="flex flex-wrap items-center gap-2">
+            {whatsappHref && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="button-whatsapp"
+                onClick={onWhatsAppClick}
+              >
+                <button className="flex items-center gap-1.5 sm:gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap">
+                  <SiWhatsapp size={14} />
+                  WhatsApp
+                </button>
+              </a>
+            )}
 
             {store.phone && (
-              <a 
-                href={`tel:${store.phone.startsWith('+') ? store.phone : `+244${store.phone.replace(/\D/g, '')}`}`}
-                data-testid="button-call"
-              >
+              <a href={telHref} data-testid="button-call" onClick={onCallClick}>
                 <button className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap">
                   <Phone size={13} />
                   Ligar
@@ -477,7 +548,42 @@ export default function StoreProfile() {
               </a>
             )}
 
-            {/* Botão de Partilhar Loja */}
+            {socialLinks.length > 0 && (
+              <button
+                onClick={() => setShowSocial(true)}
+                data-testid="button-socials"
+                className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
+              >
+                <Share2 size={13} />
+                Redes sociais
+              </button>
+            )}
+
+            {deliveryInfo && (
+              <button
+                onClick={() => setShowDelivery(true)}
+                data-testid="button-delivery"
+                className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
+              >
+                <Truck size={13} />
+                Entregas
+              </button>
+            )}
+
+            <button
+              onClick={handleFavorite}
+              aria-pressed={saved}
+              data-testid="button-save-store"
+              className={`flex items-center gap-1.5 sm:gap-2 border text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-colors whitespace-nowrap ${
+                saved
+                  ? "border-rose-200 bg-rose-50 text-rose-600"
+                  : "border-[#E9D9B6] text-[#171717] hover:bg-[#E9D9B6]/50"
+              }`}
+            >
+              <Heart size={13} fill={saved ? "currentColor" : "none"} />
+              {saved ? "Guardada" : "Guardar"}
+            </button>
+
             <button
               onClick={async () => {
                 const shareData = {
@@ -509,7 +615,6 @@ export default function StoreProfile() {
               Partilhar
             </button>
 
-            {/* Como Chegar - Modal de Opções */}
             <button
               onClick={() => setShowMapApps(true)}
               data-testid="button-directions"
@@ -519,6 +624,88 @@ export default function StoreProfile() {
               Como chegar
             </button>
 
+            <div className="relative ml-auto" ref={moreRef}>
+              <button
+                onClick={() => setShowMore((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={showMore}
+                data-testid="button-more-store"
+                className="flex items-center gap-1.5 sm:gap-2 border border-[#E9D9B6] text-[#171717] text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-[#E9D9B6]/50 transition-colors whitespace-nowrap"
+              >
+                <MoreHorizontal size={14} />
+                Mais
+              </button>
+              <AnimatePresence>
+                {showMore && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
+                    role="menu"
+                    className="absolute right-0 top-full mt-2 z-30 w-52 rounded-2xl border border-[#E9D9B6] bg-white p-1.5 shadow-xl"
+                  >
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        setShowMore(false);
+                        setShowReport(true);
+                        setReportSent(false);
+                        setReportReason("");
+                        setReportError("");
+                      }}
+                      data-testid="button-report-store"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-[#171717] hover:bg-[#FBF7EC] transition-colors"
+                    >
+                      <Flag size={14} className="text-[#77736D]" />
+                      Denunciar loja
+                    </button>
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        setShowMore(false);
+                        void handleBlockToggle();
+                      }}
+                      data-testid="button-block-store"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-[#171717] hover:bg-[#FBF7EC] transition-colors"
+                    >
+                      <Ban size={14} className="text-[#77736D]" />
+                      {isBlocked ? "Desbloquear loja" : "Bloquear loja"}
+                    </button>
+                    {isOwner && (
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          setShowMore(false);
+                          setShowEditor(true);
+                        }}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-[#171717] hover:bg-[#FBF7EC] transition-colors"
+                      >
+                        <Pencil size={14} className="text-[#77736D]" />
+                        Redes e entregas
+                      </button>
+                    )}
+                    <div className="my-1 border-t border-[#E9D9B6]" />
+                    <a
+                      role="menuitem"
+                      href="/termos"
+                      onClick={() => setShowMore(false)}
+                      className="flex w-full items-center rounded-xl px-3 py-2 text-left text-xs text-[#77736D] hover:bg-[#FBF7EC] hover:text-[#171717] transition-colors"
+                    >
+                      Termos e Condições
+                    </a>
+                    <a
+                      role="menuitem"
+                      href="/privacidade"
+                      onClick={() => setShowMore(false)}
+                      className="flex w-full items-center rounded-xl px-3 py-2 text-left text-xs text-[#77736D] hover:bg-[#FBF7EC] hover:text-[#171717] transition-colors"
+                    >
+                      Política de Privacidade
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -661,6 +848,133 @@ export default function StoreProfile() {
           )}
         </AnimatePresence>
 
+        {/* Modal de Redes Sociais */}
+        <AnimatePresence>
+          {showSocial && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+              onClick={() => setShowSocial(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Redes sociais</h3>
+                    <p className="text-xs text-[#77736D] mt-0.5">Contactos oficiais de {store.name}</p>
+                  </div>
+                  <button
+                    onClick={() => setShowSocial(false)}
+                    aria-label="Fechar"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <X size={18} className="text-gray-500" />
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.key}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 rounded-2xl border border-[#E9D9B6] px-4 py-3 hover:bg-[#FBF7EC] transition-colors"
+                    >
+                      <span className="w-9 h-9 rounded-xl bg-[#FBF7EC] border border-[#E9D9B6] grid place-items-center text-[#171717] flex-shrink-0">
+                        <SocialIcon kind={link.key} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-medium text-[#171717]">{link.label}</span>
+                        <span className="block truncate text-xs text-[#77736D]">{link.handle}</span>
+                      </span>
+                      <ExternalLink size={15} className="text-[#77736D] flex-shrink-0" />
+                    </a>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowSocial(false)}
+                  className="w-full mt-4 py-3 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Fechar
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Modal de Entregas */}
+        <AnimatePresence>
+          {showDelivery && deliveryInfo && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+              onClick={() => setShowDelivery(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-9 h-9 rounded-xl bg-[#FBF7EC] border border-[#E9D9B6] grid place-items-center text-[#A96F12]">
+                      <Truck size={17} />
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Entregas</h3>
+                      <p className="text-[11px] text-[#77736D]">Informação indicada pela loja</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowDelivery(false)}
+                    aria-label="Fechar"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <X size={18} className="text-gray-500" />
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {deliveryInfo.zones && <DeliveryRow label="Zonas" value={deliveryInfo.zones} />}
+                  {deliveryInfo.fee && <DeliveryRow label="Taxa" value={deliveryInfo.fee} />}
+                  {deliveryInfo.conditions && <DeliveryRow label="Condições" value={deliveryInfo.conditions} />}
+                </div>
+                <p className="mt-4 rounded-xl bg-[#FBF7EC] border border-[#E9D9B6]/70 p-3 text-[11px] leading-relaxed text-[#77736D]">
+                  A YESOLA não faz entregas. Confirme sempre a zona, o valor e o prazo diretamente com a loja antes de pagar.
+                </p>
+                <button
+                  onClick={() => setShowDelivery(false)}
+                  className="w-full mt-4 py-3 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Fechar
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {showEditor && isOwner && (
+          <StoreExtrasEditor
+            store={store}
+            onClose={() => setShowEditor(false)}
+            onSaved={() => {
+              setShowEditor(false);
+              queryClient.invalidateQueries({ queryKey: ["store", store.id] });
+              toast({ title: "Informação atualizada", description: "As redes e entregas já estão visíveis na loja." });
+            }}
+          />
+        )}
+
         {/* Tabs */}
         <Tabs defaultValue={tabParam === "carrinhos" && store.carrinhoAccess === "APROVADO" ? "carrinhos" : "produtos"} className="py-6 pb-14">
           <TabsList className="bg-transparent border-0 gap-0 p-0 mb-7 border-b border-[#E9D9B6] w-full justify-start rounded-none h-auto overflow-x-auto">
@@ -721,9 +1035,150 @@ export default function StoreProfile() {
             </div>
           </TabsContent>
         </Tabs>
+
+        <footer className="border-t border-[#E9D9B6] py-6 mt-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+              <Link href="/favoritos"><span className="font-medium text-[#171717] hover:text-[#A96F12] transition-colors">Lojas Favoritas</span></Link>
+              <Link href="/termos"><span className="font-medium text-[#171717] hover:text-[#A96F12] transition-colors">Termos e Condições</span></Link>
+              <Link href="/privacidade"><span className="font-medium text-[#171717] hover:text-[#A96F12] transition-colors">Política de Privacidade</span></Link>
+            </div>
+            <p className="text-[11px] leading-relaxed text-[#77736D]">
+              YESOLA – Prestação de Serviços, (SU), LDA · NIF 5003489922
+            </p>
+          </div>
+        </footer>
       </div>
       </div>
     </PageTransition>
+  );
+}
+
+function toAngolaWhatsApp(value?: string | null): string {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.startsWith("244") ? digits : `244${digits}`;
+}
+
+function SocialIcon({ kind }: { kind: SocialKey }) {
+  if (kind === "instagram") return <SiInstagram size={16} />;
+  if (kind === "tiktok") return <SiTiktok size={16} />;
+  return <SiFacebook size={16} />;
+}
+
+function DeliveryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-[#E9D9B6] bg-[#FBF7EC]/60 px-3.5 py-3">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D]">{label}</p>
+      <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-[#171717]">{value}</p>
+    </div>
+  );
+}
+
+const editInputClass =
+  "w-full rounded-xl border border-[#E9D9B6] bg-white px-3.5 py-2.5 text-sm text-[#171717] outline-none transition-colors placeholder:text-[#9A968F] focus:border-[#D8B532]";
+
+function StoreExtrasEditor({ store, onClose, onSaved }: { store: Store; onClose: () => void; onSaved: () => void }) {
+  const delivery = getDeliveryInfo(store);
+  const [instagram, setInstagram] = useState(getSocialHandle(store, "instagram"));
+  const [tiktok, setTiktok] = useState(getSocialHandle(store, "tiktok"));
+  const [facebook, setFacebook] = useState(getSocialHandle(store, "facebook"));
+  const [zones, setZones] = useState(delivery?.zones || "");
+  const [fee, setFee] = useState(delivery?.fee || "");
+  const [conditions, setConditions] = useState(delivery?.conditions || "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    setError("");
+    try {
+      await updateStore(store.id, {
+        socials: { instagram, tiktok, facebook },
+        delivery: { zones, fee, conditions },
+      });
+      onSaved();
+    } catch {
+      setError("Não foi possível guardar. Verifique a ligação e tente novamente.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-[#FBF7EC] border border-[#E9D9B6] shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#E9D9B6] bg-[#FBF7EC]/95 px-5 py-4 backdrop-blur">
+          <div>
+            <h3 className="text-base font-semibold text-[#171717]">Redes e entregas</h3>
+            <p className="text-xs text-[#77736D] mt-0.5">Só o que preencher aparece na loja.</p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Fechar"
+            className="w-8 h-8 flex items-center justify-center rounded-full text-[#77736D] hover:bg-[#E9D9B6]/50 transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="space-y-5 p-5">
+          <section className="space-y-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D]">Redes sociais</p>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">Instagram</span>
+              <input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@loja ou link" className={editInputClass} />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">TikTok</span>
+              <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} placeholder="@loja ou link" className={editInputClass} />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">Facebook</span>
+              <input value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="página ou link" className={editInputClass} />
+            </label>
+          </section>
+
+          <section className="space-y-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D]">Entregas</p>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">Zonas</span>
+              <input value={zones} onChange={(e) => setZones(e.target.value)} placeholder="Ex.: Luanda, Talatona, Kilamba" className={editInputClass} />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">Taxa</span>
+              <input value={fee} onChange={(e) => setFee(e.target.value)} placeholder="Ex.: Grátis acima de 20.000 Kz" className={editInputClass} />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-[#171717]">Condições</span>
+              <textarea value={conditions} onChange={(e) => setConditions(e.target.value)} rows={3} placeholder="Ex.: Entrega em 24h; pagamento por transferência." className={editInputClass} />
+            </label>
+          </section>
+
+          {error && <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">{error}</p>}
+
+          <div className="flex gap-2 pt-1">
+            <button onClick={onClose} className="flex-1 rounded-full border border-[#E9D9B6] py-3 text-sm font-medium text-[#171717] hover:bg-[#E9D9B6]/40 transition-colors">
+              Cancelar
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex-1 rounded-full bg-[#D8B532] py-3 text-sm font-semibold text-white hover:bg-[#B8962A] disabled:opacity-50 transition-colors"
+            >
+              {saving ? "A guardar..." : "Guardar"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -789,6 +1244,7 @@ function singleOrderMessage(storeName: string, p: { name: string; price: number;
 }
 
 function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightProduct }: { products: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }[]; storeId: string; storeName: string; storeWhatsapp: string; highlightProduct?: string | null }) {
+  const { guard } = useTermsGate();
   // Categoria virtual para produtos sem categoria (não existe na BD).
   const OUTROS_CAT = "__outros__";
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -1112,7 +1568,14 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick(storeId)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const url = e.currentTarget.href;
+                  guard(() => {
+                    trackWhatsAppClick(storeId);
+                    window.open(url, "_blank", "noopener,noreferrer");
+                  });
+                }}
                 className="mt-4 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-colors border border-white/10 shadow-lg"
               >
                 <SiWhatsapp size={14} />
@@ -1127,6 +1590,7 @@ function ProductsTab({ products, storeId, storeName, storeWhatsapp, highlightPro
 }
 
 function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhotoClick }: { product: { id: string; name: string; price: number; currency?: string; imageColor: string; imageUrl?: string; imageUrls?: string[]; category?: string; subcategory?: string; description?: string }; index: number; storeId: string; storeName: string; storeWhatsapp: string; onPhotoClick: () => void }) {
+  const { guard } = useTermsGate();
   const [imgError, setImgError] = useState(false);
 
   // Roda as fotos do produto (1s) quando há mais de uma imagem
@@ -1223,7 +1687,14 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackWhatsAppClick(storeId)}
+          onClick={(e) => {
+            e.preventDefault();
+            const url = e.currentTarget.href;
+            guard(() => {
+              trackWhatsAppClick(storeId);
+              window.open(url, "_blank", "noopener,noreferrer");
+            });
+          }}
           className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#22c35f] text-white text-xs font-semibold py-2 rounded-xl transition-colors border border-[#E9D9B6]"
         >
           <SiWhatsapp size={13} />
@@ -1235,6 +1706,7 @@ function ProductCard({ product, index, storeId, storeName, storeWhatsapp, onPhot
 }
 
 function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products: any[]; storeId: string; storeName: string; storeWhatsapp: string }) {
+  const { guard } = useTermsGate();
   const [selected, setSelected] = useState<string[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState<number>(0);
@@ -1458,7 +1930,7 @@ function CarrinhoTab({ products, storeId, storeName, storeWhatsapp }: { products
               <p className="text-sm font-bold text-[#D4A843]">{totalPrice.toLocaleString("pt-AO")} Kz</p>
             </div>
             <button
-              onClick={sendWhatsApp}
+              onClick={() => guard(sendWhatsApp)}
               className="flex items-center gap-2 bg-[#25D366] hover:bg-[#22c35f] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
             >
               <SiWhatsapp size={16} />

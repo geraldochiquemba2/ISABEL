@@ -120,9 +120,10 @@ export default function InfantilHome({ onBackToSelector }: { onBackToSelector?: 
 
         </div>
         {menuOpen && (
-          <div className="bg-[#FFF7E6] border-t border-[#E6DED3]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+          <div className="bg-[#FFF8FB] border-t border-[#F3E0F7]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-infantil" className="py-2">Entrar</a>
             <a href="/explorar-infantil" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

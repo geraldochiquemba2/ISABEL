@@ -118,6 +118,7 @@ import Privacidade from "@/pages/Privacidade";
 import Sobre from "@/pages/Sobre";
 import Contacto from "@/pages/Contacto";
 import Termos from "@/pages/Termos";
+import Favorites from "@/pages/Favorites";
 import OfflineBanner from "@/components/OfflineBanner";
 import { DemoLoginButton } from "@/components/DemoLoginButton";
 import { initPush } from "@/lib/push";
@@ -375,9 +376,18 @@ function DemoLoginGate() {
 }
 
 function Router() {
-  const [selectedStore, setSelectedStore] = useState<StoreType>(
-    () => (localStorage.getItem("eliora-selected-store") as StoreType) ?? inferStoreFromUrl()
-  );
+  const [selectedStore, setSelectedStore] = useState<StoreType>(() => {
+    try {
+      const saved = localStorage.getItem("eliora-selected-store") as StoreType;
+      if (saved) return saved;
+    } catch {}
+    const inferred = inferStoreFromUrl();
+    if (inferred) {
+      try { localStorage.setItem("eliora-selected-store", inferred); } catch {}
+      return inferred;
+    }
+    return null;
+  });
   const [location, setLoc] = useLocation();
   const basePath = location.split("?")[0];
 
@@ -572,17 +582,21 @@ function Router() {
     };
   }, []);
 
-  // Deep-link: se abriu /loja/:id?from=colecao sem loja escolhida,
-  // assume essa vertical para a loja abrir e o voltar funcionar em 2 níveis.
+  // Deep-link: se abriu /loja/:id sem vertical escolhida, infere por ?from= ou usa "collection" por defeito
+  // para garantir que abre na demonstração (crítico no app).
   useEffect(() => {
-    if (!selectedStore) {
-      const inferred = inferStoreFromUrl();
-      if (inferred && window.location.pathname.startsWith("/loja")) {
+    if (selectedStore) return;
+    const path = window.location.pathname;
+    if (path.startsWith("/loja/")) {
+      const inferred = inferStoreFromUrl() || "collection";
+      try {
         localStorage.setItem("eliora-selected-store", inferred);
-        setSelectedStore(inferred);
+      } catch {
+        /* sem storage */
       }
+      setSelectedStore(inferred);
     }
-  }, [selectedStore]);
+  }, [selectedStore, location]);
   // Deep-link entre verticais: /login-beleza, /dashboard-casa,
   // /explorar-turismo ou /beleza ativam a vertical certa em vez de
   // cair na home errada (links partilhados, favoritos, voltar do login).
@@ -655,6 +669,7 @@ function Router() {
   if (basePath === "/descobrir-estilo") return <DescobrirEstilo />;
   if (basePath === "/consultores-estilo") return <ConsultoresEstilo />;
   if (basePath === "/privacidade") return <Privacidade />;
+    if (basePath === "/favoritos" || basePath === "/guardadas" || basePath === "/favoritas") return <Favorites />;
   if (basePath === "/sobre") return <Sobre />;
   if (basePath === "/contacto") return <Contacto />;
   if (basePath === "/termos") return <Termos />;

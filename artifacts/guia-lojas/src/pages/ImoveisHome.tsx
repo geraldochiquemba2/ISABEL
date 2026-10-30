@@ -120,9 +120,10 @@ export default function ImoveisHome({ onBackToSelector }: { onBackToSelector?: (
 
         </div>
         {menuOpen && (
-          <div className="bg-[#FAFAFA] border-t border-[#A7B3C5]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+          <div className="bg-[#F7F8FA] border-t border-[#E5E7EB]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-imoveis" className="py-2">Entrar</a>
             <a href="/explorar-imoveis" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

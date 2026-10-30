@@ -121,13 +121,14 @@ export default function AutomoveisHome({ onBackToSelector }: { onBackToSelector?
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#fff" }}>YESOLA</span>
             <span className="text-[9px] tracking-[0.25em] text-[#c9913a] font-semibold uppercase mt-0.5">Automóveis & Mobilidade</span>
           </div>
-
+          <a href="/favoritos" className="p-1" title="Lojas Favoritas"><Heart size={22} className="text-white" /></a>
         </div>
         {menuOpen && (
-          <div className="bg-[#0f1d32] border-t border-white/10 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <a href="/login-automoveis" className="py-2 text-white">Entrar</a>
-            <a href="/explorar-automoveis" className="py-2 text-white">Explorar</a>
-            {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left text-white/70">Trocar loja</button>}
+          <div className="bg-[#0f1d32]/95 border-t border-white/10 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-white">
+            <a href="/login-automoveis" className="py-2">Entrar</a>
+            <a href="/explorar-automoveis" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
+            {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}
       </header>

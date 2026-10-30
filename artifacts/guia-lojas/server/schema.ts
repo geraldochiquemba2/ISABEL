@@ -147,6 +147,17 @@ export async function initDB() {
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS categories TEXT[] DEFAULT '{}'`,
       `UPDATE stores SET categories = ARRAY[category] WHERE (categories IS NULL OR categories = '{}') AND category IS NOT NULL AND category <> ''`,
       `ALTER TABLE stores ADD COLUMN IF NOT EXISTS locality TEXT DEFAULT ''`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS socials JSONB DEFAULT NULL`,
+      `ALTER TABLE stores ADD COLUMN IF NOT EXISTS delivery JSONB DEFAULT NULL`,
+      `CREATE TABLE IF NOT EXISTS terms_acceptances (
+        id            SERIAL PRIMARY KEY,
+        phone         TEXT NOT NULL,
+        store_type    TEXT NOT NULL DEFAULT 'collection',
+        version       TEXT NOT NULL,
+        accepted_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        UNIQUE(phone, store_type, version)
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_terms_acceptances_lookup ON terms_acceptances(phone, store_type, version)`,
       `UPDATE wedding_groups SET title = 'Pedidos de Casamento, Noivados & Momentos Românticos' WHERE id = 'wg-02'`,
       `UPDATE wedding_groups SET image = NULL WHERE id = 'wg-01'`,
       `DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_key') THEN ALTER TABLE users DROP CONSTRAINT users_phone_key; END IF; END $$`,

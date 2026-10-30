@@ -1,80 +1,82 @@
 import { ArrowLeft, FileText } from "lucide-react";
 import { goBackTo } from "@/lib/storeBack";
 import { useThemeColor } from "@/lib/useThemeColor";
+import { TERMS_META, TERMS_SECTIONS } from "@/data/termsContent";
 
-// Termos de Uso da YESOLA (yesola.ao). Aceites expressos na criação de conta,
-// em conjunto com a Política de Privacidade (Lei n.º 22/11, art. 12).
 export default function Termos() {
   useThemeColor("#FFFDF8");
   return (
     <main className="min-h-[100dvh] bg-[#FFFDF8] text-[#111111]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="mx-auto max-w-[860px] px-6 py-10 md:px-12">
-        <button onClick={() => goBackTo("/")} className="inline-flex items-center gap-2 text-sm text-[#6F6F6F] hover:text-[#111111] transition-colors mb-8 sticky top-[max(12px,env(safe-area-inset-top))] z-30 bg-white/90 backdrop-blur-md border border-black/10 shadow-sm rounded-full px-3 py-1.5">
+        <button
+          onClick={() => goBackTo("/")}
+          className="inline-flex items-center gap-2 text-sm text-[#6F6F6F] hover:text-[#111111] transition-colors mb-8 sticky top-[max(12px,env(safe-area-inset-top))] z-30 bg-white/90 backdrop-blur-md border border-black/10 shadow-sm rounded-full px-3 py-1.5"
+        >
           <ArrowLeft size={16} /> Voltar
         </button>
+
         <div className="flex items-center gap-3 mb-2">
           <span className="w-11 h-11 rounded-2xl bg-[#A96F12] text-white grid place-items-center">
             <FileText size={20} />
           </span>
-          <h1 className="font-['Playfair_Display'] text-4xl md:text-5xl tracking-[-0.02em]">Termos de Uso</h1>
+          <h1 className="font-['Playfair_Display'] text-4xl md:text-5xl tracking-[-0.02em]">Termos e Condições</h1>
         </div>
-        <p className="text-xs text-[#6F6F6F] mb-10">Última actualização: Outubro de 2026 · YESOLA (yesola.ao)</p>
+        <p className="text-xs text-[#6F6F6F] mb-6">
+          Versão {TERMS_META.version} · YESOLA (yesola.ao) · {TERMS_META.entity}
+        </p>
+
+        <div className="mb-10 rounded-2xl border border-[#E9D9B6] bg-[#FBF7EC] p-5 text-sm leading-7 text-[#111111]/80">
+          <p className="font-semibold text-[#111111]">{TERMS_META.entity}</p>
+          <p>NIF {TERMS_META.nif} · Matrícula {TERMS_META.registration}</p>
+          <p>{TERMS_META.address}</p>
+          <p className="mt-2">
+            Atendimento geral: {TERMS_META.generalPhone} · Empresas e serviços comerciais: {TERMS_META.businessPhone}
+          </p>
+          <p>
+            Website:{" "}
+            <a href={TERMS_META.website} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-[#A96F12]">
+              {TERMS_META.website}
+            </a>
+          </p>
+        </div>
 
         <div className="space-y-8 text-sm leading-7 text-[#111111]/80">
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">1. O que é a YESOLA</h2>
-            <p>
-              A YESOLA (yesola.ao) é uma montra digital de lojas, serviços e profissionais
-              em Angola. Qualquer pessoa pode ver as montras; só lojistas com conta aprovada
-              publicam conteúdos.
-            </p>
-          </section>
+          {TERMS_SECTIONS.map((section) => (
+            <section key={section.title} id={section.title.split(".")[0]}>
+              <h2 className="text-lg font-semibold text-[#111111] mb-2">{section.title}</h2>
+              {section.paragraphs?.map((paragraph, i) => (
+                <p key={`p-${i}`} className={i > 0 ? "mt-2" : undefined}>
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets && (
+                <ul className="list-disc pl-5 space-y-1 mt-2">
+                  {section.bullets.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              {section.after?.map((paragraph, i) => (
+                <p key={`a-${i}`} className="mt-2">
+                  {paragraph}
+                </p>
+              ))}
+            </section>
+          ))}
+        </div>
 
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">2. Conta de lojista</h2>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>A conta é pessoal e intransmissível; cada número de telefone vale uma conta por plataforma.</li>
-              <li>Contas novas ficam <strong>pendentes</strong> até aprovação pela equipa YESOLA.</li>
-              <li>Deve ter pelo menos 18 anos; menores só com representante legal.</li>
-              <li>É responsável por manter a sua palavra-passe em segredo.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">3. Conteúdos da montra</h2>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>É responsável por tudo o que publica: nome, descrição, preços, fotos, contactos e horário.</li>
-              <li>É proibido publicar conteúdos falsos, burlas, produtos ilícitos ou conteúdos que violem a lei angolana.</li>
-              <li>A YESOLA pode remover conteúdos e suspender contas que violem estes termos.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">4. Dados pessoais</h2>
-            <p>
-              Ao criar a conta, aceita expressamente o tratamento dos seus dados nos termos da{" "}
-              <a href="/privacidade" className="underline underline-offset-2 text-[#A96F12]">Política de Privacidade</a>,
-              em conformidade com a Lei n.º 22/11, de 17 de Junho (Protecção de Dados Pessoais).
-              Os dados públicos da sua montra ficam visíveis a qualquer visitante — é a finalidade da plataforma.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">5. Disponibilidade e suporte</h2>
-            <p>
-              Fazemos o possível para manter o serviço sempre disponível, mas não garantimos
-              ausência de falhas. Para dúvidas e apoio, use a página{" "}
-              <a href="/contacto" className="underline underline-offset-2 text-[#A96F12]">Fale connosco</a>.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-[#111111] mb-2">6. Lei aplicável</h2>
-            <p>
-              Estes termos regem-se pela lei angolana. Alterações serão publicadas nesta página
-              com a data de actualização.
-            </p>
-          </section>
+        <div className="mt-12 rounded-2xl border border-[#E9D9B6] bg-[#FBF7EC] p-5 text-sm leading-7 text-[#111111]/80">
+          <p>
+            Consulte também a{" "}
+            <a href="/privacidade" className="underline underline-offset-2 text-[#A96F12]">
+              Política de Privacidade
+            </a>
+            . Para denúncias, reclamações ou pedidos sobre estes Termos, utilize a página{" "}
+            <a href="/contacto" className="underline underline-offset-2 text-[#A96F12]">
+              Fale connosco
+            </a>{" "}
+            ou o atendimento geral.
+          </p>
         </div>
       </div>
     </main>

@@ -123,9 +123,10 @@ export default function BusinessHome({ onBackToSelector }: { onBackToSelector?: 
 
         </div>
         {menuOpen && (
-          <div className="bg-[#FAF8F3] border-t border-[#E8F2EE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <a href="/login-business" className="py-2">Entrar</a>
-            <a href="/explorar-business" className="py-2">Explorar</a>
+          <div className="bg-[#F8FAFC] border-t border-[#E2E8F0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <a href="/login-empresas" className="py-2">Entrar</a>
+            <a href="/explorar-empresas" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

@@ -125,9 +125,10 @@ export default function AlimentacaoHome({ onBackToSelector }: { onBackToSelector
 
         </div>
         {menuOpen && (
-          <div className="bg-[#fbe9e7] border-t border-[#ffccbc]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <button onClick={() => navigate("/login-alimentacao")} className="py-2 text-left">Entrar</button>
-            <button onClick={() => navigate("/explorar-alimentacao")} className="py-2 text-left">Explorar</button>
+          <div className="bg-[#FFFBF7] border-t border-[#FDE68A]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <a href="/login-alimentacao" className="py-2">Entrar</a>
+            <a href="/explorar-alimentacao" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

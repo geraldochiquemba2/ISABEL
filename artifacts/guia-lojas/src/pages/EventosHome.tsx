@@ -120,12 +120,13 @@ export default function EventosHome({ onBackToSelector }: { onBackToSelector?: (
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "26px", fontWeight: 600, color: "#2d2c2b" }}>YESOLA</span>
             <span className="text-[9px] tracking-[0.25em] text-[#C45125] font-semibold uppercase mt-0.5">Eventos</span>
           </div>
-
+          <a href="/favoritos" className="p-1" title="Lojas Favoritas"><Heart size={22} /></a>
         </div>
         {menuOpen && (
           <div className="bg-[#FBF8F4] border-t border-[#E8DDD0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
             <a href="/login-eventos" className="py-2">Entrar</a>
             <a href="/explorar-eventos" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

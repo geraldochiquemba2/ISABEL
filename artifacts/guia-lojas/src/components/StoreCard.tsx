@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { Store } from "@/data/mock";
-import { MapPin } from "lucide-react";
+import { Heart, MapPin } from "lucide-react";
 import { nativeTap } from "@/lib/nativePhoto";
 import { thumbUrl, thumbList } from "@/lib/img";
 import { fetchStoreById, getBlockedStoreIds } from "@/lib/api";
@@ -36,7 +36,14 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
   }
   const images = coverList.length > 0 ? coverList : productImages;
 
-  // Sem rotação automática: a foto só muda por toque manual nos pontos.
+  // Rotação automática nas listagens
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const currentImage = images[currentImageIndex];
 
@@ -96,7 +103,7 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
             </div>
           )}
 
-          {/* Pontos manuais: toque muda a foto (sem autoplay) */}
+          {/* Pontos manuais: toque muda a foto */}
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
               {images.slice(0, 5).map((_, i) => (
@@ -110,6 +117,26 @@ export function StoreCard({ store, isFavorite, onToggleFavorite, index = 0, size
                 />
               ))}
             </div>
+          )}
+
+          {/* Botão de guardar/favoritar */}
+          {onToggleFavorite && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onToggleFavorite(store.id);
+              }}
+              aria-pressed={isFavorite}
+              title={isFavorite ? "Remover das Lojas Favoritas" : "Guardar loja"}
+              className="absolute top-10 right-3 z-30 w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-sm flex items-center justify-center transition-all"
+            >
+              <Heart
+                size={16}
+                className={isFavorite ? "text-rose-500" : "text-gray-700"}
+                fill={isFavorite ? "currentColor" : "none"}
+              />
+            </button>
           )}
 
           {/* Cadeado: loja bloqueada fica no lugar */}

@@ -123,9 +123,10 @@ export default function DesportoHome({ onBackToSelector }: { onBackToSelector?: 
 
         </div>
         {menuOpen && (
-          <div className="bg-[#fff3e0] border-t border-[#ffcc80]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <button onClick={() => navigate("/login-desporto")} className="py-2 text-left">Entrar</button>
-            <button onClick={() => navigate("/explorar-desporto")} className="py-2 text-left">Explorar</button>
+          <div className="bg-[#F7FFF9] border-t border-[#BBF7D0]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <a href="/login-desporto" className="py-2">Entrar</a>
+            <a href="/explorar-desporto" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

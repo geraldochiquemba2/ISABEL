@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, MapPin, TrendingUp } from "lucide-react";
+import { ChevronRight, Heart, MapPin, TrendingUp } from "lucide-react";
 import { Store } from "@/data/mock";
 import { getStoreCategories, sortStoresForCards } from "@/lib/storeCategories";
 import { thumbUrl, thumbList } from "@/lib/img";
 import { nativeShare, nativeTap } from "@/lib/nativePhoto";
 import { fetchStoreById, getBlockedStoreIds } from "@/lib/api";
 import StoreLockOverlay from "@/components/StoreLock";
+import { useFavorites } from "@/lib/favorites";
 
 // Aliases de etiquetas genéricas (ex: "Mulher", "SHEIN") → palavras-chave
 // das secções, para lojas registadas com categorias livres não ficarem invisíveis.
@@ -48,6 +49,7 @@ const expandWords = (n: string): string[] => {
 export function StoreCard({ store, from }: { store: Store; from: string }) {
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const fallbackImage = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&h=300&fit=crop&auto=format&q=75";
   // Ordem: 1) capas da loja 2) fotos dos produtos (muitas lojas têm produtos
   // com foto mas nunca definiram capa — eram estas que caíam sempre na padrão)
@@ -110,6 +112,19 @@ export function StoreCard({ store, from }: { store: Store; from: string }) {
         {store.logoUrl && (
           <img src={thumbUrl(store.logoUrl)} alt="" className="absolute top-2 left-2 w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm z-20" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}
+
+        {/* Botão de Guardar/Favoritar */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(store.id);
+          }}
+          aria-pressed={isFavorite(store.id)}
+          title={isFavorite(store.id) ? "Remover das Lojas Favoritas" : "Guardar loja"}
+          className="absolute top-8 right-2 w-7 h-7 rounded-full bg-white/90 hover:bg-white shadow-sm flex items-center justify-center z-30 transition-all"
+        >
+          <Heart size={14} className={isFavorite(store.id) ? "text-rose-500" : "text-gray-700"} fill={isFavorite(store.id) ? "currentColor" : "none"} />
+        </button>
         
         {/* Botão de Partilha no Card (folha nativa no iPhone, Web Share senão) */}
         <button

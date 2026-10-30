@@ -1,3 +1,15 @@
+export interface StoreSocials {
+  instagram?: string;
+  tiktok?: string;
+  facebook?: string;
+}
+
+export interface StoreDelivery {
+  zones?: string;
+  fee?: string;
+  conditions?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -34,6 +46,10 @@ export interface Store {
   longitude?: number | null;
   carrinhoAccess?: string;
   schedule?: any;
+  /** Redes sociais indicadas pelo vendedor (só aparecem as preenchidas). */
+  socials?: StoreSocials | string | null;
+  /** Zonas, taxas e condições de entrega indicadas pelo vendedor. */
+  delivery?: StoreDelivery | string | null;
   whatsapp_clicks?: number;
   bairro?: string;
   subcategory?: string;

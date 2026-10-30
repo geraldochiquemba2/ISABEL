@@ -50,6 +50,8 @@ storesRouter.get("/admin/all", async (req, res) => {
       locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
       schedule: r.schedule || null,
+      socials: r.socials || null,
+      delivery: r.delivery || null,
       products: r.products || [],
     })));
   } catch (err) {
@@ -186,6 +188,8 @@ storesRouter.get("/", async (req, res) => {
       locality: r.locality || "",
       carrinhoAccess: r.carrinho_access,
       schedule: r.schedule || null,
+      socials: r.socials || null,
+      delivery: r.delivery || null,
       createdAt: r.created_at,
       products: r.products || [],
     }));
@@ -236,6 +240,8 @@ storesRouter.get("/:id", async (req, res) => {
       locality: store.locality || "",
       carrinhoAccess: store.carrinho_access,
       schedule: store.schedule || null,
+      socials: store.socials || null,
+      delivery: store.delivery || null,
       latitude: store.latitude ? parseFloat(String(store.latitude)) || null : null,
       longitude: store.longitude ? parseFloat(String(store.longitude)) || null : null,
       products: productsRes.rows.map((p) => ({
@@ -273,16 +279,42 @@ function normalizeStoreCategories(body: any): { primary: string; all: string[] }
   return { primary, all: all.length ? all : [primary] };
 }
 
+// Campos JSONB livres (redes sociais / entregas): normaliza para JSON válido
+// ou null. Não inventa valores — o vendedor é que preenche.
+function normalizeJsonField(value: any): string | null {
+  if (value === undefined || value === null) return null;
+  if (typeof value === "string") {
+    const text = value.trim();
+    if (!text) return null;
+    try {
+      const parsed = JSON.parse(text);
+      return parsed && typeof parsed === "object" ? JSON.stringify(parsed) : null;
+    } catch {
+      return null;
+    }
+  }
+  if (typeof value === "object") {
+    const entries = Object.entries(value).filter(
+      ([, v]) => typeof v === "string" && (v as string).trim()
+    );
+    if (!entries.length) return null;
+    return JSON.stringify(Object.fromEntries(entries.map(([k, v]) => [k, (v as string).trim()])));
+  }
+  return null;
+}
+
 // POST /api/stores — criar loja
 storesRouter.post("/", async (req, res) => {
   try {
     const { id, name, address, phone, whatsapp, description, coverColor, coverImage, coverImages, logoUrl, province, municipality, locality } = req.body;
     const { primary: category, all: categories } = normalizeStoreCategories(req.body);
+    const socials = normalizeJsonField(req.body?.socials);
+    const delivery = normalizeJsonField(req.body?.delivery);
     await pool.query(
-      `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, cover_images, logo_url, province, municipality, locality)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
-       ON CONFLICT (id) DO UPDATE SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7, description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15`,
-      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, locality || ""]
+      `INSERT INTO stores (id, name, category, categories, address, phone, whatsapp, description, cover_color, cover_image, cover_images, logo_url, province, municipality, locality, socials, delivery)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+       ON CONFLICT (id) DO UPDATE SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7, description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, socials=$16, delivery=$17`,
+      [id, name, category, categories, address, phone, whatsapp, description, coverColor, coverImage, coverImages || [], logoUrl || null, province, municipality, locality || "", socials, delivery]
     );
     res.json({ success: true });
   } catch (err) {
@@ -328,9 +360,11 @@ storesRouter.put("/:id", async (req, res) => {
       ({ primary: category, all: categories } = normalizeStoreCategories({ categories: providedCats, category: providedCat }));
     }
     localityVal = providedLocality !== undefined ? providedLocality : (cur.locality || "");
+    const socialsVal = body.socials !== undefined ? normalizeJsonField(body.socials) : cur.socials;
+    const deliveryVal = body.delivery !== undefined ? normalizeJsonField(body.delivery) : cur.delivery;
     await pool.query(
       `UPDATE stores SET name=$2, category=$3, categories=$4, address=$5, phone=$6, whatsapp=$7,
-       description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, is_open=$16, schedule=$17, latitude=$18, longitude=$19
+       description=$8, cover_color=$9, cover_image=$10, cover_images=$11, logo_url=$12, province=$13, municipality=$14, locality=$15, is_open=$16, schedule=$17, latitude=$18, longitude=$19, socials=$20, delivery=$21
        WHERE id=$1`,
       [id, has("name") ? body.name : cur.name, category, categories, has("address") ? body.address : cur.address,
        has("phone") ? body.phone : cur.phone, has("whatsapp") ? body.whatsapp : cur.whatsapp,
@@ -339,7 +373,8 @@ storesRouter.put("/:id", async (req, res) => {
        has("logoUrl") ? body.logoUrl : cur.logo_url, has("province") ? body.province : cur.province,
        has("municipality") ? body.municipality : cur.municipality, localityVal, effectiveIsOpen,
        has("schedule") ? (body.schedule ? JSON.stringify(body.schedule) : null) : cur.schedule,
-       has("latitude") ? (body.latitude || null) : cur.latitude, has("longitude") ? (body.longitude || null) : cur.longitude]
+       has("latitude") ? (body.latitude || null) : cur.latitude, has("longitude") ? (body.longitude || null) : cur.longitude,
+       socialsVal, deliveryVal]
     );
     res.json({ success: true });
   } catch (err) {

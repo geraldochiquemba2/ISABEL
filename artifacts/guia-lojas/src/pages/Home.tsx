@@ -11,7 +11,7 @@ import StoreCategorySection, { StoreCard } from "@/components/StoreCategorySecti
 import type { Scope } from "@/components/WhereSearch";
 import { norm } from "@/lib/locationIndex";
 import {
-  Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search,
+  Heart, ShoppingBag, ChevronRight, Star, MapPin, Menu, X, Search, ShoppingCart, User,
   Shirt, Watch, Footprints, Gem, Briefcase, Baby,
   ShieldCheck, BadgeCheck, CreditCard, HeadphonesIcon,
 } from "lucide-react";
@@ -132,6 +132,9 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "24px", fontWeight: 600, color: "#171717", letterSpacing: "-.02em" }}>YESOLA</span>
             <span className="text-[9px] tracking-[0.25em] text-[#D8B532] font-medium uppercase mt-0.5">MODA & ACESSÓRIOS</span>
           </div>
+          <a href="/favoritos" className="p-1" title="Lojas Favoritas">
+            <Heart size={22} color="#171717" />
+          </a>
         </div>
         {menuOpen && (
           <div className="bg-[#FBF7EC] border-t border-[#E9D9B6]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium text-[#171717]">
@@ -141,7 +144,12 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
               <a href="/login" className="py-2">Entrar</a>
             )}
             <a href="/explorar" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
+            <div className="mt-1 border-t border-[#E9D9B6] pt-3 flex flex-col gap-2 text-xs font-normal text-[#77736D]">
+              <a href="/termos" className="py-1">Termos e Condições</a>
+              <a href="/privacidade" className="py-1">Política de Privacidade</a>
+            </div>
           </div>
         )}
       </header>
@@ -299,6 +307,19 @@ export default function Home({ onBackToSelector }: { onBackToSelector?: () => vo
       </section>
 
       {/* Featured Stores */}
+      <section className="px-5 py-3">
+        <button onClick={() => setLocation("/favoritos")} className="w-full flex items-center gap-4 bg-white rounded-2xl px-4 py-4 border border-[#E9D9B6] hover:border-[#D8B532]/30 transition-all">
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center border border-[#E9D9B6]">
+            <Heart size={20} className="text-[#D8B532]" />
+          </div>
+          <div className="text-left flex-1">
+            <p className="text-[14px] font-semibold text-[#171717]">Lojas Favoritas</p>
+            <p className="text-[11px] text-[#77736D]">As suas lojas favoritas num só lugar</p>
+          </div>
+          <ChevronRight size={18} className="text-[#D8B532]" />
+        </button>
+      </section>
+
       {(featured.length > 0) && (
         <section className="px-5 py-5">
           <div className="flex justify-between items-center mb-4">

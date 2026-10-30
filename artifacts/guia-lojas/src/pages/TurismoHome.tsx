@@ -122,9 +122,10 @@ export default function TurismoHome({ onBackToSelector }: { onBackToSelector?: (
 
         </div>
         {menuOpen && (
-          <div className="bg-[#e0f2f1] border-t border-[#b2dfdb]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <button onClick={() => navigate("/login-turismo")} className="py-2 text-left">Entrar</button>
-            <button onClick={() => navigate("/explorar-turismo")} className="py-2 text-left">Explorar</button>
+          <div className="bg-[#F7FFFE] border-t border-[#99F6E4]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <a href="/login-turismo" className="py-2">Entrar</a>
+            <a href="/explorar-turismo" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

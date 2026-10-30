@@ -120,9 +120,10 @@ export default function BancosHome({ onBackToSelector }: { onBackToSelector?: ()
 
         </div>
         {menuOpen && (
-          <div className="bg-[#EFF6FF] border-t border-[#BFDBFE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-            <button onClick={() => navigate("/login-bancos")} className="py-2 text-left">Entrar</button>
-            <button onClick={() => navigate("/explorar-bancos")} className="py-2 text-left">Explorar</button>
+          <div className="bg-[#F8FAFF] border-t border-[#DBEAFE]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+            <a href="/login-bancos" className="py-2">Entrar</a>
+            <a href="/explorar-bancos" className="py-2">Explorar</a>
+            <a href="/favoritos" className="py-2">Lojas Favoritas</a>
             {onBackToSelector && <button onClick={onBackToSelector} className="py-2 text-left">Trocar loja</button>}
           </div>
         )}

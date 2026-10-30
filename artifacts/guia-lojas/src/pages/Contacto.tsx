@@ -30,16 +30,7 @@ const CONTACTOS = [
     wa: "244922001778",
     mensagem: "Olá YESOLA, quero divulgar a minha empresa.",
   },
-  {
-    id: "representantes",
-    icon: Users,
-    titulo: "Reclamações sobre representantes",
-    texto: "Para comunicar uma situação relacionada com o atendimento ou a atuação de um representante da Yesola.",
-    telefone: "+244 924 861 609",
-    wa: "244924861609",
-    mensagem: "Olá YESOLA, quero comunicar uma situação sobre um representante.",
-  },
-];
+  ];
 
 function WhatsAppIcon({ size = 22 }: { size?: number }) {
   return (

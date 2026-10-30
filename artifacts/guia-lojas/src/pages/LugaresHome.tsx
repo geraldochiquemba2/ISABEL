@@ -178,10 +178,11 @@ export default function LugaresHome() {
             <span className="w-[30px]" />
           </div>
           {menuOpen && (
-            <div className="bg-[#FFFDF8] border-t border-[#E8CC91]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
-              <button onClick={() => (window.location.href = "/login-lugares")} className="py-2 text-left">Entrar</button>
-              <button onClick={() => { try { localStorage.removeItem("eliora-selected-store"); const dead: string[] = []; for (let i = 0; i < sessionStorage.length; i++) { const k = sessionStorage.key(i); if (k && k.startsWith("scroll:") && k !== "scroll:none:/") dead.push(k); } dead.forEach((k) => sessionStorage.removeItem(k)); } catch { /* sem storage */ } window.location.href = "/"; }} className="py-2 text-left">Trocar de loja</button>
-            </div>
+              <div className="bg-[#FFFDF8] border-t border-[#E8CC91]/60 px-5 py-4 flex flex-col gap-3 text-sm font-medium">
+                <button onClick={() => (window.location.href = "/login-lugares")} className="py-2 text-left">Entrar</button>
+                <button onClick={() => (window.location.href = "/favoritos")} className="py-2 text-left">Lojas Favoritas</button>
+                <button onClick={() => { try { localStorage.removeItem("eliora-selected-store"); } catch {}; window.location.href = "/"; }} className="py-2 text-left">Trocar loja</button>
+              </div>
           )}
         </header>
 
