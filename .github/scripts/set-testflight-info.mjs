@@ -83,6 +83,7 @@ async function main() {
       data: {
         type: 'betaAppLocalizations',
         attributes: { locale, description: defaultDescription, feedbackEmail: FEEDBACK_EMAIL },
+        relationships: { app: { data: { type: 'apps', id: app.id } } },
       },
     });
     console.log(`beta app localization created: ${locale}`);
