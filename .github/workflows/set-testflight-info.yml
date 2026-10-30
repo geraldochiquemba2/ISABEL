@@ -1,0 +1,30 @@
+name: Set TestFlight Beta Info
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  set-beta-info:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Preencher informacao Beta e TestFlight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          APP_STORE_APP_ID: ${{ secrets.APP_STORE_APP_ID }}
+          BUNDLE_ID: pt.yesola.appstore
+          BUILD_NUMBER: '140'
+          BETA_FEEDBACK_EMAIL: ${{ secrets.BETA_FEEDBACK_EMAIL }}
+          BETA_REVIEW_FIRST_NAME: ${{ secrets.BETA_REVIEW_FIRST_NAME }}
+          BETA_REVIEW_LAST_NAME: ${{ secrets.BETA_REVIEW_LAST_NAME }}
+          BETA_REVIEW_PHONE: ${{ secrets.BETA_REVIEW_PHONE }}
+          BETA_REVIEW_EMAIL: ${{ secrets.BETA_REVIEW_EMAIL }}
+        run: node .github/scripts/set-testflight-info.mjs
