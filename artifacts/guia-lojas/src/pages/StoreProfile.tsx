@@ -6,6 +6,7 @@ import { SiWhatsapp, SiInstagram, SiTiktok, SiFacebook } from "react-icons/si";
 import { STORES, type Store } from "@/data/mock";
 import { useFavorites } from "@/lib/favorites";
 import { PageTransition } from "@/components/PageTransition";
+import { SplashScreen } from "@/components/SplashScreen";
 import { TermsGateProvider, useTermsGate } from "@/components/TermsGate";
 import { getDeliveryInfo, getSocialHandle, getSocialLinks, type SocialKey } from "@/lib/storeExtras";
 import { toast } from "@/hooks/use-toast";
@@ -226,11 +227,7 @@ function StoreProfileContent() {
   }, [images, fullCoverImages]);
 
   if (isLoading) {
-    return (
-      <div className="max-w-xl mx-auto px-4 py-24 text-center">
-        <p className="text-[#77736D] text-sm">Carregando dados da loja...</p>
-      </div>
-    );
+    return <SplashScreen show label="A carregar loja..." />;
   }
 
   if (!store) {
@@ -248,7 +245,6 @@ function StoreProfileContent() {
   const socialLinks = getSocialLinks(store);
   const deliveryInfo = getDeliveryInfo(store);
   const saved = isFavorite(store.id);
-  const viewer = getViewer();
   const isOwner = !!viewer?.storeId && viewer.storeId === store.id;
   const whatsappNumber = toAngolaWhatsApp(store.whatsapp || store.phone);
   const whatsappHref = whatsappNumber

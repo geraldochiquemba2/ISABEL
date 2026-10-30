@@ -60,9 +60,6 @@ jobs:
           python3 -c "import re; p='ios/App/App.xcodeproj/project.pbxproj'; s=open(p).read(); s=re.sub(r'CURRENT_PROJECT_VERSION = \d+;', 'CURRENT_PROJECT_VERSION = $GITHUB_RUN_NUMBER;', s); open(p,'w').write(s)"
           grep -m2 "CURRENT_PROJECT_VERSION" ios/App/App.xcodeproj/project.pbxproj
 
-      - name: Generate icons+splash (ferramenta oficial)
-        run: npx -y @capacitor/assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'
-
       - name: Install CocoaPods
         run: |
           cd ios/App

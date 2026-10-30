@@ -3,9 +3,10 @@ import { createPortal } from "react-dom";
 
 interface SplashScreenProps {
   show: boolean;
+  label?: string;
 }
 
-export function SplashScreen({ show }: SplashScreenProps) {
+export function SplashScreen({ show, label = "YESOLA Collection" }: SplashScreenProps) {
   if (typeof document === "undefined") return null;
 
   return createPortal(
@@ -38,7 +39,7 @@ export function SplashScreen({ show }: SplashScreenProps) {
           }}
         >
           <img
-            src="/logo-yesola-star-gold.png"
+            src="/logo-yesola-splash.png"
             alt="YESOLA"
             style={{
               width: 150,
@@ -55,7 +56,7 @@ export function SplashScreen({ show }: SplashScreenProps) {
               color: "#b8860b",
             }}
           >
-            YESOLA Collection
+            {label}
           </span>
         </motion.div>
       )}

@@ -1194,20 +1194,18 @@ function Router() {
 
   function App() {
     const [location] = useLocation();
-    const [showSplash, setShowSplash] = useState(true);
+    const [showSplash, setShowSplash] = useState(false);
     const prevLoc = useRef(location);
 
-    // Splash ao entrar e ao navegar entre paginas
-    useLayoutEffect(() => {
-      document.documentElement.style.overflow = "hidden";
+    // O splash de arranque é o #boot-splash do index.html (aparece antes do
+    // JS carregar). Aqui só o retiramos depois de a app estar montada, com
+    // um tempo mínimo para a logo não passar num piscar.
+    useEffect(() => {
+      const remaining = Math.max(0, 900 - performance.now());
       const t = setTimeout(() => {
-        setShowSplash(false);
-        document.documentElement.style.overflow = "";
-      }, 1100);
-      return () => {
-        clearTimeout(t);
-        document.documentElement.style.overflow = "";
-      };
+        (window as unknown as { __yesolaHideBootSplash?: () => void }).__yesolaHideBootSplash?.();
+      }, remaining);
+      return () => clearTimeout(t);
     }, []);
 
     useLayoutEffect(() => {
