@@ -156,10 +156,15 @@ async function main() {
     } catch (error) {
       if (error.status === 409) {
         console.log(`build ${BUILD_NUMBER} already in internal beta group "${group.attributes.name}"`);
+      } else if (error.status === 422) {
+        console.log(`internal group cannot be assigned via API (HTTP 422); internal testers receive builds automatically`);
       } else {
         throw error;
       }
     }
+    const groupBuilds = (await api(`/v1/betaGroups/${group.id}/builds?fields[builds]=version,processingState&limit=50`))?.data || [];
+    const inGroup = groupBuilds.some((item) => item.id === build.id);
+    console.log(`build ${BUILD_NUMBER} listed in internal group "${group.attributes.name}": ${inGroup}`);
   }
 
   try {
