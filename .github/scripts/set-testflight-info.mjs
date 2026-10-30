@@ -70,13 +70,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function main() {
   let app;
-  const configuredAppId = (process.env.APP_STORE_APP_ID || '').trim();
-  if (configuredAppId) {
-    app = (await api(`/v1/apps/${encodeURIComponent(configuredAppId)}?fields[apps]=name,bundleId,primaryLocale`)).data;
-  } else {
-    const list = await api(`/v1/apps?filter[bundleId]=${encodeURIComponent(BUNDLE_ID)}&fields[apps]=name,bundleId,primaryLocale`);
-    app = (list?.data || []).find((item) => item.attributes?.bundleId === BUNDLE_ID);
-  }
+  const list = await api(`/v1/apps?filter[bundleId]=${encodeURIComponent(BUNDLE_ID)}&fields[apps]=name,bundleId,primaryLocale`);
+  app = (list?.data || []).find((item) => item.attributes?.bundleId === BUNDLE_ID);
   if (!app) throw new Error(`App ${BUNDLE_ID} not found`);
   console.log(`App: ${app.attributes.name} (${app.attributes.bundleId}), id=${app.id}, primaryLocale=${app.attributes.primaryLocale}`);
 
